@@ -6,8 +6,8 @@
     "lib": ["dom", "es2017"],
     "baseUrl": ".",
     "paths": {
-      "~/components/*": ["components/*"],
-      "~/utils/*": ["utils/*"]
+      "~/components/*": ["src/components/*"],
+      "~/utils/*": ["src/utils/*"]
     },
     "moduleResolution": "node",
     "strict": true,
