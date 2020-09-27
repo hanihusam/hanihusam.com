@@ -1,11 +1,11 @@
 {
-  "name": "nextjs-typescript-quickstart",
+  "name": "hanihusam.com",
   "version": "1.0.0",
-  "description": "Get started on Next.js with TypeScript in seconds.",
+  "description": "Hani Husamuddin's personal page",
   "main": "N/A",
-  "repository": "https://github.com/resir014/nextjs-typescript-quickstart",
-  "author": "Resi Respati <resir014@gmail.com>",
-  "license": "Unlicense",
+  "repository": "https://github.com/hanihusam/hanihusam.com",
+  "author": "Hani Husamuddin <hani.husam@gmail.com>",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next",
@@ -22,7 +22,8 @@
     "modern-normalize": "^0.7.0",
     "next": "^9.5.2",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "styled-components": "^5.2.0"
   },
   "devDependencies": {
     "@types/node": "^12.6.2",
