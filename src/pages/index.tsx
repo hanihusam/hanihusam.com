@@ -2,10 +2,6 @@ import * as React from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
 
-import relativeTime from 'src/utils/relativeTime'
-
-const lastUpdated = '2015-01-25T07:25:15+07:00'
-
 const IndexPage: NextPage = () => (
   <>
     <p>
@@ -14,7 +10,6 @@ const IndexPage: NextPage = () => (
       Vide, quaeso, rectumne sit.
     </p>
     <p>
-      Last updated: <time dateTime={lastUpdated}>{relativeTime(new Date(lastUpdated))}</time> |{' '}
       <Link href="/about" passHref>
         <a>About</a>
       </Link>
