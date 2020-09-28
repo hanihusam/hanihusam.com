@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components'
 import { colors, fonts, breakpoints, widths, mediaQueries, shadows, GlobalStyles } from './utils'
 import useDarkMode from '~/utils/useDarkMode'
 
-const themeProps = {
+export const themeProps = {
   colors,
   fonts,
   widths,

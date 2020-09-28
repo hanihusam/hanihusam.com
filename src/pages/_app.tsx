@@ -1,9 +1,20 @@
 import * as React from 'react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
+import styled from 'styled-components'
 
 import 'modern-normalize'
 import { Theme } from 'src/styles'
+import { Navigation } from '~/components/layout/Navigation'
+
+const LayoutRoot = styled.main`
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding-top: 80px;
+`
 
 export default function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -13,7 +24,10 @@ export default function MyApp({ Component, pageProps }: AppProps) {
         <title>Hani Husam</title>
       </Head>
       <Theme>
-        <Component {...pageProps} />
+        <Navigation />
+        <LayoutRoot>
+          <Component {...pageProps} />
+        </LayoutRoot>
       </Theme>
     </>
   )
