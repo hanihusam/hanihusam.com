@@ -1,2 +1,2 @@
-export { GlobalStyles } from "./global";
-export * from "./variables";
+export { GlobalStyles, Container } from './global'
+export * from './variables'
