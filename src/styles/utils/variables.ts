@@ -5,6 +5,14 @@ export const colors = {
   secondary: '#ED7D31',
   textColorPrimary: '#7A8391',
   textColorSecondary: '#C4C4C4',
+
+  buttonlightmode: '#45577B',
+  buttonlightmodetext: '#ffffff',
+  buttondarkmode: '#434343',
+  buttondarkmodetext: '#f1f2f3',
+  navgridbgmobile: '#3c4249',
+
+  card: '#46434E',
   header: '#FFF',
   activeMenu: '#ED7D31'
 }
@@ -37,6 +45,17 @@ export const mediaQueries = {
   lg: `@media screen and (min-width: ${breakpoints[3]})`,
   xl: `@media screen and (min-width: ${breakpoints[4]})`,
   smMax: `@media screen and (max-width: ${breakpoints[1]})`
+}
+
+export const space = {
+  xxxs: 2,
+  xxs: 4,
+  xs: 8,
+  sm: 12,
+  md: 16,
+  lg: 24,
+  xl: 32,
+  xxl: 48
 }
 
 export const widths = {
