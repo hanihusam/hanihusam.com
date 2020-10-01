@@ -16,6 +16,7 @@ import {
   MobileNav,
   MobileNavLink
 } from './components'
+import OptionModal from './OptionModal'
 
 const Root = Box.withComponent('header')
 
@@ -106,19 +107,14 @@ const OptionButtonIcon = styled.div`
   margin-bottom: 2px;
 `
 
-const PageTitle = styled(Box)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-
-  ${themeProps.mediaQueries.sm} {
-    display: none;
-  }
-`
-
 const Navigation: React.FC = () => {
   const [isDarkMode, toggleDarkMode] = useDarkMode()
+  const [isOptionModalOpen, setIsOptionModalOpen] = React.useState(false)
   const router = useRouter()
+
+  const toggleOptionModal = () => {
+    setIsOptionModalOpen(!isOptionModalOpen)
+  }
 
   return (
     <Root>
@@ -156,6 +152,42 @@ const Navigation: React.FC = () => {
           </MainNavRight>
         </MainNavInner>
       </NavGrid>
+      <NavGrid backgroundColor="bgPrimary" color="textPrimary">
+        <MobileNav backgroundColor="navgridbgmobile">
+          <MobileNavLink
+            href="/"
+            isActive={router.pathname === '/'}
+            title="Home"
+            // icon={<HomeIcon fill={getMobNavIconColor('/')} />}
+          />
+          <MobileNavLink
+            href="#about"
+            as="/about"
+            isActive={router.pathname === '/about'}
+            title="About Me"
+            // icon={<DialogIcon fill={getMobNavIconColor('/faq')} />}
+          />
+          <MobileNavLink
+            href="#projects"
+            as="/projects"
+            isActive={router.pathname === '/projects'}
+            title="Projects"
+            // icon={<DialogIcon fill={getMobNavIconColor('/faq')} />}
+          />
+          <MobileNavLink
+            href="#services"
+            as="/services"
+            isActive={router.pathname === '/services'}
+            title="Services"
+            // icon={<DialogIcon fill={getMobNavIconColor('/faq')} />}
+          />
+          <OptionButton type="button" style={{ outline: 'none' }} onClick={toggleOptionModal}>
+            <OptionButtonIcon>{/* <OptionIcon fill={getMobNavIconColor()} /> */}</OptionButtonIcon>
+            <Text variant={100}>Lainnya</Text>
+          </OptionButton>
+        </MobileNav>
+      </NavGrid>
+      <OptionModal isOpen={isOptionModalOpen} onClose={toggleOptionModal} />
     </Root>
   )
 }

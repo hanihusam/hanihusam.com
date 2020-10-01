@@ -1,4 +1,4 @@
-import React from 'react'
+import * as React from 'react'
 import useDarkMode from 'src/utils/useDarkMode'
 import styled from 'styled-components'
 import { Portal, UnstyledButton, Box } from 'src/styles'
@@ -90,7 +90,7 @@ const NavInnerFooter = styled(NavInnerHeader)`
 const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
   const [isDarkMode, toggleDarkMode] = useDarkMode()
 
-  // const iconColor = isDarkMode ? '#666b73' : '#666B73';
+  const iconColor = isDarkMode ? '#666b73' : '#666B73'
 
   const toggleModal = () => {
     if (onClose) {
@@ -113,24 +113,72 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
           left={0}
           width="100%"
           height="calc(100% - 54px)"
-          backgroundColor="background"
-          color="foreground"
+          backgroundColor="bgPrimary"
+          color="textPrimary"
           zIndex={50}
         >
-          <NavGrid backgroundColor="background" color="foreground">
+          <NavGrid backgroundColor="bgPrimary" color="textPrimary">
             <NavInner display="flex" flexDirection="row">
               <Box display="flex" flexDirection="row" alignItems="center" flex="1 1 auto" height={60}>
-                <img src={!isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'} alt="hanihusam logo" aria-hidden />
+                <img src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'} alt="hanihusam logo" aria-hidden />
               </Box>
             </NavInner>
           </NavGrid>
           <Container>
-            <VerticalNavGrid backgroundColor="background" color="foreground" flex="1 1 auto">
+            <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
               <NavInnerHeader display="flex" flexDirection="column">
                 Seputar COVID19
               </NavInnerHeader>
+              <NavLinkVertical
+                href="/pranala"
+                title="Pranala Penting"
+                // icon={<ChainIcon fill={iconColor} />}
+              />
+              {/* <NavLinkVertical
+                href="/ongoing"
+                title="Langganan Informasi"
+                icon={<WhatsappIcon fill={iconColor} />}
+              />
+              <NavLinkVertical
+                href="/ongoing"
+                title="Hotline KawalCOVID19"
+                icon={<DialogIcon fill={iconColor} />}
+              /> */}
+              <NavLinkVertical
+                href="https://berbagibantuan.kawalcovid19.id"
+                title="Berbagi Bantuan"
+                // icon={<BerbagiIcon fill={iconColor} />}
+              />
+              <NavLinkVertical
+                href="/unduh-aplikasi"
+                title="Unduh Aplikasi Mobile"
+                // icon={<MobileIcon fill={iconColor} />}
+              />
+              <NavInnerHeader display="flex" flexDirection="column">
+                KawalCOVID19
+              </NavInnerHeader>
+              <NavLinkVertical
+                href="/tentang-kami"
+                title="Tentang Kami"
+                // icon={<ProfileIcon fill={iconColor} />}
+              />
+              {/* <NavLinkVertical
+                href="/ongoing"
+                title="Hubungi Kami"
+                icon={<MailIcon fill={iconColor} />}
+              />
+              <NavLinkVertical
+                href="/ongoing"
+                title="Bergabung/Kontribusi"
+                icon={<ContribIcon fill={iconColor} />}
+              /> */}
+              <NavLinkVertical
+                href="/kebijakan-privasi"
+                title="Kebijakan Privasi"
+                // icon={<LockIcon fill={iconColor} />}
+              />
             </VerticalNavGrid>
-            <VerticalNavGrid backgroundColor="background" color="foreground" flex="1 1 auto">
+            <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
               <NavInnerFooter display="flex" flexDirection="column">
                 <NavLabel>Ganti mode warna</NavLabel>
                 <Box>
@@ -144,7 +192,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                     borderRadius={2}
                     onClick={toggleDarkMode}
                   >
-                    Light
+                    Terang
                   </ToggleButtonLight>
                   <ToggleButtonDark
                     type="button"
@@ -157,14 +205,14 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                     margin="0"
                     onClick={toggleDarkMode}
                   >
-                    Dark
+                    Gelap
                   </ToggleButtonDark>
                 </Box>
               </NavInnerFooter>
             </VerticalNavGrid>
           </Container>
           <Footer>
-            <CloseButtonContainer type="button" backgroundColor="background" onClick={toggleModal}>
+            <CloseButtonContainer type="button" backgroundColor="bgPrimary" onClick={toggleModal}>
               <CloseButtonIconWrapper
                 display="flex"
                 alignItems="center"
@@ -173,7 +221,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                 borderRadius={20}
                 backgroundColor="brandred"
               >
-                {/* <CloseIcon /> */}
+                X
               </CloseButtonIconWrapper>
               Tutup
             </CloseButtonContainer>
