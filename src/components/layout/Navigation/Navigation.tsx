@@ -5,17 +5,7 @@ import { useRouter } from 'next/router'
 import styled from 'styled-components'
 import { themeProps, UnstyledButton, Box, Text } from 'src/styles'
 import useDarkMode from 'src/utils/useDarkMode'
-import {
-  NavGrid,
-  MainNavInner,
-  MainNavCenter,
-  MainNavCenterLinks,
-  MainNavLink,
-  MainNavRight,
-  MainNavigation,
-  MobileNav,
-  MobileNavLink
-} from './components'
+import { NavGrid, MainNavInner, MainNavCenter, MainNavCenterLinks, MainNavLink, MainNavRight, MobileNav, MobileNavLink } from './components'
 import OptionModal from './OptionModal'
 
 const Root = Box.withComponent('header')
