@@ -1,5 +1,6 @@
 export const colors = {
   bgPrimary: '#F2F2F2',
+  fgPrimary: '#45577B',
   bgSecondary: '#263238',
   primary: '#45577B',
   secondary: '#ED7D31',
@@ -10,7 +11,7 @@ export const colors = {
   buttonlightmodetext: '#ffffff',
   buttondarkmode: '#434343',
   buttondarkmodetext: '#f1f2f3',
-  navgridbgmobile: '#3c4249',
+  navgridbgmobile: '#46434E',
 
   card: '#46434E',
   header: '#FFF',

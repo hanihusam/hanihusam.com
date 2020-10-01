@@ -26,8 +26,7 @@ const darkThemeProps = {
     buttonlightmode: '#f1f2f3',
     buttonlightmodetext: '#22272c',
     buttondarkmode: '#45577B',
-    buttondarkmodetext: '#ffffff',
-    navgridbgmobile: '#3c4249'
+    buttondarkmodetext: '#ffffff'
   }
 }
 
