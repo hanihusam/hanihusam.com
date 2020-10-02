@@ -22,6 +22,7 @@ const darkThemeProps = {
     bgPrimary: '#434343',
     primary: '#FFFFFF',
     textPrimary: '#F2F2F2',
+    navgridbgmobile: '#46434E',
 
     buttonlightmode: '#f1f2f3',
     buttonlightmodetext: '#22272c',
