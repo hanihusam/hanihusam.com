@@ -6,7 +6,7 @@ import { themeProps, Box } from 'src/styles'
 import NavLinkRoot from './NavLinkRoot'
 
 interface NavLinkProps {
-  title: string
+  title?: string
   href: string
   as?: string
   isActive?: boolean
