@@ -11,7 +11,7 @@ export const colors = {
   buttonlightmodetext: '#ffffff',
   buttondarkmode: '#434343',
   buttondarkmodetext: '#f1f2f3',
-  navgridbgmobile: '#46434E',
+  navgridbgmobile: '#ffffff',
 
   card: '#46434E',
   header: '#FFF',
