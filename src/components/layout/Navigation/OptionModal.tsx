@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { Portal, UnstyledButton, Box } from 'src/styles'
 import { NavGrid, NavInner } from './components/NavComponents'
 import NavLinkVertical from './NavLinkVertical'
+import { FaTimes } from 'react-icons/fa'
 
 export const OptionModalButton = styled(UnstyledButton)``
 
@@ -65,7 +66,7 @@ const CloseButtonContainer = styled(UnstyledButton)`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: calc(100% / 5);
+  width: calc(100% / 3);
   height: 100%;
   font-size: 10px;
 `
@@ -120,67 +121,20 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
           <NavGrid backgroundColor="bgPrimary" color="textPrimary">
             <NavInner display="flex" flexDirection="row">
               <Box display="flex" flexDirection="row" alignItems="center" flex="1 1 auto" height={60}>
-                <img src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'} alt="hanihusam logo" aria-hidden />
+                <img
+                  src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'}
+                  alt="hanihusam logo"
+                  width="36"
+                  height="auto"
+                  aria-hidden
+                />
               </Box>
             </NavInner>
           </NavGrid>
           <Container>
             <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
-              <NavInnerHeader display="flex" flexDirection="column">
-                Seputar COVID19
-              </NavInnerHeader>
-              <NavLinkVertical
-                href="/pranala"
-                title="Pranala Penting"
-                // icon={<ChainIcon fill={iconColor} />}
-              />
-              {/* <NavLinkVertical
-                href="/ongoing"
-                title="Langganan Informasi"
-                icon={<WhatsappIcon fill={iconColor} />}
-              />
-              <NavLinkVertical
-                href="/ongoing"
-                title="Hotline KawalCOVID19"
-                icon={<DialogIcon fill={iconColor} />}
-              /> */}
-              <NavLinkVertical
-                href="https://berbagibantuan.kawalcovid19.id"
-                title="Berbagi Bantuan"
-                // icon={<BerbagiIcon fill={iconColor} />}
-              />
-              <NavLinkVertical
-                href="/unduh-aplikasi"
-                title="Unduh Aplikasi Mobile"
-                // icon={<MobileIcon fill={iconColor} />}
-              />
-              <NavInnerHeader display="flex" flexDirection="column">
-                KawalCOVID19
-              </NavInnerHeader>
-              <NavLinkVertical
-                href="/tentang-kami"
-                title="Tentang Kami"
-                // icon={<ProfileIcon fill={iconColor} />}
-              />
-              {/* <NavLinkVertical
-                href="/ongoing"
-                title="Hubungi Kami"
-                icon={<MailIcon fill={iconColor} />}
-              />
-              <NavLinkVertical
-                href="/ongoing"
-                title="Bergabung/Kontribusi"
-                icon={<ContribIcon fill={iconColor} />}
-              /> */}
-              <NavLinkVertical
-                href="/kebijakan-privasi"
-                title="Kebijakan Privasi"
-                // icon={<LockIcon fill={iconColor} />}
-              />
-            </VerticalNavGrid>
-            <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
               <NavInnerFooter display="flex" flexDirection="column">
-                <NavLabel>Ganti mode warna</NavLabel>
+                <NavLabel>Theme mode</NavLabel>
                 <Box>
                   <ToggleButtonLight
                     type="button"
@@ -192,7 +146,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                     borderRadius={2}
                     onClick={toggleDarkMode}
                   >
-                    Terang
+                    Light
                   </ToggleButtonLight>
                   <ToggleButtonDark
                     type="button"
@@ -205,10 +159,33 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                     margin="0"
                     onClick={toggleDarkMode}
                   >
-                    Gelap
+                    Dark
                   </ToggleButtonDark>
                 </Box>
               </NavInnerFooter>
+            </VerticalNavGrid>
+            <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
+              <NavLinkVertical
+                href="/"
+                title="Home"
+                // icon={<MobileIcon fill={iconColor} />}
+              />
+              <NavLinkVertical
+                href="#about"
+                title="About"
+                // icon={<ProfileIcon fill={iconColor} />}
+              />
+
+              <NavLinkVertical
+                href="#projects"
+                title="Projects"
+                // icon={<LockIcon fill={iconColor} />}
+              />
+              <NavLinkVertical
+                href="#services"
+                title="Services"
+                // icon={<LockIcon fill={iconColor} />}
+              />
             </VerticalNavGrid>
           </Container>
           <Footer>
@@ -221,7 +198,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                 borderRadius={20}
                 backgroundColor="brandred"
               >
-                X
+                <FaTimes />
               </CloseButtonIconWrapper>
               Tutup
             </CloseButtonContainer>
