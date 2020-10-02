@@ -1,8 +1,8 @@
 import React from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 
 import styled from 'styled-components'
+import { FaBars, FaEnvelope } from 'react-icons/fa'
 import { themeProps, UnstyledButton, Box, Text } from 'src/styles'
 import useDarkMode from 'src/utils/useDarkMode'
 import { NavGrid, MainNavInner, MainNavCenter, MainNavCenterLinks, MainNavLink, MainNavRight, MobileNav, MobileNavLink } from './components'
@@ -100,7 +100,7 @@ const OptionButtonIcon = styled.div`
 const Navigation: React.FC = () => {
   const [isDarkMode, toggleDarkMode] = useDarkMode()
   const [isOptionModalOpen, setIsOptionModalOpen] = React.useState(false)
-  const router = useRouter()
+  const isRendered = typeof window !== 'undefined'
 
   const toggleOptionModal = () => {
     setIsOptionModalOpen(!isOptionModalOpen)
@@ -120,10 +120,10 @@ const Navigation: React.FC = () => {
           </Link>
           <MainNavCenter flex="1 1 auto">
             <MainNavCenterLinks>
-              <MainNavLink href="/" title="Home" isActive={router.pathname === '/'} />
-              <MainNavLink href="#about" as="/about" title="About" isActive={router.pathname === '/about'} />
-              <MainNavLink href="#projects" as="/projects" title="Projects" isActive={router.pathname === '/projects'} />
-              <MainNavLink href="#services" as="/services" title="Services" isActive={router.pathname === '/services'} />
+              <MainNavLink href="/" title="Home" isActive={isRendered && window.location.hash === ''} />
+              <MainNavLink href="#about" title="About" isActive={isRendered && window.location.hash === '#about'} />
+              <MainNavLink href="#projects" title="Projects" isActive={isRendered && window.location.hash === '#projects'} />
+              <MainNavLink href="#services" title="Services" isActive={isRendered && window.location.hash === '#services'} />
             </MainNavCenterLinks>
           </MainNavCenter>
           <MainNavRight display="flex" alignItems="center">
@@ -146,34 +146,15 @@ const Navigation: React.FC = () => {
         <MobileNav backgroundColor="navgridbgmobile">
           <MobileNavLink
             href="/"
-            isActive={router.pathname === '/'}
-            title="Home"
-            // icon={<HomeIcon fill={getMobNavIconColor('/')} />}
+            isActive={isRendered && window.location.hash === '/'}
+            icon={<img src="/images/logo-dark.png" alt="logo" width="32" height="auto" />}
           />
-          <MobileNavLink
-            href="#about"
-            as="/about"
-            isActive={router.pathname === '/about'}
-            title="About Me"
-            // icon={<DialogIcon fill={getMobNavIconColor('/faq')} />}
-          />
-          <MobileNavLink
-            href="#projects"
-            as="/projects"
-            isActive={router.pathname === '/projects'}
-            title="Projects"
-            // icon={<DialogIcon fill={getMobNavIconColor('/faq')} />}
-          />
-          <MobileNavLink
-            href="#services"
-            as="/services"
-            isActive={router.pathname === '/services'}
-            title="Services"
-            // icon={<DialogIcon fill={getMobNavIconColor('/faq')} />}
-          />
+          <MobileNavLink href="mailto:hani.husam@gmail.com" title="Email Me" icon={<FaEnvelope />} />
           <OptionButton type="button" style={{ outline: 'none' }} onClick={toggleOptionModal}>
-            <OptionButtonIcon>{/* <OptionIcon fill={getMobNavIconColor()} /> */}</OptionButtonIcon>
-            <Text variant={100}>Lainnya</Text>
+            <OptionButtonIcon>
+              <FaBars />
+            </OptionButtonIcon>
+            <Text variant={100}>Menu</Text>
           </OptionButton>
         </MobileNav>
       </NavGrid>
