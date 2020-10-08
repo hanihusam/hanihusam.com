@@ -166,11 +166,6 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
             </VerticalNavGrid>
             <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
               <NavLinkVertical
-                href="/"
-                title="Home"
-                // icon={<MobileIcon fill={iconColor} />}
-              />
-              <NavLinkVertical
                 href="#about"
                 title="About"
                 // icon={<ProfileIcon fill={iconColor} />}

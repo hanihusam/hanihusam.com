@@ -30,7 +30,7 @@ const NavInnerVertical = styled(NavInner)`
   flex-direction: row;
   align-items: center;
   border-bottom: 1px solid ${themeProps.colors.secondary};
-  margin: 0 -${themeProps.space.lg}px;
+  margin: ${themeProps.space.lg}px -${themeProps.space.lg}px;
   padding: ${themeProps.space.xs}px ${themeProps.space.lg}px;
 `
 
