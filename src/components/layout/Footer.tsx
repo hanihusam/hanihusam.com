@@ -1,7 +1,7 @@
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { Text, Box, Stack, UnstyledAnchor, themeProps } from 'src/styles'
+import { Text, Box, UnstyledAnchor, themeProps } from 'src/styles'
 import { SiLinkedin, SiGithub, SiDribbble } from 'react-icons/si'
 
 const FooterArea = Box.withComponent('footer')
@@ -21,7 +21,7 @@ const FooterBox = styled(Box)`
   grid-template-columns: 1fr 1fr minmax(auto, ${themeProps.widths.xl}px) 1fr 1fr;
 `
 
-const FooterContent = styled(Stack)`
+const FooterContent = styled(Box)`
   padding-top: 72px;
   border-top: 1px solid rgb(126, 126, 136);
 `
