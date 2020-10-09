@@ -17,7 +17,7 @@ const Root = styled(FooterArea)`
 `
 
 const FooterBox = styled(Box)`
-  padding: 36px ${themeProps.space.lg}px;
+  padding: 36px 0;
   grid-template-columns: 1fr 1fr minmax(auto, ${themeProps.widths.xl}px) 1fr 1fr;
 `
 

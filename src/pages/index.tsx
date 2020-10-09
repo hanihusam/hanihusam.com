@@ -1,7 +1,9 @@
 import React from 'react'
 import { NextPage } from 'next'
 import Link from 'next/link'
+
 import { PageWrapper } from 'src/components/layout'
+import { CallToAction } from 'src/components'
 
 const IndexPage: NextPage = () => (
   <PageWrapper>
@@ -15,6 +17,7 @@ const IndexPage: NextPage = () => (
         <a>About</a>
       </Link>
     </p>
+    <CallToAction />
   </PageWrapper>
 )
 
