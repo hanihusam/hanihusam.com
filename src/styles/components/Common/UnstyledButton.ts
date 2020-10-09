@@ -40,7 +40,9 @@ export interface UnstyledButtonProps
 }
 
 /** A button element with all styling elements removed (incl. hover/focus effects). */
-const UnstyledButton = styled('button').withConfig({ shouldForwardProp: prop => !['filterThis'].includes(prop) })<UnstyledButtonProps>`
+const UnstyledButton = styled('button').withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) => !['hidden'].includes(prop) && defaultValidatorFn(prop)
+})<UnstyledButtonProps>`
   width: auto;
   margin: 0;
   padding: 0;

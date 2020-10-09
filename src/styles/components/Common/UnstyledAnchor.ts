@@ -40,7 +40,9 @@ export interface UnstyledAnchorProps
 }
 
 /** An anchor element with all styling elements removed (incl. hover/focus effects). */
-const UnstyledAnchor = styled('a').withConfig({ shouldForwardProp: prop => !['filterThis'].includes(prop) })<UnstyledAnchorProps>`
+const UnstyledAnchor = styled('a').withConfig({
+  shouldForwardProp: (prop, defaultValidatorFn) => !['hidden'].includes(prop) && defaultValidatorFn(prop)
+})<UnstyledAnchorProps>`
   font-style: inherit;
   color: inherit;
   background-color: transparent;
