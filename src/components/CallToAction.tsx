@@ -44,11 +44,12 @@ const CtaButtonWrapper = styled(Box)`
 
 const HireMeButton = styled(UnstyledButton)`
   display: flex;
+  text-align: center;
   justify-content: center;
   align-items: center;
   padding: ${themeProps.space.md}px;
-  min-width: 150px;
-  min-height: 60px;
+  min-width: 100px;
+  min-height: 40px;
   margin-left: ${themeProps.space.md}px;
   margin-right: ${themeProps.space.md}px;
   border-radius: 5px;
@@ -60,12 +61,15 @@ const HireMeButton = styled(UnstyledButton)`
 
   ${themeProps.mediaQueries.md} {
     margin-left: ${themeProps.space.xl}px;
+    min-width: 150px;
+    min-height: 60px;
     margin-right: 0;
   }
 `
 
 const SeeMoreButton = styled(UnstyledButton)`
   display: flex;
+  text-align: center;
   justify-content: center;
   align-items: center;
   padding: ${themeProps.space.md}px;
