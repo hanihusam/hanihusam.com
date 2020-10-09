@@ -64,7 +64,7 @@ const ToggleButtonLight = styled(Box)`
   align-items: center;
   padding-left: ${themeProps.space.sm}px;
   padding-right: ${themeProps.space.xs}px;
-  border-radius: 16px 0 0 16px;
+  border-radius: 5px 0 0 5px;
 `
 
 const ToggleButtonDark = styled(Box)`
@@ -74,7 +74,7 @@ const ToggleButtonDark = styled(Box)`
   align-items: center;
   padding-left: ${themeProps.space.xs}px;
   padding-right: ${themeProps.space.sm}px;
-  border-radius: 0 16px 16px 0;
+  border-radius: 0 5px 5px 0;
 `
 
 const OptionButton = styled(UnstyledButton)`

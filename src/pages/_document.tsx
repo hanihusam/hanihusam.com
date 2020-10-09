@@ -1,9 +1,13 @@
 import * as React from 'react'
 
-import NextDocument, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
+import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
-export default class Document extends NextDocument {
+interface IProps {
+  styleTags: Array<React.ReactElement<{}>>
+}
+
+export default class MyDocument extends Document<IProps> {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage
@@ -14,7 +18,7 @@ export default class Document extends NextDocument {
           enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
         })
 
-      const initialProps = await NextDocument.getInitialProps(ctx)
+      const initialProps = await Document.getInitialProps(ctx)
       return {
         ...initialProps,
         styles: (
