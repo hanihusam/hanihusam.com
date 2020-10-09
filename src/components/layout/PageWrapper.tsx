@@ -3,6 +3,7 @@ import Head from 'next/head'
 
 import { Navigation } from './Navigation'
 import { LayoutRoot } from 'src/styles'
+import Footer from './Footer'
 
 interface PageWrapperProps {
   title?: string
@@ -90,6 +91,7 @@ const PageWrapper: React.FC<PageWrapperProps> = ({
       </Head>
       <Navigation />
       {children}
+      <Footer />
     </LayoutRoot>
   )
 }
