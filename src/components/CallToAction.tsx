@@ -55,6 +55,11 @@ const HireMeButton = styled(UnstyledButton)`
   border-radius: 5px;
   transition: 500ms;
 
+  & > a {
+    color: #ffffff;
+    text-decoration: none;
+  }
+
   &:hover {
     filter: brightness(80%);
   }
@@ -103,7 +108,9 @@ const CallToAction: React.FC = () => {
               <Text variant={400}>See More Projects</Text>
             </SeeMoreButton>
             <HireMeButton backgroundColor="secondary" color="white">
-              <Text variant={400}>Hire Me</Text>
+              <Text as="a" href="mailto:hani.husam@gmail.com" variant={400}>
+                Hire Me
+              </Text>
             </HireMeButton>
           </CtaButtonWrapper>
         </CtaContent>
