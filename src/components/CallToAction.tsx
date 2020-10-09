@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import { Box, Text, themeProps, UnstyledButton } from 'src/styles'
+import { Box, Column, Text, themeProps, UnstyledButton } from 'src/styles'
 
 const Section = Box.withComponent('section')
 
@@ -93,19 +93,21 @@ const SeeMoreButton = styled(UnstyledButton)`
 const CallToAction: React.FC = () => {
   return (
     <CtaArea>
-      <CtaContent>
-        <TextTitle as="h1" variant={800}>
-          Interested working with me?
-        </TextTitle>
-        <CtaButtonWrapper>
-          <SeeMoreButton border="1px solid" borderColor="secondary" color="white">
-            <Text variant={400}>See More Projects</Text>
-          </SeeMoreButton>
-          <HireMeButton backgroundColor="secondary" color="white">
-            <Text variant={400}>Hire Me</Text>
-          </HireMeButton>
-        </CtaButtonWrapper>
-      </CtaContent>
+      <Column>
+        <CtaContent>
+          <TextTitle as="h1" variant={800}>
+            Interested working with me?
+          </TextTitle>
+          <CtaButtonWrapper>
+            <SeeMoreButton border="1px solid" borderColor="secondary" color="white">
+              <Text variant={400}>See More Projects</Text>
+            </SeeMoreButton>
+            <HireMeButton backgroundColor="secondary" color="white">
+              <Text variant={400}>Hire Me</Text>
+            </HireMeButton>
+          </CtaButtonWrapper>
+        </CtaContent>
+      </Column>
     </CtaArea>
   )
 }
