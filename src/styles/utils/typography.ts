@@ -1,4 +1,4 @@
-import { mediaQueries } from '../variables'
+import { mediaQueries } from './variables'
 
 /**
  * Typography scaling following BBC's GEL:
