@@ -2,7 +2,7 @@ import * as React from 'react'
 import Head from 'next/head'
 
 import { Navigation } from './Navigation'
-import { LayoutRoot } from 'src/styles'
+import LayoutRoot from './LayoutRoot'
 import Footer from './Footer'
 
 interface PageWrapperProps {
