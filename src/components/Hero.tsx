@@ -57,7 +57,7 @@ const Description = styled(Paragraph)`
 `
 
 const AvatarDesktop = styled(Box)`
-  margin: 0 32px -32px;
+  margin: 0 0 -32px;
   display: none;
 
   ${themeProps.mediaQueries.md} {
