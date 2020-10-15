@@ -167,7 +167,14 @@ const Hero: React.FC = () => (
               <Icon>
                 <FiDownload />
               </Icon>
-              <Text as="a" href="mailto:hani.husam@gmail.com" variant={400} color="textColorPrimary">
+              <Text
+                as="a"
+                href="https://drive.google.com/file/d/13G-efGaq8I5tveBz7X_nkYRAw2XP-3AL/view?usp=sharing"
+                target="blank"
+                rel="noopener noreferrer"
+                variant={400}
+                color="textColorPrimary"
+              >
                 Download CV
               </Text>
             </CVButton>
