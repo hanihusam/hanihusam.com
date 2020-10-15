@@ -91,8 +91,6 @@ const NavInnerFooter = styled(NavInnerHeader)`
 const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
   const [isDarkMode, toggleDarkMode] = useDarkMode()
 
-  const iconColor = isDarkMode ? '#666b73' : '#666B73'
-
   const toggleModal = () => {
     if (onClose) {
       onClose()
