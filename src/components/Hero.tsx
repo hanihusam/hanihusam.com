@@ -248,7 +248,7 @@ const Hero: React.FC = () => (
             </EmailMeButton>
             <CVButton>
               <Icon
-                href="https://drive.google.com/file/d/13G-efGaq8I5tveBz7X_nkYRAw2XP-3AL/view?usp=sharing"
+                href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
                 marginRight="8px"
@@ -258,7 +258,7 @@ const Hero: React.FC = () => (
               </Icon>
               <Text
                 as="a"
-                href="https://drive.google.com/file/d/13G-efGaq8I5tveBz7X_nkYRAw2XP-3AL/view?usp=sharing"
+                href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
                 target="_blank"
                 rel="noopener noreferrer"
                 variant={400}
