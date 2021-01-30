@@ -1,8 +1,9 @@
+import * as React from 'react'
 import { useMemo } from 'react'
 import { ThemeProvider } from 'styled-components'
 
-import { colors, fonts, space, breakpoints, widths, mediaQueries, shadows, GlobalStyles, componentStyles } from './utils'
 import useDarkMode from 'src/utils/useDarkMode'
+import { colors, fonts, space, breakpoints, widths, mediaQueries, shadows, GlobalStyles, componentStyles } from './utils'
 
 export const themeProps = {
   colors,
