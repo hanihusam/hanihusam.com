@@ -2,9 +2,9 @@ import * as React from 'react'
 import useDarkMode from 'src/utils/useDarkMode'
 import styled from 'styled-components'
 import { Portal, UnstyledButton, Box } from 'src/styles'
+import { FaTimes } from 'react-icons/fa'
 import { NavGrid, NavInner } from './components/NavComponents'
 import NavLinkVertical from './NavLinkVertical'
-import { FaTimes } from 'react-icons/fa'
 
 export const OptionModalButton = styled(UnstyledButton)``
 
@@ -163,22 +163,10 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
               </NavInnerFooter>
             </VerticalNavGrid>
             <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
-              <NavLinkVertical
-                href="#about"
-                title="About"
-                // icon={<ProfileIcon fill={iconColor} />}
-              />
+              <NavLinkVertical href="#about" title="About" />
 
-              <NavLinkVertical
-                href="#projects"
-                title="Projects"
-                // icon={<LockIcon fill={iconColor} />}
-              />
-              <NavLinkVertical
-                href="#services"
-                title="Services"
-                // icon={<LockIcon fill={iconColor} />}
-              />
+              <NavLinkVertical href="#projects" title="Projects" />
+              <NavLinkVertical href="#services" title="Services" />
             </VerticalNavGrid>
           </Container>
           <Footer>

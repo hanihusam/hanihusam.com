@@ -13,7 +13,7 @@ interface NavLinkProps {
   icon?: React.ReactNode
 }
 
-const MobileNavLinkBase = styled(NavLinkRoot)<Pick<NavLinkProps, 'isActive'>>`
+const MobileNavLinkBase = styled(NavLinkRoot) <Pick<NavLinkProps, 'isActive'>>`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -46,6 +46,7 @@ const MobileNav = styled(Box)`
   display: flex;
   justify-content: space-evenly;
   height: 54px;
+  z-index: 1;
 
   ${themeProps.mediaQueries.sm} {
     display: none;
