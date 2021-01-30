@@ -88,11 +88,11 @@ const AboutMe: React.FC = () => (
           <SecondTitle variant={900} color="header">
             Why hire me for your next project?
           </SecondTitle>
-          <Description color="textColorPrimary">
+          <Description color="textColorSecondary">
             Currently I am working as a fulltime freelancer. Before that I’ve worked at Nutrination Pte. Ltd (Bubays), Singapore as a
             Fullstack Engineer.
           </Description>
-          <Description color="textColorPrimary">
+          <Description color="textColorSecondary">
             I find my self as a creative, reliable and detailed freelancer who can work independently without too many detailed
             instructions. I have a principle that is "stay simple and stay humble". I believe that in simplicity there is a complexity and
             very deep thoroughness. I see every project as a process of solving a problem. Then it is time for your problems to be resolved
