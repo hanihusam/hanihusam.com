@@ -231,7 +231,7 @@ const Hero: React.FC = () => (
         <Avatar />
         <RightContentWrapper>
           <FirstTitle as="p" variant={800} color="secondary">
-            Hi, I am Hani Husam
+            Hi, I am Han
           </FirstTitle>
           <SecondTitle variant={900} color="primary">
             Web Developer and UI Designer based in Yogyakarta, Indonesia.
