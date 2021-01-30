@@ -60,7 +60,6 @@ const Content = styled(Box)`
   width: calc(512px + 24px * 2);
 `
 const AvatarWrapper = styled(Box)`
-  color: #fff;
   text-align: center;
   margin-top: 0;
   margin-bottom: 20px;
@@ -124,7 +123,6 @@ const TextTitle = styled(Text)`
   margin-top: 12px;
   word-break: break-word;
   margin-bottom: ${themeProps.space.md}px;
-  color: ${themeProps.colors.header};
 `
 
 const LinkButton = styled(UnstyledButton)`
@@ -168,7 +166,7 @@ const LinksPage: React.FC = () => (
                     <div className="ava" />
                   </Avatar>
                 </ProfilePicture>
-                <TextTitle as="h3" variant={800}>
+                <TextTitle as="h3" variant={800} color="primary">
                   Hani Husam
                 </TextTitle>
               </AvatarWrapper>
