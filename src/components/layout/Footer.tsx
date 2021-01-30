@@ -101,7 +101,7 @@ const Footer: React.FC = () => (
                 <TextLink as="a" href="mailto:hani.husam@gmail.com" rel="noopener noreferrer">
                   hani.husam@gmail.com
                 </TextLink>
-                .<br /> &copy; 2020 hanihusam. All rights reserved.
+                .<br /> &copy; 2021 hanihusam. All rights reserved.
               </Text>
             </FooterCopyright>
           </ContentGrid>
