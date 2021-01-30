@@ -167,7 +167,7 @@ const LinksPage: React.FC = () => (
                   </Avatar>
                 </ProfilePicture>
                 <TextTitle as="h3" variant={800} color="primary">
-                  Hani Husam
+                  Han
                 </TextTitle>
               </AvatarWrapper>
               <LinkButton backgroundColor="secondary" color="white" boxShadow="double">
