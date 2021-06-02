@@ -1,15 +1,16 @@
 import * as React from 'react'
 import Head from 'next/head'
+import { NextSeo } from 'next-seo'
 
+import { SiteMetadata } from 'src/types/default'
+
+import siteMetadata from 'src/_data/siteMetaData.json'
 import { Navigation } from './Navigation'
 import LayoutRoot from './LayoutRoot'
 import Footer from './Footer'
 
 interface PageWrapperProps {
-  title?: string
   pageTitle?: string
-  author?: string
-  description?: string
 }
 
 declare global {
@@ -18,76 +19,22 @@ declare global {
   }
 }
 
-const defaultTitle = 'Hani Husam'
-const defaultAuthor = 'Hani Husamuddin'
-const defaultDescription = "Hani Husamuddin's personal portfolio website."
-const defaultKeywords = 'hanihusam, hani husamuddin, web developer, frontend developer, freelancer, indonesia'
-
-const PageWrapper: React.FC<PageWrapperProps> = ({
-  author = defaultAuthor,
-  children,
-  title = defaultTitle,
-  description = defaultDescription
-}) => {
-  const noHTMLTagDescription = description.replace(/<\/?[^>]+(>|$)/g, ``)
-  const metaAttributes = [
-    {
-      name: `description`,
-      content: noHTMLTagDescription
-    },
-    {
-      name: 'keywords',
-      content: defaultKeywords
-    },
-    {
-      property: `og:title`,
-      content: title
-    },
-    {
-      property: `og:description`,
-      content: noHTMLTagDescription
-    },
-    {
-      property: `og:image`,
-      content: `/images/logo.png`
-    },
-    {
-      property: `og:image:width`,
-      content: `192`
-    },
-    {
-      property: `og:image:height`,
-      content: `192`
-    },
-    {
-      property: `og:type`,
-      content: `website`
-    },
-    {
-      name: `twitter:card`,
-      content: `summary`
-    },
-    {
-      name: `twitter:creator`,
-      content: author
-    },
-    {
-      name: `twitter:title`,
-      content: title
-    },
-    {
-      name: `twitter:description`,
-      content: noHTMLTagDescription
-    }
-  ]
+const PageWrapper: React.FC<PageWrapperProps> = ({ children, pageTitle }) => {
+  const { author }: SiteMetadata = siteMetadata
 
   return (
     <LayoutRoot>
+      {pageTitle && <NextSeo title={pageTitle} openGraph={{ title: pageTitle }} />}
       <Head>
-        <title>{title}</title>
-        {metaAttributes.map(attributes => (
-          <meta key={attributes.name || attributes.property} {...attributes} />
+        <meta name="twitter:dnt" content="on" />
+        {Object.keys(author.url).map(key => (
+          <link key={key} rel="me" href={author.url[key]} />
         ))}
+        <link rel="alternate" type="application/rss+xml" title="All posts by @hanihusam" href="/posts/rss.xml" />
+        {process.env.NODE_ENV === 'production' && <meta name="monetization" content={process.env.NEXT_PUBLIC_ILP_URL} />}
+        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+          <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION} />
+        )}
       </Head>
       <Navigation />
       {children}

@@ -3,11 +3,11 @@ import * as React from 'react'
 import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
-interface IProps {
+interface InitialProps {
   styleTags: Array<React.ReactElement<{}>>
 }
 
-export default class MyDocument extends Document<IProps> {
+export default class MyDocument extends Document<InitialProps> {
   static async getInitialProps(ctx: DocumentContext) {
     const sheet = new ServerStyleSheet()
     const originalRenderPage = ctx.renderPage

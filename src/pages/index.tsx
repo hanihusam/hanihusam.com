@@ -1,8 +1,8 @@
 import React from 'react'
 import { NextPage } from 'next'
 
-import { PageWrapper } from 'src/components/layout'
-import { AboutMe, CallToAction, Hero } from 'src/components'
+import { PageWrapper } from '~/components/layout'
+import { AboutMe, CallToAction, Hero } from '../components'
 
 const IndexPage: NextPage = () => (
   <PageWrapper>
