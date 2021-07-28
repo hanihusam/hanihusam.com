@@ -1,35 +1,34 @@
 import * as React from 'react'
 
-import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
-import { ServerStyleSheet } from 'styled-components'
+import emotionCache from '../utils/emotionCache'
 
-interface InitialProps {
-  styleTags: Array<React.ReactElement<{}>>
+import createEmotionServer from '@emotion/server/create-instance'
+import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
+
+interface ExtendedDocumentProps {
+  ids: string[]
+  css: string
 }
 
-export default class MyDocument extends Document<InitialProps> {
+const { extractCritical } = createEmotionServer(emotionCache)
+
+export default class MyDocument extends Document<ExtendedDocumentProps> {
   static async getInitialProps(ctx: DocumentContext) {
-    const sheet = new ServerStyleSheet()
-    const originalRenderPage = ctx.renderPage
+    const { html, ...renderPageResult } = await ctx.renderPage()
+    const { ids, css, ...props } = extractCritical(html)
 
-    try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
-        })
+    const initialProps = await Document.getInitialProps(ctx)
 
-      const initialProps = await Document.getInitialProps(ctx)
-      return {
-        ...initialProps,
-        styles: (
-          <>
-            {initialProps.styles}
-            {sheet.getStyleElement()}
-          </>
-        )
-      }
-    } finally {
-      sheet.seal()
+    return {
+      ...initialProps,
+      ...renderPageResult,
+      ...props,
+      styles: (
+        <>
+          {initialProps.styles}
+          <style dangerouslySetInnerHTML={{ __html: css }} data-emotion-css={ids.join(' ')} />
+        </>
+      )
     }
   }
 
@@ -39,15 +38,15 @@ export default class MyDocument extends Document<InitialProps> {
         <Head>
           <meta charSet="UTF-8" />
 
-          <meta httpEquiv="X-UA-Compatible" content="ie=edge" />
-          <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+          <meta content="ie=edge" httpEquiv="X-UA-Compatible" />
+          <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
-          <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-          <meta name="theme-color" content="#333333" />
-          <meta name="msapplication-TileColor" content="#333333" />
+          <meta content="yes" name="apple-mobile-web-app-capable" />
+          <meta content="black-translucent" name="apple-mobile-web-app-status-bar-style" />
+          <meta content="#333333" name="theme-color" />
+          <meta content="#333333" name="msapplication-TileColor" />
 
-          <link rel="manifest" href="/manifest.json" />
+          <link href="/manifest.json" rel="manifest" />
 
           <meta content="/icons/ms-icon-70x70.png" name="msapplication-square70x70" />
           <meta content="/icons/ms-icon-144x144.png" name="msapplication-square144x144" />
@@ -66,11 +65,6 @@ export default class MyDocument extends Document<InitialProps> {
           <link href="/icons/apple-icon-180x180.png" rel="icon" sizes="180x180" type="image/png" />
           <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
           <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-
-          <link
-            href="https://fonts.googleapis.com/css2?family=Jost:wght@700&family=Ubuntu:wght@300;400;700&display=swap"
-            rel="stylesheet"
-          />
         </Head>
         <body>
           <Main />

@@ -1,4 +1,4 @@
-import { Box } from 'src/styles'
+import { Box } from '../../../ui'
 
 const NavLinkRoot = Box.withComponent('a')
 

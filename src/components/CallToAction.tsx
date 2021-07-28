@@ -1,7 +1,10 @@
 import React from 'react'
 
-import styled from 'styled-components'
-import { Box, Column, Text, themeProps, UnstyledButton } from 'src/styles'
+import Column from './layout/Column'
+import { Box, Text, themeProps, UnstyledButton } from './ui'
+
+import styled from '@emotion/styled'
+import Link from 'next/link'
 
 const Section = Box.withComponent('section')
 
@@ -107,9 +110,11 @@ const CallToAction: React.FC = () => (
             <Text variant={400}>See More Projects</Text>
           </SeeMoreButton>
           <HireMeButton backgroundColor="secondary" color="white">
-            <Text as="a" href="mailto:hani.husam@gmail.com" variant={400}>
-              Hire Me
-            </Text>
+            <Link href="mailto:hani.husam@gmail.com" passHref>
+              <Text as="a" variant={400}>
+                Hire Me
+              </Text>
+            </Link>
           </HireMeButton>
         </CtaButtonWrapper>
       </CtaContent>

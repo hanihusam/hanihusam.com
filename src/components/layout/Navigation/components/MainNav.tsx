@@ -1,7 +1,8 @@
 import React from 'react'
-import styled from 'styled-components'
 
-import { themeProps, Box } from 'src/styles'
+import { Box, themeProps } from '../../../ui'
+
+import styled from '@emotion/styled'
 import Link from 'next/link'
 
 interface LinkIconProps {
@@ -17,13 +18,13 @@ interface LinkIconProps {
 export const MainNavInner: React.FC = ({ children }) => {
   return (
     <Box
+      alignItems="center"
       display="flex"
       flexDirection="row"
-      alignItems="center"
       gridColumn="3/4"
+      height={[60, null, null, 96, null]}
       overflowX="auto"
       overflowY="hidden"
-      height={[60, null, null, 96, null]}
     >
       {children}
     </Box>
@@ -60,7 +61,8 @@ const MainNavLinkBase = styled('a')<{ isActive?: boolean }>`
   position: relative;
   display: inline-block;
   text-decoration: none;
-  color: ${({ isActive }) => (isActive ? `${themeProps.colors.secondary}` : `${themeProps.colors.textColorPrimary}`)};
+  color: ${({ isActive }) =>
+    isActive ? `${themeProps.colors.secondary}` : `${themeProps.colors.textColorPrimary}`};
 
   ${themeProps.mediaQueries.sm} {
     font-size: 13px;
@@ -79,15 +81,26 @@ const MainNavLinkBase = styled('a')<{ isActive?: boolean }>`
 `
 
 /** Wrap internal links in Next <Link>, open external links in new tab (default) */
-export const MainNavLink: React.FC<LinkIconProps> = ({ title, href, as, target = '_blank', isActive }) => {
-  const isInternalLink = href.charAt(0) === '/' || href.charAt(0) === '#'
+export const MainNavLink: React.FC<LinkIconProps> = ({
+  title,
+  href,
+  as,
+  target = '_blank',
+  isActive
+}) => {
+  const isInternalLink = href.startsWith('/') || href.startsWith('#')
 
   return isInternalLink ? (
-    <Link href={href} as={as} passHref>
+    <Link as={as} href={href} passHref>
       <MainNavLinkBase isActive={isActive}>{title}</MainNavLinkBase>
     </Link>
   ) : (
-    <MainNavLinkBase href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined} isActive={isActive}>
+    <MainNavLinkBase
+      href={href}
+      isActive={isActive}
+      rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+      target={target}
+    >
       {title}
     </MainNavLinkBase>
   )

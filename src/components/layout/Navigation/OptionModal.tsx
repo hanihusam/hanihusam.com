@@ -1,10 +1,13 @@
 import * as React from 'react'
-import useDarkMode from 'src/utils/useDarkMode'
-import styled from 'styled-components'
-import { Portal, UnstyledButton, Box } from 'src/styles'
-import { FaTimes } from 'react-icons/fa'
+
+import { Box, Portal, UnstyledButton } from '../../ui'
+
 import { NavGrid, NavInner } from './components/NavComponents'
 import NavLinkVertical from './NavLinkVertical'
+
+import styled from '@emotion/styled'
+import { FaTimes } from 'react-icons/fa'
+import useDarkMode from 'src/utils/useDarkMode'
 
 export const OptionModalButton = styled(UnstyledButton)``
 
@@ -105,26 +108,32 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
     if (isOpen) {
       return (
         <Box
-          display="flex"
-          flexDirection="column"
-          position="fixed"
-          top={0}
-          left={0}
-          width="100%"
-          height="calc(100% - 54px)"
           backgroundColor="bgPrimary"
           color="textPrimary"
+          display="flex"
+          flexDirection="column"
+          height="calc(100% - 54px)"
+          left={0}
+          position="fixed"
+          top={0}
+          width="100%"
           zIndex={50}
         >
           <NavGrid backgroundColor="bgPrimary" color="textPrimary">
             <NavInner display="flex" flexDirection="row">
-              <Box display="flex" flexDirection="row" alignItems="center" flex="1 1 auto" height={60}>
+              <Box
+                alignItems="center"
+                display="flex"
+                flex="1 1 auto"
+                flexDirection="row"
+                height={60}
+              >
                 <img
-                  src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'}
                   alt="hanihusam logo"
-                  width="36"
-                  height="auto"
                   aria-hidden
+                  height="auto"
+                  src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'}
+                  width="36"
                 />
               </Box>
             </NavInner>
@@ -135,27 +144,27 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                 <NavLabel>Theme mode</NavLabel>
                 <Box>
                   <ToggleButtonLight
-                    type="button"
-                    ml="sm"
                     backgroundColor="buttonlightmode"
-                    color="buttonlightmodetext"
-                    py="xxs"
-                    px="xs"
                     borderRadius={2}
+                    color="buttonlightmodetext"
+                    ml="sm"
                     onClick={toggleDarkMode}
+                    px="xs"
+                    py="xxs"
+                    type="button"
                   >
                     Light
                   </ToggleButtonLight>
                   <ToggleButtonDark
-                    type="button"
-                    ml="sm"
                     backgroundColor="buttondarkmode"
-                    color="buttondarkmodetext"
-                    py="xxs"
-                    px="xs"
                     borderRadius={2}
+                    color="buttondarkmodetext"
                     margin="0"
+                    ml="sm"
                     onClick={toggleDarkMode}
+                    px="xs"
+                    py="xxs"
+                    type="button"
                   >
                     Dark
                   </ToggleButtonDark>
@@ -170,14 +179,14 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
             </VerticalNavGrid>
           </Container>
           <Footer>
-            <CloseButtonContainer type="button" backgroundColor="bgPrimary" onClick={toggleModal}>
+            <CloseButtonContainer backgroundColor="bgPrimary" onClick={toggleModal} type="button">
               <CloseButtonIconWrapper
-                display="flex"
                 alignItems="center"
+                backgroundColor="brandred"
+                borderRadius={20}
+                display="flex"
                 justifyContent="center"
                 size={20}
-                borderRadius={20}
-                backgroundColor="brandred"
               >
                 <FaTimes />
               </CloseButtonIconWrapper>

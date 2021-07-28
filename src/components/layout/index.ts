@@ -1,2 +1,5 @@
-export { default as PageWrapper } from './PageWrapper'
+export { default as Column } from './Column'
+export { default as Footer } from './Footer'
 export { default as LayoutRoot } from './LayoutRoot'
+export { default as PageWrapper } from './PageWrapper'
+export { default as ThemeWrapper } from './ThemeWrapper'

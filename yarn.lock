@@ -1201,6 +1201,16 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@fontsource/jost@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/jost/-/jost-4.5.0.tgz#1c61c164114dbd60fc6029131422950d9c2938d1"
+  integrity sha512-oSAd/XsrQ6wUifC5G9Zf6NfQHIVb/Hv9iZdSel7ZH5ZdWA4OVao68JN6V+BAvH51CG0+uSBJh5HIxgG78dwTmQ==
+
+"@fontsource/ubuntu@^4.5.0":
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/@fontsource/ubuntu/-/ubuntu-4.5.0.tgz#13700f2e34b8dead9c935850e5ef26add9e70cc9"
+  integrity sha512-PytR+FgXPPK+UNrLNhYucrNXewS9b4YOJpS2oYw4dfJq+5iyG8iV6CfwToy2UOVSOmBSBhCQ6mJa5Z6BqrGqMw==
+
 "@hapi/accept@5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@hapi/accept/-/accept-5.0.1.tgz#068553e867f0f63225a506ed74e899441af53e10"

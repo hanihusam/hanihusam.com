@@ -1,6 +1,6 @@
-import styled from 'styled-components'
+import { Box, themeProps } from '../../../ui'
 
-import { Box, themeProps } from 'src/styles'
+import styled from '@emotion/styled'
 
 interface NavGridProps {
   noPadding?: boolean

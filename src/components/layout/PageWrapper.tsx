@@ -1,22 +1,16 @@
 import * as React from 'react'
+
+import Footer from './Footer'
+import LayoutRoot from './LayoutRoot'
+import { Navigation } from './Navigation'
+
 import Head from 'next/head'
 import { NextSeo } from 'next-seo'
-
-import { SiteMetadata } from 'src/types/default'
-
 import siteMetadata from 'src/_data/siteMetaData.json'
-import { Navigation } from './Navigation'
-import LayoutRoot from './LayoutRoot'
-import Footer from './Footer'
+import { SiteMetadata } from 'src/types/default'
 
 interface PageWrapperProps {
   pageTitle?: string
-}
-
-declare global {
-  interface Window {
-    GA_INITIALIZED?: boolean
-  }
 }
 
 const PageWrapper: React.FC<PageWrapperProps> = ({ children, pageTitle }) => {
@@ -24,17 +18,27 @@ const PageWrapper: React.FC<PageWrapperProps> = ({ children, pageTitle }) => {
 
   return (
     <LayoutRoot>
-      {pageTitle && <NextSeo title={pageTitle} openGraph={{ title: pageTitle }} />}
+      {pageTitle && <NextSeo openGraph={{ title: pageTitle }} title={pageTitle} />}
       <Head>
-        <meta name="twitter:dnt" content="on" />
+        <meta content="on" name="twitter:dnt" />
         {Object.keys(author.url).map(key => (
-          <link key={key} rel="me" href={author.url[key]} />
+          <link key={key} href={author.url[key]} rel="me" />
         ))}
-        <link rel="alternate" type="application/rss+xml" title="All posts by @hanihusam" href="/posts/rss.xml" />
-        {process.env.NODE_ENV === 'production' && <meta name="monetization" content={process.env.NEXT_PUBLIC_ILP_URL} />}
-        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
-          <meta name="google-site-verification" content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION} />
+        <link
+          href="/posts/rss.xml"
+          rel="alternate"
+          title="All posts by @hanihusam"
+          type="application/rss+xml"
+        />
+        {/* {process.env.NODE_ENV === 'production' && (
+          <meta content={process.env.NEXT_PUBLIC_ILP_URL} name="monetization" />
         )}
+        {process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION && (
+          <meta
+            content={process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION}
+            name="google-site-verification"
+          />
+        )} */}
       </Head>
       <Navigation />
       {children}

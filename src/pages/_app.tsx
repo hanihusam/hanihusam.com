@@ -1,35 +1,39 @@
+import 'modern-normalize'
+import '../styles/fonts'
+
 import * as React from 'react'
+
+import { ThemeWrapper } from '../components/layout'
+import emotionCache from '../utils/emotionCache'
+
+import { CacheProvider } from '@emotion/react'
 import { AppProps } from 'next/app'
 import Head from 'next/head'
 import { DefaultSeo } from 'next-seo'
-
-import { Theme } from 'src/styles'
 import siteMetadata from 'src/_data/siteMetaData.json'
-
-import 'modern-normalize'
 
 export default function MyApp({ Component, pageProps, router }: AppProps) {
   return (
-    <>
+    <CacheProvider value={emotionCache}>
       <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/icons/apple-touch-icon.png" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/icons/favicon-16x16.png" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <link rel="manifest" href="/manifest.json" />
+        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+        <link href="/icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
+        <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
+        <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
+        <link href="/favicon.ico" rel="shortcut icon" />
+        <link href="/manifest.json" rel="manifest" />
       </Head>
 
       <DefaultSeo
+        canonical={siteMetadata.siteUrl + (router.asPath || '')}
+        description={siteMetadata.description}
         title="Home"
         titleTemplate={`%s · ${siteMetadata.title}`}
-        description={siteMetadata.description}
-        canonical={siteMetadata.siteUrl + (router.asPath || '')}
       />
 
-      <Theme>
+      <ThemeWrapper>
         <Component {...pageProps} />
-      </Theme>
-    </>
+      </ThemeWrapper>
+    </CacheProvider>
   )
 }

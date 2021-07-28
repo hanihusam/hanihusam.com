@@ -1,9 +1,11 @@
 import * as React from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
 
-import { Box, UnstyledAnchor, themeProps } from 'src/styles'
+import { Box, themeProps, UnstyledAnchor } from '../../ui'
+
 import { NavInner } from './components/NavComponents'
+
+import styled from '@emotion/styled'
+import Link from 'next/link'
 
 interface NavLinkProps {
   title: string
@@ -42,14 +44,18 @@ const NavLinkVertical: React.FC<NavLinkProps> = ({ title, href, as, target = '_b
     </NavInnerVertical>
   )
 
-  const isInternalLink = href.charAt(0) === '/'
+  const isInternalLink = href.startsWith('/')
 
   return isInternalLink ? (
-    <Link href={href} as={as} passHref>
+    <Link as={as} href={href} passHref>
       {NavLinkVerticalInner}
     </Link>
   ) : (
-    <UnstyledAnchor href={href} target={target} rel={target === '_blank' ? 'noopener noreferrer' : undefined}>
+    <UnstyledAnchor
+      href={href}
+      rel={target === '_blank' ? 'noopener noreferrer' : undefined}
+      target={target}
+    >
       {NavLinkVerticalInner}
     </UnstyledAnchor>
   )

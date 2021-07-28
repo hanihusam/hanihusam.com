@@ -12,7 +12,7 @@ const formatTime = (date: Date, dateFormat?: string) => {
 
   if (dateFormat) {
     // TODO fixup and document supported keywords
-    switch (dateFormat?.toLowerCase()) {
+    switch (dateFormat.toLowerCase()) {
       case 'default':
       case 'date':
       case 'normal':
@@ -50,7 +50,6 @@ const formatTime = (date: Date, dateFormat?: string) => {
 
       // ? Custom format support. Delete the default block below if unnecessary
       default:
-        df = dateFormat ?? 'dd MMMM yyyy'
         break
     }
   }

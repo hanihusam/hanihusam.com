@@ -1,4 +1,7 @@
-import { useState, useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
+/* eslint-disable @typescript-eslint/no-implicit-any-catch */
+import { useEffect, useState } from 'react'
 
 type StorageMode = 'WindowVar' | 'LocalStorage' | 'SessionStorage'
 type DarkMode = 'true' | 'false'
@@ -54,17 +57,15 @@ function getValue() {
         break
       }
       default: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         val = (window as any)[storageKey] as DarkMode
       }
     }
   } catch (e) {
     storageMode = 'WindowVar'
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     val = (window as any)[storageKey] as DarkMode
   }
 
-  return val as DarkMode
+  return val
 }
 
 function setValue(val: DarkMode) {

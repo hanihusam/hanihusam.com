@@ -1,7 +1,9 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
-import { Box, themeProps, Column, Text, Heading, Paragraph } from 'src/styles'
+import Column from './layout/Column'
+import { Box, Heading, Paragraph, Text, themeProps } from './ui'
+
+import styled from '@emotion/styled'
 
 const Root = Box.withComponent('section')
 
@@ -79,24 +81,26 @@ const AboutMe: React.FC = () => (
     <Column>
       <AboutMeContent>
         <LeftContentWrapper>
-          <img src="/images/aboutme-illustration.svg" alt="About Me Avatar" />
+          <img alt="About Me Avatar" src="/images/aboutme-illustration.svg" />
         </LeftContentWrapper>
         <RightContentWrapper>
-          <FirstTitle as="p" variant={400} color="secondary">
+          <FirstTitle as="p" color="secondary" variant={400}>
             About Me
           </FirstTitle>
-          <SecondTitle variant={900} color="header">
+          <SecondTitle color="header" variant={900}>
             Why hire me for your next project?
           </SecondTitle>
           <Description color="textColorSecondary">
-            Currently I am working as a fulltime freelancer. Before that I’ve worked at Nutrination Pte. Ltd (Bubays), Singapore as a
-            Fullstack Engineer.
+            Currently I am working as a fulltime freelancer. Before that I’ve worked at Nutrination
+            Pte. Ltd (Bubays), Singapore as a Fullstack Engineer.
           </Description>
           <Description color="textColorSecondary">
-            I find my self as a creative, reliable and detailed freelancer who can work independently without too many detailed
-            instructions. I have a principle that is "stay simple and stay humble". I believe that in simplicity there is a complexity and
-            very deep thoroughness. I see every project as a process of solving a problem. Then it is time for your problems to be resolved
-            in detail, in depth, and of course in simplicity.
+            I find my self as a creative, reliable and detailed freelancer who can work
+            independently without too many detailed instructions. I have a principle that is
+            &quot;stay simple and stay humble&quot;. I believe that in simplicity there is a
+            complexity and very deep thoroughness. I see every project as a process of solving a
+            problem. Then it is time for your problems to be resolved in detail, in depth, and of
+            course in simplicity.
           </Description>
         </RightContentWrapper>
       </AboutMeContent>

@@ -1,9 +1,12 @@
 import * as React from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
 
-import { themeProps, UnstyledButton, Box } from 'src/styles'
+import { Box, themeProps, UnstyledButton } from '../../../ui'
+
 import NavLinkRoot from './NavLinkRoot'
+
+import styled from '@emotion/styled'
+import { themeGet } from '@styled-system/theme-get'
+import Link from 'next/link'
 
 interface NavLinkProps {
   title: string
@@ -59,7 +62,7 @@ const FadeBox = styled(Box)<FadeBoxProps>`
   background: linear-gradient(
     ${props => props.direction},
     transparent 0%,
-    ${props => `${themeProps.colors}.${props.color}`} transparent 100%
+    ${props => themeGet(`colors.${props.color}`, 'transparent')} 100%
   );
 
   ${themeProps.mediaQueries.md} {
@@ -79,7 +82,7 @@ const SecondaryNavLinkText = styled.span`
 
 const SecondaryNavLink: React.FC<NavLinkProps> = ({ title, href, as, isActive, icon }) => {
   return (
-    <Link href={href} as={as} passHref>
+    <Link as={as} href={href} passHref>
       <SecondaryNavigationBase isActive={isActive}>
         {icon && <LinkIcon type="button">{icon}</LinkIcon>}
         <Box>
@@ -94,4 +97,4 @@ SecondaryNavLink.defaultProps = {
   isActive: false
 }
 
-export { SecondaryNavWrapper, SecondaryNavLink, FadeBox }
+export { FadeBox, SecondaryNavLink, SecondaryNavWrapper }

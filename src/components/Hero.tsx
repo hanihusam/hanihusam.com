@@ -1,7 +1,9 @@
 import React from 'react'
 
-import styled from 'styled-components'
-import { Box, Column, Text, Heading, Paragraph, themeProps, UnstyledButton, UnstyledAnchor } from 'src/styles'
+import Column from './layout/Column'
+import { Box, Heading, Paragraph, Text, themeProps, UnstyledAnchor, UnstyledButton } from './ui'
+
+import styled from '@emotion/styled'
 import { FiDownload } from 'react-icons/fi'
 import { SiDribbble, SiGithub, SiLinkedin } from 'react-icons/si'
 
@@ -194,10 +196,10 @@ const Line = styled.span`
 const Avatar: React.FC = () => (
   <>
     <AvatarMobile as="div" justifyContent="center">
-      <img src="/images/avatar-sm.png" alt="avatar" />
+      <img alt="avatar" src="/images/avatar-sm.png" />
     </AvatarMobile>
     <AvatarDesktop as="div" justifyContent="center">
-      <img src="/images/avatar-lg.png" alt="avatar" />
+      <img alt="avatar" src="/images/avatar-lg.png" />
     </AvatarDesktop>
   </>
 )
@@ -207,75 +209,112 @@ const Hero: React.FC = () => (
     <Column>
       <HeroContent>
         <LeftContentWrapper>
-          <FirstTitle as="p" variant={800} color="secondary">
+          <FirstTitle as="p" color="secondary" variant={800}>
             Hi, I am
           </FirstTitle>
-          <SecondTitle as="h1" variant={1100} color="primary">
+          <SecondTitle as="h1" color="primary" variant={1100}>
             Hani
             <br />
             Husam
           </SecondTitle>
           <Line />
           <SocialLinkWrapper>
-            <Icon href="https://linkedin.com/in/hanihusamuddin" target="_blank" rel="noopener noreferrer" marginRight="24px" size="32">
+            <Icon
+              href="https://linkedin.com/in/hanihusamuddin"
+              marginRight="24px"
+              rel="noopener noreferrer"
+              size="32"
+              target="_blank"
+            >
               <SiLinkedin />
             </Icon>
-            <Icon href="https://github.com/hanihusam" target="_blank" rel="noopener noreferrer" marginRight="24px" size="32">
+            <Icon
+              href="https://github.com/hanihusam"
+              marginRight="24px"
+              rel="noopener noreferrer"
+              size="32"
+              target="_blank"
+            >
               <SiGithub />
             </Icon>
-            <Icon href="https://dribbble.com/hanihusam" target="_blank" rel="noopener noreferrer" marginRight="24px" size="32">
+            <Icon
+              href="https://dribbble.com/hanihusam"
+              marginRight="24px"
+              rel="noopener noreferrer"
+              size="32"
+              target="_blank"
+            >
               <SiDribbble />
             </Icon>
           </SocialLinkWrapper>
         </LeftContentWrapper>
         <Avatar />
         <RightContentWrapper>
-          <FirstTitle as="p" variant={800} color="secondary">
+          <FirstTitle as="p" color="secondary" variant={800}>
             Hi, I am Han
           </FirstTitle>
-          <SecondTitle variant={900} color="primary">
+          <SecondTitle color="primary" variant={900}>
             Web Developer and UI Designer based in Yogyakarta, Indonesia.
           </SecondTitle>
           <Description color="textColorPrimary">
-            I am a “half-blood” Web Developer and UI Designer who has experience creating many projects in a various industry. In other
-            words, I understand how to build an aesthetic, powerful, and lightweight website at once.
+            I am a “half-blood” Web Developer and UI Designer who has experience creating many
+            projects in a various industry. In other words, I understand how to build an aesthetic,
+            powerful, and lightweight website at once.
           </Description>
           <CtaButtonWrapper>
-            <EmailMeButton backgroundColor="secondary" color="white" boxShadow="double">
-              <Text as="a" href="mailto:hani.husam@gmail.com" variant={400}>
+            <EmailMeButton backgroundColor="secondary" boxShadow="double" color="white">
+              <Text as="a" variant={400}>
                 Email Me
               </Text>
             </EmailMeButton>
             <CVButton>
               <Icon
                 href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
                 marginRight="8px"
+                rel="noopener noreferrer"
                 size="16"
+                target="_blank"
               >
                 <FiDownload />
               </Icon>
-              <Text
+              {/* <Text
                 as="a"
-                href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
-                target="_blank"
-                rel="noopener noreferrer"
-                variant={400}
                 color="textColorPrimary"
+                href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
+                rel="noopener noreferrer"
+                target="_blank"
+                variant={400}
               >
                 Download CV
-              </Text>
+              </Text> */}
             </CVButton>
           </CtaButtonWrapper>
           <SocialLinkWrapper>
-            <Icon href="https://linkedin.com/in/hanihusamuddin" target="_blank" rel="noopener noreferrer" marginRight="24px" size="32">
+            <Icon
+              href="https://linkedin.com/in/hanihusamuddin"
+              marginRight="24px"
+              rel="noopener noreferrer"
+              size="32"
+              target="_blank"
+            >
               <SiLinkedin />
             </Icon>
-            <Icon href="https://github.com/hanihusamu" target="_blank" rel="noopener noreferrer" marginRight="24px" size="32">
+            <Icon
+              href="https://github.com/hanihusamu"
+              marginRight="24px"
+              rel="noopener noreferrer"
+              size="32"
+              target="_blank"
+            >
               <SiGithub />
             </Icon>
-            <Icon href="https://dribbble.com/hanihusam" target="_blank" rel="noopener noreferrer" marginRight="24px" size="32">
+            <Icon
+              href="https://dribbble.com/hanihusam"
+              marginRight="24px"
+              rel="noopener noreferrer"
+              size="32"
+              target="_blank"
+            >
               <SiDribbble />
             </Icon>
           </SocialLinkWrapper>

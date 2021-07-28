@@ -1,9 +1,11 @@
 import * as React from 'react'
-import Link from 'next/link'
-import styled from 'styled-components'
 
-import { themeProps, Box } from 'src/styles'
+import { Box, themeProps } from '../../../ui'
+
 import NavLinkRoot from './NavLinkRoot'
+
+import styled from '@emotion/styled'
+import Link from 'next/link'
 
 interface NavLinkProps {
   title?: string
@@ -13,7 +15,7 @@ interface NavLinkProps {
   icon?: React.ReactNode
 }
 
-const MobileNavLinkBase = styled(NavLinkRoot) <Pick<NavLinkProps, 'isActive'>>`
+const MobileNavLinkBase = styled(NavLinkRoot)<Pick<NavLinkProps, 'isActive'>>`
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -55,7 +57,7 @@ const MobileNav = styled(Box)`
 
 const MobileNavLink: React.FC<NavLinkProps> = ({ title, href, as, isActive, icon }) => {
   return (
-    <Link href={href} as={as}>
+    <Link as={as} href={href} passHref>
       <MobileNavLinkBase isActive={isActive}>
         <LinkIcon>{icon}</LinkIcon>
         <span style={{ fontWeight: isActive ? 'bold' : 'normal' }}>{title}</span>

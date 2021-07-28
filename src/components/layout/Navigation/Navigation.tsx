@@ -1,18 +1,39 @@
 import React from 'react'
-import Link from 'next/link'
 
-import styled from 'styled-components'
-import { FaBars, FaEnvelope } from 'react-icons/fa'
-import { themeProps, UnstyledButton, Box, Text } from 'src/styles'
-import useDarkMode from 'src/utils/useDarkMode'
-import { NavGrid, MainNavInner, MainNavCenter, MainNavCenterLinks, MainNavLink, MainNavRight, MobileNav, MobileNavLink } from './components'
+import useDarkMode from '../../../utils/useDarkMode'
+import { Box, Text, themeProps, UnstyledButton } from '../../ui'
+
+import {
+  MainNavCenter,
+  MainNavCenterLinks,
+  MainNavInner,
+  MainNavLink,
+  MainNavRight,
+  MobileNav,
+  MobileNavLink,
+  NavGrid
+} from './components'
 import OptionModal from './OptionModal'
+
+import styled from '@emotion/styled'
+import { VisuallyHidden } from '@reach/visually-hidden'
+import Link from 'next/link'
+import { FaBars, FaEnvelope, FaHome } from 'react-icons/fa'
 
 const Root = Box.withComponent('header')
 
-const LogoLink = styled.a`
+const LogoLinkRoot = Box.withComponent('a')
+
+const LogoLink = styled(LogoLinkRoot)`
   display: block;
+  width: 56px;
+  height: 48px;
   overflow: hidden;
+
+  ${themeProps.mediaQueries.md} {
+    width: 80px;
+    height: 64px;
+  }
 
   &:hover,
   &:focus,
@@ -22,20 +43,13 @@ const LogoLink = styled.a`
   }
 `
 
-const LogoWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 140px;
-  height: 36px;
-
+const LogoWrapper = styled(Box)`
   > img {
     width: 36px !important;
     height: 36px !important;
   }
-
   > h1 {
-    font-size: ${themeProps.fonts.fontSizes.sm};
+    font-size: 14px;
   }
 `
 
@@ -112,23 +126,50 @@ const Navigation: React.FC = () => {
         <MainNavInner>
           <Link href="/" passHref>
             <LogoLink>
-              <LogoWrapper>
-                <img src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'} alt="hanihusam logo" aria-hidden />
+              <VisuallyHidden>hanihusam.</VisuallyHidden>
+              <LogoWrapper
+                alignItems="center"
+                display="flex"
+                height={48}
+                justifyContent="space-around"
+                width={200}
+              >
+                <img
+                  alt="hanihusam logo"
+                  aria-hidden
+                  src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'}
+                />
                 <h1 style={isDarkMode ? { color: '#F2F2F2' } : { color: '#7A8391' }}>hanihusam.</h1>
               </LogoWrapper>
             </LogoLink>
           </Link>
           <MainNavCenter flex="1 1 auto">
             <MainNavCenterLinks>
-              <MainNavLink href="/" title="Home" isActive={isRendered && window.location.hash === ''} />
-              <MainNavLink href="#about" title="About" isActive={isRendered && window.location.hash === '#about'} />
-              <MainNavLink href="#projects" title="Projects" isActive={isRendered && window.location.hash === '#projects'} />
-              <MainNavLink href="#services" title="Services" isActive={isRendered && window.location.hash === '#services'} />
+              <MainNavLink
+                href="/"
+                isActive={isRendered && window.location.hash === ''}
+                title="Home"
+              />
+              <MainNavLink
+                href="#about"
+                isActive={isRendered && window.location.hash === '#about'}
+                title="About"
+              />
+              <MainNavLink
+                href="#projects"
+                isActive={isRendered && window.location.hash === '#projects'}
+                title="Projects"
+              />
+              <MainNavLink
+                href="#services"
+                isActive={isRendered && window.location.hash === '#services'}
+                title="Services"
+              />
             </MainNavCenterLinks>
           </MainNavCenter>
-          <MainNavRight display="flex" alignItems="center">
+          <MainNavRight alignItems="center" display="flex">
             <ColorToggleWrapper>
-              <UnstyledButton style={{ outline: 'none' }} onClick={toggleDarkMode}>
+              <UnstyledButton onClick={toggleDarkMode} style={{ outline: 'none' }}>
                 <ToggleButtonInnerWrapper>
                   <ToggleButtonLight backgroundColor="buttonlightmode" color="buttonlightmodetext">
                     <Text variant={200}>Light</Text>
@@ -146,11 +187,15 @@ const Navigation: React.FC = () => {
         <MobileNav backgroundColor="navgridbgmobile">
           <MobileNavLink
             href="/"
+            icon={<FaHome />}
             isActive={isRendered && window.location.hash === '/'}
-            icon={<img src="/images/logo-dark.png" alt="logo" width="32" height="auto" />}
           />
-          <MobileNavLink href="mailto:hani.husam@gmail.com" title="Email Me" icon={<FaEnvelope />} />
-          <OptionButton type="button" style={{ outline: 'none' }} onClick={toggleOptionModal}>
+          <MobileNavLink
+            href="mailto:hani.husam@gmail.com"
+            icon={<FaEnvelope />}
+            title="Email Me"
+          />
+          <OptionButton onClick={toggleOptionModal} style={{ outline: 'none' }} type="button">
             <OptionButtonIcon>
               <FaBars />
             </OptionButtonIcon>

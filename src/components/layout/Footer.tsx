@@ -1,8 +1,12 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
-import { Text, Box, UnstyledAnchor, Column, themeProps } from 'src/styles'
-import { SiLinkedin, SiGithub, SiDribbble } from 'react-icons/si'
+import { Box, Text, themeProps, UnstyledAnchor } from '../ui'
+
+import Column from './Column'
+
+import styled from '@emotion/styled'
+import Link from 'next/link'
+import { SiDribbble, SiGithub, SiLinkedin } from 'react-icons/si'
 
 const FooterArea = Box.withComponent('footer')
 
@@ -83,24 +87,36 @@ const Footer: React.FC = () => (
         <FooterContent gridColumn="3/4" textAlign="center">
           <ContentGrid>
             <FooterSocials display="flex" justifyContent="center">
-              <Box display="grid" gridTemplateColumns="24px 24px 24px" gridGap="xl">
-                <SocialLink href="https://linkedin.com/in/hanihusamuddin" target="_blank" rel="noopener noreferrer">
+              <Box display="grid" gridGap="xl" gridTemplateColumns="24px 24px 24px">
+                <SocialLink
+                  href="https://linkedin.com/in/hanihusamuddin"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   <SiLinkedin />
                 </SocialLink>
-                <SocialLink href="https://github.com/hanihusam" target="_blank" rel="noopener noreferrer">
+                <SocialLink
+                  href="https://github.com/hanihusam"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   <SiGithub />
                 </SocialLink>
-                <SocialLink href="https://dribbble.com/hanihusam" target="_blank" rel="noopener noreferrer">
+                <SocialLink
+                  href="https://dribbble.com/hanihusam"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
                   <SiDribbble />
                 </SocialLink>
               </Box>
             </FooterSocials>
-            <FooterCopyright display="flex" alignItems="center">
+            <FooterCopyright alignItems="center" display="flex">
               <Text as="p">
                 For business inquiry please send email to{' '}
-                <TextLink as="a" href="mailto:hani.husam@gmail.com" rel="noopener noreferrer">
-                  hani.husam@gmail.com
-                </TextLink>
+                <Link href="malito:hani.husam@gmail.com" passHref>
+                  <TextLink as="a">hani.husam@gmail.com</TextLink>
+                </Link>
                 .<br /> &copy; 2021 hanihusam. All rights reserved.
               </Text>
             </FooterCopyright>

@@ -1,16 +1,18 @@
 import React from 'react'
-import { Box } from 'src/styles/components'
 
-const LayoutRoot: React.FC = ({ children }) => (
+import { Box } from '../ui'
+
+const LayoutRoot: React.FC = ({ children, ...rest }) => (
   <Box
     as="main"
+    backgroundColor="bgPrimary"
+    color="textColorPrimary"
     display="flex"
     flexDirection="column"
-    position="relative"
     minHeight="100vh"
     overflowX="hidden"
-    color="textColorPrimary"
-    backgroundColor="bgPrimary"
+    position="relative"
+    {...rest}
   >
     {children}
   </Box>

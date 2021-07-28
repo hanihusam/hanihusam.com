@@ -1,8 +1,9 @@
 import * as React from 'react'
-import styled from 'styled-components'
 
-import { Box, themeProps, Text, UnstyledButton } from 'src/styles'
-import { PageWrapper } from '~/components/layout'
+import { PageWrapper } from '../components/layout'
+import { Box, Text, themeProps, UnstyledButton } from '../components/ui'
+
+import styled from '@emotion/styled'
 
 const Root = Box.withComponent('section')
 
@@ -77,7 +78,7 @@ const ProfilePicture = styled(Box)`
   height: 48px;
   width: 48px;
   line-height: 48px;
-  font-size: ${themeProps.fonts.fontSizes['4xl']};
+  font-size: 48px;
   font-weight: 300;
 
   ${themeProps.mediaQueries.xl} {
@@ -153,7 +154,7 @@ const LinkButton = styled(UnstyledButton)`
 `
 
 const LinksPage: React.FC = () => (
-  <PageWrapper title="Hani Husam | Links" description="Link channel list">
+  <PageWrapper pageTitle="Hani Husam | Links">
     <LinksArea>
       <LinksContent>
         <MainWrapper>
@@ -166,32 +167,62 @@ const LinksPage: React.FC = () => (
                     <div className="ava" />
                   </Avatar>
                 </ProfilePicture>
-                <TextTitle as="h3" variant={800} color="primary">
+                <TextTitle as="h3" color="primary" variant={800}>
                   Han
                 </TextTitle>
               </AvatarWrapper>
-              <LinkButton backgroundColor="secondary" color="white" boxShadow="double">
-                <Text as="a" href="https://medium.com/ayah-rumahan" target="_blank" rel="noopener noreferrer" variant={400}>
+              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
+                <Text
+                  // as="a"
+                  // href="https://medium.com/ayah-rumahan"
+                  // rel="noopener noreferrer"
+                  // target="_blank"
+                  variant={400}
+                >
                   Medium — Ayah Rumahan
                 </Text>
               </LinkButton>
-              <LinkButton backgroundColor="secondary" color="white" boxShadow="double">
-                <Text as="a" href="https://linkedin.com/in/hanihusam" target="_blank" rel="noopener noreferrer" variant={400}>
+              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
+                <Text
+                  // as="a"
+                  // href="https://linkedin.com/in/hanihusam"
+                  // rel="noopener noreferrer"
+                  // target="_blank"
+                  variant={400}
+                >
                   Linkedin
                 </Text>
               </LinkButton>
-              <LinkButton backgroundColor="secondary" color="white" boxShadow="double">
-                <Text as="a" href="https://github.com/hanihusam" target="_blank" rel="noopener noreferrer" variant={400}>
+              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
+                <Text
+                  // as="a"
+                  // href="https://github.com/hanihusam"
+                  // rel="noopener noreferrer"
+                  // target="_blank"
+                  variant={400}
+                >
                   Github
                 </Text>
               </LinkButton>
-              <LinkButton backgroundColor="secondary" color="white" boxShadow="double">
-                <Text as="a" href="https://dribbble.com/hanihusam" target="_blank" rel="noopener noreferrer" variant={400}>
+              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
+                <Text
+                  // as="a"
+                  // href="https://dribbble.com/hanihusam"
+                  // rel="noopener noreferrer"
+                  // target="_blank"
+                  variant={400}
+                >
                   Dribbble
                 </Text>
               </LinkButton>
-              <LinkButton backgroundColor="secondary" color="white" boxShadow="double">
-                <Text as="a" href="https://upwork.com/fl/hanihusamuddin" target="_blank" rel="noopener noreferrer" variant={400}>
+              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
+                <Text
+                  // as="a"
+                  // href="https://upwork.com/fl/hanihusamuddin"
+                  // rel="noopener noreferrer"
+                  // target="_blank"
+                  variant={400}
+                >
                   Upwork
                 </Text>
               </LinkButton>
