@@ -1201,10 +1201,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@fontsource/jost@^4.5.0":
+"@fontsource/poppins@^4.5.0":
   version "4.5.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/jost/-/jost-4.5.0.tgz#1c61c164114dbd60fc6029131422950d9c2938d1"
-  integrity sha512-oSAd/XsrQ6wUifC5G9Zf6NfQHIVb/Hv9iZdSel7ZH5ZdWA4OVao68JN6V+BAvH51CG0+uSBJh5HIxgG78dwTmQ==
+  resolved "https://registry.yarnpkg.com/@fontsource/poppins/-/poppins-4.5.0.tgz#a419697b85864afbf8363f5c247b1e9d1f117564"
+  integrity sha512-RqgMIQqKHWNH3IUj+a0MAhlb4g5fftsXRTJ2bauefBmfM8Ja5q+qQZjKwyB/iCc+paJD320zFnLJ8G+y1ZyemQ==
 
 "@fontsource/ubuntu@^4.5.0":
   version "4.5.0"

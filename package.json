@@ -26,7 +26,7 @@
     "@emotion/react": "^11.4.0",
     "@emotion/server": "^11.4.0",
     "@emotion/styled": "^11.3.0",
-    "@fontsource/jost": "^4.5.0",
+    "@fontsource/poppins": "^4.5.0",
     "@fontsource/ubuntu": "^4.5.0",
     "@netlify/plugin-nextjs": "3.7.1",
     "@reach/visually-hidden": "^0.15.2",
