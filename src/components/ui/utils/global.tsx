@@ -5,6 +5,7 @@ import { css, Global, Theme, useTheme } from '@emotion/react'
 const globalCSS = (theme: Theme) => css`
   :root {
     --reach-skip-nav: 1;
+    font-size: 16px;
   }
 
   html {

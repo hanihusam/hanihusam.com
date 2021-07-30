@@ -4,17 +4,19 @@ export const colors = {
   bgSecondary: '#263238',
   primary: '#45577B',
   secondary: '#ED7D31',
-  textColorPrimary: '#7A8391',
-  textColorSecondary: '#C4C4C4',
+  secondary02: '#C85F18',
+  accent: '#7A8391',
+  black: '#46434E',
+  white: '#F2F2F2',
 
   buttonlightmode: '#45577B',
-  buttonlightmodetext: '#ffffff',
+  buttonlightmodetext: '#F2F2F2',
   buttondarkmode: '#434343',
   buttondarkmodetext: '#f1f2f3',
-  navgridbgmobile: '#ffffff',
+  navgridbgmobile: '#F2F2F2',
 
   card: '#46434E',
-  header: '#FFF',
+  header: '#F2F2F2',
   activeMenu: '#ED7D31'
 }
 
@@ -26,7 +28,7 @@ export const systemFontsMonospace =
 export const fonts = {
   system: systemFonts,
   systemMonospace: systemFontsMonospace,
-  heading: `'Jost', ${systemFonts}`,
+  heading: `'Poppins', ${systemFonts}`,
   body: `'Ubuntu', ${systemFonts}`
 }
 
@@ -49,7 +51,8 @@ export const space = {
   md: 16,
   lg: 24,
   xl: 32,
-  xxl: 48
+  xxl: 48,
+  xxxl: 56
 }
 
 export const widths = {
