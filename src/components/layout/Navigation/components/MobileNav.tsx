@@ -23,7 +23,7 @@ const MobileNavLinkBase = styled(NavLinkRoot)<Pick<NavLinkProps, 'isActive'>>`
   justify-content: center;
   text-decoration: none;
   white-space: nowrap;
-  font-size: 10px;
+  font-size: 12px;
   margin-bottom: 2px;
 `
 

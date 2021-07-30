@@ -1,6 +1,7 @@
 import React from 'react'
 
-import useDarkMode from '../../../utils/useDarkMode'
+import useDarkMode from '~/src/utils/useDarkMode'
+
 import { Box, Text, themeProps, UnstyledButton } from '../../ui'
 
 import {
@@ -13,11 +14,13 @@ import {
   MobileNavLink,
   NavGrid
 } from './components'
+import Logo from './Logo'
 import OptionModal from './OptionModal'
 
 import styled from '@emotion/styled'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { FaBars, FaEnvelope, FaHome } from 'react-icons/fa'
 
 const Root = Box.withComponent('header')
@@ -31,7 +34,7 @@ const LogoLink = styled(LogoLinkRoot)`
   overflow: hidden;
 
   ${themeProps.mediaQueries.md} {
-    width: 80px;
+    width: 130px;
     height: 64px;
   }
 
@@ -114,7 +117,12 @@ const OptionButtonIcon = styled.div`
 const Navigation: React.FC = () => {
   const [isDarkMode, toggleDarkMode] = useDarkMode()
   const [isOptionModalOpen, setIsOptionModalOpen] = React.useState(false)
-  const isRendered = typeof window !== 'undefined'
+  const router = useRouter()
+
+  const getMobNavIconColor = (activePath?: string) =>
+    isDarkMode || router.pathname === activePath
+      ? themeProps.colors.white
+      : themeProps.colors.primary
 
   const toggleOptionModal = () => {
     setIsOptionModalOpen(!isOptionModalOpen)
@@ -131,38 +139,25 @@ const Navigation: React.FC = () => {
                 alignItems="center"
                 display="flex"
                 height={48}
-                justifyContent="space-around"
-                width={200}
+                justifyContent="space-between"
+                width={130}
               >
-                <img
-                  alt="hanihusam logo"
-                  aria-hidden
-                  src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'}
-                />
-                <h1 style={isDarkMode ? { color: '#F2F2F2' } : { color: '#7A8391' }}>hanihusam.</h1>
+                <Logo isDarkMode={isDarkMode} />
               </LogoWrapper>
             </LogoLink>
           </Link>
           <MainNavCenter flex="1 1 auto">
             <MainNavCenterLinks>
+              <MainNavLink href="/" isActive={router.pathname === '/'} title="Home" />
+              <MainNavLink href="/about" isActive={router.pathname === '/about'} title="About" />
               <MainNavLink
-                href="/"
-                isActive={isRendered && window.location.hash === ''}
-                title="Home"
-              />
-              <MainNavLink
-                href="#about"
-                isActive={isRendered && window.location.hash === '#about'}
-                title="About"
-              />
-              <MainNavLink
-                href="#projects"
-                isActive={isRendered && window.location.hash === '#projects'}
+                href="/projects"
+                isActive={router.pathname === '/projects'}
                 title="Projects"
               />
               <MainNavLink
-                href="#services"
-                isActive={isRendered && window.location.hash === '#services'}
+                href="/services"
+                isActive={router.pathname === '/services'}
                 title="Services"
               />
             </MainNavCenterLinks>
@@ -187,12 +182,12 @@ const Navigation: React.FC = () => {
         <MobileNav backgroundColor="navgridbgmobile">
           <MobileNavLink
             href="/"
-            icon={<FaHome />}
-            isActive={isRendered && window.location.hash === '/'}
+            icon={<FaHome fill={getMobNavIconColor('/')} />}
+            isActive={router.pathname === '/'}
           />
           <MobileNavLink
             href="mailto:hani.husam@gmail.com"
-            icon={<FaEnvelope />}
+            icon={<FaEnvelope fill={getMobNavIconColor('mailto:hani.husam@gmail.com')} />}
             title="Email Me"
           />
           <OptionButton onClick={toggleOptionModal} style={{ outline: 'none' }} type="button">

@@ -1,5 +1,7 @@
 import React from 'react'
 
+import useDarkMode from '~/src/utils/useDarkMode'
+
 import { Box, themeProps } from '../../../ui'
 
 import styled from '@emotion/styled'
@@ -61,8 +63,10 @@ const MainNavLinkBase = styled('a')<{ isActive?: boolean }>`
   position: relative;
   display: inline-block;
   text-decoration: none;
-  color: ${({ isActive }) =>
-    isActive ? `${themeProps.colors.secondary}` : `${themeProps.colors.textColorPrimary}`};
+  color: ${({ color }) => color};
+  border-bottom-width: 2px;
+  border-bottom-style: solid;
+  border-color: ${({ isActive }) => (isActive ? `${themeProps.colors.secondary}` : 'transparent')};
 
   ${themeProps.mediaQueries.sm} {
     font-size: 13px;
@@ -88,11 +92,17 @@ export const MainNavLink: React.FC<LinkIconProps> = ({
   target = '_blank',
   isActive
 }) => {
-  const isInternalLink = href.startsWith('/') || href.startsWith('#')
+  const [isDarkMode] = useDarkMode()
+  const isInternalLink = href.startsWith('/')
 
   return isInternalLink ? (
     <Link as={as} href={href} passHref>
-      <MainNavLinkBase isActive={isActive}>{title}</MainNavLinkBase>
+      <MainNavLinkBase
+        color={isDarkMode ? themeProps.colors.white : themeProps.colors.primary}
+        isActive={isActive}
+      >
+        {title}
+      </MainNavLinkBase>
     </Link>
   ) : (
     <MainNavLinkBase

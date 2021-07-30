@@ -8,9 +8,10 @@ const darkThemeProps = {
   colors: {
     ...themeProps.colors,
     bgPrimary: '#434343',
-    primary: '#FFFFFF',
-    textPrimary: '#F2F2F2',
-    navgridbgmobile: '#46434E',
+    primary: themeProps.colors.white,
+    black: themeProps.colors.white,
+    white: themeProps.colors.black,
+    navgridbgmobile: themeProps.colors.black,
 
     buttonlightmode: '#f1f2f3',
     buttonlightmodetext: '#22272c',

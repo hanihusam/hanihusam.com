@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import Column from './layout/Column'
-import { Box, Heading, Paragraph, Text, themeProps } from './ui'
+import { Box, Heading, Paragraph, Text, themeProps, Verse } from './ui'
 
 import styled from '@emotion/styled'
 
@@ -10,11 +10,11 @@ const Root = Box.withComponent('section')
 const AboutMeArea = styled(Root)`
   padding: 32px ${themeProps.space.md}px;
   margin: 0 0 48px;
-  color: ${themeProps.colors.textColorSecondary};
+  color: ${themeProps.colors.secondary};
   background: ${themeProps.colors.card};
 
   ${themeProps.mediaQueries.md} {
-    padding: 48px ${themeProps.space.lg}px 0;
+    padding: ${themeProps.space.xxxl}px ${themeProps.space.lg}px;
     margin: 0 auto 48px;
     border-radius: 20px;
   }
@@ -32,7 +32,7 @@ const AboutMeContent = styled(Box)`
   }
 `
 
-const FirstTitle = styled(Text)`
+const FirstTitle = styled(Verse)`
   display: block;
   padding-bottom: ${themeProps.space.md}px;
 
@@ -84,17 +84,13 @@ const AboutMe: React.FC = () => (
           <img alt="About Me Avatar" src="/images/aboutme-illustration.svg" />
         </LeftContentWrapper>
         <RightContentWrapper>
-          <FirstTitle as="p" color="secondary" variant={400}>
-            About Me
-          </FirstTitle>
-          <SecondTitle color="header" variant={900}>
-            Why hire me for your next project?
-          </SecondTitle>
-          <Description color="textColorSecondary">
+          <FirstTitle color="secondary">About Me</FirstTitle>
+          <SecondTitle color="white">Why hire me for your next project?</SecondTitle>
+          <Description color="white">
             Currently I am working as a fulltime freelancer. Before that I’ve worked at Nutrination
             Pte. Ltd (Bubays), Singapore as a Fullstack Engineer.
           </Description>
-          <Description color="textColorSecondary">
+          <Description color="white">
             I find my self as a creative, reliable and detailed freelancer who can work
             independently without too many detailed instructions. I have a principle that is
             &quot;stay simple and stay humble&quot;. I believe that in simplicity there is a
