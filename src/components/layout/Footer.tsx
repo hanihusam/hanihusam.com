@@ -12,7 +12,7 @@ const FooterArea = Box.withComponent('footer')
 
 const Root = styled(FooterArea)`
   padding: 0px ${themeProps.space.md}px 84px;
-  color: ${themeProps.colors.textColorSecondary};
+  color: ${themeProps.colors.secondary};
   background: ${themeProps.colors.card};
 
   ${themeProps.mediaQueries.md} {
