@@ -10,7 +10,7 @@ const Section = Box.withComponent('section')
 
 const CtaArea = styled(Section)`
   padding: 32px ${themeProps.space.md}px;
-  color: ${themeProps.colors.textColorSecondary};
+  color: ${themeProps.colors.secondary};
   background: ${themeProps.colors.card};
 
   ${themeProps.mediaQueries.md} {
