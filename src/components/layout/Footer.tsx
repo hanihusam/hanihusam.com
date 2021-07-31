@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Box, Text, themeProps, UnstyledAnchor } from '../ui'
+import { Box, Text, themeProps, UnstyledAnchor, Verse } from '../ui'
 
 import Column from './Column'
 
@@ -12,7 +12,7 @@ const FooterArea = Box.withComponent('footer')
 
 const Root = styled(FooterArea)`
   padding: 0px ${themeProps.space.md}px 84px;
-  color: ${themeProps.colors.secondary};
+  color: ${themeProps.colors.white};
   background: ${themeProps.colors.card};
 
   ${themeProps.mediaQueries.md} {
@@ -112,13 +112,15 @@ const Footer: React.FC = () => (
               </Box>
             </FooterSocials>
             <FooterCopyright alignItems="center" display="flex">
-              <Text as="p">
+              <Verse>
                 For business inquiry please send email to{' '}
                 <Link href="malito:hani.husam@gmail.com" passHref>
-                  <TextLink as="a">hani.husam@gmail.com</TextLink>
+                  <TextLink as="a" fontWeight={500}>
+                    hani.husam@gmail.com
+                  </TextLink>
                 </Link>
                 .<br /> &copy; 2021 hanihusam. All rights reserved.
-              </Text>
+              </Verse>
             </FooterCopyright>
           </ContentGrid>
         </FooterContent>

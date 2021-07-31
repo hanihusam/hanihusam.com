@@ -1,8 +1,16 @@
 import React from 'react'
 
-import { AnchorButton } from './ui/components/Button/AnchorButton'
 import { Column, Content } from './layout'
-import { Box, Heading, Paragraph, PrimaryButton, Text, themeProps, UnstyledAnchor } from './ui'
+import {
+  AnchorButton,
+  Box,
+  Heading,
+  Paragraph,
+  PrimaryButton,
+  Text,
+  themeProps,
+  UnstyledAnchor
+} from './ui'
 
 import styled from '@emotion/styled'
 import Link from 'next/link'
@@ -166,7 +174,12 @@ const Hero: React.FC = () => (
           <FirstTitle color="secondary" variant={800}>
             Hi, I am
           </FirstTitle>
-          <Heading color="primary" paddingBottom={themeProps.space.md} variant={1100}>
+          <Heading
+            color="primary"
+            fontWeight={900}
+            paddingBottom={themeProps.space.md}
+            variant={1100}
+          >
             Han
           </Heading>
           <Line />
@@ -205,10 +218,10 @@ const Hero: React.FC = () => (
           <FirstTitle as="p" color="secondary" variant={800}>
             Hi, I am Han
           </FirstTitle>
-          <Heading color="primary" marginBottom={themeProps.space.lg}>
+          <Heading color="primary" paddingBottom={themeProps.space.xl}>
             Web Developer and UI Designer based in Yogyakarta, Indonesia.
           </Heading>
-          <Paragraph color="black" marginBottom={themeProps.space.xxl}>
+          <Paragraph color="black" paddingBottom={themeProps.space.xxl}>
             I am a “half-blood” Web Developer and UI Designer who has experience creating many
             projects in a various industry. In other words, I understand how to build an aesthetic,
             powerful, and lightweight website at once.

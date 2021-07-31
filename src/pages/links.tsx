@@ -17,7 +17,7 @@ const LinksArea = styled(Root)`
   max-width: 100%;
   position: relative;
   padding: 32px ${themeProps.space.md}px;
-  color: ${themeProps.colors.secondary};
+  color: ${themeProps.colors.white};
 
   ${themeProps.mediaQueries.md} {
     padding: 48px ${themeProps.space.lg}px 0;

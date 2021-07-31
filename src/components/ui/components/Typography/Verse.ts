@@ -5,6 +5,7 @@ import shouldForwardProp from '@styled-system/should-forward-prop'
 import {
   color,
   ColorProps,
+  fontWeight,
   layout,
   LayoutProps,
   space,
@@ -29,7 +30,8 @@ const Verse = styled('p', { shouldForwardProp })<VerseProps>(
 )
 
 Verse.defaultProps = {
-  variant: 400
+  variant: 400,
+  fontWeight: 300
 }
 
 Verse.displayName = 'Verse'

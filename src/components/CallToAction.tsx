@@ -1,7 +1,7 @@
 import React from 'react'
 
 import Column from './layout/Column'
-import { Box, Text, themeProps, UnstyledButton } from './ui'
+import { Box, GhostButton, PrimaryButton, Text, themeProps } from './ui'
 
 import styled from '@emotion/styled'
 import Link from 'next/link'
@@ -45,57 +45,12 @@ const CtaButtonWrapper = styled(Box)`
   }
 `
 
-const HireMeButton = styled(UnstyledButton)`
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  padding: ${themeProps.space.md}px;
-  min-width: 100px;
-  min-height: 40px;
-  margin-left: ${themeProps.space.md}px;
-  margin-right: ${themeProps.space.md}px;
-  border-radius: 5px;
-  transition: 500ms;
-
-  & > a {
-    color: #ffffff;
-    text-decoration: none;
-  }
-
-  &:hover {
-    filter: brightness(80%);
-  }
-
-  ${themeProps.mediaQueries.md} {
-    margin-left: ${themeProps.space.xl}px;
-    min-width: 150px;
-    min-height: 60px;
-    margin-right: 0;
-  }
+const HireMeButton = styled(PrimaryButton)`
+  margin: 0 ${themeProps.space.sm}px;
 `
 
-const SeeMoreButton = styled(UnstyledButton)`
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  padding: ${themeProps.space.md}px;
-  min-width: 150px;
-  min-height: 60px;
-  margin-left: ${themeProps.space.md}px;
-  margin-right: ${themeProps.space.md}px;
-  border-radius: 5px;
-  transition: 500ms;
-
-  &:hover {
-    background-color: ${themeProps.colors.secondary};
-  }
-
-  ${themeProps.mediaQueries.md} {
-    margin-left: ${themeProps.space.xl}px;
-    margin-right: 0;
-  }
+const SeeMoreButton = styled(GhostButton)`
+  margin: 0 ${themeProps.space.sm}px;
 `
 
 const CallToAction: React.FC = () => (
@@ -106,16 +61,14 @@ const CallToAction: React.FC = () => (
           Interested working with me?
         </TextTitle>
         <CtaButtonWrapper>
-          <SeeMoreButton border="1px solid" borderColor="secondary" color="white">
-            <Text variant={400}>See More Projects</Text>
+          <SeeMoreButton>
+            <Text>See More Projects</Text>
           </SeeMoreButton>
-          <HireMeButton backgroundColor="secondary" color="white">
-            <Link href="mailto:hani.husam@gmail.com" passHref>
-              <Text as="a" variant={400}>
-                Hire Me
-              </Text>
-            </Link>
-          </HireMeButton>
+          <Link href="mailto:hani.husam@gmail.com" passHref>
+            <HireMeButton type="button">
+              <Text as="a">Hire Me</Text>
+            </HireMeButton>
+          </Link>
         </CtaButtonWrapper>
       </CtaContent>
     </Column>

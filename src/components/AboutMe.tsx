@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import Column from './layout/Column'
-import { Box, Heading, Paragraph, Text, themeProps, Verse } from './ui'
+import { Box, Heading, Paragraph, themeProps, Verse } from './ui'
 
 import styled from '@emotion/styled'
 
@@ -34,6 +34,7 @@ const AboutMeContent = styled(Box)`
 
 const FirstTitle = styled(Verse)`
   display: block;
+  color: ${themeProps.colors.secondary};
   padding-bottom: ${themeProps.space.md}px;
 
   ${themeProps.mediaQueries.md} {
@@ -42,10 +43,12 @@ const FirstTitle = styled(Verse)`
 `
 
 const SecondTitle = styled(Heading)`
+  color: ${themeProps.colors.white};
   padding-bottom: ${themeProps.space.md}px;
 `
 
 const Description = styled(Paragraph)`
+  color: ${themeProps.colors.white};
   padding-bottom: ${themeProps.space.md}px;
 `
 
@@ -84,13 +87,13 @@ const AboutMe: React.FC = () => (
           <img alt="About Me Avatar" src="/images/aboutme-illustration.svg" />
         </LeftContentWrapper>
         <RightContentWrapper>
-          <FirstTitle color="secondary">About Me</FirstTitle>
-          <SecondTitle color="white">Why hire me for your next project?</SecondTitle>
-          <Description color="white">
+          <FirstTitle>About Me</FirstTitle>
+          <SecondTitle>Why hire me for your next project?</SecondTitle>
+          <Description>
             Currently I am working as a fulltime freelancer. Before that I’ve worked at Nutrination
             Pte. Ltd (Bubays), Singapore as a Fullstack Engineer.
           </Description>
-          <Description color="white">
+          <Description>
             I find my self as a creative, reliable and detailed freelancer who can work
             independently without too many detailed instructions. I have a principle that is
             &quot;stay simple and stay humble&quot;. I believe that in simplicity there is a
