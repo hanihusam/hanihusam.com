@@ -17,7 +17,8 @@
     "netlify-export": "yarn build && next export",
     "now-build": "cross-env BUILD_TARGET=serverless next build",
     "test": "npm run type-check && npm run lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "validate": "yarn lint && yarn type-check"
   },
   "dependencies": {
     "@emotion/babel-plugin": "^11.3.0",
