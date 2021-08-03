@@ -1,9 +1,10 @@
 import * as React from 'react'
 
 import { PageWrapper } from '../components/layout'
-import { Box, Text, themeProps, UnstyledButton } from '../components/ui'
+import { Box, PrimaryButton, Text, themeProps, UnstyledButton } from '../components/ui'
 
 import styled from '@emotion/styled'
+import Link from 'next/link'
 
 const Root = Box.withComponent('section')
 
@@ -126,26 +127,17 @@ const TextTitle = styled(Text)`
   margin-bottom: ${themeProps.space.md}px;
 `
 
-const LinkButton = styled(UnstyledButton)`
-  display: flex;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
+const LinkButton = styled(PrimaryButton)`
   padding: 0 ${themeProps.space.lg}px;
   height: 48px;
   min-width: 100%;
   margin: auto auto ${themeProps.space.lg}px;
-  border-radius: 5px;
   transition: 800ms;
   vertical-align: middle;
 
   & > a {
     color: #ffffff;
     text-decoration: none;
-  }
-
-  &:hover {
-    filter: brightness(80%);
   }
 
   ${themeProps.mediaQueries.md} {
@@ -171,61 +163,31 @@ const LinksPage: React.FC = () => (
                   Han
                 </TextTitle>
               </AvatarWrapper>
-              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
-                <Text
-                  // as="a"
-                  // href="https://medium.com/ayah-rumahan"
-                  // rel="noopener noreferrer"
-                  // target="_blank"
-                  variant={400}
-                >
-                  Medium — Ayah Rumahan
-                </Text>
-              </LinkButton>
-              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
-                <Text
-                  // as="a"
-                  // href="https://linkedin.com/in/hanihusam"
-                  // rel="noopener noreferrer"
-                  // target="_blank"
-                  variant={400}
-                >
-                  Linkedin
-                </Text>
-              </LinkButton>
-              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
-                <Text
-                  // as="a"
-                  // href="https://github.com/hanihusam"
-                  // rel="noopener noreferrer"
-                  // target="_blank"
-                  variant={400}
-                >
-                  Github
-                </Text>
-              </LinkButton>
-              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
-                <Text
-                  // as="a"
-                  // href="https://dribbble.com/hanihusam"
-                  // rel="noopener noreferrer"
-                  // target="_blank"
-                  variant={400}
-                >
-                  Dribbble
-                </Text>
-              </LinkButton>
-              <LinkButton backgroundColor="secondary" boxShadow="double" color="white">
-                <Text
-                  // as="a"
-                  // href="https://upwork.com/fl/hanihusamuddin"
-                  // rel="noopener noreferrer"
-                  // target="_blank"
-                  variant={400}
-                >
-                  Upwork
-                </Text>
-              </LinkButton>
+              <Link href="https://medium.com/ayah-rumahan" passHref>
+                <a rel="noopener noreferrer" target="_blank">
+                  <LinkButton color="white">Berbagi di Ayah Rumahan</LinkButton>
+                </a>
+              </Link>
+              <Link href="https://linkedin.com/in/hanihusam" passHref>
+                <a rel="noopener noreferrer" target="_blank">
+                  <LinkButton color="white">Linkedin | Professional Profile</LinkButton>
+                </a>
+              </Link>
+              <Link href="https://github.com/hanihusam" passHref>
+                <a rel="noopener noreferrer" target="_blank">
+                  <LinkButton color="white">Github | Programmer Portfolio</LinkButton>
+                </a>
+              </Link>
+              <Link href="https://dribbble.com/hanihusam" passHref>
+                <a rel="noopener noreferrer" target="_blank">
+                  <LinkButton color="white">Dribbble | Design Portfolio</LinkButton>
+                </a>
+              </Link>
+              <Link href="https://upwork.com/fl/hanihusamuddin" passHref>
+                <a rel="noopener noreferrer" target="_blank">
+                  <LinkButton color="white">For project via Upwork</LinkButton>
+                </a>
+              </Link>
             </Content>
           </ContentWrapper>
         </MainWrapper>

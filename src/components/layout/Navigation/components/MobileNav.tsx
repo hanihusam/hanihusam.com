@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Box, themeProps } from '../../../ui'
+import { Box, Text, themeProps } from '../../../ui'
 
 import NavLinkRoot from './NavLinkRoot'
 
@@ -60,7 +60,9 @@ const MobileNavLink: React.FC<NavLinkProps> = ({ title, href, as, isActive, icon
     <Link as={as} href={href} passHref>
       <MobileNavLinkBase isActive={isActive}>
         <LinkIcon>{icon}</LinkIcon>
-        <span style={{ fontWeight: isActive ? 'bold' : 'normal' }}>{title}</span>
+        <Text color="primary" variant={100}>
+          {title}
+        </Text>
       </MobileNavLinkBase>
     </Link>
   )

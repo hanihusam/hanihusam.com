@@ -21,7 +21,7 @@ import styled from '@emotion/styled'
 import { VisuallyHidden } from '@reach/visually-hidden'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { FaBars, FaEnvelope, FaHome } from 'react-icons/fa'
+import { FaBars, FaEnvelope } from 'react-icons/fa'
 
 const Root = Box.withComponent('header')
 
@@ -180,21 +180,19 @@ const Navigation: React.FC = () => {
       </NavGrid>
       <NavGrid backgroundColor="bgPrimary" color="textPrimary">
         <MobileNav backgroundColor="navgridbgmobile">
-          <MobileNavLink
-            href="/"
-            icon={<FaHome fill={getMobNavIconColor('/')} />}
-            isActive={router.pathname === '/'}
-          />
+          <MobileNavLink href="/" icon={<Logo />} isActive={router.pathname === '/'} />
           <MobileNavLink
             href="mailto:hani.husam@gmail.com"
-            icon={<FaEnvelope fill={getMobNavIconColor('mailto:hani.husam@gmail.com')} />}
+            icon={<FaEnvelope fill={getMobNavIconColor()} />}
             title="Email Me"
           />
           <OptionButton onClick={toggleOptionModal} style={{ outline: 'none' }} type="button">
             <OptionButtonIcon>
-              <FaBars />
+              <FaBars fill={getMobNavIconColor()} />
             </OptionButtonIcon>
-            <Text variant={100}>Menu</Text>
+            <Text color="primary" variant={100}>
+              Menu
+            </Text>
           </OptionButton>
         </MobileNav>
       </NavGrid>

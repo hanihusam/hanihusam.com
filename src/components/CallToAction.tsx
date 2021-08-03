@@ -31,8 +31,12 @@ const CtaContent = styled(Box)`
 
 const TextTitle = styled(Text)`
   flex: 1;
-  margin-bottom: ${themeProps.space.md}px;
+  margin-bottom: ${themeProps.space.lg}px;
   color: ${themeProps.colors.header};
+
+  ${themeProps.mediaQueries.md} {
+    margin-bottom: ${themeProps.space.md}px;
+  }
 `
 
 const CtaButtonWrapper = styled(Box)`

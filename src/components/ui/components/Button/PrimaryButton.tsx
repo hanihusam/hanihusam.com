@@ -34,7 +34,7 @@ const BaseButton = styled(UnstyledButton)`
 `
 
 export const PrimaryButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ style, type, isLoading, loadingText = 'Memuat...', disabled, children, ...rest }, ref) => (
+  ({ style, type, isLoading, loadingText = 'Loading...', disabled, children, ...rest }, ref) => (
     <BaseButton
       disabled={isLoading ?? disabled}
       ref={ref}

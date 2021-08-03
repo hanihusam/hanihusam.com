@@ -8,6 +8,7 @@ import NavLinkVertical from './NavLinkVertical'
 import styled from '@emotion/styled'
 import { FaTimes } from 'react-icons/fa'
 import useDarkMode from 'src/utils/useDarkMode'
+import Logo from './Logo'
 
 export const OptionModalButton = styled(UnstyledButton)``
 
@@ -109,7 +110,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
       return (
         <Box
           backgroundColor="bgPrimary"
-          color="textPrimary"
+          color="primary"
           display="flex"
           flexDirection="column"
           height="calc(100% - 54px)"
@@ -119,7 +120,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
           width="100%"
           zIndex={50}
         >
-          <NavGrid backgroundColor="bgPrimary" color="textPrimary">
+          <NavGrid backgroundColor="bgPrimary" color="primary">
             <NavInner display="flex" flexDirection="row">
               <Box
                 alignItems="center"
@@ -128,18 +129,12 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                 flexDirection="row"
                 height={60}
               >
-                <img
-                  alt="hanihusam logo"
-                  aria-hidden
-                  height="auto"
-                  src={isDarkMode ? '/images/logo-dark.png' : '/images/logo.png'}
-                  width="36"
-                />
+                <Logo />
               </Box>
             </NavInner>
           </NavGrid>
           <Container>
-            <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
+            <VerticalNavGrid backgroundColor="bgPrimary" color="primary" flex="1 1 auto">
               <NavInnerFooter display="flex" flexDirection="column">
                 <NavLabel>Theme mode</NavLabel>
                 <Box>
@@ -171,7 +166,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                 </Box>
               </NavInnerFooter>
             </VerticalNavGrid>
-            <VerticalNavGrid backgroundColor="bgPrimary" color="textPrimary" flex="1 1 auto">
+            <VerticalNavGrid backgroundColor="bgPrimary" color="primary" flex="1 1 auto">
               <NavLinkVertical href="#about" title="About" />
 
               <NavLinkVertical href="#projects" title="Projects" />
@@ -190,7 +185,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
               >
                 <FaTimes />
               </CloseButtonIconWrapper>
-              Tutup
+              Close
             </CloseButtonContainer>
           </Footer>
         </Box>
