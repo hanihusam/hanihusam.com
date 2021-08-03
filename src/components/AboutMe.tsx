@@ -57,7 +57,11 @@ const LeftContentWrapper = styled(Box)`
   flex-direction: column;
   text-align: left;
   padding: 32px ${themeProps.space.md}px;
-  margin: 0 56px;
+
+  ${themeProps.mediaQueries.md} {
+    padding: 32px 0;
+    margin: 0 56px;
+  }
 `
 
 const RightContentWrapper = styled(Box)`
