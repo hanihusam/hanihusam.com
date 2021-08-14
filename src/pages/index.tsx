@@ -1,15 +1,15 @@
 import React from 'react'
 
-import { AboutMe, CallToAction, Hero } from '../components'
+import { HomepageAboutMe, HomepageCTA, HomepageHero } from '../components/home'
 import { PageWrapper } from '../components/layout'
 
 import { NextPage } from 'next'
 
 const IndexPage: NextPage = () => (
   <PageWrapper>
-    <Hero />
-    <AboutMe />
-    <CallToAction />
+    <HomepageHero />
+    <HomepageAboutMe />
+    <HomepageCTA />
   </PageWrapper>
 )
 

@@ -1,31 +1,32 @@
 import * as React from 'react'
 
-import Column from './layout/Column'
-import { Box, Heading, Paragraph, themeProps, Verse } from './ui'
+import Column from '../layout/Column'
+import { Box, Heading, Paragraph, themeProps, Verse } from '../ui'
 
 import styled from '@emotion/styled'
 
 const Root = Box.withComponent('section')
 
 const AboutMeArea = styled(Root)`
-  padding: 32px ${themeProps.space.md}px;
-  margin: 0 0 48px;
-  color: ${themeProps.colors.secondary};
-  background: ${themeProps.colors.card};
+  padding: 0 0 40px;
 
   ${themeProps.mediaQueries.md} {
-    padding: ${themeProps.space.xxxl}px ${themeProps.space.lg}px;
-    margin: 0 auto 48px;
-    border-radius: 20px;
+    padding: 0 ${themeProps.space.xxxl}px ${themeProps.space.lg}px;
+    margin: 0 auto 108px;
   }
 `
 
 const AboutMeContent = styled(Box)`
+  color: ${themeProps.colors.secondary};
+  background: ${themeProps.colors.card};
+  border-radius: 4px;
   display: flex;
   flex-direction: column;
   text-align: center;
+  padding: ${themeProps.space.md}px;
 
   ${themeProps.mediaQueries.md} {
+    padding: 80px ${themeProps.space.xxxl}px;
     text-align: left;
     flex-direction: row;
     justify-content: space-between;
@@ -60,7 +61,6 @@ const LeftContentWrapper = styled(Box)`
 
   ${themeProps.mediaQueries.md} {
     padding: 32px 0;
-    margin: 0 56px;
   }
 `
 
@@ -72,7 +72,7 @@ const RightContentWrapper = styled(Box)`
 
   ${themeProps.mediaQueries.md} {
     padding: 32px 0;
-    margin: 0 56px;
+    margin: 0 0 0 56px;
   }
 
   & > ${SecondTitle} {

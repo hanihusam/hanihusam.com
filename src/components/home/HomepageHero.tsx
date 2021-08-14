@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Column, Content } from './layout'
+import { Column, Content } from '../layout'
 import {
   AnchorButton,
   Box,
@@ -10,7 +10,7 @@ import {
   Text,
   themeProps,
   UnstyledAnchor
-} from './ui'
+} from '../ui'
 
 import styled from '@emotion/styled'
 import Link from 'next/link'

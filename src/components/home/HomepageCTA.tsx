@@ -1,7 +1,7 @@
 import React from 'react'
 
-import Column from './layout/Column'
-import { Box, GhostButton, PrimaryButton, Text, themeProps } from './ui'
+import Column from '../layout/Column'
+import { Box, GhostButton, PrimaryButton, Text, themeProps } from '../ui'
 
 import styled from '@emotion/styled'
 import Link from 'next/link'
@@ -9,23 +9,29 @@ import Link from 'next/link'
 const Section = Box.withComponent('section')
 
 const CtaArea = styled(Section)`
-  padding: 32px ${themeProps.space.md}px;
-  color: ${themeProps.colors.secondary};
-  background: ${themeProps.colors.card};
+  padding: 0px ${themeProps.space.md}px 84px;
+  margin-bottom: 0;
+  z-index: 1;
 
   ${themeProps.mediaQueries.md} {
-    padding: 48px ${themeProps.space.lg}px 64px;
+    padding: ${themeProps.space.xxxl}px ${themeProps.space.lg}px;
+    margin-bottom: -120px;
   }
 `
 
 const CtaContent = styled(Box)`
+  border-radius: 4px;
+  color: ${themeProps.colors.secondary};
+  background: ${themeProps.colors.card};
   display: flex;
   flex-direction: column;
   text-align: center;
+  padding: ${themeProps.space.lg}px;
 
   ${themeProps.mediaQueries.md} {
     text-align: left;
     flex-direction: row;
+    padding: 64px;
   }
 `
 
@@ -41,20 +47,30 @@ const TextTitle = styled(Text)`
 
 const CtaButtonWrapper = styled(Box)`
   display: flex;
+  flex-direction: column;
   flex: 1;
   justify-content: center;
 
   ${themeProps.mediaQueries.md} {
+    flex-direction: row;
     justify-content: flex-end;
   }
 `
 
 const HireMeButton = styled(PrimaryButton)`
-  margin: 0 ${themeProps.space.sm}px;
+  margin-bottom: ${themeProps.space.sm}px;
+
+  ${themeProps.mediaQueries.md} {
+    margin: 0 ${themeProps.space.sm}px;
+  }
 `
 
 const SeeMoreButton = styled(GhostButton)`
-  margin: 0 ${themeProps.space.sm}px;
+  margin-bottom: ${themeProps.space.sm}px;
+
+  ${themeProps.mediaQueries.md} {
+    margin: 0 ${themeProps.space.sm}px;
+  }
 `
 
 const CallToAction: React.FC = () => (

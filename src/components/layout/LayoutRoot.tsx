@@ -5,7 +5,7 @@ import { Box } from '../ui'
 const LayoutRoot: React.FC = ({ children, ...rest }) => (
   <Box
     as="main"
-    backgroundColor="bgPrimary"
+    backgroundColor="background"
     color="textColorPrimary"
     display="flex"
     flexDirection="column"
