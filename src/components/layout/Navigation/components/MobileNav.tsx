@@ -49,7 +49,7 @@ const MobileNav = styled(Box)`
   justify-content: space-evenly;
   height: 54px;
   z-index: 1;
-  padding-bottom: env(safe-area-inset-bottom);
+  margin-bottom: env(safe-area-inset-bottom);
 
   ${themeProps.mediaQueries.sm} {
     display: none;
