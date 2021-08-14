@@ -7,7 +7,8 @@ const darkThemeProps = {
   ...themeProps,
   colors: {
     ...themeProps.colors,
-    bgPrimary: '#434343',
+    background: '#434343',
+    footer: '#434343',
     primary: themeProps.colors.white,
     black: themeProps.colors.white,
     white: themeProps.colors.black,

@@ -1,7 +1,5 @@
 export const colors = {
-  bgPrimary: '#F2F2F2',
-  fgPrimary: '#45577B',
-  bgSecondary: '#263238',
+  background: '#F2F2F2',
   primary: '#45577B',
   secondary: '#ED7D31',
   secondary02: '#C85F18',
@@ -17,6 +15,7 @@ export const colors = {
 
   card: '#46434E',
   header: '#F2F2F2',
+  footer: '#FFFFFF',
   activeMenu: '#ED7D31'
 }
 
