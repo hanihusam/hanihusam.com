@@ -41,6 +41,7 @@ const NavLabel = styled(Box)`
 
 const ToggleButton = styled(UnstyledButton)`
   outline: none;
+  margin-left: 0;
 `
 
 const ToggleButtonLight = styled(ToggleButton)`
@@ -93,7 +94,7 @@ const NavInnerFooter = styled(NavInnerHeader)`
 `
 
 const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
-  const [isDarkMode, toggleDarkMode] = useDarkMode()
+  const [, toggleDarkMode] = useDarkMode()
 
   const toggleModal = () => {
     if (onClose) {
@@ -109,7 +110,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
     if (isOpen) {
       return (
         <Box
-          backgroundColor="bgPrimary"
+          backgroundColor="background"
           color="primary"
           display="flex"
           flexDirection="column"
@@ -120,7 +121,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
           width="100%"
           zIndex={50}
         >
-          <NavGrid backgroundColor="bgPrimary" color="primary">
+          <NavGrid backgroundColor="background" color="primary">
             <NavInner display="flex" flexDirection="row">
               <Box
                 alignItems="center"
@@ -134,7 +135,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
             </NavInner>
           </NavGrid>
           <Container>
-            <VerticalNavGrid backgroundColor="bgPrimary" color="primary" flex="1 1 auto">
+            <VerticalNavGrid backgroundColor="background" color="primary" flex="1 1 auto">
               <NavInnerFooter display="flex" flexDirection="column">
                 <NavLabel>Theme mode</NavLabel>
                 <Box>
@@ -166,7 +167,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
                 </Box>
               </NavInnerFooter>
             </VerticalNavGrid>
-            <VerticalNavGrid backgroundColor="bgPrimary" color="primary" flex="1 1 auto">
+            <VerticalNavGrid backgroundColor="background" color="primary" flex="1 1 auto">
               <NavLinkVertical href="#about" title="About" />
 
               <NavLinkVertical href="#projects" title="Projects" />
@@ -174,7 +175,7 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
             </VerticalNavGrid>
           </Container>
           <Footer>
-            <CloseButtonContainer backgroundColor="bgPrimary" onClick={toggleModal} type="button">
+            <CloseButtonContainer backgroundColor="background" onClick={toggleModal} type="button">
               <CloseButtonIconWrapper
                 alignItems="center"
                 backgroundColor="brandred"
