@@ -11,11 +11,11 @@ const Section = Box.withComponent('section')
 const CtaArea = styled(Section)`
   padding: 0px ${themeProps.space.md}px 84px;
   margin-bottom: 0;
-  z-index: 1;
 
   ${themeProps.mediaQueries.md} {
     padding: ${themeProps.space.xxxl}px ${themeProps.space.lg}px;
     margin-bottom: -120px;
+    z-index: 1;
   }
 `
 

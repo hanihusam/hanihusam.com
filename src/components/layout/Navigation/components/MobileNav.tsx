@@ -42,14 +42,13 @@ const MobileNav = styled(Box)`
   position: fixed;
   bottom: 0;
   width: 100%;
-  margin: 0 -${themeProps.space.md}px;
+  margin: 0 -${themeProps.space.md}px env(safe-area-inset-bottom);
   backdrop-filter: blur(16px);
   box-shadow: ${themeProps.shadows.single};
   display: flex;
   justify-content: space-evenly;
   height: 54px;
   z-index: 1;
-  margin-bottom: env(safe-area-inset-bottom);
 
   ${themeProps.mediaQueries.sm} {
     display: none;
