@@ -1,7 +1,7 @@
 {
   "name": "hanihusam.com",
-  "version": "1.0.0",
-  "description": "Hani Husamuddin's personal page",
+  "version": "0.2.2beta",
+  "description": "Source code for hanihusam.com",
   "main": "N/A",
   "repository": "https://github.com/hanihusam/hanihusam.com",
   "author": "Hani Husamuddin <hani.husam@gmail.com>",
@@ -14,6 +14,7 @@
     "format": "prettier --write \"./**/*.{ts,tsx}\"",
     "lint": "eslint \"**/*.{js,jsx,ts,tsx}\"",
     "lint:fix": "eslint --fix \"**/*.{js,jsx,ts,tsx}\"",
+    "prepare": "husky install",
     "netlify-export": "yarn build && next export",
     "now-build": "cross-env BUILD_TARGET=serverless next build",
     "test": "npm run type-check && npm run lint",
@@ -81,11 +82,6 @@
     "stylelint-config-recommended": "5.0.0",
     "ts-node": "^10.1.0",
     "typescript": "^4.1.3"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "lint-staged": {
     "*.{ts,tsx}": "eslint"
