@@ -2,7 +2,6 @@
 
 [![Build Status](https://github.com/hanihusam/hanihusam.com/workflows/CI/badge.svg)](https://github.com/hanihusam/hanihusam.com/actions?query=workflow%3ACI)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/61368615-14f6-48ee-9e3f-0fb221cdc447/deploy-status)](https://app.netlify.com/sites/hanihusam/deploys)
-[![CircleCI (all branches)](https://img.shields.io/circleci/project/github/hanihusam/hanihusam.com.svg)](https://circleci.com/gh/hanihusam/hanihusam.com)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=hanihusam_hanihusam.com&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=hanihusam_hanihusam.com)
 
 > Source code for [hanihusam.com](https://hanihusam.com).
