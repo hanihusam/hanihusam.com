@@ -13,6 +13,7 @@
     "start": "next start",
     "format": "prettier --write \"./**/*.{ts,tsx}\"",
     "lint": "eslint \"**/*.{ts,tsx}\" \"*.config.js\"",
+    "netlify-export": "yarn build && next export",
     "prepare": "husky install",
     "test": "npm run type-check && npm run lint",
     "type-check": "tsc --noEmit",
