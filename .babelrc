@@ -1,9 +1,4 @@
 {
-  "presets": [
-    "next/babel",
-    "@babel/preset-typescript"
-  ],
-  "plugins": [
-    "@emotion"
-  ]
+  "presets": ["next/babel", "@babel/preset-typescript", "@emotion/babel-preset-css-prop"],
+  "plugins": ["@emotion"]
 }
