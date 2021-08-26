@@ -161,7 +161,7 @@ const LinksPage: React.FC = () => (
                   Fulltime at home. Sometimes doing code. Sometimes doing design.
                 </Text>
               </AvatarWrapper>
-              <Link href="https://te.me/bapak2developer" passHref>
+              <Link href="https://t.me/bapak2developer" passHref>
                 <a rel="noopener noreferrer" target="_blank">
                   <LinkButton>
                     <SiTelegram style={{ marginRight: 8 }} />
