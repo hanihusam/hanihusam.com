@@ -1,10 +1,11 @@
 import * as React from 'react'
 
 import { PageWrapper } from '../components/layout'
-import { Box, PrimaryButton, Text, themeProps, UnstyledButton } from '../components/ui'
+import { Box, PrimaryButton, Text, themeProps } from '../components/ui'
 
 import styled from '@emotion/styled'
 import Link from 'next/link'
+import { SiDribbble, SiFigma, SiGithub, SiLinkedin, SiMedium, SiTelegram } from 'react-icons/si'
 
 const Root = Box.withComponent('section')
 
@@ -64,7 +65,7 @@ const Content = styled(Box)`
 const AvatarWrapper = styled(Box)`
   text-align: center;
   margin-top: 0;
-  margin-bottom: 20px;
+  margin-bottom: ${themeProps.space.xxl}px;
   align-items: center;
   flex-direction: column;
   position: relative;
@@ -122,9 +123,8 @@ const Avatar = styled(Box)`
 const TextTitle = styled(Text)`
   flex: 1;
   text-align: center;
-  margin-top: 12px;
   word-break: break-word;
-  margin-bottom: ${themeProps.space.md}px;
+  padding: 12px 0;
 `
 
 const LinkButton = styled(PrimaryButton)`
@@ -132,16 +132,11 @@ const LinkButton = styled(PrimaryButton)`
   height: 48px;
   min-width: 100%;
   margin: auto auto ${themeProps.space.lg}px;
-  transition: 800ms;
   vertical-align: middle;
-
-  & > a {
-    color: #ffffff;
-    text-decoration: none;
-  }
 
   ${themeProps.mediaQueries.md} {
     height: 65px;
+    width: 100%;
   }
 `
 
@@ -159,33 +154,58 @@ const LinksPage: React.FC = () => (
                     <div className="ava" />
                   </Avatar>
                 </ProfilePicture>
-                <TextTitle as="h3" color="primary" variant={800}>
-                  Han
+                <TextTitle color="primary" fontWeight="600" variant={400}>
+                  Bapak2Developer.
                 </TextTitle>
+                <Text color="black">
+                  Fulltime at home. Sometimes doing code. Sometimes doing design.
+                </Text>
               </AvatarWrapper>
+              <Link href="https://te.me/bapak2developer" passHref>
+                <a rel="noopener noreferrer" target="_blank">
+                  <LinkButton>
+                    <SiTelegram style={{ marginRight: 8 }} />
+                    For Business Inquiry
+                  </LinkButton>
+                </a>
+              </Link>
+              <Link href="https://figma.com/@hanihusam" passHref>
+                <a rel="noopener noreferrer" target="_blank">
+                  <LinkButton>
+                    <SiFigma style={{ marginRight: 8 }} />
+                    Figma Templates - FREE
+                  </LinkButton>
+                </a>
+              </Link>
               <Link href="https://medium.com/ayah-rumahan" passHref>
                 <a rel="noopener noreferrer" target="_blank">
-                  <LinkButton color="white">Berbagi di Ayah Rumahan</LinkButton>
+                  <LinkButton>
+                    <SiMedium style={{ marginRight: 8 }} />
+                    Tulisan Ayah Rumahan
+                  </LinkButton>
                 </a>
               </Link>
               <Link href="https://linkedin.com/in/hanihusam" passHref>
                 <a rel="noopener noreferrer" target="_blank">
-                  <LinkButton color="white">Linkedin | Professional Profile</LinkButton>
+                  <LinkButton>
+                    <SiLinkedin style={{ marginRight: 8 }} /> Professional Profile
+                  </LinkButton>
                 </a>
               </Link>
               <Link href="https://github.com/hanihusam" passHref>
                 <a rel="noopener noreferrer" target="_blank">
-                  <LinkButton color="white">Github | Programmer Portfolio</LinkButton>
+                  <LinkButton>
+                    <SiGithub style={{ marginRight: 8 }} />
+                    Github Repository
+                  </LinkButton>
                 </a>
               </Link>
               <Link href="https://dribbble.com/hanihusam" passHref>
                 <a rel="noopener noreferrer" target="_blank">
-                  <LinkButton color="white">Dribbble | Design Portfolio</LinkButton>
-                </a>
-              </Link>
-              <Link href="https://upwork.com/fl/hanihusamuddin" passHref>
-                <a rel="noopener noreferrer" target="_blank">
-                  <LinkButton color="white">For project via Upwork</LinkButton>
+                  <LinkButton>
+                    <SiDribbble style={{ marginRight: 8 }} />
+                    Design Portfolio
+                  </LinkButton>
                 </a>
               </Link>
             </Content>
