@@ -16,7 +16,7 @@ const BaseButton = styled(UnstyledButton)`
   color: ${themeProps.colors.white};
   padding: ${themeProps.space.md}px ${themeProps.space.lg}px;
   border-radius: 5px;
-  transition: 800ms;
+  transition: 300ms;
 
   & > a {
     color: #ffffff;
