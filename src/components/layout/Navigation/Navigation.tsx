@@ -150,15 +150,16 @@ const Navigation: React.FC = () => {
             <MainNavCenterLinks>
               <MainNavLink href="/" isActive={router.pathname === '/'} title="Home" />
               <MainNavLink href="/about" isActive={router.pathname === '/about'} title="About" />
+              <MainNavLink href="/posts" isActive={router.pathname === '/posts'} title="Posts" />
               <MainNavLink
                 href="/projects"
                 isActive={router.pathname === '/projects'}
                 title="Projects"
               />
               <MainNavLink
-                href="/services"
-                isActive={router.pathname === '/services'}
-                title="Services"
+                href="/bookmarks"
+                isActive={router.pathname === '/bookmarks'}
+                title="Bookmarks"
               />
             </MainNavCenterLinks>
           </MainNavCenter>
