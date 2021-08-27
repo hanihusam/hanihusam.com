@@ -168,10 +168,10 @@ const OptionModal: React.FC<OptionModalProps> = ({ isOpen, onClose }) => {
               </NavInnerFooter>
             </VerticalNavGrid>
             <VerticalNavGrid backgroundColor="background" color="primary" flex="1 1 auto">
-              <NavLinkVertical href="#about" title="About" />
-
-              <NavLinkVertical href="#projects" title="Projects" />
-              <NavLinkVertical href="#services" title="Services" />
+              <NavLinkVertical href="/about" title="About" />
+              <NavLinkVertical href="/posts" title="Posts" />
+              <NavLinkVertical href="/projects" title="Projects" />
+              <NavLinkVertical href="/bookmarks" title="Bookmarks" />
             </VerticalNavGrid>
           </Container>
           <Footer>
