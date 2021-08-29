@@ -1,6 +1,7 @@
 {
   "name": "hanihusam.com",
   "version": "0.2.2beta",
+  "baseUrl": "https://hanihusam.com",
   "description": "Source code for hanihusam.com",
   "main": "N/A",
   "repository": "https://github.com/hanihusam/hanihusam.com",
