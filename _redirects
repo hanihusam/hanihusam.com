@@ -3,5 +3,5 @@
 # These rules will change if you change your site’s customdomainsorHTTPSsettings
 # https://app.netlify.com/sites/hanihusam/settings/domain
 
-# Optional: Redirect default Netlifysubdomain to primary domain
-https://hanihusam.netlify.com/* https://hanihusam.com/:splat 301!
+# Optional: Redirect default Netlify subdomain to primary domain
+# https://hanihusam.netlify.com/* https://hanihusam.com/:splat 301!
