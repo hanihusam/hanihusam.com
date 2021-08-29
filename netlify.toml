@@ -1,8 +1,6 @@
 [build]
   command = "yarn netlify-export"
-  functions = "out_functions"
-  publish   = "out_publish"
-
+  publish = "out"
 
 [[plugins]]
   package = "@netlify/plugin-lighthouse"
