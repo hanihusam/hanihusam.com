@@ -1,7 +1,8 @@
-# These rules will change if you change your site’s custom domains orHTTPSsettings
-# https://app.netlify.com/sites/hanihusam/settings/domain
+/cv-template                                                                              https://www.figma.com/community/file/1013467435484263834/Template-%7C-CV
+# These rules will change if you change your site’s custom domainsorHTTPSsettings
+#https://app.netlify.com/sites/hanihusam/settings/domain
 
-/cv-template   https://www.figma.com/community/file/1013467435484263834/Template-%7C-CV
+/cv-template   https://www.figma.com/community/file/1013467435484263834/Template-%7C-CV   301!
 
-# Optional: Redirect default Netlify subdomain toprimarydomain
-https://hanihusam.netlify.com/*https://hanihusam.com/:splat301!
+# Optional: Redirect default Netlify subdomaintoprimarydomain
+https://hanihusam.netlify.com/* https://hanihusam.com/:splat301!
