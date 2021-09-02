@@ -34,13 +34,8 @@ const AboutMeContent = styled(Box)`
 `
 
 const FirstTitle = styled(Verse)`
-  display: block;
   color: ${themeProps.colors.secondary};
   padding-bottom: ${themeProps.space.md}px;
-
-  ${themeProps.mediaQueries.md} {
-    display: none;
-  }
 `
 
 const SecondTitle = styled(Heading)`
@@ -73,14 +68,6 @@ const RightContentWrapper = styled(Box)`
   ${themeProps.mediaQueries.md} {
     padding: 32px 0;
     margin: 0 0 0 56px;
-  }
-
-  & > ${SecondTitle} {
-    padding-bottom: 32px;
-  }
-
-  & > ${FirstTitle} {
-    display: block;
   }
 `
 

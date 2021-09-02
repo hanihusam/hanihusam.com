@@ -241,27 +241,6 @@ const Hero: React.FC = () => (
                 <Text color="black">Download CV</Text>
               </AnchorButton>
             </Link>
-            {/* <CVButton>
-              <Icon
-                href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
-                marginRight="8px"
-                rel="noopener noreferrer"
-                size="16"
-                target="_blank"
-              >
-                <FiDownload />
-              </Icon>
-              <Text
-                as="a"
-                color="textColorPrimary"
-                href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
-                rel="noopener noreferrer"
-                target="_blank"
-                variant={400}
-              >
-                Download CV
-              </Text>
-            </CVButton> */}
           </CtaButtonWrapper>
           <SocialLinkWrapper>
             <Icon
