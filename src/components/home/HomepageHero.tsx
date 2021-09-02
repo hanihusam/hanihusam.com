@@ -219,12 +219,12 @@ const Hero: React.FC = () => (
             Hi, I am Han
           </FirstTitle>
           <Heading color="primary" paddingBottom={themeProps.space.xl}>
-            Web Developer and UI Designer based in Yogyakarta, Indonesia.
+            Frontend Developer and UI Designer from Yogyakarta, Indonesia.
           </Heading>
           <Paragraph color="black" paddingBottom={themeProps.space.xxl}>
-            I am a “half-blood” Web Developer and UI Designer who has experience creating many
-            projects in a various industry. In other words, I understand how to build an aesthetic,
-            powerful, and lightweight website at once.
+            I am a multi-disciplinary Frontend Developer and UI Designer who have experience
+            creating projects in a various industry and have worked with diverse clients from all
+            over the world.
           </Paragraph>
           <CtaButtonWrapper>
             <PrimaryButton type="button">

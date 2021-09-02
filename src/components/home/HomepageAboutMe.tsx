@@ -95,16 +95,13 @@ const AboutMe: React.FC = () => (
           <FirstTitle>About Me</FirstTitle>
           <SecondTitle>Why hire me for your next project?</SecondTitle>
           <Description>
-            Currently I am working as a fulltime freelancer. Before that I’ve worked at Nutrination
-            Pte. Ltd (Bubays), Singapore as a Fullstack Engineer.
+            In the past, I worked at a Singapore venture-backed startup as a Fullstack Developer.
           </Description>
           <Description>
-            I find my self as a creative, reliable and detailed freelancer who can work
-            independently without too many detailed instructions. I have a principle that is
-            &quot;stay simple and stay humble&quot;. I believe that in simplicity there is a
-            complexity and very deep thoroughness. I see every project as a process of solving a
-            problem. Then it is time for your problems to be resolved in detail, in depth, and of
-            course in simplicity.
+            I have a principle that is &quot;stay simple and stay humble&quot;. I believe,
+            simplicity hides a great deal of complexity and thoroughness. I see every project as a
+            process of solving a problem. Now it's time to solve your problems in detail, in depth,
+            and of course with simplicity.
           </Description>
         </RightContentWrapper>
       </AboutMeContent>
