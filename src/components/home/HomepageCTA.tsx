@@ -82,11 +82,11 @@ const CallToAction: React.FC = () => (
         </TextTitle>
         <CtaButtonWrapper>
           <SeeMoreButton>
-            <Text>See More Projects</Text>
+            <Text>Ask Me First</Text>
           </SeeMoreButton>
           <Link href="mailto:hani.husam@gmail.com" passHref>
             <HireMeButton type="button">
-              <Text as="a">Hire Me</Text>
+              <Text as="a">Let's Connect</Text>
             </HireMeButton>
           </Link>
         </CtaButtonWrapper>
