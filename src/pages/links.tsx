@@ -170,13 +170,13 @@ const LinksPage: React.FC = () => (
                 </a>
               </Link>
               <Link
-                href="https://www.figma.com/community/file/1013467435484263834/Template-%7C-CV"
+                href="https://www.figma.com/community/file/1016698474340633848/Pitch-Deck-Design-Template"
                 passHref
               >
                 <a rel="noopener noreferrer" target="_blank">
                   <LinkButton>
                     <SiFigma style={{ marginRight: 8 }} />
-                    CV Template - FREE
+                    Pitch Deck Freelancer Template
                   </LinkButton>
                 </a>
               </Link>
