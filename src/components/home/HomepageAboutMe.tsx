@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import Column from '../layout/Column'
-import { Box, Heading, Paragraph, themeProps, Verse } from '../ui'
+import { Box, Heading, Paragraph, themeProps } from '../ui'
 
 import styled from '@emotion/styled'
 
@@ -31,21 +31,6 @@ const AboutMeContent = styled(Box)`
     flex-direction: row;
     justify-content: space-between;
   }
-`
-
-const FirstTitle = styled(Verse)`
-  color: ${themeProps.colors.secondary};
-  padding-bottom: ${themeProps.space.md}px;
-`
-
-const SecondTitle = styled(Heading)`
-  color: ${themeProps.colors.white};
-  padding-bottom: ${themeProps.space.md}px;
-`
-
-const Description = styled(Paragraph)`
-  color: ${themeProps.colors.white};
-  padding-bottom: ${themeProps.space.md}px;
 `
 
 const LeftContentWrapper = styled(Box)`
@@ -79,17 +64,21 @@ const AboutMe: React.FC = () => (
           <img alt="About Me Avatar" src="/images/aboutme-illustration.svg" />
         </LeftContentWrapper>
         <RightContentWrapper>
-          <FirstTitle>About Me</FirstTitle>
-          <SecondTitle>Why hire me for your next project?</SecondTitle>
-          <Description>
+          <Paragraph color="secondary" paddingBottom={themeProps.space.md}>
+            About Me
+          </Paragraph>
+          <Heading color="#fff" paddingBottom={themeProps.space.xxl}>
+            Why hire me for your next project?
+          </Heading>
+          <Paragraph color="#fff" paddingBottom={themeProps.space.xxl}>
             In the past, I worked at a Singapore venture-backed startup as a Fullstack Developer.
-          </Description>
-          <Description>
+          </Paragraph>
+          <Paragraph color="#fff" paddingBottom={themeProps.space.xxl}>
             I have a principle that is &quot;stay simple and stay humble&quot;. I believe,
             simplicity hides a great deal of complexity and thoroughness. I see every project as a
             process of solving a problem. Now it's time to solve your problems in detail, in depth,
             and of course with simplicity.
-          </Description>
+          </Paragraph>
         </RightContentWrapper>
       </AboutMeContent>
     </Column>
