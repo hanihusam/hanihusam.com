@@ -70,9 +70,11 @@ const AboutMe: React.FC = () => (
           <Heading color="#fff" paddingBottom={themeProps.space.md}>
             Why hire me for your next project?
           </Heading>
-          <Paragraph color="#fff" paddingBottom={themeProps.space.xxl}>
+          <Paragraph color="#fff" paddingBottom={themeProps.space.sm}>
             In the past, I worked at a Singapore venture-backed startup as a Fullstack Developer.
-            <br />I have a principle that is &quot;stay simple and stay humble&quot;. I believe,
+          </Paragraph>
+          <Paragraph color="#fff" paddingBottom={themeProps.space.xxl}>
+            I have a principle that is &quot;stay simple and stay humble&quot;. I believe,
             simplicity hides a great deal of complexity and thoroughness. I see every project as a
             process of solving a problem. Now it's time to solve your problems in detail, in depth,
             and of course with simplicity.
