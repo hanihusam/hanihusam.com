@@ -25,6 +25,13 @@ const ServicesContent = styled(Box)`
   }
 `
 
+const Description = styled(Box)`
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  max-width: 512px;
+`
+
 const CardWrapper = styled(Box)`
   width: fit-content;
   display: flex;
@@ -76,7 +83,7 @@ const Services: React.FC = () => {
     <SectionArea>
       <Column>
         <ServicesContent>
-          <Box display="flex" flexDirection="column" maxWidth={512}>
+          <Description>
             <Paragraph color="secondary" paddingBottom={themeProps.space.md}>
               Services
             </Paragraph>
@@ -89,7 +96,7 @@ const Services: React.FC = () => {
               It doesn't have a modern look and optimal user experience across various devices, and
               browsers? <strong>You're in the right place!</strong>
             </Paragraph>
-          </Box>
+          </Description>
           <CardWrapper>
             <Card>
               <CardBody>
