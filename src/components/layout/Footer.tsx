@@ -52,7 +52,7 @@ const Footer: React.FC = () => (
         </FooterCopyright>
         <Box display="flex" flexDirection="row" justifyContent="space-between" width={120}>
           <SocialLink
-            href="https://linkedin.com/in/hanihusamuddin"
+            href="https://linkedin.com/in/hanihusam"
             rel="noopener noreferrer"
             target="_blank"
           >

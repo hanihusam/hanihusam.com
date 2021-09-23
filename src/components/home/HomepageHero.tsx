@@ -185,7 +185,7 @@ const Hero: React.FC = () => (
           <Line />
           <SocialLinkWrapper>
             <Icon
-              href="https://linkedin.com/in/hanihusamuddin"
+              href="https://linkedin.com/in/hanihusam"
               marginRight="24px"
               rel="noopener noreferrer"
               size="32"
@@ -231,7 +231,7 @@ const Hero: React.FC = () => (
               <Text>Email Me</Text>
             </PrimaryButton>
             <Link
-              href="https://drive.google.com/file/d/1TwgJosOspY8mrxHrTT91bKwcssOZomhn/view?usp=sharing"
+              href="https://drive.google.com/file/d/1pauUzeImQPPpzS9D8HI-CcySZO_MjWgk/view?usp=sharing"
               passHref
             >
               <AnchorButton type="button">
@@ -244,7 +244,7 @@ const Hero: React.FC = () => (
           </CtaButtonWrapper>
           <SocialLinkWrapper>
             <Icon
-              href="https://linkedin.com/in/hanihusamuddin"
+              href="https://linkedin.com/in/hanihusam"
               marginRight="24px"
               rel="noopener noreferrer"
               size="32"
@@ -253,7 +253,7 @@ const Hero: React.FC = () => (
               <SiLinkedin />
             </Icon>
             <Icon
-              href="https://github.com/hanihusamu"
+              href="https://github.com/hanihusam"
               marginRight="24px"
               rel="noopener noreferrer"
               size="32"
