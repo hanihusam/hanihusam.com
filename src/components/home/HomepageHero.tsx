@@ -216,15 +216,16 @@ const Hero: React.FC = () => (
         <Avatar />
         <RightContentWrapper>
           <FirstTitle as="p" color="secondary" variant={800}>
-            Hi, I am Han
+            Hi 👋, I am Han
           </FirstTitle>
           <Heading color="primary" paddingBottom={themeProps.space.xl}>
-            Frontend Developer and UI Designer from Yogyakarta, Indonesia.
+            UI Engineer from Yogyakarta, Indonesia.
           </Heading>
           <Paragraph color="black" paddingBottom={themeProps.space.xxl}>
             I am a multi-disciplinary Frontend Developer and UI Designer who have experience
             creating projects in a various industry and have worked with diverse clients from all
-            over the world.
+            over the world. I merge technical and design skills to create innovative product with
+            beautiful and functional user experiences.
           </Paragraph>
           <CtaButtonWrapper>
             <PrimaryButton type="button">
