@@ -75,7 +75,7 @@ const Services: React.FC = () => {
     <SectionArea>
       <Column>
         <ServicesContent>
-          <Box display="flex" flexDirection="column" maxWidth={512}>
+          <Box display="flex" flexDirection="column" width={512}>
             <Paragraph color="secondary" paddingBottom={themeProps.space.md}>
               Services
             </Paragraph>
