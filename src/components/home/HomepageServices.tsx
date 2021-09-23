@@ -26,6 +26,7 @@ const ServicesContent = styled(Box)`
 `
 
 const CardWrapper = styled(Box)`
+  width: fit-content;
   display: flex;
   flex-direction: column;
   text-align: left;
@@ -75,7 +76,7 @@ const Services: React.FC = () => {
     <SectionArea>
       <Column>
         <ServicesContent>
-          <Box display="flex" flexDirection="column" width={512}>
+          <Box display="flex" flexDirection="column" maxWidth={512}>
             <Paragraph color="secondary" paddingBottom={themeProps.space.md}>
               Services
             </Paragraph>
