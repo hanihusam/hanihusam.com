@@ -48,7 +48,7 @@ const MobileNav = styled(Box)`
   display: flex;
   justify-content: space-evenly;
   height: 54px;
-  z-index: 1;
+  z-index: 999;
 
   ${themeProps.mediaQueries.sm} {
     display: none;
