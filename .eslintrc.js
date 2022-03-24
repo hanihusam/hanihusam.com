@@ -2,26 +2,22 @@ module.exports = {
   env: {
     browser: true,
     es2021: true,
-    node: true,
+    node: true
   },
-  plugins: ['@typescript-eslint', 'simple-import-sort', 'unused-imports'],
-  extends: [
-    'eslint:recommended',
-    'next',
-    'next/core-web-vitals',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['plugin:@typescript-eslint/recommended', 'prettier', 'plugin:@next/next/recommended'],
+  plugins: ['prettier', 'simple-import-sort', 'unused-imports'],
   rules: {
+    '@babel/new-cap': 'off',
+    '@typescript-eslint/no-explicit-any': 'warn',
     'no-unused-vars': 'off',
+    'no-unused-private-class-members': 'off',
+    'prefer-object-has-own': 'off',
     'no-console': 'warn',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-
     'react/display-name': 'off',
-    'react/jsx-curly-brace-presence': [
-      'warn',
-      { props: 'never', children: 'never' },
-    ],
+    'jsx-a11y/anchor-is-valid': 'off',
+    'jsx-a11y/accessible-emoji': 'off',
+    'react/react-in-jsx-scope': ['off'],
 
     //#region  //*=========== Unused Import ===========
     '@typescript-eslint/no-unused-vars': 'off',
@@ -32,8 +28,8 @@ module.exports = {
         vars: 'all',
         varsIgnorePattern: '^_',
         args: 'after-used',
-        argsIgnorePattern: '^_',
-      },
+        argsIgnorePattern: '^_'
+      }
     ],
     //#endregion  //*======== Unused Import ===========
 
@@ -66,18 +62,18 @@ module.exports = {
             '^\\.\\./\\.\\./?$',
             '^\\.\\./\\.\\.(?!/?$)',
             '^\\.\\./\\.\\./\\.\\./?$',
-            '^\\.\\./\\.\\./\\.\\.(?!/?$)',
+            '^\\.\\./\\.\\./\\.\\.(?!/?$)'
           ],
           ['^@/types'],
           // other that didnt fit in
-          ['^'],
-        ],
-      },
-    ],
+          ['^']
+        ]
+      }
+    ]
     //#endregion  //*======== Import Sort ===========
   },
   globals: {
     React: true,
-    JSX: true,
-  },
-};
+    JSX: true
+  }
+}
