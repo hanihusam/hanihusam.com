@@ -1,39 +1,16 @@
-import 'modern-normalize'
-import '../styles/fonts'
+import { AppProps } from 'next/app';
 
-import * as React from 'react'
+import '@/styles/globals.css';
+// !STARTERCONF This is for demo purposes, remove @/styles/colors.css import immediately
+import '@/styles/colors.css';
 
-import { ThemeWrapper } from '../components/layout'
-import emotionCache from '../utils/emotionCache'
+/**
+ * !STARTERCONF info
+ * ? `Layout` component is called in every page using `np` snippets. If you have consistent layout across all page, you can add it here too
+ */
 
-import { CacheProvider } from '@emotion/react'
-import { AppProps } from 'next/app'
-import Head from 'next/head'
-import { DefaultSeo } from 'next-seo'
-import siteMetadata from 'src/_data/siteMetaData.json'
-
-export default function MyApp({ Component, pageProps, router }: AppProps) {
-  return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-        <link href="/icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180" />
-        <link href="/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png" />
-        <link href="/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png" />
-        <link href="/favicon.ico" rel="shortcut icon" />
-        <link href="/manifest.json" rel="manifest" />
-      </Head>
-
-      <DefaultSeo
-        canonical={siteMetadata.siteUrl + (router.asPath || '')}
-        description={siteMetadata.description}
-        title="Home"
-        titleTemplate={`%s · ${siteMetadata.title}`}
-      />
-
-      <ThemeWrapper>
-        <Component {...pageProps} />
-      </ThemeWrapper>
-    </CacheProvider>
-  )
+function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
 }
+
+export default MyApp;

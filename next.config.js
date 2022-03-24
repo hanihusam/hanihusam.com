@@ -1,52 +1,34 @@
-const basePath = ''
+/** @type {import('next').NextConfig} */
+module.exports = {
+  eslint: {
+    dirs: ['src'],
+  },
 
-const nextConfig = {
-  trailingSlash: true,
-  target: 'serverless',
-  basePath,
-  async headers() {
-    return [
-      {
-        source: '/_next/static/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
-          }
-        ]
-      },
-      {
-        source: '/static/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable'
-          }
-        ]
-      },
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY'
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block'
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'same-origin'
-          }
-        ]
-      }
-    ]
-  }
-}
+  reactStrictMode: true,
 
-module.exports = nextConfig
+  // Uncoment to add domain whitelist
+  // images: {
+  //   domains: [
+  //     'res.cloudinary.com',
+  //   ],
+  // },
+
+  // SVGR
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      issuer: /\.[jt]sx?$/,
+      use: [
+        {
+          loader: '@svgr/webpack',
+          options: {
+            typescript: true,
+            icon: true,
+          },
+        },
+      ],
+    });
+
+    return config;
+  },
+};
