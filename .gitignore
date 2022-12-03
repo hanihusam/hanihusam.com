@@ -1,5 +1,8 @@
 node_modules
 
+# ESLint
+.eslintcache
+
 /build
 /public/build
 .env
