@@ -1,48 +1,54 @@
-import type { LinksFunction, LoaderArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-} from "@remix-run/react";
+import fonts from "@/styles/fonts.css";
+import tailwindStyles from "@/styles/tailwind.css";
 
-import tailwindStylesheetUrl from "./styles/tailwind.css";
-import fonts from "./styles/fonts.css";
-import { getUser } from "./session.server";
+import { H1 } from "@/components/typography";
+
+import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import { Links, LiveReload, Meta } from "@remix-run/react";
 
 export const links: LinksFunction = () => {
   return [
-    { rel: "stylesheet", href: tailwindStylesheetUrl },
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      href: "/favicons/apple-touch-icon.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "32x32",
+      href: "/favicons/favicon-32x32.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "16x16",
+      href: "/favicons/favicon-16x16.png",
+    },
+    { rel: "manifest", href: "/site.webmanifest" },
+    { rel: "icon", href: "/favicon.ico" },
+    { rel: "stylesheet", href: tailwindStyles },
     { rel: "stylesheet", href: fonts },
   ];
 };
 
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
-  title: "Remix Notes",
-  viewport: "width=device-width,initial-scale=1",
+  title: "Hani Husamuddin",
+  description:
+    "A professional freelancer who are able to help you solve your software engineer and UI design problem",
+  viewport: "width=device-width,initial-scale=1,viewport-fit=cover",
 });
-
-export async function loader({ request }: LoaderArgs) {
-  return json({
-    user: await getUser(request),
-  });
-}
 
 export default function App() {
   return (
-    <html lang="en" className="h-full">
+    <html lang="en">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="h-full">
-        <Outlet />
-        <ScrollRestoration />
-        <Scripts />
+      <body>
+        <H1>Hello world</H1>
         <LiveReload />
       </body>
     </html>
