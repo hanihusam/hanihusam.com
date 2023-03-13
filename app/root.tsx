@@ -36,7 +36,7 @@ export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Hani Husamuddin",
   description:
-    "A professional freelancer who are able to help you solve your software engineer and UI design problem",
+    "A professional freelancer who could help you solve your software engineer and UI design problem",
   viewport: "width=device-width,initial-scale=1,viewport-fit=cover",
 });
 
@@ -48,7 +48,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <H1>Hello world</H1>
+        <H1 className="text-dark">Hello world</H1>
         <LiveReload />
       </body>
     </html>
