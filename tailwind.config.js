@@ -6,8 +6,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        dark: "#46434E",
-        light: "#F2F3F2",
+        black: "#46434E",
+        white: "#FFFFFF",
+        dark: "#434343",
+        light: "#F2F2F2",
         body: "#7C808B",
         accent: "#7A8391",
         primary: {
@@ -18,15 +20,15 @@ module.exports = {
           700: "#A75016",
         },
         secondary: {
-          300: "#55749B",
-          400: "#435C7A",
-          500: "#304258",
-          600: "#1F2A38",
-          700: "#0D1117",
+          300: "#7398C7",
+          400: "#55749B",
+          500: "#45577B",
+          600: "##304258",
+          700: "#1F2A38",
         },
       },
       fontFamily: {
-        sans: ["Poppins", "Ubuntu", ...defaultTheme.fontFamily.sans],
+        sans: ["Satoshi", ...defaultTheme.fontFamily.sans],
       },
     },
   },
