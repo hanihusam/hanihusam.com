@@ -1,7 +1,23 @@
 {
-  "name": "hanihusam-com-da54",
-  "private": true,
-  "sideEffects": false,
+  "name": "hanihusam.com",
+  "version": "1.0.0",
+  "engines": {
+    "node": "18",
+    "npm": "8"
+  },
+  "description": "A remix version of hanihusam.com",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hanihusam/hanihusam.com.git"
+  },
+  "keywords": [],
+  "author": "Hani Husamuddin <me@hanihusam.com> (https://hanihusam.com/)",
+  "license": "GPL-3.0-only",
+  "bugs": {
+    "url": "https://github.com/hanihusam/hanihusam.com/issues"
+  },
+  "homepage": "https://github.com/hanihusam/hanihusam.com#readme",
   "scripts": {
     "build": "run-s build:*",
     "build:css": "npm run generate:css -- --minify",
@@ -30,25 +46,28 @@
     "/public/build"
   ],
   "dependencies": {
-    "@heroicons/react": "^2.0.13",
+    "@headlessui/react": "^1.7.13",
+    "@heroicons/react": "^2.0.16",
     "@prisma/client": "^4.5.0",
-    "@remix-run/node": "^1.8.0",
-    "@remix-run/react": "^1.8.0",
-    "@remix-run/serve": "^1.8.0",
+    "@remix-run/node": "^1.14.1",
+    "@remix-run/react": "^1.14.1",
+    "@remix-run/serve": "^1.14.1",
     "@remix-run/server-runtime": "^1.8.0",
     "bcryptjs": "^2.4.3",
     "clsx": "^1.2.1",
     "isbot": "^3.6.3",
+    "pm2": "^5.2.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tailwind-merge": "^1.8.1",
-    "tiny-invariant": "^1.3.1"
+    "tiny-invariant": "^1.3.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
     "@faker-js/faker": "^7.6.0",
-    "@remix-run/dev": "^1.8.0",
+    "@remix-run/dev": "^1.14.1",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@testing-library/cypress": "^8.0.3",
     "@testing-library/dom": "^8.19.0",
@@ -60,6 +79,7 @@
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.48.0",
     "@typescript-eslint/parser": "^5.48.0",
     "@vitejs/plugin-react": "^2.2.0",
@@ -88,9 +108,6 @@
     "vite": "^3.2.2",
     "vite-tsconfig-paths": "^3.5.2",
     "vitest": "^0.24.5"
-  },
-  "engines": {
-    "node": ">=14"
   },
   "prisma": {
     "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"

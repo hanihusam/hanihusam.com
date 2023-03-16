@@ -1,18 +1,17 @@
-import type { EntryContext } from "@remix-run/node";
+import type { HandleDocumentRequestFunction } from "@remix-run/node";
 import { Response } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 import { PassThrough } from "stream";
 
+type DocRequestArgs = Parameters<HandleDocumentRequestFunction>;
+
 const ABORT_DELAY = 5000;
 
-export default function handleRequest(
-  request: Request,
-  responseStatusCode: number,
-  responseHeaders: Headers,
-  remixContext: EntryContext
-) {
+export default function handleRequest(...args: DocRequestArgs) {
+  const [request, responseStatusCode, responseHeaders, remixContext] = args;
+
   const callbackName = isbot(request.headers.get("user-agent"))
     ? "onAllReady"
     : "onShellReady";
@@ -21,7 +20,11 @@ export default function handleRequest(
     let didError = false;
 
     const { pipe, abort } = renderToPipeableStream(
-      <RemixServer context={remixContext} url={request.url} />,
+      <RemixServer
+        abortDelay={ABORT_DELAY}
+        context={remixContext}
+        url={request.url}
+      />,
       {
         [callbackName]: () => {
           const body = new PassThrough();

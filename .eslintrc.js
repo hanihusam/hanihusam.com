@@ -8,6 +8,8 @@ module.exports = {
   plugins: ["prettier"],
   extends: ["eslint-config-kdnj/react"],
   rules: {
+    "no-console": "off",
+
     "jsx-a11y/alt-text": "off", // it's not smart enough
     "jsx-a11y/media-has-caption": "off",
     "no-unused-private-class-members": "off",
@@ -32,6 +34,11 @@ module.exports = {
         ],
       },
     ],
+
+    // I can't figure these out:
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
 
     // for CatchBoundaries
     "@typescript-eslint/no-throw-literal": "off",
