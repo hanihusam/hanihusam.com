@@ -38,7 +38,7 @@ const Grid = React.forwardRef<HTMLElement, GridProps>(function Grid(
           "relative grid grid-cols-4 gap-x-4 md:grid-cols-8 lg:grid-cols-12 lg:gap-x-6",
           {
             "mx-auto max-w-7xl": !nested,
-            "gap-y-4 lg:gap-y-6": rowGap,
+            "gap-y-8": rowGap,
           },
           className
         )}
