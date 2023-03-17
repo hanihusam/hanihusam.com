@@ -76,6 +76,7 @@ export const links: LinksFunction = () => {
       href: "/favicons/favicon-16x16.png",
     },
     { rel: "icon", href: "/favicon.ico" },
+    { rel: "manifest", href: "/favicons/manifest.json" },
     { rel: "stylesheet", href: tailwindStyles },
     { rel: "stylesheet", href: fonts },
   ];
@@ -89,7 +90,7 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1,viewport-fit=cover",
 });
 
-function Root() {
+export default function App() {
   return (
     <html lang="en">
       <head>
@@ -108,8 +109,4 @@ function Root() {
       </body>
     </html>
   );
-}
-
-export default function AppWithProviders() {
-  return <Root />;
 }

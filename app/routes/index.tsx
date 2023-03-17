@@ -3,7 +3,7 @@ import { HeroSection } from "@/components/home/hero-section";
 import { ServicesSection } from "@/components/home/services-section";
 import { Spacer } from "@/components/spacer";
 
-export default function IndexRoute() {
+export default function HomePage() {
   return (
     <>
       <HeroSection />
