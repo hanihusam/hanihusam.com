@@ -5,10 +5,8 @@ import { ServicesSection } from "@/components/home/services-section";
 export default function IndexRoute() {
   return (
     <>
-      <div className="flex flex-col items-start">
-        <HeroSection />
-        <AboutSection />
-      </div>
+      <HeroSection />
+      <AboutSection />
       <ServicesSection />
     </>
   );

@@ -11,7 +11,7 @@ const theme: string = "light";
 export function Navbar() {
   return (
     <div className="flex items-start py-6 px-6 md:px-[5vw] lg:py-12">
-      <div className="mx-auto flex w-full items-center md:justify-between">
+      <nav className="mx-auto flex w-full max-w-8xl items-center md:justify-between">
         <div className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-light">
           <img alt="HNH logo" className="h-10 w-10" src={logo} />
         </div>
@@ -26,7 +26,7 @@ export function Navbar() {
         </div>
         <Switch
           checked={theme === "dark"}
-          className="relative hidden h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white  focus-visible:ring-opacity-75 md:inline-flex"
+          className="relative hidden h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-base bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white  focus-visible:ring-opacity-75 md:inline-flex"
           onChange={(checked) => {
             console.log(checked);
           }}
@@ -44,7 +44,7 @@ export function Navbar() {
             )}
           </span>
         </Switch>
-      </div>
+      </nav>
     </div>
   );
 }

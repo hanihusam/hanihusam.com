@@ -1,5 +1,6 @@
 import { Button } from "@/components/button";
 import { ButtonText } from "@/components/button-text";
+import { Grid } from "@/components/grid";
 import { IconLink } from "@/components/icon-link";
 import { DribbbleIcon, GithubIcon, LinkedinIcon } from "@/components/icons";
 import { H1, H2, H4, Paragraph } from "@/components/typography";
@@ -12,9 +13,9 @@ import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 
 export function HeroSection() {
   return (
-    <div className="flex flex-col items-start space-y-6 self-stretch px-6 pt-6 md:flex-row md:justify-between md:px-[5vw] md:pt-12">
-      <div className="hidden flex-col space-y-16 md:flex">
-        <div className="flex flex-col space-y-6">
+    <Grid className="mb-24 h-auto pt-24 lg:min-h-[40rem] xl:mb-0">
+      <div className="hidden gap-16 lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:flex lg:flex-col">
+        <div className="flex flex-col gap-6">
           <div className="flex flex-col">
             <H4 className="text-primary-500">Hi, I am</H4>
             <H1 className="text-secondary-500 dark:text-light">Han</H1>
@@ -38,19 +39,18 @@ export function HeroSection() {
 
       <img
         alt="Avatar of Han"
-        className="hidden md:block"
+        className="col-span-full hidden lg:col-span-6 lg:col-start-3 lg:block"
         src={avatar}
-        width={523}
       />
       <img
         alt="Avatar of Han"
-        className="block md:hidden"
+        className="col-span-full mx-auto mb-12 block lg:hidden"
         src={avatarMemoji}
         width={380}
       />
 
-      <div className="flex w-[370px] flex-col space-y-8 self-stretch">
-        <div className="flex flex-col space-y-4">
+      <div className="col-span-full flex flex-col gap-8 self-stretch lg:col-span-4 lg:col-start-9">
+        <div className="flex flex-col gap-4">
           <H4 className="block text-primary-500 md:hidden">
             Hi{" "}
             <span aria-labelledby="hi emoji" role="img">
@@ -86,6 +86,6 @@ export function HeroSection() {
           </AnchorOrLink>
         </div>
       </div>
-    </div>
+    </Grid>
   );
 }

@@ -1,14 +1,18 @@
 import { AboutIllustration } from "@/assets/illustrations";
+import { Grid } from "@/components/grid";
 import { H2, H6, Paragraph } from "@/components/typography";
+import { useMediaQuery } from "@/utils/misc";
 
 export function AboutSection() {
-  return (
-    <div className="mt-8 flex self-stretch md:mt-0 md:px-[5vw]">
-      <div className="flex w-full flex-col items-center space-y-6 self-stretch rounded-xl bg-black px-6 py-[72px] md:flex-row md:justify-between md:px-10">
-        <AboutIllustration className="w-[375px] md:w-[500px]" />
+  const mobile = useMediaQuery("(max-width: 640px)");
 
-        <div className="flex max-w-[475px] flex-col items-start space-y-8 self-stretch">
-          <div className="flex flex-col space-y-2 self-stretch">
+  return (
+    <Grid nested={mobile}>
+      <div className="col-span-full grid grid-cols-4 gap-6 rounded-xl bg-black px-6 py-[72px] md:grid-cols-8 md:flex-row md:px-10 lg:grid-cols-12">
+        <AboutIllustration className="col-span-full col-start-1 row-start-1 w-[375px] md:w-[500px] lg:col-span-4" />
+
+        <div className="col-span-full flex flex-col items-start gap-8 self-stretch lg:col-span-5 lg:col-start-8">
+          <div className="flex flex-col gap-2 self-stretch">
             <H6 className="text-primary-500">About</H6>
             <H2 className="text-light">Why hire me for your next project?</H2>
           </div>
@@ -29,6 +33,6 @@ export function AboutSection() {
           </div>
         </div>
       </div>
-    </div>
+    </Grid>
   );
 }
