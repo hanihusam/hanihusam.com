@@ -63,7 +63,7 @@ export function HeroSection() {
           </H2>
         </div>
 
-        <Paragraph className="text-body">
+        <Paragraph>
           I am a multi-disciplinary Frontend Developer and UI Designer who have
           experience creating projects in a various industry and have worked
           with diverse clients from all over the world. I merge technical and
