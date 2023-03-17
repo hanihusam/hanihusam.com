@@ -1,16 +1,11 @@
+import { AboutIllustration } from "@/assets/illustrations";
 import { H2, H6, Paragraph } from "@/components/typography";
-
-import illustration from "../../../public/images/illustration.png";
 
 export function AboutSection() {
   return (
     <div className="mt-8 flex self-stretch md:mt-0 md:px-[5vw]">
       <div className="flex w-full flex-col items-center space-y-6 self-stretch rounded-xl bg-black px-6 py-[72px] md:flex-row md:justify-between md:px-10">
-        <img
-          alt="freelancer illustration"
-          className="w-[375px] md:w-[500px]"
-          src={illustration}
-        />
+        <AboutIllustration className="w-[375px] md:w-[500px]" />
 
         <div className="flex max-w-[475px] flex-col items-start space-y-8 self-stretch">
           <div className="flex flex-col space-y-2 self-stretch">
