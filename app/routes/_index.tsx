@@ -15,6 +15,7 @@ export default function IndexRoute() {
       <ServicesSection />
       <Spacer size="lg" />
       <CtaSection />
+      <Spacer size="lg" />
     </React.Fragment>
   );
 }

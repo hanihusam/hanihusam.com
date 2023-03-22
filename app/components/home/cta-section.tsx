@@ -11,11 +11,10 @@ export function CtaSection() {
 
   return (
     <Grid nested={mobile}>
-      <div className="col-span-full grid grid-cols-4 gap-6 rounded-xl bg-black px-6 py-[72px] md:grid-cols-8 md:flex-row md:px-10 lg:grid-cols-12">
-        <div className="col-span-full lg:col-span-6">
-          <H2 className="text-light">Interested working with me?</H2>
-        </div>
-        <div className="col-span-full flex gap-2 self-stretch lg:col-start-10">
+      <div className="col-span-full flex flex-col gap-6 rounded-xl bg-black px-6 py-[72px] md:flex-row md:px-10 lg:justify-between">
+        <H2 className="text-light">Interested working with me?</H2>
+
+        <div className="flex gap-2 self-stretch">
           <ButtonOutline>See Projects</ButtonOutline>
           <Button icon={EnvelopeIcon} iconClassName="text-light">
             Email Me

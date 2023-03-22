@@ -4,6 +4,7 @@ import { Grid } from "@/components/grid";
 import { IconLink } from "@/components/icon-link";
 import { DribbbleIcon, GithubIcon, LinkedinIcon } from "@/components/icons";
 import { H1, H2, H4, Paragraph } from "@/components/typography";
+import { externalLinks } from "@/external-links";
 import { AnchorOrLink } from "@/utils/misc";
 
 import avatar from "../../../public/images/avatar-hani.png";
@@ -25,13 +26,13 @@ export function HeroSection() {
         </div>
 
         <div className="flex items-start space-x-6">
-          <IconLink href="https://linkedin.com/in/hanihusam/" target="_blank">
+          <IconLink href={externalLinks.linkedin}>
             <LinkedinIcon className="text-secondary-500" />
           </IconLink>
-          <IconLink href="https://github.com/hanihusam" target="_blank">
+          <IconLink href={externalLinks.github}>
             <GithubIcon className="text-secondary-500" />
           </IconLink>
-          <IconLink href="https://dribbble.com/hanihusam" target="_blank">
+          <IconLink href={externalLinks.dribbble}>
             <DribbbleIcon className="text-secondary-500" />
           </IconLink>
         </div>

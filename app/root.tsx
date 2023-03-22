@@ -1,6 +1,7 @@
 import fonts from "@/styles/fonts.css";
 import tailwindStyles from "@/styles/tailwind.css";
 
+import { Footer } from "@/components/footer";
 import { LayoutRoot } from "@/components/layout";
 import { Navbar } from "@/components/navbar";
 
@@ -101,6 +102,7 @@ export default function App() {
         <LayoutRoot>
           <Navbar />
           <Outlet />
+          <Footer />
         </LayoutRoot>
 
         <ScrollRestoration />
