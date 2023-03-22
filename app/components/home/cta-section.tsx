@@ -1,4 +1,5 @@
 import { Button } from "@/components/button";
+import { ButtonOutline } from "@/components/button-outline";
 import { Grid } from "@/components/grid";
 import { H2 } from "@/components/typography";
 import { useMediaQuery } from "@/utils/misc";
@@ -15,7 +16,7 @@ export function CtaSection() {
           <H2 className="text-light">Interested working with me?</H2>
         </div>
         <div className="col-span-full flex gap-2 self-stretch lg:col-start-10">
-          <Button>See Projects</Button>
+          <ButtonOutline>See Projects</ButtonOutline>
           <Button icon={EnvelopeIcon} iconClassName="text-light">
             Email Me
           </Button>

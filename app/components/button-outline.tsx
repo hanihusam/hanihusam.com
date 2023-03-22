@@ -9,7 +9,7 @@ import clsxm from "@/utils/clsxm";
 
 import { Paragraph } from "./typography";
 
-interface ButtonBaseProps {
+interface ButtonOutlineBaseProps {
   /** Make the button expand the width of the container. */
   block?: boolean;
   /** The base variant of the button. */
@@ -21,17 +21,17 @@ interface ButtonBaseProps {
   iconClassName?: string;
 }
 
-type ButtonProps = ButtonBaseProps &
+type ButtonProps = ButtonOutlineBaseProps &
   React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 function buttonModifierStyle(variant: "primary" | "secondary") {
   switch (variant) {
     case "primary":
-      return "hover:bg-primary-600 focus:ring-2 focus:ring-primary-500/20 active:bg-primary-700 disabled:bg-primary-300";
+      return "hover:bg-primary-500 focus:ring-2 focus:ring-primary-500/20 active:bg-primary-600 active:border-primary-600 disabled:border-primary-300 disabled:text-primary-300";
     case "secondary":
-      return "hover:bg-secondary-600 focus:ring-2 focus:ring-secondary-500/20 active:bg-secondary-700 disabled:bg-secondary-300";
+      return "hover:bg-secondary-500 focus:ring-2 focus:ring-secondary-500/20 active:bg-secondary-600 active:border-secondary-600 disabled:border-secondary-300 disabled:text-secondary-300";
     default:
-      return "hover:bg-primary-600 focus:ring-2 focus:ring-primary-500/20 active:bg-primary-700 disabled:bg-primary-300";
+      return "hover:bg-primary-500 focus:ring-2 focus:ring-primary-500/20 active:bg-primary-600 disabled:border-primary-300 disabled:text-primary-300";
   }
 }
 
@@ -40,7 +40,7 @@ function buttonModifierStyle(variant: "primary" | "secondary") {
  *
  * @link https://tailwindui.com/components/application-ui/elements/buttons#component-80fd0d5ac7982f1a83b171bb0fb9e116
  */
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+export const ButtonOutline = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       className,
@@ -61,8 +61,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       className={clsxm(
         buttonBlockStyles(block),
         buttonModifierStyle(variant),
-        "items-center justify-center rounded-md px-5 py-3 duration-200 focus:outline-none",
-        `bg-${variant}-500`,
+        "group items-center justify-center rounded-md border px-5 py-3 duration-200 focus:outline-none",
+        `border-${variant}-500 text-${variant}-500`,
         disabledStyles,
         className
       )}
@@ -76,9 +76,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         icon,
         additionalClasses: iconClassName,
       })}
-      <Paragraph className="text-light">{children}</Paragraph>
+      <Paragraph
+        className={`text-${variant} group-hover:text-light group-focus:text-light group-active:text-light`}
+      >
+        {children}
+      </Paragraph>
     </button>
   )
 );
 
-Button.displayName = "Button";
+ButtonOutline.displayName = "ButtonOutline";
