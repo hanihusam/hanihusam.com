@@ -1,12 +1,44 @@
-import { H6 } from "@/components/typography";
+import clsxm from "@/utils/clsxm";
 
 import logo from "../../public/images/hnh-logo.png";
 
 import { Switch } from "@headlessui/react";
 import { SunIcon } from "@heroicons/react/24/outline";
 import { MoonIcon } from "@heroicons/react/24/solid";
+import { Link, useLocation } from "@remix-run/react";
 
 const theme: string = "light";
+
+const LINKS = [
+  { name: "Blog", to: "/blog" },
+  { name: "Projects", to: "/projects" },
+];
+
+function NavLink({
+  to,
+  ...rest
+}: Omit<Parameters<typeof Link>["0"], "to"> & { to: string }) {
+  const location = useLocation();
+  const isSelected =
+    to === location.pathname || location.pathname.startsWith(`${to}/`);
+
+  return (
+    <li className="flex items-start px-5 py-2">
+      <Link
+        className={clsxm(
+          "underlined block whitespace-nowrap text-lg font-medium focus:outline-none dark:text-white",
+          {
+            "active text-secondary": isSelected,
+            "text-black ": !isSelected,
+          }
+        )}
+        prefetch="intent"
+        to={to}
+        {...rest}
+      />
+    </li>
+  );
+}
 
 export function Navbar() {
   return (
@@ -17,13 +49,13 @@ export function Navbar() {
         </div>
 
         <div className="hidden items-start md:flex">
-          <div className="flex items-start px-5 py-2">
-            <H6 className="text-black dark:text-white">Blog</H6>
-          </div>
-          <div className="flex items-start px-5 py-2">
-            <H6 className="text-black dark:text-white">Projects</H6>
-          </div>
+          {LINKS.map((link) => (
+            <NavLink key={link.to} to={link.to}>
+              {link.name}
+            </NavLink>
+          ))}
         </div>
+
         <Switch
           checked={theme === "dark"}
           className="relative hidden h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-base bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white  focus-visible:ring-opacity-75 md:inline-flex"

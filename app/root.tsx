@@ -1,3 +1,4 @@
+import appStyles from "@/styles/app.css";
 import fonts from "@/styles/fonts.css";
 import tailwindStyles from "@/styles/tailwind.css";
 
@@ -78,6 +79,7 @@ export const links: LinksFunction = () => {
     },
     { rel: "icon", href: "/favicon.ico" },
     { rel: "manifest", href: "/favicons/manifest.json" },
+    { rel: "stylesheet", href: appStyles },
     { rel: "stylesheet", href: tailwindStyles },
     { rel: "stylesheet", href: fonts },
   ];
