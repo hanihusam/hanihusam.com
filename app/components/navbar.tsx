@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import clsxm from "@/utils/clsxm";
+import { Theme, useTheme } from "@/utils/theme-provider";
 
 import logo from "../../public/images/hnh-logo.png";
 
@@ -8,8 +9,6 @@ import { Popover, Switch } from "@headlessui/react";
 import { Bars3Icon, SunIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { MoonIcon } from "@heroicons/react/24/solid";
 import { Link, useLocation } from "@remix-run/react";
-
-const theme: string = "light";
 
 const LINKS = [
   { name: "Blog", to: "/blog" },
@@ -75,8 +74,40 @@ export function NavigationMenuPopover({
             </Link>
           );
         })}
+        <div className="noscript-hidden py-9 text-center">
+          <ThemeToggler />
+        </div>
       </nav>
     </Popover.Panel>
+  );
+}
+
+function ThemeToggler() {
+  const [theme, setTheme] = useTheme();
+
+  return (
+    <Switch
+      checked={theme === Theme.DARK}
+      className="relative inline-flex h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-base bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75"
+      onChange={() => {
+        setTheme((prevTheme) =>
+          prevTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK
+        );
+      }}
+    >
+      <span className="sr-only">Use theme</span>
+      <span
+        aria-hidden="true"
+        className={`${theme === "dark" ? "translate-x-9" : "translate-x-0"}
+            pointer-events-none inline-block  transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+      >
+        {theme === "dark" ? (
+          <MoonIcon className="h-9 w-9 text-secondary-500" />
+        ) : (
+          <SunIcon className="h-9 w-9 text-primary-500" />
+        )}
+      </span>
+    </Switch>
   );
 }
 
@@ -142,26 +173,9 @@ export function Navbar() {
           )}
         </Popover>
 
-        <Switch
-          checked={theme === "dark"}
-          className="relative hidden h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-base bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white  focus-visible:ring-opacity-75 md:inline-flex"
-          onChange={(checked) => {
-            console.log(checked);
-          }}
-        >
-          <span className="sr-only">Use theme</span>
-          <span
-            aria-hidden="true"
-            className={`${theme === "dark" ? "translate-x-9" : "translate-x-0"}
-            pointer-events-none inline-block  transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
-          >
-            {theme === "dark" ? (
-              <MoonIcon className="h-9 w-9 text-secondary-500" />
-            ) : (
-              <SunIcon className="h-9 w-9 text-primary-500" />
-            )}
-          </span>
-        </Switch>
+        <div className="hidden lg:block">
+          <ThemeToggler />
+        </div>
       </nav>
     </div>
   );

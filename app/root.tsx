@@ -1,12 +1,26 @@
 import appStyles from "@/styles/app.css";
 import fonts from "@/styles/fonts.css";
+import noScriptStyles from "@/styles/no-script.css";
 import tailwindStyles from "@/styles/tailwind.css";
 
 import { Footer } from "@/components/footer";
 import { LayoutRoot } from "@/components/layout";
 import { Navbar } from "@/components/navbar";
+import clsxm from "@/utils/clsxm";
+import { getThemeSession } from "@/utils/theme.server";
+import {
+  NonFlashOfWrongThemeEls,
+  ThemeProvider,
+  useTheme,
+} from "@/utils/theme-provider";
 
-import type { LinksFunction, MetaFunction } from "@remix-run/node";
+import type {
+  DataFunctionArgs,
+  LinksFunction,
+  MetaFunction,
+  SerializeFrom,
+} from "@remix-run/node";
+import { json } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,6 +28,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 
 export const links: LinksFunction = () => {
@@ -93,12 +108,38 @@ export const meta: MetaFunction = () => ({
   viewport: "width=device-width,initial-scale=1,viewport-fit=cover",
 });
 
-export default function App() {
+export async function loader({ request }: DataFunctionArgs) {
+  const themeSession = await getThemeSession(request);
+
+  const data = {
+    requestInfo: {
+      path: new URL(request.url).pathname,
+      session: {
+        theme: themeSession.getTheme(),
+      },
+    },
+  };
+
+  return json(data);
+}
+
+export type LoaderData = SerializeFrom<typeof loader>;
+
+function App() {
+  const data = useLoaderData<typeof loader>();
+  const [theme] = useTheme();
+
   return (
-    <html lang="en">
+    <html className={clsxm(theme)} lang="en">
       <head>
         <Meta />
         <Links />
+        <noscript>
+          <link href={noScriptStyles} rel="stylesheet" />
+        </noscript>
+        <NonFlashOfWrongThemeEls
+          ssrTheme={Boolean(data.requestInfo.session.theme)}
+        />
       </head>
       <body>
         <LayoutRoot>
@@ -112,5 +153,15 @@ export default function App() {
         <LiveReload />
       </body>
     </html>
+  );
+}
+
+export default function AppWithProviders() {
+  const data = useLoaderData<LoaderData>();
+
+  return (
+    <ThemeProvider specifiedTheme={data.requestInfo.session.theme}>
+      <App />
+    </ThemeProvider>
   );
 }

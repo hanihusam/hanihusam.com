@@ -1,0 +1,4 @@
+/* This is for anything that just won't work without JavaScript */
+.noscript-hidden {
+  display: none !important;
+}
