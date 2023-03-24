@@ -7,8 +7,6 @@ import {
 } from "@/utils/button";
 import clsxm from "@/utils/clsxm";
 
-import { Paragraph } from "./typography";
-
 interface ButtonTextBaseProps {
   /** Make the button expand the width of the container. */
   block?: boolean;
@@ -46,7 +44,7 @@ export const ButtonText = React.forwardRef<HTMLButtonElement, ButtonTextProps>(
     <button
       className={clsxm(
         buttonBlockStyles(block),
-        "bg-transparent items-center justify-center rounded-md border-0 px-5 py-3 text-secondary-500 duration-200 hover:text-secondary-600 focus:text-secondary-600 focus:outline-none focus:ring-2 focus:ring-secondary-500/20 active:text-secondary-700 disabled:text-secondary-300",
+        "bg-transparent items-center justify-center rounded-md border-0 px-5 py-3 text-lg text-secondary-500 duration-200 hover:text-secondary-600 focus:text-secondary-600 focus:outline-none focus:ring-2 focus:ring-secondary-500/20 active:text-secondary-700 active:focus:text-white disabled:text-secondary-300 dark:text-light dark:hover:text-white dark:focus:text-white",
         disabledStyles,
         className
       )}
@@ -60,7 +58,7 @@ export const ButtonText = React.forwardRef<HTMLButtonElement, ButtonTextProps>(
         icon,
         additionalClasses: clsxm(iconClassName),
       })}
-      <Paragraph>{children}</Paragraph>
+      {children}
     </button>
   )
 );

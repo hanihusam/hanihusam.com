@@ -8,7 +8,7 @@ import { Paragraph } from "./typography";
 export function Footer() {
   return (
     <Grid className="gap-8">
-      <hr className="col-span-full w-full bg-accent" />
+      <hr className="col-span-full w-full border-accent" />
       <div className="col-span-full mb-8 flex flex-col gap-4 lg:flex-row lg:justify-between">
         <Paragraph className="text-dark dark:text-light">{`© ${new Date().getFullYear()} hanihusam. All rights reserved.`}</Paragraph>
 

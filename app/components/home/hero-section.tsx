@@ -27,13 +27,13 @@ export function HeroSection() {
 
         <div className="flex items-start space-x-6">
           <IconLink href={externalLinks.linkedin}>
-            <LinkedinIcon className="text-secondary-500" />
+            <LinkedinIcon className="text-secondary-500 dark:text-light" />
           </IconLink>
           <IconLink href={externalLinks.github}>
-            <GithubIcon className="text-secondary-500" />
+            <GithubIcon className="text-secondary-500 dark:text-light" />
           </IconLink>
           <IconLink href={externalLinks.dribbble}>
-            <DribbbleIcon className="text-secondary-500" />
+            <DribbbleIcon className="text-secondary-500 dark:text-light" />
           </IconLink>
         </div>
       </div>
