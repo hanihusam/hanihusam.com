@@ -1,47 +1,28 @@
 {
+  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "allowJs": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "lib": ["DOM", "DOM.Iterable", "ES2021"],
+    "types": ["jest"],
     "isolatedModules": true,
-    "jsx": "preserve",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ESNext"
-    ],
-    "module": "ESNext",
+    "esModuleInterop": true,
+    "jsx": "react-jsx",
+    "module": "es2020",
+    "target": "es2020",
     "moduleResolution": "node",
-    "noEmit": true,
     "resolveJsonModule": true,
-    "skipLibCheck": true,
-    "sourceMap": true,
+    "noUncheckedIndexedAccess": true,
     "strict": true,
-    "target": "es5",
-    "typeRoots": [
-      "./@types",
-      "./node_modules/@types"
-    ],
-    "baseUrl": "./",
+    "allowJs": true,
+    "importsNotUsedAsValues": "error",
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": ".",
     "paths": {
-      "~/*": [
-        "./*"
-      ]
-    }
-  },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "env.d.ts",
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "ts-node": {
-    "compilerOptions": {
-      "module": "commonjs",
-      "sourceMap": true
-    }
+      "@/*": ["./app/*"]
+    },
+    "skipLibCheck": true,
+    "typeRoots": ["./types", "./node_modules/@types"],
+
+    // Remix takes care of building everything in `remix build`.
+    "noEmit": true
   }
 }
