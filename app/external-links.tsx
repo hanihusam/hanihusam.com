@@ -6,6 +6,9 @@ const externalLinks = {
   instagram: "https://instagram.com/bapak2dev",
   figma: "https://figma.com/@hani.husam",
   rss: "https://hanihusam.com/blog/rss.xml",
+  telegram: "https://t.me/bapak2dev",
+  pitcDeckFigma:
+    "https://www.figma.com/community/file/1016698474340633848/Pitch-Deck-Design-Template",
 };
 
 export { externalLinks };
