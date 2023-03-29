@@ -113,6 +113,7 @@ function ThemeToggler() {
 
 function NavLink({
   to,
+  children,
   ...rest
 }: Omit<Parameters<typeof Link>["0"], "to"> & { to: string }) {
   const location = useLocation();
@@ -132,7 +133,9 @@ function NavLink({
         prefetch="intent"
         to={to}
         {...rest}
-      />
+      >
+        {children}
+      </Link>
     </li>
   );
 }

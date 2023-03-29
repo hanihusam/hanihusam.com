@@ -5,8 +5,13 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  plugins: ["prettier"],
-  extends: ["eslint-config-kdnj/react"],
+  extends: [
+    "@remix-run/eslint-config",
+    "@remix-run/eslint-config/node",
+    "@remix-run/eslint-config/jest-testing-library",
+    "prettier",
+  ],
+  plugins: ["eslint-plugin-simple-import-sort"],
   rules: {
     "no-console": "off",
 
@@ -58,15 +63,9 @@ module.exports = {
       jsx: true,
     },
   },
-  overrides: [
-    {
-      files: ["**/*.d.ts", "**/*.ts", "**/*.tsx"],
-      rules: {
-        "@typescript-eslint/no-explicit-any": "warn",
-        "@typescript-eslint/no-unsafe-assignment": "warn",
-        "@typescript-eslint/restrict-template-expressions": "off",
-        "@typescript-eslint/no-floating-promises": "off",
-      },
+  settings: {
+    jest: {
+      version: 28,
     },
-  ],
+  },
 };
