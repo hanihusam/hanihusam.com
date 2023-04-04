@@ -1,5 +1,6 @@
 import { Grid } from "@/components/grid";
-import { H2, H4, H5, H6, Paragraph } from "@/components/typography";
+import { Header } from "@/components/header";
+import { H4, H5, Paragraph } from "@/components/typography";
 
 import { ComputerDesktopIcon, PaintBrushIcon } from "@heroicons/react/24/solid";
 
@@ -7,12 +8,11 @@ export function ServicesSection() {
   return (
     <Grid rowGap>
       <div className="col-span-full row-start-1 flex flex-col space-y-8 lg:col-span-6 lg:col-start-1">
-        <div className="flex flex-col space-y-2 self-stretch">
-          <H6 className="text-primary-500">Service</H6>
-          <H2 className="text-secondary-500 dark:text-light">
-            Best solution to boost your project and business
-          </H2>
-        </div>
+        <Header
+          title="Best solution to boost your project and business"
+          subTitle="Service"
+          nested
+        />
 
         <div className="flex flex-col space-y-2 self-stretch">
           <Paragraph>
@@ -34,7 +34,7 @@ export function ServicesSection() {
             <ComputerDesktopIcon className="absolute left-8 top-0 z-[1] h-20 w-20 text-secondary-500 dark:text-primary-500" />
             <div className="relative flex h-full w-full flex-col space-y-2.5 rounded-xl bg-white px-8 pb-8 pt-16 dark:bg-black">
               <div className="flex flex-col space-y-6 self-stretch">
-                <H4 className="text-secondary-500">Frontend Web Developer</H4>
+                <H4 variant="secondary">Frontend Web Developer</H4>
                 <Paragraph>
                   Details in the code and verbose documentation. I guaranteed
                   free session until you can run my code on your system.
@@ -49,7 +49,7 @@ export function ServicesSection() {
             <PaintBrushIcon className="absolute left-8 top-0 z-[1] h-20 w-20 text-secondary-500 dark:text-primary-500" />
             <div className="relative flex h-full w-full flex-col space-y-2.5 rounded-xl bg-white px-8 pb-8 pt-16 dark:bg-black">
               <div className="flex flex-col space-y-6 self-stretch">
-                <H4 className="text-secondary-500">User Interface Designer</H4>
+                <H4 variant="secondary">User Interface Designer</H4>
                 <Paragraph>
                   I look at every UI design project as a process in solving a
                   problem. I am considering all the aspects until the UI design

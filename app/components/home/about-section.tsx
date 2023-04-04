@@ -13,7 +13,7 @@ export function AboutSection() {
 
         <div className="col-span-full flex flex-col items-start gap-8 self-stretch lg:col-span-5 lg:col-start-8">
           <div className="flex flex-col gap-2 self-stretch">
-            <H6 className="text-primary-500">About</H6>
+            <H6>About</H6>
             <H2 className="text-light">Why hire me for your next project?</H2>
           </div>
 
