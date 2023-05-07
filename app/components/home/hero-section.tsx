@@ -76,7 +76,7 @@ export function HeroSection() {
           <AnchorOrLink to="links">
             <Button>Reach Me</Button>
           </AnchorOrLink>
-          <AnchorOrLink href="https://donwload.cv">
+          <AnchorOrLink href={externalLinks.cv}>
             <ButtonText
               className="group"
               icon={ArrowDownTrayIcon}

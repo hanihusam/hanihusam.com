@@ -2,7 +2,8 @@ import { Button } from "@/components/button";
 import { ButtonOutline } from "@/components/button-outline";
 import { Grid } from "@/components/grid";
 import { H2 } from "@/components/typography";
-import { useMediaQuery } from "@/utils/misc";
+import { externalLinks } from "@/external-links";
+import { AnchorOrLink, useMediaQuery } from "@/utils/misc";
 
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
 
@@ -16,9 +17,11 @@ export function CtaSection() {
 
         <div className="flex gap-2 self-stretch">
           <ButtonOutline>See Projects</ButtonOutline>
-          <Button icon={EnvelopeIcon} iconClassName="text-light">
-            Email Me
-          </Button>
+          <AnchorOrLink href={externalLinks.email}>
+            <Button icon={EnvelopeIcon} iconClassName="text-light">
+              Email Me
+            </Button>
+          </AnchorOrLink>
         </div>
       </div>
     </Grid>
