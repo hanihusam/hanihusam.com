@@ -9,12 +9,22 @@ interface GridProps {
   as?: React.ElementType;
   id?: string;
   nested?: boolean;
+  smFull?: boolean;
   rowGap?: boolean;
   featured?: boolean;
 }
 
 const Grid = React.forwardRef<HTMLElement, GridProps>(function Grid(
-  { children, className, as: Tag = "div", featured, nested, rowGap, id },
+  {
+    children,
+    className,
+    as: Tag = "div",
+    featured,
+    nested,
+    smFull,
+    rowGap,
+    id,
+  },
   ref
 ) {
   return (
@@ -22,6 +32,7 @@ const Grid = React.forwardRef<HTMLElement, GridProps>(function Grid(
       className={clsxm("relative", {
         "mx-10vw": !nested,
         "w-full": nested,
+        "mx-0 w-full md:mx-10vw md:w-auto": smFull,
         "py-10 md:py-24 lg:pb-40 lg:pt-36": featured,
       })}
       id={id}
