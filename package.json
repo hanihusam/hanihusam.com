@@ -46,6 +46,7 @@
     "/public/build"
   ],
   "dependencies": {
+    "@cld-apis/types": "^0.1.6",
     "@headlessui/react": "^1.7.13",
     "@heroicons/react": "^2.0.16",
     "@prisma/client": "^4.5.0",
@@ -54,7 +55,9 @@
     "@remix-run/serve": "^1.17.0",
     "@remix-run/server-runtime": "^1.17.0",
     "bcryptjs": "^2.4.3",
+    "cloudinary-build-url": "^0.2.4",
     "clsx": "^1.2.1",
+    "date-fns": "^2.30.0",
     "gray-matter": "^4.0.3",
     "isbot": "^3.6.3",
     "mdx-bundler": "^9.2.1",

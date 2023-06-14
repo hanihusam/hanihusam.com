@@ -5,7 +5,6 @@ export interface ContentMeta {
   views: number;
   likes: number;
   likesByUser: number;
-  devtoViews?: number;
 }
 
 export interface SingleContentMeta {
@@ -22,7 +21,7 @@ export type BlogFrontmatter = {
   englishOnly?: boolean;
   title: string;
   description: string;
-  banner: string;
+  bannerCloudinaryId: string;
   publishedAt: string;
   lastUpdated?: string;
   tags: string;
@@ -50,7 +49,7 @@ export type ProjectFrontmatter = {
   description: string;
   category?: string;
   techs: string;
-  banner: string;
+  bannerCloudinaryId: string;
   link?: string;
   github?: string;
   youtube?: string;

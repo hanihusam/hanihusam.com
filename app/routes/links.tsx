@@ -8,7 +8,6 @@ import { AnchorOrLink } from "@/utils/misc";
 import logo from "../../public/images/hnh-logo.png";
 
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
 
 export const loader = async () => {
   return json({
@@ -17,8 +16,6 @@ export const loader = async () => {
 };
 
 export default function Links() {
-  const data = useLoaderData<typeof loader>();
-
   return (
     <Grid featured>
       <div className="col-span-4 flex flex-col gap-8 lg:col-start-5">
@@ -48,9 +45,6 @@ export default function Links() {
             <Button block>Design Showcase</Button>
           </AnchorOrLink>
         </div>
-        {data.listItems.map((item) => (
-          <div key={item.id}>{item.slug}</div>
-        ))}
       </div>
     </Grid>
   );

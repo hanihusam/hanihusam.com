@@ -5,30 +5,26 @@ import matter from "gray-matter";
 import { bundleMDX } from "mdx-bundler";
 import { join } from "path";
 import readingTime from "reading-time";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypePrism from "rehype-prism-plus";
-import rehypeSlug from "rehype-slug";
-import remarkGfm from "remark-gfm";
 
 export async function getFiles(type: ContentType) {
-  return readdirSync(join(process.cwd(), "src", "contents", type));
+  return readdirSync(join(process.cwd(), "contents", type));
 }
 
 export async function getFileBySlug(type: ContentType, slug: string) {
+  const { default: rehypeAutolinkHeadings } = await import(
+    "rehype-autolink-headings"
+  );
+  const { default: rehypePrism } = await import("rehype-prism-plus");
+  const { default: rehypeSlug } = await import("rehype-slug");
+  const { default: gfm } = await import("remark-gfm");
   const source = slug
-    ? readFileSync(
-        join(process.cwd(), "src", "contents", type, `${slug}.mdx`),
-        "utf8"
-      )
-    : readFileSync(
-        join(process.cwd(), "src", "contents", `${type}.mdx`),
-        "utf8"
-      );
+    ? readFileSync(join(process.cwd(), "contents", type, `${slug}.mdx`), "utf8")
+    : readFileSync(join(process.cwd(), "contents", `${type}.mdx`), "utf8");
 
   const { code, frontmatter } = await bundleMDX({
     source,
     mdxOptions(options) {
-      options.remarkPlugins = [...(options?.remarkPlugins ?? []), remarkGfm];
+      options.remarkPlugins = [...(options?.remarkPlugins ?? []), gfm];
       options.rehypePlugins = [
         ...(options?.rehypePlugins ?? []),
         rehypeSlug,
@@ -59,11 +55,11 @@ export async function getFileBySlug(type: ContentType, slug: string) {
 }
 
 export async function getAllFilesFrontmatter<T extends ContentType>(type: T) {
-  const files = readdirSync(join(process.cwd(), "src", "contents", type));
+  const files = readdirSync(join(process.cwd(), "contents", type));
 
   return files.reduce((allPosts: Array<PickFrontmatter<T>>, postSlug) => {
     const source = readFileSync(
-      join(process.cwd(), "src", "contents", type, postSlug),
+      join(process.cwd(), "contents", type, postSlug),
       "utf8"
     );
     const { data } = matter(source);
