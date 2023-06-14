@@ -21,9 +21,9 @@ export const loader: LoaderFunction = async () => {
   const blogs = await getAllFilesFrontmatter("blog");
 
   const featuredPosts = getFeatured(blogs, [
-    "2022-retrospective",
-    "2022-retrospective",
-    "2022-retrospective",
+    "my-first-1000-upwork",
+    "2020-retrospective",
+    "why-i-become-freelancer",
   ]);
 
   const data: LoaderData = {

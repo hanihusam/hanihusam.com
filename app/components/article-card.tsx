@@ -1,5 +1,4 @@
 import type { BlogFrontmatter, InjectedMeta } from "@/types";
-import clsxm from "@/utils/clsxm";
 import {
   getImageBuilder,
   getImgProps,
@@ -25,7 +24,6 @@ function ArticleCard({
     slug,
     bannerCloudinaryId,
   },
-  className,
   onClick,
 }: ArticleCardProps) {
   const dateDisplay = format(
@@ -38,10 +36,7 @@ function ArticleCard({
     <div className="relative w-full" onClick={onClick}>
       <Link
         prefetch="intent"
-        className={clsxm(
-          "group peer relative block w-full focus:outline-none",
-          className
-        )}
+        className="group peer relative block w-full focus:outline-none"
         to={`/blog/${slug}`}
       >
         <BlurrableImage
