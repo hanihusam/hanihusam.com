@@ -7,6 +7,7 @@ import { Footer } from "@/components/footer";
 import { LayoutRoot } from "@/components/layout";
 import { Navbar } from "@/components/navbar";
 import clsxm from "@/utils/clsxm";
+import { toErrorWithMessage } from "@/utils/helpers";
 import { getThemeSession } from "@/utils/theme.server";
 import {
   NonFlashOfWrongThemeEls,
@@ -21,6 +22,7 @@ import type {
   SerializeFrom,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
+import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import {
   Links,
   LiveReload,
@@ -163,5 +165,32 @@ export default function AppWithProviders() {
     <ThemeProvider specifiedTheme={data.requestInfo.session.theme}>
       <App />
     </ThemeProvider>
+  );
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError();
+
+  // when true, this is what used to go to `CatchBoundary`
+  if (isRouteErrorResponse(error)) {
+    return (
+      <div>
+        <h1>Oops</h1>
+        <p>Status: {error.status}</p>
+        <p>{error.data.message}</p>
+      </div>
+    );
+  }
+
+  // Don't forget to typecheck with your own logic.
+  // Any value can be thrown, not just errors!
+  const errorMessage = toErrorWithMessage(error);
+
+  return (
+    <div>
+      <h1>Uh oh ...</h1>
+      <p>Something went wrong.</p>
+      <pre>{errorMessage.message}</pre>
+    </div>
   );
 }

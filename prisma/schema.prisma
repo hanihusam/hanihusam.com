@@ -7,32 +7,28 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model User {
-  id    String @id @default(cuid())
-  email String @unique
-
+model ContentMeta {
+  id        Int      @id @default(autoincrement())
+  slug      String   @unique
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  password Password?
-  notes    Note[]
+  likes     Like[]
+  views     View[]
 }
 
-model Password {
-  hash String
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  sessionId String
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String @unique
+  contentMetaId Int?
+  ContentMeta   ContentMeta? @relation(fields: [contentMetaId], references: [id], onDelete: Cascade)
 }
 
-model Note {
-  id    String @id @default(cuid())
-  title String
-  body  String
-
+model View {
+  id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  sessionId String
 
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
-  userId String
+  contentMetaId Int?
+  ContentMeta   ContentMeta? @relation(fields: [contentMetaId], references: [id], onDelete: Cascade)
 }
