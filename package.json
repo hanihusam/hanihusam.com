@@ -60,6 +60,7 @@
     "date-fns": "^2.30.0",
     "gray-matter": "^4.0.3",
     "isbot": "^3.6.3",
+    "lru-cache": "^9.1.2",
     "mdx-bundler": "^9.2.1",
     "pm2": "^5.2.2",
     "react": "^18.2.0",
