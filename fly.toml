@@ -49,4 +49,4 @@ processes = []
     protocol = "http"
     timeout = "2s"
     tls_skip_verify = false
-    [services.http_checks.headers]
+    headers = { }
