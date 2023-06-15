@@ -21,37 +21,42 @@ export async function getFileBySlug(type: ContentType, slug: string) {
     ? readFileSync(join(process.cwd(), "contents", type, `${slug}.mdx`), "utf8")
     : readFileSync(join(process.cwd(), "contents", `${type}.mdx`), "utf8");
 
-  const { code, frontmatter } = await bundleMDX({
-    source,
-    mdxOptions(options) {
-      options.remarkPlugins = [...(options?.remarkPlugins ?? []), gfm];
-      options.rehypePlugins = [
-        ...(options?.rehypePlugins ?? []),
-        rehypeSlug,
-        rehypePrism,
-        [
-          rehypeAutolinkHeadings,
-          {
-            properties: {
-              className: ["hash-anchor"],
+  try {
+    const { code, frontmatter } = await bundleMDX({
+      source,
+      mdxOptions(options) {
+        options.remarkPlugins = [...(options?.remarkPlugins ?? []), gfm];
+        options.rehypePlugins = [
+          ...(options?.rehypePlugins ?? []),
+          rehypeSlug,
+          rehypePrism,
+          [
+            rehypeAutolinkHeadings,
+            {
+              properties: {
+                className: ["hash-anchor"],
+              },
             },
-          },
-        ],
-      ];
+          ],
+        ];
 
-      return options;
-    },
-  });
+        return options;
+      },
+    });
 
-  return {
-    code,
-    frontmatter: {
-      wordCount: source.split(/\s+/gu).length,
-      readingTime: readingTime(source),
-      slug: slug || null,
-      ...frontmatter,
-    },
-  };
+    return {
+      code,
+      frontmatter: {
+        wordCount: source.split(/\s+/gu).length,
+        readingTime: readingTime(source),
+        slug: slug || null,
+        ...frontmatter,
+      },
+    };
+  } catch (error: unknown) {
+    console.error(`Compilation error for slug: `, slug);
+    throw error;
+  }
 }
 
 export async function getAllFilesFrontmatter<T extends ContentType>(type: T) {

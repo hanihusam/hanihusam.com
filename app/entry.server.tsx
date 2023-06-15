@@ -43,9 +43,9 @@ function handleBotRequest(
   return new Promise((resolve, reject) => {
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
-        abortDelay={ABORT_DELAY}
         context={remixContext}
         url={request.url}
+        abortDelay={ABORT_DELAY}
       />,
       {
         onAllReady() {
@@ -85,9 +85,9 @@ function handleBrowserRequest(
   return new Promise((resolve, reject) => {
     const { pipe, abort } = renderToPipeableStream(
       <RemixServer
-        abortDelay={ABORT_DELAY}
         context={remixContext}
         url={request.url}
+        abortDelay={ABORT_DELAY}
       />,
       {
         onShellReady() {
