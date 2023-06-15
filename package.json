@@ -58,6 +58,7 @@
     "cloudinary-build-url": "^0.2.4",
     "clsx": "^1.2.1",
     "date-fns": "^2.30.0",
+    "esbuild": "^0.18.2",
     "gray-matter": "^4.0.3",
     "isbot": "^3.6.3",
     "lru-cache": "^9.1.2",
