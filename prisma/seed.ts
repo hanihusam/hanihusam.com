@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-async function main() {
+async function seed() {
   const data = faunadata as unknown as FaunaMeta[];
   data.forEach(async (datum) => {
     let views;
@@ -34,15 +34,16 @@ async function main() {
       },
     });
   });
+
+  console.log(`Database has been seeded. 🌱`);
 }
 
-main()
-  .then(async () => {
-    await prisma.$disconnect();
-  })
-  .catch(async (e) => {
-    // eslint-disable-next-line no-console
+seed()
+  .catch((e) => {
     console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
     await prisma.$disconnect();
   });
 

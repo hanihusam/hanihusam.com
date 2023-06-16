@@ -11,5 +11,3 @@ node_modules
 /cypress/videos
 /prisma/sqlite.db
 /prisma/sqlite.db-journal
-
-/app/styles/tailwind.css
