@@ -2,7 +2,7 @@ import { Button } from "@/components/button";
 import { Grid } from "@/components/grid";
 import { H3, Paragraph } from "@/components/typography";
 import { externalLinks } from "@/external-links";
-import { db } from "@/utils/db.server";
+import { prisma } from "@/utils/db.server";
 import { AnchorOrLink } from "@/utils/misc";
 
 import logo from "../../public/images/hnh-logo.png";
@@ -11,7 +11,7 @@ import { json } from "@remix-run/node";
 
 export const loader = async () => {
   return json({
-    listItems: await db.contentMeta.findMany(),
+    listItems: await prisma.contentMeta.findMany(),
   });
 };
 

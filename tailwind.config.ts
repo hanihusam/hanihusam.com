@@ -1,9 +1,9 @@
-/** @type {import('tailwindcss').Config} */
-const defaultTheme = require("tailwindcss/defaultTheme");
+import type { Config } from "tailwindcss";
+import defaultTheme from "tailwindcss/defaultTheme.js";
 
-module.exports = {
+export default {
+  content: ["./app/**/*.{ts,tsx,jsx,js}"],
   darkMode: "class",
-  content: ["./app/**/*.{ts,tsx}"],
   theme: {
     screens: {
       md: "640px",
@@ -64,4 +64,4 @@ module.exports = {
     },
   },
   plugins: [require("@tailwindcss/aspect-ratio")],
-};
+} satisfies Config;
