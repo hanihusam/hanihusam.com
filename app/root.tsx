@@ -1,7 +1,7 @@
-import appStyles from "./styles/app.css";
-import fonts from "./styles/fonts.css";
-import noScriptStyles from "./styles/no-script.css";
-import tailwindStyles from "./styles/tailwind.css";
+import appStyles from "@/styles/app.css";
+import fonts from "@/styles/fonts.css";
+import noScriptStyles from "@/styles/no-script.css";
+import tailwindStyles from "@/styles/tailwind.css";
 
 import { Footer } from "@/components/footer";
 import { LayoutRoot } from "@/components/layout";
