@@ -1,6 +1,6 @@
 [
   {
-    "slug": "l_absolute-import",
+    "slug": "b_2020-retrospective",
     "views": 1849,
     "likes": 620,
     "likesByUser": {
@@ -150,7 +150,7 @@
     }
   },
   {
-    "slug": "b_nextjs-redirect-no-flashing",
+    "slug": "b_my-first-1000-upwork",
     "views": 18110,
     "likes": 510,
     "likesByUser": {
@@ -270,7 +270,7 @@
     }
   },
   {
-    "slug": "b_tailwindcss-best-practice",
+    "slug": "b_why-i-become-freelancer",
     "views": 10031,
     "likes": 447,
     "likesByUser": {
@@ -378,84 +378,6 @@
       "57d2b3e89b49ba0bbe166a571524d870": 5,
       "bdf37e64b7db1b1b5e50a3de323bf787": 5,
       "325edae151a4371de79d062b6f0b1458": 5
-    }
-  },
-  {
-    "slug": "b_my-addons",
-    "views": 554,
-    "likes": 50,
-    "likesByUser": {
-      "b2d585819becc679ae67713447babcea": 5,
-      "9e8dad3d659f7537aa1ed6523c17ef24": 5,
-      "f9165bfe7e6c4ab5be1ed78a4c24f616": 5,
-      "d9df6390a8ab9b715d80306ebfcd4502": 5,
-      "6a422cfef35fa24f7ee9c5d7ddc2756c": 3,
-      "22ab0b368d70206c7edaca792f232b4f": 5,
-      "d28b9da94cbd177114b86d00a577cf4e": 5,
-      "23f470bd21161e9594ebf37ef1168737": 5,
-      "13d53d7fc38b4011550a63cb0ae26a88": 5,
-      "d6219810ea0c173f7dd6c9c3f5a59e23": 1,
-      "164ebaa87e7f9dc32124336afa1e6cb9": 5
-    }
-  },
-  {
-    "slug": "b_vite-cra",
-    "views": 1303,
-    "likes": 60,
-    "likesByUser": {
-      "b2d585819becc679ae67713447babcea": 5,
-      "1b894d85baddfb94ee1116512723ed80": 5,
-      "85c7d0d0f78a6eb9f6741503225927ce": 5,
-      "3abfef8b032e4b4238280fa335170926": 1,
-      "60e070f81dea2439e9ee69840fa0227b": 5,
-      "464ac9ff98fa271f6ce7d878165e3830": 5,
-      "185f899d9196cf8670fa88be2736838d": 4,
-      "d28b9da94cbd177114b86d00a577cf4e": 1,
-      "d8206f8cca270626af1c26f2c8f67fba": 5,
-      "aa54fe0169cba7509a919cc2ff066fb7": 5,
-      "f6279e3617fa7c7f53070671997570f5": 2,
-      "f0fdec0273967a4986fa9f141e81c55c": 5,
-      "79975eac1e8a597dc3cc55944d9ea0f3": 5,
-      "9e4756950224cedefc6e485a007cc4a6": 1,
-      "828e0b16561f1be1a6d3fa19f23ffbf4": 5
-    }
-  },
-  {
-    "slug": "b_btb-rem-em",
-    "views": 2238,
-    "likes": 140,
-    "likesByUser": {
-      "90d58f0ba79672cc6da8c827a175e7b0": 2,
-      "cd01a459ffc9f16d32e7d2fc8b912f1b": 5,
-      "ca39ef294f12072205134605ec95172d": 5,
-      "1bfe4068bbe2b94249a19152a3a9b1ac": 5,
-      "35d93ac0f2110adcfa45eef04b59ce58": 5,
-      "6b900e277bedcedabaa4a59955242f6b": 5,
-      "c73990407a5522f78c8315362d2f31d5": 5,
-      "4ec88db6a431e3bf6b7c410df12f25ac": 5,
-      "fc8766e7bec6bd5c0fbc6cade81f1ae7": 5,
-      "6b8f3a33f216d09a2319d384eb9f5cd8": 5,
-      "3a97b0b9c29e804b102eec598cf99a45": 5,
-      "102da73a700200bd500a0f49b6577207": 5,
-      "713436492d4351de7206dd3ce0cfa2bf": 5,
-      "e61cb53634c26c2b063a19ec88b7df23": 1,
-      "668c6199765e094d9e00457c06b2e12f": 5,
-      "e1f1eeef92c5ac645b4c343aeb673608": 5,
-      "32414ecdf31a965d655e09e2a95faffd": 5,
-      "d28b9da94cbd177114b86d00a577cf4e": 5,
-      "1549302b15341e59a76c89efc8cc67e8": 5,
-      "5a7011564a06c504eb3a4559367b6b11": 5,
-      "fa411773485166556fa226b2022e331d": 5,
-      "92dbc541f7732d987968f044c9089c15": 5,
-      "eb3b4b162b3a0b3e83c245a956257676": 3,
-      "2fcf307288de92f36ddb855831234ee2": 5,
-      "260a3b6dcbe7794e8efbccabfc42d223": 5,
-      "671267a7533f1277a20dd61d66ba108e": 1,
-      "891320e9fd391b56c024e3e01fb4542a": 5,
-      "a03e87b2f8ae939d4b031dc8c54b5772": 2,
-      "8a2c093723190247b6c1f92441c078c5": 5,
-      "0afa87548a901d5153bcc9388d748c5c": 5,
-      "6fdf418d7b261e1adda32a659e86535e": 5
     }
   }
 ]
