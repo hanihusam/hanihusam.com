@@ -1,11 +1,23 @@
-import { startTransition } from "react";
-
-import { handleDarkAndLightModeEls } from "./utils/theme-provider";
+import { startTransition, StrictMode } from "react";
 
 import { RemixBrowser } from "@remix-run/react";
 import { hydrateRoot } from "react-dom/client";
 
-startTransition(() => {
-  handleDarkAndLightModeEls();
-  hydrateRoot(document, <RemixBrowser />);
-});
+function hydrate() {
+  startTransition(() => {
+    hydrateRoot(
+      document,
+      <StrictMode>
+        <RemixBrowser />
+      </StrictMode>
+    );
+  });
+}
+
+if (typeof requestIdleCallback === "function") {
+  requestIdleCallback(hydrate);
+} else {
+  // Safari doesn't support requestIdleCallback
+  // https://caniuse.com/requestidlecallback
+  setTimeout(hydrate, 1);
+}

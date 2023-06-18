@@ -6,8 +6,8 @@ import tailwindStyles from "@/styles/tailwind.css";
 import { Footer } from "@/components/footer";
 import { LayoutRoot } from "@/components/layout";
 import { Navbar } from "@/components/navbar";
-import clsxm from "@/utils/clsxm";
 import { toErrorWithMessage } from "@/utils/helpers";
+import { useNonce } from "@/utils/nonce-provider";
 import { getThemeSession } from "@/utils/theme.server";
 import {
   NonFlashOfWrongThemeEls,
@@ -18,7 +18,6 @@ import {
 import type {
   DataFunctionArgs,
   LinksFunction,
-  MetaFunction,
   SerializeFrom,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -102,13 +101,22 @@ export const links: LinksFunction = () => {
   ];
 };
 
-export const meta: MetaFunction = () => ({
-  charset: "utf-8",
-  title: "Hani Husamuddin",
-  description:
-    "A professional freelancer who could help you solve your software engineer and UI design problem",
-  viewport: "width=device-width,initial-scale=1,viewport-fit=cover",
-});
+export const meta = () => [
+  { title: "Hani Husamuddin" },
+  {
+    property: "og:title",
+    content: "Han Personal Website",
+  },
+  {
+    name: "description",
+    content:
+      "A professional freelancer who could help you solve your software engineer and UI design problem",
+  },
+  {
+    name: "viewport",
+    content: "width=device-width,initial-scale=1,viewport-fit=cover",
+  },
+];
 
 export async function loader({ request }: DataFunctionArgs) {
   const themeSession = await getThemeSession(request);
@@ -129,10 +137,11 @@ export type LoaderData = SerializeFrom<typeof loader>;
 
 function App() {
   const data = useLoaderData<typeof loader>();
+  const nonce = useNonce();
   const [theme] = useTheme();
 
   return (
-    <html className={clsxm(theme)} lang="en">
+    <html className={theme ?? ""}>
       <head>
         <Meta />
         <Links />
@@ -140,6 +149,7 @@ function App() {
           <link href={noScriptStyles} rel="stylesheet" />
         </noscript>
         <NonFlashOfWrongThemeEls
+          nonce={nonce}
           ssrTheme={Boolean(data.requestInfo.session.theme)}
         />
       </head>
@@ -150,9 +160,9 @@ function App() {
           <Footer />
         </LayoutRoot>
 
-        <ScrollRestoration />
-        <Scripts />
-        <LiveReload />
+        <ScrollRestoration nonce={nonce} />
+        <Scripts nonce={nonce} />
+        <LiveReload nonce={nonce} />
       </body>
     </html>
   );

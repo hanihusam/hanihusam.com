@@ -49,7 +49,6 @@ function ThemeProvider({
   const persistTheme = useFetcher();
   // TODO: remove this when persistTheme is memoized properly
   const persistThemeRef = React.useRef(persistTheme);
-
   React.useEffect(() => {
     persistThemeRef.current = persistTheme;
   }, [persistTheme]);
@@ -66,11 +65,10 @@ function ThemeProvider({
   const setTheme = React.useCallback(
     (cb: Parameters<typeof setThemeState>[0]) => {
       const newTheme = typeof cb === "function" ? cb(theme) : cb;
-
       if (newTheme) {
         persistThemeRef.current.submit(
           { theme: newTheme },
-          { action: "/action/set-theme", method: "post" }
+          { action: "action/set-theme", method: "POST" }
         );
       }
       setThemeState(newTheme);
@@ -161,8 +159,8 @@ function NonFlashOfWrongThemeEls({
         this is correct before hydration.
       */}
       <meta
-        content={theme === "light" ? "light dark" : "dark light"}
         name="color-scheme"
+        content={theme === "light" ? "light dark" : "dark light"}
       />
       {/*
         If we know what the theme is from the server then we don't need
@@ -170,12 +168,12 @@ function NonFlashOfWrongThemeEls({
       */}
       {ssrTheme ? null : (
         <script
+          nonce={nonce}
           // NOTE: we cannot use type="module" because that automatically makes
           // the script "defer". That doesn't work for us because we need
           // this script to run synchronously before the rest of the document
           // is finished loading.
           dangerouslySetInnerHTML={{ __html: clientThemeCode }}
-          nonce={nonce}
         />
       )}
     </>
