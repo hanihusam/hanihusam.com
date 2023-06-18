@@ -6,15 +6,10 @@ export async function loader({ request }: DataFunctionArgs) {
   const host =
     request.headers.get("X-Forwarded-Host") ?? request.headers.get("host");
 
+  console.log(`this is the ${new URL(request.url).protocol}${host}`);
+
   try {
-    await Promise.all([
-      prisma.contentMeta.count(),
-      fetch(`${new URL(request.url).protocol}${host}`, { method: "HEAD" }).then(
-        (r) => {
-          if (!r.ok) return Promise.reject(r);
-        }
-      ),
-    ]);
+    await Promise.all([prisma.contentMeta.count()]);
     return new Response("OK");
   } catch (error: unknown) {
     console.error(request.url, "healthcheck ❌", { error });
