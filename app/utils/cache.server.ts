@@ -18,7 +18,7 @@ import { getInstanceInfo, getInstanceInfoSync } from "litefs-js";
 import { LRUCache } from "lru-cache";
 
 // Always got an error if using getRequiredServerEnvVar method
-const CACHE_DATABASE_PATH = "other/cache.db";
+const CACHE_DATABASE_PATH = "../../other/cache.db";
 
 const cacheDb = singleton("cacheDb", createDatabase);
 
