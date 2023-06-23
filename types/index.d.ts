@@ -1,5 +1,7 @@
 import type { ReadTimeResults } from "reading-time";
 
+export type GitHubFile = { path: string; content: string };
+
 export interface ContentMeta {
   slug: string;
   views: number;
@@ -25,6 +27,7 @@ export type BlogFrontmatter = {
   publishedAt: string;
   lastUpdated?: string;
   tags: string;
+  bannerBlurDataUrl?: string;
   repost?: string;
 };
 
@@ -33,6 +36,10 @@ export type ContentType = "blog" | "projects";
 export type PickFrontmatter<T extends ContentType> = T extends "blog"
   ? BlogFrontmatter
   : ProjectFrontmatter;
+
+export type PickContent<T extends ContentType> = T extends "blog"
+  ? BlogType
+  : ProjectType;
 
 export type InjectedMeta = { views?: number; likes?: number };
 
@@ -53,6 +60,7 @@ export type ProjectFrontmatter = {
   link?: string;
   github?: string;
   youtube?: string;
+  bannerBlurDataUrl?: string;
 };
 
 export type ProjectType = {
@@ -60,6 +68,11 @@ export type ProjectType = {
   frontmatter: ProjectFrontmatter;
 };
 
+export type PageContent<T extends ContentType> = {
+  code: string;
+  frontmatter: PickFrontmatter<T>;
+};
+
 export type FrontmatterWithTags = BlogFrontmatter;
 export type FrontmatterWithDate = BlogFrontmatter | ProjectFrontmatter;
-export type Frontmatter = ProjectFrontmatter | BlogFrontmatter;
+export type Frontmatter = FrontmatterWithDate;

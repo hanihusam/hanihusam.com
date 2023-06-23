@@ -1,9 +1,5 @@
 import type { BlogFrontmatter, InjectedMeta } from "@/types";
-import {
-  getImageBuilder,
-  getImgProps,
-  useImageBlurDataUrl,
-} from "@/utils/images";
+import { getImageBuilder, getImgProps } from "@/utils/images";
 
 import { BlurrableImage } from "./blurrable-image";
 import { H4, H6 } from "./typography";
@@ -23,6 +19,7 @@ function ArticleCard({
     readingTime,
     slug,
     bannerCloudinaryId,
+    bannerBlurDataUrl,
   },
   onClick,
 }: ArticleCardProps) {
@@ -30,7 +27,6 @@ function ArticleCard({
     new Date(lastUpdated ?? publishedAt),
     "MMMM dd, yyyy"
   );
-  const bannerBlurDataUrl = useImageBlurDataUrl(bannerCloudinaryId);
 
   return (
     <div className="relative w-full" onClick={onClick}>

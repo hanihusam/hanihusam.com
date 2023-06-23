@@ -169,6 +169,7 @@ function NonFlashOfWrongThemeEls({
       {ssrTheme ? null : (
         <script
           nonce={nonce}
+          suppressHydrationWarning
           // NOTE: we cannot use type="module" because that automatically makes
           // the script "defer". That doesn't work for us because we need
           // this script to run synchronously before the rest of the document

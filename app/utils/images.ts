@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 import { toErrorWithMessage } from "@/utils/helpers";
 
 import type { TransformerOption } from "@cld-apis/types";
@@ -81,21 +79,11 @@ async function getBlurDataUrl(cloudinaryId: string) {
   return dataUrl;
 }
 
-function arrayBufferToBase64(buffer: ArrayBuffer) {
-  let binary = "";
-  const bytes = new Uint8Array(buffer);
-  const len = bytes.byteLength;
-  for (let i = 0; i < len; i++) {
-    binary += String.fromCharCode(bytes[i] as number);
-  }
-  return window.btoa(binary);
-}
-
 async function getDataUrlForImage(imageUrl: string) {
   try {
     const res = await fetch(imageUrl);
     const arrayBuffer = await res.arrayBuffer();
-    const base64 = arrayBufferToBase64(arrayBuffer);
+    const base64 = Buffer.from(arrayBuffer).toString("base64");
     const mime = res.headers.get("Content-Type") ?? "image/webp";
     const dataUrl = `data:${mime};base64,${base64}`;
     return dataUrl;
@@ -105,22 +93,5 @@ async function getDataUrlForImage(imageUrl: string) {
   }
 }
 
-function useImageBlurDataUrl(publicId: string) {
-  const [blurDataUrl, setBlurDataUrl] = useState<string>("");
-
-  useEffect(() => {
-    getBlurDataUrl(publicId)
-      .then((res) => {
-        if (res) setBlurDataUrl(res);
-      })
-      .catch((err: unknown) => {
-        const error = toErrorWithMessage(err);
-        throw new Error(error.message);
-      });
-  }, [publicId]);
-
-  return blurDataUrl;
-}
-
-export { getBlurDataUrl, getImageBuilder, getImgProps, useImageBlurDataUrl };
+export { getBlurDataUrl, getImageBuilder, getImgProps };
 export type { ImageBuilder };

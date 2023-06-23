@@ -7,7 +7,8 @@ import { HeroSection } from "@/components/home/hero-section";
 import { ServicesSection } from "@/components/home/services-section";
 import { Spacer } from "@/components/spacer";
 import type { BlogFrontmatter } from "@/types";
-import { getAllFilesFrontmatter, getFeatured } from "@/utils/blog.server";
+import { getFeatured } from "@/utils/blog.server";
+import { getBlogMdxListItems } from "@/utils/mdx";
 
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
@@ -17,8 +18,9 @@ type LoaderData = {
   featuredPosts: BlogFrontmatter[];
 };
 
-export const loader: LoaderFunction = async () => {
-  const blogs = await getAllFilesFrontmatter("blog");
+export const loader: LoaderFunction = async ({ request }) => {
+  const timings = {};
+  const blogs = await getBlogMdxListItems("blog", { request, timings });
 
   const featuredPosts = getFeatured(blogs, [
     "my-first-1000-upwork",

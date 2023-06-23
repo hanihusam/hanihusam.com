@@ -11,3 +11,4 @@ node_modules
 /cypress/videos
 /prisma/sqlite.db
 /prisma/sqlite.db-journal
+/other/cache.db
