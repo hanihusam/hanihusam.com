@@ -6,6 +6,7 @@ import tailwindStyles from "@/styles/tailwind.css";
 import { Footer } from "@/components/footer";
 import { LayoutRoot } from "@/components/layout";
 import { Navbar } from "@/components/navbar";
+import { getEnv } from "@/utils/env.server";
 import { toErrorWithMessage } from "@/utils/helpers";
 import { useNonce } from "@/utils/nonce-provider";
 import { getThemeSession } from "@/utils/theme.server";
@@ -122,6 +123,7 @@ export async function loader({ request }: DataFunctionArgs) {
   const themeSession = await getThemeSession(request);
 
   const data = {
+    ENV: getEnv(),
     requestInfo: {
       path: new URL(request.url).pathname,
       session: {
@@ -162,7 +164,14 @@ function App() {
 
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        <LiveReload nonce={nonce} />
+        <script
+          nonce={nonce}
+          suppressHydrationWarning
+          dangerouslySetInnerHTML={{
+            __html: `window.ENV = ${JSON.stringify(data.ENV)};`,
+          }}
+        />
+        {ENV.NODE_ENV === "development" ? <LiveReload nonce={nonce} /> : null}
       </body>
     </html>
   );
