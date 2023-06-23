@@ -12,7 +12,7 @@ module.exports = {
   },
   ignoredRouteFiles: ["**/*"],
   postcss: true,
-  serverModuleFormat: "esm",
+  serverModuleFormat: "cjs",
   serverPlatform: "node",
   tailwind: true,
   routes: async (defineRoutes) => {
