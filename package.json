@@ -7,12 +7,13 @@
   },
   "description": "A remix version of hanihusam.com",
   "main": "index.js",
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanihusam/hanihusam.com.git"
   },
   "keywords": [],
-  "author": "Hani Husamuddin <me@hanihusam.com> (https://hanihusam.com/)",
+  "author": "Hani Husamuddin <hi@hanihusam.com> (https://hanihusam.com/)",
   "license": "GPL-3.0-only",
   "bugs": {
     "url": "https://github.com/hanihusam/hanihusam.com/issues"
@@ -59,7 +60,9 @@
     "cloudinary-build-url": "^0.2.4",
     "clsx": "^1.2.1",
     "date-fns": "^2.30.0",
+    "dotenv": "^16.3.1",
     "esbuild": "^0.18.2",
+    "execa": "^7.1.1",
     "gray-matter": "^4.0.3",
     "isbot": "^3.6.3",
     "litefs-js": "^1.1.2",
