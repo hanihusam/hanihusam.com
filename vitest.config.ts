@@ -10,6 +10,6 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "happy-dom",
-    setupFiles: ["./test/setup-test-env.ts"],
+    setupFiles: ["./tests/setup-test-env.ts"],
   },
 });
