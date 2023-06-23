@@ -1,5 +1,5 @@
 # base node image
-FROM node:16-bullseye-slim as base
+FROM node:18-bullseye-slim as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
@@ -12,7 +12,7 @@ FROM base as deps
 
 WORKDIR /myapp
 
-ADD package.json .npmrc ./
+ADD package.json .npmrc package-lock.json ./
 RUN npm install --include=dev
 
 # Setup production node_modules
@@ -21,7 +21,7 @@ FROM base as production-deps
 WORKDIR /myapp
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json .npmrc ./
+ADD package.json .npmrc package-lock.json ./
 RUN npm prune --omit=dev
 
 # Build the app
@@ -40,8 +40,15 @@ RUN npm run build
 # Finally, build the production image with minimal footprint
 FROM base
 
-ENV DATABASE_URL=file:/data/sqlite.db
-ENV PORT="8080"
+ENV FLY="true"
+ENV LITEFS_DIR="/litefs/data"
+ENV DATABASE_FILENAME="sqlite.db"
+ENV DATABASE_PATH="$LITEFS_DIR/$DATABASE_FILENAME"
+ENV DATABASE_URL="file:$DATABASE_PATH"
+ENV CACHE_DATABASE_FILENAME="cache.db"
+ENV CACHE_DATABASE_PATH="/$LITEFS_DIR/$CACHE_DATABASE_FILENAME"
+ENV INTERNAL_PORT="8080"
+ENV PORT="8081"
 ENV NODE_ENV="production"
 
 # add shortcut for connecting to database CLI
@@ -58,4 +65,11 @@ COPY --from=build /myapp/package.json /myapp/package.json
 COPY --from=build /myapp/start.sh /myapp/start.sh
 COPY --from=build /myapp/prisma /myapp/prisma
 
-ENTRYPOINT [ "./start.sh" ]
+# prepare for litefs
+COPY --from=flyio/litefs:0.4.0 /usr/local/bin/litefs /usr/local/bin/litefs
+ADD other/litefs.yml /etc/litefs.yml
+RUN mkdir -p /data ${LITEFS_DIR}
+
+ADD . .
+
+CMD ["litefs", "mount"]

@@ -108,6 +108,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.26.0",
     "eslint-config-kdnj": "^2.0.4",
+    "eslint-plugin-remix-react-routes": "^1.0.5",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "happy-dom": "^6.0.4",
     "husky": "^7.0.0",
@@ -131,7 +132,12 @@
     "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,yml,yaml}": "eslint --cache --fix",
-    "*.{js,jsx,ts,tsx,css,md}": "prettier --write"
+    "src/**/*.{js,jsx,ts,tsx}": [
+      "eslint --cache --fix",
+      "prettier -w"
+    ],
+    "src/**/*.{json,css,scss,md,mdx}": [
+      "prettier -w"
+    ]
   }
 }
