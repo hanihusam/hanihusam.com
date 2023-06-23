@@ -5,6 +5,7 @@
     "node": "18",
     "npm": "8"
   },
+  "sideEffects": false,
   "description": "A remix version of hanihusam.com",
   "main": "index.js",
   "type": "module",
@@ -21,7 +22,7 @@
   "homepage": "https://github.com/hanihusam/hanihusam.com#readme",
   "scripts": {
     "prepare": "husky install",
-    "build": "remix build",
+    "build": "remix build --sourcemap",
     "dev": "cross-env NODE_ENV=development binode --require ./mocks -- @remix-run/dev:remix dev",
     "format": "prettier --write .",
     "format:repo": "npm run format && npm run lint:repo -- --fix",
