@@ -1,6 +1,6 @@
 import { updatePrimaryCacheValue } from "@/routes/cache.sqlite";
 
-// import { getRequiredServerEnvVar } from "./misc";
+import { getRequiredServerEnvVar } from "./misc";
 import { singleton } from "./singleton.server";
 import { time, type Timings } from "./timing.server";
 
@@ -18,7 +18,10 @@ import { getInstanceInfo, getInstanceInfoSync } from "litefs-js";
 import { LRUCache } from "lru-cache";
 
 // Always got an error if using getRequiredServerEnvVar method
-const CACHE_DATABASE_PATH = "../../other/cache.db";
+// So decided to declare the path manually
+// const CACHE_DATABASE_PATH = "../../other/cache.db";
+
+const CACHE_DATABASE_PATH = getRequiredServerEnvVar("CACHE_DATABASE_PATH");
 
 const cacheDb = singleton("cacheDb", createDatabase);
 
