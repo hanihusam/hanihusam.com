@@ -124,15 +124,15 @@
     "prisma": "^4.15.0",
     "start-server-and-test": "^1.14.0",
     "tailwindcss": "^3.3.2",
-    "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
+    "tsx": "^3.12.7",
     "typescript": "^4.8.4",
     "vite": "^3.2.7",
     "vite-tsconfig-paths": "^3.5.2",
     "vitest": "^0.24.5"
   },
   "prisma": {
-    "seed": "ts-node --require tsconfig-paths/register prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
