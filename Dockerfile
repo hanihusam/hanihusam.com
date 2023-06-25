@@ -61,7 +61,6 @@ COPY --from=build /myapp/node_modules/.prisma /myapp/node_modules/.prisma
 
 COPY --from=build /myapp/build /myapp/build
 COPY --from=build /myapp/public /myapp/public
-COPY --from=build /myapp/start.sh /myapp/start.sh
 COPY --from=build /myapp/package.json /myapp/package.json
 COPY --from=build /myapp/prisma /myapp/prisma
 
@@ -72,4 +71,4 @@ RUN mkdir -p /data ${LITEFS_DIR}
 
 ADD . .
 
-CMD ["./start.sh", "litefs", "mount"]
+CMD ["litefs", "mount"]
