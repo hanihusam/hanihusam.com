@@ -72,4 +72,4 @@ RUN mkdir -p /data ${LITEFS_DIR}
 
 ADD . .
 
-CMD ["litefs", "./start.sh", "mount"]
+CMD ["./start.sh", "litefs", "mount"]
