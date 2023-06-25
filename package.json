@@ -6,7 +6,6 @@
   },
   "sideEffects": false,
   "description": "A remix version of hanihusam.com",
-  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/hanihusam/hanihusam.com.git"
