@@ -6,7 +6,6 @@
   },
   "sideEffects": false,
   "description": "A remix version of hanihusam.com",
-  "main": "index.js",
   "type": "module",
   "repository": {
     "type": "git",
