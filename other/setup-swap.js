@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { $ } from "execa";
-import { writeFile } from "node:fs/promises";
+const { $ } = require("execa");
+const { writeFile } = require("node:fs/promises");
 
 console.log("setting up swapfile...");
 await $`fallocate -l 512M /swapfile`;
