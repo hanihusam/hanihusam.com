@@ -1,4 +1,4 @@
-import { flatRoutes } from "remix-flat-routes";
+const { flatRoutes } = require("remix-flat-routes");
 
 /** @type {import('@remix-run/dev').AppConfig} */
 module.exports = {
