@@ -1,7 +1,9 @@
-const { flatRoutes } = require("remix-flat-routes");
+import { flatRoutes } from "remix-flat-routes";
 
-/** @type {import('@remix-run/dev').AppConfig} */
-module.exports = {
+/**
+ * @type {import('@remix-run/dev').AppConfig}
+ */
+export default {
   cacheDirectory: "./node_modules/.cache/remix",
   future: {
     v2_errorBoundary: true,
