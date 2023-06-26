@@ -1,13 +1,13 @@
 {
   "include": ["**/*.ts", "**/*.tsx"],
   "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2021"],
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
     "types": ["vitest/globals"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
-    "module": "es2020",
-    "target": "es2020",
+    "module": "es2022",
+    "target": "es2022",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "strict": true,
