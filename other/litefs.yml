@@ -29,7 +29,7 @@ lease:
     key: "litefs/${FLY_APP_NAME}"
 
 exec:
-  - cmd: node ./other/setup-swap.ts
+  - cmd: node ./other/setup-swap.js
 
   - cmd: npx prisma migrate deploy
     if-candidate: true
