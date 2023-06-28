@@ -30,3 +30,8 @@ lease:
 
 exec:
   - cmd: ./start.sh
+
+  - cmd: npx prisma migrate deploy
+    if-candidate: true
+
+  - cmd: npm start
