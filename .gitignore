@@ -9,6 +9,6 @@ node_modules
 
 /cypress/screenshots
 /cypress/videos
-/prisma/sqlite.db
-/prisma/sqlite.db-journal
+/prisma/data.db
+/prisma/data.db-journal
 /other/cache.db
