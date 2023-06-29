@@ -22,8 +22,8 @@ import type {
   SerializeFrom,
 } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import {
+  isRouteErrorResponse,
   Links,
   LiveReload,
   Meta,
@@ -31,6 +31,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRouteError,
 } from "@remix-run/react";
 
 export const links: LinksFunction = () => {

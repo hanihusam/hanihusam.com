@@ -1,7 +1,11 @@
 import { useMemo } from "react";
 
-import type { ContentType, GitHubFile } from "@/types";
-import type { PageContent, PickFrontmatter } from "@/types";
+import type {
+  ContentType,
+  GitHubFile,
+  PageContent,
+  PickFrontmatter,
+} from "@/types";
 
 import { cache, cachified } from "./cache.server";
 import { compileMdx } from "./complie-mdx.server";
