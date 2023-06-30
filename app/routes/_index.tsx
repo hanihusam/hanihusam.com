@@ -8,7 +8,7 @@ import { ServicesSection } from "@/components/home/services-section";
 import { Spacer } from "@/components/spacer";
 import type { BlogFrontmatter } from "@/types";
 import { getFeatured } from "@/utils/blog.server";
-import { getBlogMdxListItems } from "@/utils/mdx";
+import { getContentMdxListItems } from "@/utils/mdx";
 
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";
@@ -20,7 +20,7 @@ type LoaderData = {
 
 export const loader: LoaderFunction = async ({ request }) => {
   const timings = {};
-  const blogs = await getBlogMdxListItems("blog", { request, timings });
+  const blogs = await getContentMdxListItems("blog", { request, timings });
 
   const featuredPosts = getFeatured(blogs, [
     "my-first-1000-upwork",

@@ -230,12 +230,12 @@ function mapFromMdxPageToMdxListItem<T extends ContentType>(
   return mdxListItem.frontmatter;
 }
 
-async function getBlogMdxListItems<T extends ContentType>(
+async function getContentMdxListItems<T extends ContentType>(
   type: T,
   options: CachifiedOptions
 ) {
   const { request, forceFresh, ttl = defaultTTL, timings } = options;
-  const key = "blog:mdx-list-items";
+  const key = `${type}:mdx-list-items`;
   return cachified({
     cache,
     request,
@@ -260,4 +260,4 @@ async function getBlogMdxListItems<T extends ContentType>(
   });
 }
 
-export { getBlogMdxListItems, useMdxComponent };
+export { getContentMdxListItems, useMdxComponent };

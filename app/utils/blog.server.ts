@@ -40,7 +40,7 @@ export async function getRecommendations(currSlug: string) {
 
   // Find with similar tags
   const recommendations = otherFms.filter((op) =>
-    op.tags.split(",").some((p) => currentFm?.tags.split(",").includes(p))
+    op.tags.some((p) => currentFm?.tags.includes(p))
   );
 
   // Populate with random recommendations if not enough
