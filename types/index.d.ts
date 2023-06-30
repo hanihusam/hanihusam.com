@@ -26,7 +26,7 @@ export type BlogFrontmatter = {
   bannerCloudinaryId: string;
   publishedAt: string;
   lastUpdated?: string;
-  tags: string;
+  tags: Array<string>;
   bannerBlurDataUrl?: string;
   repost?: string;
 };
