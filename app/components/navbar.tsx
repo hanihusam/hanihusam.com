@@ -58,7 +58,7 @@ export function NavigationMenuPopover({
   }, [open]);
 
   return (
-    <Popover.Panel className="fixed top-[104px] bottom-0 left-1/2 z-10 w-full max-w-xl -translate-x-1/2 transform">
+    <Popover.Panel className="fixed bottom-0 left-1/2 top-[104px] z-10 w-full max-w-xl -translate-x-1/2 transform">
       <nav className="flex h-full w-full flex-1 flex-col overflow-auto bg-light text-black dark:bg-dark dark:text-white">
         {MOBILE_LINKS.map((link) => {
           const isActive = link.to === router.pathname;
@@ -124,10 +124,9 @@ function NavLink({
     <li className="flex items-start px-5 py-2">
       <Link
         className={clsxm(
-          "underlined block whitespace-nowrap text-lg font-medium focus:outline-none dark:text-white",
+          "underlined block whitespace-nowrap text-lg font-medium text-black focus:outline-none dark:text-white",
           {
-            "active text-secondary": isSelected,
-            "text-black ": !isSelected,
+            active: isSelected,
           }
         )}
         prefetch="intent"
@@ -144,7 +143,7 @@ export function Navbar() {
   const popoverButtonRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex items-start py-6 px-6 md:px-[5vw] lg:py-12">
+    <div className="flex items-start px-6 py-6 md:px-[5vw] lg:py-12">
       <nav className="mx-auto flex w-full max-w-8xl items-center justify-between">
         <div className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-light">
           <img alt="HNH logo" className="h-10 w-10" src={logo} />
