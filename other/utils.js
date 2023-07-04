@@ -1,6 +1,6 @@
 // try to keep this dep-free so we don't have to install deps
-import { execSync } from "child_process";
-import https from "https";
+const { execSync } = require("child_process");
+const https = require("https");
 
 export function fetchJson(url, { timoutTime } = {}) {
   return new Promise((resolve, reject) => {
