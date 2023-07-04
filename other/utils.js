@@ -2,7 +2,7 @@
 const { execSync } = require("child_process");
 const https = require("https");
 
-export function fetchJson(url, { timoutTime } = {}) {
+function fetchJson(url, { timoutTime } = {}) {
   return new Promise((resolve, reject) => {
     const request = https
       .get(url, (res) => {
@@ -37,7 +37,7 @@ const changeTypes = {
   R: "moved",
 };
 
-export async function getChangedFiles(currentCommitSha, compareCommitSha) {
+async function getChangedFiles(currentCommitSha, compareCommitSha) {
   try {
     const lineParser = /^(?<change>\w).*?\s+(?<filename>.+$)/;
     const gitOutput = execSync(
@@ -64,7 +64,7 @@ export async function getChangedFiles(currentCommitSha, compareCommitSha) {
 }
 
 // try to keep this dep-free so we don't have to install deps
-export async function postRefreshCache({
+async function postRefreshCache({
   http,
   postData,
   options: { headers: headersOverrides, ...optionsOverrides } = {},
@@ -113,3 +113,5 @@ export async function postRefreshCache({
     }
   });
 }
+
+module.exports = { fetchJson, getChangedFiles, postRefreshCache };
