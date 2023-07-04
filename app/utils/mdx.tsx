@@ -168,6 +168,51 @@ export async function downloadMdxFilesCached(
 
 const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`;
 
+async function getMdxPage<T extends ContentType>(
+  {
+    contentDir,
+    slug,
+  }: {
+    contentDir: T;
+    slug: string;
+  },
+  options: CachifiedOptions
+): Promise<PageContent<T> | null> {
+  const { forceFresh, ttl = defaultTTL, request, timings } = options;
+  const key = `mdx-page:${contentDir}:${slug}:compiled`;
+  const page = await cachified({
+    key,
+    cache,
+    request,
+    timings,
+    ttl,
+    staleWhileRevalidate: defaultStaleWhileRevalidate,
+    forceFresh,
+    checkValue: checkCompiledValue,
+    getFreshValue: async () => {
+      const pageFiles = await downloadMdxFilesCached(contentDir, slug, options);
+      const compiledPage = await compileMdxCached({
+        contentDir,
+        slug,
+        ...pageFiles,
+        options,
+      }).catch((err) => {
+        console.error(`Failed to get a fresh value for mdx:`, {
+          contentDir,
+          slug,
+        });
+        return Promise.reject(err);
+      });
+      return compiledPage;
+    },
+  });
+  if (!page) {
+    // if there's no page, let's remove it from the cache
+    void cache.delete(key);
+  }
+  return page;
+}
+
 async function getMdxDirList(contentDir: string, options?: CachifiedOptions) {
   const { forceFresh, ttl = defaultTTL, request, timings } = options ?? {};
   const key = getDirListKey(contentDir);
@@ -191,6 +236,7 @@ async function getMdxDirList(contentDir: string, options?: CachifiedOptions) {
             .replace(/\.mdx$/, ""),
         }))
         .filter(({ name }) => name !== "README.md");
+
       return dirList;
     },
   });
@@ -260,4 +306,4 @@ async function getContentMdxListItems<T extends ContentType>(
   });
 }
 
-export { getContentMdxListItems, useMdxComponent };
+export { getContentMdxListItems, getMdxDirList, getMdxPage, useMdxComponent };
