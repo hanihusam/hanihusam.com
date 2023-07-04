@@ -6,6 +6,8 @@ import path from "path";
 
 const app = express();
 
+const here = (...d: Array<string>) => path.join(__dirname, ...d);
+
 app.use((req, res, next) => {
   // helpful headers:
   res.set("x-fly-region", process.env.FLY_REGION ?? "unknown");
@@ -89,6 +91,30 @@ app.listen(port, () => {
   require(BUILD_DIR);
   console.log(`✅ app ready: http://localhost:${port}`);
 });
+
+const publicAbsolutePath = here("../public");
+
+app.use(
+  express.static(publicAbsolutePath, {
+    maxAge: "1w",
+    setHeaders(res, resourcePath) {
+      const relativePath = resourcePath.replace(`${publicAbsolutePath}/`, "");
+      if (relativePath.startsWith("build/info.json")) {
+        res.setHeader("cache-control", "no-cache");
+        return;
+      }
+      // If we ever change our font (which we quite possibly never will)
+      // then we'll just want to change the filename or something...
+      // Remix fingerprints its assets so we can cache forever
+      if (
+        relativePath.startsWith("fonts") ||
+        relativePath.startsWith("build")
+      ) {
+        res.setHeader("cache-control", "public, max-age=31536000, immutable");
+      }
+    },
+  })
+);
 
 function purgeRequireCache() {
   // purge require cache on requests for "server side HMR" this won't let
