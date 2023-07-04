@@ -76,7 +76,7 @@ async function postRefreshCache({
     try {
       const postDataString = JSON.stringify(postData);
       const options = {
-        hostname: `${process.env.FLY_APP_NAME}.fly.dev`,
+        hostname: "hanihusam-com.fly.dev",
         port: 443,
         path: `/action/refresh-cache`,
         method: "POST",
