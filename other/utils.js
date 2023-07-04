@@ -81,7 +81,7 @@ async function postRefreshCache({
         path: `/action/refresh-cache`,
         method: "POST",
         headers: {
-          auth: process.env.process.env.REFRESH_TOKEN,
+          auth: process.env.REFRESH_TOKEN,
           "Content-Type": "application/json",
           "Content-Length": Buffer.byteLength(postDataString),
           ...headersOverrides,
