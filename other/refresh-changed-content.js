@@ -5,7 +5,7 @@ const [currentCommitSha] = process.argv.slice(2);
 
 async function go() {
   const shaInfo = await fetchJson(
-    `https://${process.env.FLY_APP_NAME}.fly.dev/refresh-commit-sha.json`,
+    "https://hanihusam-com.fly.dev/refresh-commit-sha.json",
     {
       timeoutTime: 10_000,
     }
@@ -13,7 +13,7 @@ async function go() {
   let compareSha = shaInfo?.sha;
   if (!compareSha) {
     const buildInfo = await fetchJson(
-      `https://${process.env.FLY_APP_NAME}.fly.dev/build/info.json`,
+      "https://hanihusam-com.fly.dev/build/info.json",
       {
         timeoutTime: 10_000,
       }
