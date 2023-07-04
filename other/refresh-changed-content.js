@@ -18,10 +18,8 @@ async function go() {
         timeoutTime: 10_000,
       }
     );
-    compareSha = buildInfo.commit.sha;
-    console.log(
-      `No compare sha found, using build sha: ${buildInfo.commit.sha}`
-    );
+    compareSha = buildInfo.data.sha;
+    console.log(`No compare sha found, using build sha: ${buildInfo.data.sha}`);
   }
   if (typeof compareSha !== "string") {
     console.log("🤷‍♂️ No sha to compare to. Unsure what to refresh.");
