@@ -74,7 +74,10 @@ export async function action({ request }: DataFunctionArgs) {
         continue;
       }
 
-      if (contentPath.startsWith("blog") || contentPath.startsWith("pages")) {
+      if (
+        contentPath.startsWith("blog") ||
+        contentPath.startsWith("projects")
+      ) {
         const [content, dirOrFilename] = contentPath.split("/");
         const contentDir = content as ContentType;
         if (!contentDir || !dirOrFilename) {
@@ -97,8 +100,8 @@ export async function action({ request }: DataFunctionArgs) {
         })
       );
     }
-    if (refreshingContentPaths.some((p) => p.startsWith("pages"))) {
-      promises.push(getMdxDirList("pages", { forceFresh: true }));
+    if (refreshingContentPaths.some((p) => p.startsWith("projects"))) {
+      promises.push(getMdxDirList("projects", { forceFresh: true }));
     }
 
     if (promises.length) {

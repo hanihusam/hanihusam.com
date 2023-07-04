@@ -29,8 +29,8 @@ async function go() {
   const changedFiles =
     (await getChangedFiles(currentCommitSha, compareSha)) ?? [];
   const contentPaths = changedFiles
-    .filter((f) => f.filename.startsWith("content"))
-    .map((f) => f.filename.replace(/^content\//, ""));
+    .filter((f) => f.filename.startsWith("contents"))
+    .map((f) => f.filename.replace(/^contents\//, ""));
   if (contentPaths.length) {
     console.log(`⚡️ Content changed. Requesting the cache be refreshed.`, {
       currentCommitSha,
