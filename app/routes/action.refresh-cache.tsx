@@ -32,8 +32,7 @@ export const commitShaKey = "meta:last-refresh-commit-sha";
 export async function action({ request }: DataFunctionArgs) {
   await ensurePrimary();
   if (
-    request.headers.get("auth") !==
-    getRequiredServerEnvVar("REFRESH_CACHE_SECRET")
+    request.headers.get("auth") !== getRequiredServerEnvVar("REFRESH_TOKEN")
   ) {
     return redirect("https://www.youtube.com/watch?v=dQw4w9WgXcQ");
   }
