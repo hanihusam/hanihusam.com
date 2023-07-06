@@ -133,7 +133,7 @@ async function downloadFileBySha(sha: string) {
 // https://raw.githubusercontent.com/{owner}/{repo}/{ref}/{path}
 // nice thing is it's not rate limited
 async function downloadFile(path: string) {
-  const { data } = await octokit.rest.repos.getContent({
+  const { data } = await octokit.repos.getContent({
     owner: "hanihusam",
     repo: "hanihusam.com",
     path,
@@ -155,12 +155,11 @@ async function downloadFile(path: string) {
  * @returns a promise that resolves to a file ListItem of the files/directories in the given directory (not recursive)
  */
 async function downloadDirList(path: string) {
-  const resp = await octokit.rest.repos.getContent({
+  const { data } = await octokit.repos.getContent({
     owner: "hanihusam",
     repo: "hanihusam.com",
     path,
   });
-  const data = resp.data;
 
   if (!Array.isArray(data)) {
     throw new Error(
