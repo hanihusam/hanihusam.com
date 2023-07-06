@@ -145,9 +145,12 @@ export function Navbar() {
   return (
     <div className="flex items-start px-6 py-6 md:px-[5vw] lg:py-12">
       <nav className="mx-auto flex w-full max-w-8xl items-center justify-between">
-        <div className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-light">
+        <NavLink
+          to="/"
+          className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-light"
+        >
           <img alt="HNH logo" className="h-10 w-10" src={logo} />
-        </div>
+        </NavLink>
 
         <div className="hidden items-start md:flex">
           {LINKS.map((link) => (

@@ -4,8 +4,6 @@ import { throttling } from "@octokit/plugin-throttling";
 import { Octokit as createOctokit } from "@octokit/rest";
 import nodePath from "path";
 
-const ref = process.env.GITHUB_REF ?? "main";
-
 const Octokit = createOctokit.plugin(throttling);
 
 const octokit = new Octokit({
@@ -135,11 +133,10 @@ async function downloadFileBySha(sha: string) {
 // https://raw.githubusercontent.com/{owner}/{repo}/{ref}/{path}
 // nice thing is it's not rate limited
 async function downloadFile(path: string) {
-  const { data } = await octokit.repos.getContent({
+  const { data } = await octokit.rest.repos.getContent({
     owner: "hanihusam",
     repo: "hanihusam.com",
     path,
-    ref,
   });
 
   if ("content" in data && "encoding" in data) {
@@ -147,7 +144,6 @@ async function downloadFile(path: string) {
     return Buffer.from(data.content, encoding).toString();
   }
 
-  console.error(data);
   throw new Error(
     `Tried to get ${path} but got back something that was unexpected. It doesn't have a content or encoding property`
   );
@@ -159,11 +155,10 @@ async function downloadFile(path: string) {
  * @returns a promise that resolves to a file ListItem of the files/directories in the given directory (not recursive)
  */
 async function downloadDirList(path: string) {
-  const resp = await octokit.repos.getContent({
+  const resp = await octokit.rest.repos.getContent({
     owner: "hanihusam",
     repo: "hanihusam.com",
     path,
-    ref,
   });
   const data = resp.data;
 
