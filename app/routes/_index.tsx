@@ -24,7 +24,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const featuredPosts = getFeatured(blogs, [
     "my-first-1k-upwork",
-    "2020-retrospective",
+    "for-you-who-wants-to-be-freelancer",
     "why-i-become-freelancer",
   ]);
 
