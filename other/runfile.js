@@ -10,4 +10,4 @@ const { href: scriptPath } = pathToFileURL(
   path.join(process.cwd(), process.argv[2])
 );
 
-await require(scriptPath);
+require(scriptPath);
