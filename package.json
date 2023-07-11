@@ -29,7 +29,6 @@
     "dev:content": "node -r esbuild-register -r dotenv/config other/refresh-on-content-change.ts",
     "dev:css": "tailwindcss -o ./app/styles/tailwind.css --watch",
     "dev:remix": "cross-env NODE_ENV=development remix watch",
-    "runfile": "tsx ./other/runfile.js",
     "format": "prettier --write .",
     "format:repo": "npm run format && npm run lint:repo -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
@@ -157,7 +156,7 @@
     "vitest": "^0.24.5"
   },
   "prisma": {
-    "seed": "tsx other/runfile prisma/seed.ts"
+    "seed": "tsx prisma/seed.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
