@@ -37,6 +37,7 @@ async function go() {
       compareSha,
       contentPaths,
     });
+
     try {
       const response = await postRefreshCache({
         postData: {
