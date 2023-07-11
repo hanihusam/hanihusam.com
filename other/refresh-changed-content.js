@@ -37,13 +37,17 @@ async function go() {
       compareSha,
       contentPaths,
     });
-    const response = await postRefreshCache({
-      postData: {
-        contentPaths,
-        commitSha: currentCommitSha,
-      },
-    });
-    console.log(`Content change request finished.`, { response });
+    try {
+      const response = await postRefreshCache({
+        postData: {
+          contentPaths,
+          commitSha: currentCommitSha,
+        },
+      });
+      console.log(`Content change request finished.`, { response });
+    } catch (error) {
+      console.log(`Error`, { error });
+    }
   } else {
     console.log(
       "🆗 Not refreshing changed content because no content changed."
