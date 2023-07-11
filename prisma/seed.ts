@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 async function seed() {
   const data = faunadata as unknown as FaunaMeta[];
+
   data.forEach(async (datum) => {
     let views;
     let likes;
@@ -34,8 +35,6 @@ async function seed() {
       },
     });
   });
-
-  console.log(`Database has been seeded. 🌱`);
 }
 
 seed()

@@ -1,3 +1,19 @@
+import invariant from "tiny-invariant";
+
+const requiredServerEnvs = [
+  "NODE_ENV",
+  "DATABASE_PATH",
+  "DATABASE_URL",
+  "SESSION_SECRET",
+  "CACHE_DATABASE_PATH",
+] as const;
+
+export function init() {
+  for (const env of requiredServerEnvs) {
+    invariant(process.env[env], `${env} is required`);
+  }
+}
+
 function getEnv() {
   return {
     FLY: process.env.FLY,

@@ -8,7 +8,7 @@ import { ServicesSection } from "@/components/home/services-section";
 import { Spacer } from "@/components/spacer";
 import type { BlogFrontmatter } from "@/types";
 import { getFeatured } from "@/utils/blog.server";
-import { getContentMdxListItems } from "@/utils/mdx";
+import { getContentMdxListItems } from "@/utils/mdx.server";
 
 import { useLoaderData } from "@remix-run/react";
 import type { LoaderFunction } from "@remix-run/server-runtime";

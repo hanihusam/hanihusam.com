@@ -4,25 +4,28 @@ import { throttling } from "@octokit/plugin-throttling";
 import { Octokit as createOctokit } from "@octokit/rest";
 import nodePath from "path";
 
+type ThrottleOptions = {
+  method: string;
+  url: string;
+  request: { retryCount: number };
+};
+
 const Octokit = createOctokit.plugin(throttling);
 
 const octokit = new Octokit({
   auth: process.env.BOT_GITHUB_TOKEN,
   throttle: {
-    onRateLimit: (retryAfter, options) => {
-      const method = "method" in options ? options.method : "METHOD_UNKNOWN";
-      const url = "url" in options ? options.url : "URL_UNKNOWN";
+    onRateLimit: (retryAfter: number, options: ThrottleOptions) => {
       console.warn(
-        `Request quota exhausted for request ${method} ${url}. Retrying after ${retryAfter} seconds.`
+        `Request quota exhausted for request ${options.method} ${options.url}. Retrying after ${retryAfter} seconds.`
       );
 
       return true;
     },
-    onSecondaryRateLimit: (retryAfter, options) => {
-      const method = "method" in options ? options.method : "METHOD_UNKNOWN";
-      const url = "url" in options ? options.url : "URL_UNKNOWN";
-      // does not retry, only logs a warning
-      octokit.log.warn(`Abuse detected for request ${method} ${url}`);
+    onAbuseLimit: (_: number, options: ThrottleOptions) => {
+      octokit.log.warn(
+        `Abuse detected for request ${options.method} ${options.url}`
+      );
     },
   },
 });

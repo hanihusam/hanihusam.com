@@ -1,6 +1,6 @@
 import type { ContentType } from "@/types";
 import { cache } from "@/utils/cache.server";
-import { getContentMdxListItems, getMdxDirList, getMdxPage } from "@/utils/mdx";
+import { getContentMdxListItems, getMdxPage } from "@/utils/mdx.server";
 import { getRequiredServerEnvVar } from "@/utils/misc";
 
 import { type DataFunctionArgs, json, redirect } from "@remix-run/node";
@@ -99,9 +99,9 @@ export async function action({ request }: DataFunctionArgs) {
         })
       );
     }
-    if (refreshingContentPaths.some((p) => p.startsWith("projects"))) {
-      promises.push(getMdxDirList("projects", { forceFresh: true }));
-    }
+    // if (refreshingContentPaths.some((p) => p.startsWith("projects"))) {
+    //   promises.push(getMdxDirList("projects", { forceFresh: true }));
+    // }
 
     if (promises.length) {
       await Promise.all(promises);

@@ -1,5 +1,3 @@
-import { useMemo } from "react";
-
 import type {
   ContentType,
   GitHubFile,
@@ -14,9 +12,6 @@ import { getBlurDataUrl } from "./images";
 import { typedBoolean } from "./misc";
 import type { Timings } from "./timing.server";
 
-import { LRUCache } from "lru-cache";
-import * as mdxBundler from "mdx-bundler/client";
-
 type CachifiedOptions = {
   forceFresh?: boolean | string;
   request?: Request;
@@ -30,45 +25,6 @@ const defaultStaleWhileRevalidate = 1000 * 60 * 60 * 24 * 30;
 const checkCompiledValue = (value: unknown) =>
   typeof value === "object" &&
   (value === null || ("code" in value && "frontmatter" in value));
-
-/**
- * This should be rendered within a useMemo
- * @param code the code to get the component from
- * @returns the component
- */
-function getMdxComponent(code: string) {
-  const Component = mdxBundler.getMDXComponent(code);
-  function KCDMdxComponent({
-    components,
-    ...rest
-  }: Parameters<typeof Component>["0"]) {
-    return (
-      // @ts-expect-error the types are wrong here
-      <Component components={{ ...mdxComponents, ...components }} {...rest} />
-    );
-  }
-  return KCDMdxComponent;
-}
-
-// This exists so we don't have to call new Function for the given code
-// for every request for a given blog post/mdx file.
-const mdxComponentCache = new LRUCache<
-  string,
-  ReturnType<typeof getMdxComponent>
->({
-  max: 1000,
-});
-
-function useMdxComponent(code: string) {
-  return useMemo(() => {
-    if (mdxComponentCache.has(code)) {
-      return mdxComponentCache.get(code)!;
-    }
-    const component = getMdxComponent(code);
-    mdxComponentCache.set(code, component);
-    return component;
-  }, [code]);
-}
 
 async function compileMdxCached<T extends ContentType>({
   contentDir,
@@ -306,4 +262,4 @@ async function getContentMdxListItems<T extends ContentType>(
   });
 }
 
-export { getContentMdxListItems, getMdxDirList, getMdxPage, useMdxComponent };
+export { getContentMdxListItems, getMdxDirList, getMdxPage };

@@ -5,7 +5,7 @@ import { HeaderSection } from "@/components/blog/header-section";
 import { ButtonOutline } from "@/components/button-outline";
 import { Grid } from "@/components/grid";
 import { Spacer } from "@/components/spacer";
-import { getContentMdxListItems } from "@/utils/mdx";
+import { getContentMdxListItems } from "@/utils/mdx.server";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
 import { useLoaderData } from "@remix-run/react";
