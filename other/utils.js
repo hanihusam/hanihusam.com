@@ -63,6 +63,11 @@ async function getChangedFiles(currentCommitSha, compareCommitSha) {
   }
 }
 
+const hostname =
+  process.env.GITHUB_REF_NAME === "dev"
+    ? "hanihusam-com.fly.dev"
+    : "hanihusam.com";
+
 // try to keep this dep-free so we don't have to install deps
 async function postRefreshCache({
   http,
@@ -70,13 +75,13 @@ async function postRefreshCache({
   options: { headers: headersOverrides, ...optionsOverrides } = {},
 }) {
   if (!http) {
-    http = await require("https");
+    http = https;
   }
   return new Promise((resolve, reject) => {
     try {
       const postDataString = JSON.stringify(postData);
       const options = {
-        hostname: "hanihusam-com.fly.dev",
+        hostname,
         port: 443,
         path: `/action/refresh-cache`,
         method: "POST",
