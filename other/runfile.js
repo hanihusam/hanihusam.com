@@ -1,8 +1,8 @@
-import "dotenv/config";
+require("dotenv/config");
 
-import { installGlobals } from "@remix-run/node";
-import path from "path";
-import { pathToFileURL } from "url";
+const { installGlobals } = require("@remix-run/node");
+const path = require("path");
+const { pathToFileURL } = require("url");
 
 installGlobals();
 
@@ -10,4 +10,4 @@ const { href: scriptPath } = pathToFileURL(
   path.join(process.cwd(), process.argv[2])
 );
 
-await import(scriptPath);
+await require(scriptPath);
