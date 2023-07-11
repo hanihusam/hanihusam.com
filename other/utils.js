@@ -70,7 +70,7 @@ async function postRefreshCache({
   options: { headers: headersOverrides, ...optionsOverrides } = {},
 }) {
   if (!http) {
-    http = await import("https");
+    http = await require("https");
   }
   return new Promise((resolve, reject) => {
     try {
