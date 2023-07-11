@@ -23,8 +23,8 @@ export const loader: LoaderFunction = async ({ request }) => {
   const blogs = await getContentMdxListItems("blog", { request, timings });
 
   const featuredPosts = getFeatured(blogs, [
-    "my-first-1000-upwork",
-    "2020-retrospective",
+    "my-first-1k-upwork",
+    "for-you-who-wants-to-be-freelancer",
     "why-i-become-freelancer",
   ]);
 

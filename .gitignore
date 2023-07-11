@@ -6,7 +6,9 @@ node_modules
 /build
 /public/build
 .env
+
 /app/styles/tailwind.css
+app/**/*.ignore.*
 
 /cypress/screenshots
 /cypress/videos

@@ -4,7 +4,7 @@ import chokidar from "chokidar";
 import fs from "fs";
 import path from "path";
 
-const watchPath = path.resolve(process.cwd(), "content");
+const watchPath = path.resolve(process.cwd(), "contents");
 const refreshPath = path.resolve(process.cwd(), "app", "refresh.ignore.js");
 
 chokidar.watch(watchPath).on("change", (changePath) => {

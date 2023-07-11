@@ -29,6 +29,7 @@
     "dev:content": "node -r esbuild-register -r dotenv/config other/refresh-on-content-change.ts",
     "dev:css": "tailwindcss -o ./app/styles/tailwind.css --watch",
     "dev:remix": "cross-env NODE_ENV=development remix watch",
+    "runfile": "tsx ./other/runfile.js",
     "format": "prettier --write .",
     "format:repo": "npm run format && npm run lint:repo -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
@@ -37,12 +38,15 @@
     "setup": "prisma generate && prisma migrate deploy && prisma db seed && npm run new:blog",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
     "start:mocks": "cross-env NODE_ENV=production node --require ./mocks --require dotenv/config ./build/server.js",
+    "curl:blog": "curl --HEAD --silent http://localhost:$PORT/blog > /dev/null || true",
+    "prime-cache:prod": "cross-env PORT=4001 npx start-server-and-test start http-get://localhost:4001/build/info.json curl:blog && echo cache primed ⚡️",
+    "prime-cache:mocks": "cross-env PORT=4001 npx start-server-and-test start:mocks http-get://localhost:4001/build/info.json curl:blog && echo cache primed ⚡️",
     "test": "vitest",
     "test:e2e:dev": "start-server-and-test dev http://localhost:3000 \"npx cypress open\"",
     "pretest:e2e:run": "npm run build",
     "test:e2e:run": "cross-env PORT=8811 start-server-and-test start:mocks http://localhost:8811 \"npx cypress run\"",
     "typecheck": "tsc",
-    "validate": "run-p \"test -- --run\" lint typecheck test:e2e:run"
+    "validate": "./other/validate"
   },
   "prettier": {},
   "eslintIgnore": [
@@ -153,7 +157,7 @@
     "vitest": "^0.24.5"
   },
   "prisma": {
-    "seed": "tsx prisma/seed.ts"
+    "seed": "tsx other/runfile prisma/seed.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
