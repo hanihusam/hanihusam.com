@@ -263,3 +263,4 @@ async function getContentMdxListItems<T extends ContentType>(
 }
 
 export { getContentMdxListItems, getMdxDirList, getMdxPage };
+export type { CachifiedOptions };

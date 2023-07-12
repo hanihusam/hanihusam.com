@@ -1,14 +1,17 @@
-import type { Frontmatter } from "@/types";
+import type { CachifiedOptions } from "./mdx.server";
+import { getContentMdxListItems } from "./mdx.server";
 
 /**
  * Get and order frontmatters by specified array
  */
-export function getFeatured<T extends Frontmatter>(
-  contents: Array<T>,
-  features: string[]
+export async function getBlogsFeatured(
+  features: string[],
+  options: CachifiedOptions
 ) {
+  const { request, timings } = options;
+  const contents = await getContentMdxListItems("blog", { request, timings });
   // override as T because there is no typechecking on the features array
-  return features.map(
-    (feat) => contents.find((content) => content.slug === feat) as T
-  );
+  return features.map((feat) =>
+    contents.find((content) => content.slug === feat)
+  ) as typeof contents;
 }
