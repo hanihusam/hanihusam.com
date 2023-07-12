@@ -1,8 +1,8 @@
 import type { BlogFrontmatter, InjectedMeta } from "@/types";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 
-import { BlurrableImage } from "./blurrable-image";
-import { H4, H6 } from "./typography";
+import { BlurrableImage } from "../blurrable-image";
+import { H4, H6 } from "../typography";
 
 import { Link } from "@remix-run/react";
 import { format } from "date-fns";
@@ -33,8 +33,7 @@ function ArticleCard({
       <Link
         prefetch="intent"
         className="group peer relative block w-full focus:outline-none"
-        // to={`/blog/${slug}`}
-        to={`/`}
+        to={`/blog/${slug}`}
       >
         <BlurrableImage
           key={bannerCloudinaryId}

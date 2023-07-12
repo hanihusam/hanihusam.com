@@ -4,7 +4,7 @@ import { Spacer } from "@/components/spacer";
 import type { BlogFrontmatter, InjectedMeta } from "@/types";
 import clsxm from "@/utils/clsxm";
 
-import { ArticleCard } from "../article-card";
+import { ArticleCard } from "../blog/article-card";
 
 type Posts = BlogFrontmatter & InjectedMeta;
 
