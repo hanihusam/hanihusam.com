@@ -5,6 +5,7 @@ const requiredServerEnvs = [
   "DATABASE_PATH",
   "DATABASE_URL",
   "SESSION_SECRET",
+  "REFRESH_TOKEN",
   "CACHE_DATABASE_PATH",
 ] as const;
 

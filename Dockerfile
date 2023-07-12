@@ -1,5 +1,5 @@
 # base node image
-FROM node:18-bullseye-slim as base
+FROM node:18-bookworm-slim as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
@@ -10,6 +10,7 @@ RUN apt-get update && apt-get install -y fuse3 openssl sqlite3 ca-certificates
 # Install all node_modules, including dev dependencies
 FROM base as deps
 
+RUN mkdir /myapp/
 WORKDIR /myapp
 
 ADD package.json .npmrc package-lock.json ./
@@ -18,7 +19,8 @@ RUN npm install --include=dev
 # Setup production node_modules
 FROM base as production-deps
 
-WORKDIR /myapp
+RUN mkdir /myapp/
+WORKDIR /myapp/
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 ADD package.json .npmrc package-lock.json ./
@@ -30,11 +32,14 @@ FROM base as build
 ARG COMMIT_SHA
 ENV COMMIT_SHA=$COMMIT_SHA
 
-WORKDIR /myapp
+RUN mkdir /myapp/
+WORKDIR /myapp/
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
 
-ADD prisma .
+# schema doesn't change much so these will stay cached
+ADD prisma /myapp/prisma
+
 RUN npx prisma generate
 
 ADD . .
@@ -58,7 +63,8 @@ ENV NODE_ENV="production"
 RUN echo "#!/bin/sh\nset -x\nsqlite3 \$DATABASE_URL" > /usr/local/bin/database-cli && chmod +x /usr/local/bin/database-cli
 RUN echo "#!/bin/sh\nset -x\nsqlite3 \$CACHE_DATABASE_PATH" > /usr/local/bin/cache-database-cli && chmod +x /usr/local/bin/cache-database-cli
 
-WORKDIR /myapp
+RUN mkdir /myapp/
+WORKDIR /myapp/
 
 COPY --from=production-deps /myapp/node_modules /myapp/node_modules
 COPY --from=build /myapp/node_modules/.prisma /myapp/node_modules/.prisma
