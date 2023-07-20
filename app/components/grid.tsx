@@ -32,7 +32,7 @@ const Grid = React.forwardRef<HTMLElement, GridProps>(function Grid(
       className={clsxm("relative", {
         "mx-10vw": !nested,
         "w-full": nested,
-        "mx-0 w-full md:mx-10vw md:w-auto": smFull,
+        "!mx-0 w-full md:mx-10vw md:w-auto": smFull,
         "py-10 md:py-24 lg:pb-40 lg:pt-36": featured,
       })}
       id={id}
