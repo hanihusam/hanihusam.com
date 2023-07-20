@@ -3,9 +3,9 @@ import { ButtonText } from "@/components/button-text";
 import { Grid } from "@/components/grid";
 import { IconLink } from "@/components/icon-link";
 import { DribbbleIcon, GithubIcon, LinkedinIcon } from "@/components/icons";
+import { AnchorOrLink } from "@/components/links/anchor-or-link";
 import { H1, H2, H4, Paragraph } from "@/components/typography";
 import { externalLinks } from "@/external-links";
-import { AnchorOrLink } from "@/utils/misc";
 
 import avatar from "../../../public/images/avatar-hani.png";
 import avatarMemoji from "../../../public/images/avatar-memoji.png";

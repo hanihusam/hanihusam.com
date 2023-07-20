@@ -1,8 +1,8 @@
 import { Button } from "@/components/button";
 import { Grid } from "@/components/grid";
+import { AnchorOrLink } from "@/components/links/anchor-or-link";
 import { H3, Paragraph } from "@/components/typography";
 import { externalLinks } from "@/external-links";
-import { AnchorOrLink } from "@/utils/misc";
 
 import logo from "../../public/images/hnh-logo.png";
 

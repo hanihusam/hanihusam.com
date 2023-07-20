@@ -4,7 +4,10 @@ import { BlogTitle } from "@/components/blog/blog-title";
 import { BlurrableImage } from "@/components/blurrable-image";
 import { Grid } from "@/components/grid";
 import { Spacer } from "@/components/spacer";
+import type { HeadingScrollSpy } from "@/components/table-of-content";
+import TableOfContents from "@/components/table-of-content";
 import { H5 } from "@/components/typography";
+import useScrollSpy from "@/hooks/useScrollSpy";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 import { getMdxPage } from "@/utils/mdx.server";
 import { getServerTimeHeader } from "@/utils/timing.server";
@@ -45,6 +48,29 @@ export default function Blog() {
     new Date(frontmatter.lastUpdated ?? frontmatter.publishedAt),
     "MMMM dd, yyyy"
   );
+
+  //#region  //*=========== Scrollspy ===========
+  const activeSection = useScrollSpy();
+
+  const [toc, setToc] = React.useState<HeadingScrollSpy>();
+  const minLevel =
+    toc?.reduce((min, item) => (item.level < min ? item.level : min), 10) ?? 0;
+
+  React.useEffect(() => {
+    const headings = document.querySelectorAll(".mdx h1, .mdx h2, .mdx h3");
+
+    const headingArr: HeadingScrollSpy = [];
+    headings.forEach((heading) => {
+      const id = heading.id;
+      const level = +heading.tagName.replace("H", "");
+      const text = heading.textContent + "";
+
+      headingArr.push({ id, level, text });
+    });
+
+    setToc(headingArr);
+  }, [frontmatter.slug]);
+  //#endregion  //*======== Scrollspy ===========
 
   return (
     <React.Fragment>
@@ -110,6 +136,18 @@ export default function Blog() {
       ) : null}
 
       <Spacer size="xs" />
+
+      <Grid className="lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
+        <article>Article element goes here</article>
+
+        <aside className="sticky top-36">
+          <TableOfContents
+            toc={toc}
+            minLevel={minLevel}
+            activeSection={activeSection}
+          />
+        </aside>
+      </Grid>
     </React.Fragment>
   );
 }
