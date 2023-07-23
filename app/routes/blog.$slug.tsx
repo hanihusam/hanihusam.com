@@ -9,7 +9,7 @@ import TableOfContents from "@/components/table-of-content";
 import { H5 } from "@/components/typography";
 import useScrollSpy from "@/hooks/useScrollSpy";
 import { getImageBuilder, getImgProps } from "@/utils/images";
-import { getMdxPage } from "@/utils/mdx.server";
+import { getMdxPage } from "@/utils/mdx";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";

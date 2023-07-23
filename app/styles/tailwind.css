@@ -656,14 +656,14 @@ video {
   grid-row-start: 1;
 }
 
+.\!mx-0 {
+  margin-left: 0px !important;
+  margin-right: 0px !important;
+}
+
 .-mx-5vw {
   margin-left: -5vw;
   margin-right: -5vw;
-}
-
-.mx-0 {
-  margin-left: 0px;
-  margin-right: 0px;
 }
 
 .mx-10vw {
@@ -674,11 +674,6 @@ video {
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
-}
-
-.\!mx-0 {
-  margin-left: 0px !important;
-  margin-right: 0px !important;
 }
 
 .mb-12 {
@@ -1208,6 +1203,11 @@ video {
 .py-6 {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
+}
+
+.py-8 {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .py-9 {
