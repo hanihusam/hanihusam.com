@@ -1,6 +1,6 @@
 import { Themed } from "@/utils/theme-provider";
 
-import { BlogImage } from "./blog-image";
+import { CloudinaryImg } from "./cloudinary-img";
 
 function ThemedBlogImage({
   darkCloudinaryId,
@@ -16,14 +16,14 @@ function ThemedBlogImage({
   return (
     <Themed
       light={
-        <BlogImage
+        <CloudinaryImg
           cloudinaryId={lightCloudinaryId}
           imgProps={imgProps}
           transparentBackground={transparentBackground}
         />
       }
       dark={
-        <BlogImage
+        <CloudinaryImg
           cloudinaryId={darkCloudinaryId}
           imgProps={imgProps}
           transparentBackground={transparentBackground}

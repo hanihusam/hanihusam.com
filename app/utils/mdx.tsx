@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { BlogImage } from "@/components/blog/blog-image";
+import { CloudinaryImg } from "@/components/blog/cloudinary-img";
 import { ThemedBlogImage } from "@/components/blog/themed-blog-image";
 import { AnchorOrLink } from "@/components/links/anchor-or-link";
 import type {
@@ -273,7 +273,7 @@ const mdxComponents = {
   a: AnchorOrLink,
   Themed,
   ThemedBlogImage,
-  BlogImage,
+  CloudinaryImg,
 };
 /**
  * This should be rendered within a useMemo

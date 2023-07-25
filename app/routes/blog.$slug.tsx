@@ -9,7 +9,7 @@ import TableOfContents from "@/components/table-of-content";
 import { H5 } from "@/components/typography";
 import useScrollSpy from "@/hooks/useScrollSpy";
 import { getImageBuilder, getImgProps } from "@/utils/images";
-import { getMdxPage } from "@/utils/mdx";
+import { getMdxPage, useMdxComponent } from "@/utils/mdx";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
 import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
@@ -43,7 +43,8 @@ export const loader = async ({ request, params }: DataFunctionArgs) => {
 
 export default function Blog() {
   const data = useLoaderData<typeof loader>();
-  const { frontmatter } = data;
+  const { frontmatter, code } = data;
+  const Component = useMdxComponent(code);
   const dateDisplay = format(
     new Date(frontmatter.lastUpdated ?? frontmatter.publishedAt),
     "MMMM dd, yyyy"
@@ -138,7 +139,9 @@ export default function Blog() {
       <Spacer size="xs" />
 
       <Grid className="lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
-        <article>Article element goes here</article>
+        <article className="prose-light dark:prose-dark prose mb-24 break-words">
+          <Component />
+        </article>
 
         <aside className="sticky top-36">
           <TableOfContents

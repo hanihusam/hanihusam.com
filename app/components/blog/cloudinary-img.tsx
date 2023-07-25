@@ -1,6 +1,6 @@
 import { getImageBuilder, getImgProps } from "@/utils/images";
 
-function BlogImage({
+function CloudinaryImg({
   cloudinaryId,
   imgProps,
   transparentBackground,
@@ -28,4 +28,4 @@ function BlogImage({
   );
 }
 
-export { BlogImage };
+export { CloudinaryImg };
