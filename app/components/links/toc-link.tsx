@@ -19,7 +19,7 @@ export default function TOCLink({
 }: TOCLinkProps) {
   return (
     <AnchorOrLink
-      href={`#${id}`}
+      to={`#${id}`}
       id={`link-${id}`}
       style={{ marginLeft: (level - minLevel) * 16 }}
     >
