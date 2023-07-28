@@ -140,19 +140,23 @@ export default function Blog() {
 
       <Spacer size="xs" />
 
-      <Grid className="lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
-        <article className="prose prose-light mb-24 w-full break-words dark:prose-dark">
-          <Component />
-        </article>
+      <div className="mx-10vw">
+        <section className="lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
+          <article className="prose prose-light mb-24 w-full break-words dark:prose-dark">
+            <Component />
+          </article>
 
-        <aside className="sticky top-36">
-          <TableOfContents
-            toc={toc}
-            minLevel={minLevel}
-            activeSection={activeSection}
-          />
-        </aside>
-      </Grid>
+          <aside className="py-0">
+            <div className="sticky top-24">
+              <TableOfContents
+                toc={toc}
+                minLevel={minLevel}
+                activeSection={activeSection}
+              />
+            </div>
+          </aside>
+        </section>
+      </div>
     </React.Fragment>
   );
 }
