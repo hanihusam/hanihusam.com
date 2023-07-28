@@ -189,6 +189,9 @@ export default {
                   marginTop: 0,
                   marginBottom: theme("spacing.10"),
                 },
+                "blockquote p": {
+                  fontSize: theme("fontSize.xl"),
+                },
                 "blockquote > :last-child": {
                   marginBottom: 0,
                 },
