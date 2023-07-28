@@ -1,3 +1,23 @@
+:root {
+  --color-black: #46434e;
+  --color-white: #ffffff;
+  --color-dark: #434343;
+  --color-light: #f2f2f2;
+  --color-body: #7c808b;
+  --color-accent: #7a8391;
+  --color-base: #e0e0e0;
+  --color-primary-300: #f2bb97;
+  --color-primary-400: #ec9e6a;
+  --color-primary-500: #e6813e;
+  --color-primary-600: #d4651b;
+  --color-primary-700: #a75016;
+  --color-secondary-300: #7398c7;
+  --color-secondary-400: #55749b;
+  --color-secondary-500: #45577b;
+  --color-secondary-600: #304258;
+  --color-secondary-700: #1f2a38;
+}
+
 /* I kinda feel like this should be the default... 🤷‍♂️ */
 [hidden] {
   pointer-events: none;
