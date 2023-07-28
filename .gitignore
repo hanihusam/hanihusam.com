@@ -7,7 +7,6 @@ node_modules
 /public/build
 .env
 
-/app/styles/tailwind.css
 app/**/*.ignore.*
 
 /cypress/screenshots

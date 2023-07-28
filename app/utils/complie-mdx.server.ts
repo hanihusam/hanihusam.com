@@ -194,7 +194,7 @@ async function compileMdx<FrontmatterType>(
             rehypePrettyCode({
               theme: "css-variables",
             }),
-          [rehypeAutolinkHeadings],
+          [rehypeAutolinkHeadings, { behavior: "wrap" }],
           ...rehypePlugins,
         ];
 

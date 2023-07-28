@@ -42,8 +42,21 @@ pre {
 * This un-sets some styles in tailwind/typography for when I really don't want
 * list items to display like list items. (Like for the list of translations)
 */
+.prose {
+  max-width: 50rem;
+}
+
 .prose a {
   text-decoration: none;
+}
+
+.prose :where(h1, h2, h3, h4) {
+  scroll-margin-top: 100px;
+  position: relative;
+  display: block;
+  margin-right: 0.5rem;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .prose :where(h1, h2, h3, h4) > a {
@@ -320,3 +333,17 @@ pre {
 .prose callout-success:before {
   background: #30c85e;
 }
+
+/* #region  /**=========== Hash Anchor =========== */
+.hash-anchor {
+  @apply inset-y-0 inline-flex w-full items-center;
+  position: absolute;
+  background-image: none;
+  transition: none;
+}
+
+.hash-anchor:after {
+  @apply invisible absolute -right-5 top-1/2 -translate-y-1/2 text-lg text-primary-400 dark:text-primary-300;
+  content: "#";
+}
+/* #endregion  /**======== Hash Anchor =========== */

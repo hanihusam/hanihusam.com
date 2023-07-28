@@ -201,7 +201,7 @@ export default {
               {
                 color: theme("colors.body"),
                 a: {
-                  color: theme("colors.primary.500"),
+                  color: theme("colors.primary.400"),
                 },
                 strong: {
                   color: theme("colors.black"),
@@ -213,11 +213,11 @@ export default {
                   color: theme("colors.gray.800"),
                 },
                 "h1, h2, h3, h4, h5, h6, thead th": {
-                  color: theme("colors.black"),
+                  color: theme("colors.primary.500"),
                 },
                 blockquote: {
-                  color: theme("colors.gray.500"),
-                  backgroundColor: theme("colors.gray.100"),
+                  color: theme("colors.light"),
+                  backgroundColor: theme("colors.dark"),
                 },
                 "thead, tbody tr": {
                   borderBottomColor: theme("colors.gray.200"),
@@ -230,7 +230,7 @@ export default {
               {
                 color: theme("colors.body"),
                 a: {
-                  color: theme("colors.primary.500"),
+                  color: theme("colors.primary.400"),
                 },
                 strong: {
                   color: theme("colors.white"),
@@ -242,11 +242,11 @@ export default {
                   color: theme("colors.gray.100"),
                 },
                 "h1, h2, h3, h4, h5, h6, thead th": {
-                  color: theme("colors.white"),
+                  color: theme("colors.primary.500"),
                 },
                 blockquote: {
-                  color: theme("colors.slate.500"),
-                  backgroundColor: theme("colors.gray.800"),
+                  color: theme("colors.light"),
+                  backgroundColor: theme("colors.black"),
                 },
                 "thead, tbody tr": {
                   borderBottomColor: theme("colors.gray.600"),

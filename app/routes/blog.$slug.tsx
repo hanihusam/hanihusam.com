@@ -139,7 +139,7 @@ export default function Blog() {
       <Spacer size="xs" />
 
       <Grid className="lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
-        <article className="prose-light dark:prose-dark prose mb-24 break-words">
+        <article className="prose prose-light mb-24 w-full break-words dark:prose-dark">
           <Component />
         </article>
 
