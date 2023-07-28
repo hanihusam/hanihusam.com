@@ -58,7 +58,9 @@ export default function Blog() {
     toc?.reduce((min, item) => (item.level < min ? item.level : min), 10) ?? 0;
 
   React.useEffect(() => {
-    const headings = document.querySelectorAll(".mdx h1, .mdx h2, .mdx h3");
+    const headings = document.querySelectorAll(
+      ".prose h1, .prose h2, .prose h3"
+    );
 
     const headingArr: HeadingScrollSpy = [];
     headings.forEach((heading) => {

@@ -1,7 +1,5 @@
 import clsxm from "@/utils/clsxm";
 
-import { H5 } from "../typography";
-
 import { AnchorOrLink } from "./anchor-or-link";
 
 type TOCLinkProps = {
@@ -25,9 +23,9 @@ export default function TOCLink({
       id={`link-${id}`}
       style={{ marginLeft: (level - minLevel) * 16 }}
     >
-      <H5
+      <h5
         className={clsxm(
-          "hover:text-secondary-500 focus:outline-none dark:hover:text-white",
+          "text-[20px] font-medium leading-7 hover:text-secondary-500 focus:outline-none dark:hover:text-white",
           "focus-visible:text-secondary-500 dark:focus-visible:text-white",
           activeSection === id
             ? "text-secondary-500 dark:text-light"
@@ -35,7 +33,7 @@ export default function TOCLink({
         )}
       >
         {text}
-      </H5>
+      </h5>
     </AnchorOrLink>
   );
 }
