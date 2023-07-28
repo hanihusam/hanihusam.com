@@ -1,9 +1,9 @@
 import { Button } from "@/components/button";
 import { ButtonOutline } from "@/components/button-outline";
 import { Grid } from "@/components/grid";
+import { AnchorOrLink } from "@/components/links/anchor-or-link";
 import { H2 } from "@/components/typography";
 import { externalLinks } from "@/external-links";
-import { AnchorOrLink } from "@/utils/misc";
 
 import { EnvelopeIcon } from "@heroicons/react/24/solid";
 

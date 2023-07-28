@@ -1,5 +1,5 @@
-import type { CachifiedOptions } from "./mdx.server";
-import { getContentMdxListItems } from "./mdx.server";
+import type { CachifiedOptions } from "./mdx";
+import { getContentMdxListItems } from "./mdx";
 
 /**
  * Get and order frontmatters by specified array

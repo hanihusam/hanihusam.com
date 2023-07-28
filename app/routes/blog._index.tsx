@@ -1,11 +1,11 @@
 import * as React from "react";
 
-import { ArticleCard } from "@/components/article-card";
+import { ArticleCard } from "@/components/blog/article-card";
 import { HeaderSection } from "@/components/blog/header-section";
 import { ButtonOutline } from "@/components/button-outline";
 import { Grid } from "@/components/grid";
 import { Spacer } from "@/components/spacer";
-import { getContentMdxListItems } from "@/utils/mdx.server";
+import { getContentMdxListItems } from "@/utils/mdx";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
 import { useLoaderData } from "@remix-run/react";
@@ -41,7 +41,7 @@ export const loader = async ({ request }: DataFunctionArgs) => {
 const PAGE_SIZE = 12;
 const initialIndexToShow = PAGE_SIZE;
 
-export default function Blog() {
+export default function BlogIndex() {
   const data = useLoaderData<typeof loader>();
   const { blogs } = data;
   const [indexToShow, setIndexToShow] = React.useState(initialIndexToShow);

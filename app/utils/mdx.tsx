@@ -1,3 +1,8 @@
+import * as React from "react";
+
+import { CloudinaryImg } from "@/components/blog/cloudinary-img";
+import { ThemedBlogImage } from "@/components/blog/themed-blog-image";
+import { AnchorOrLink } from "@/components/links/anchor-or-link";
 import type {
   ContentType,
   GitHubFile,
@@ -10,7 +15,11 @@ import { compileMdx } from "./complie-mdx.server";
 import { downloadDirList, downloadMdxFileOrDirectory } from "./github.server";
 import { getBlurDataUrl } from "./images";
 import { typedBoolean } from "./misc";
+import { Themed } from "./theme-provider";
 import type { Timings } from "./timing.server";
+
+import { LRUCache } from "lru-cache";
+import * as mdxBundler from "mdx-bundler/client/index.js";
 
 type CachifiedOptions = {
   forceFresh?: boolean | string;
@@ -29,13 +38,11 @@ const checkCompiledValue = (value: unknown) =>
 async function compileMdxCached<T extends ContentType>({
   contentDir,
   slug,
-  entry,
   files,
   options,
 }: {
   contentDir: T;
   slug: string;
-  entry: string;
   files: Array<GitHubFile>;
   options: CachifiedOptions;
 }) {
@@ -262,5 +269,52 @@ async function getContentMdxListItems<T extends ContentType>(
   });
 }
 
-export { getContentMdxListItems, getMdxDirList, getMdxPage };
+const mdxComponents = {
+  a: AnchorOrLink,
+  Themed,
+  ThemedBlogImage,
+  CloudinaryImg,
+};
+/**
+ * This should be rendered within a useMemo
+ * @param code the code to get the component from
+ * @returns the component
+ */
+function getMdxComponent(code: string) {
+  const Component = mdxBundler.getMDXComponent(code);
+
+  function HNHMdxComponent({
+    components,
+    ...rest
+  }: Parameters<typeof Component>["0"]) {
+    return (
+      // @ts-expect-error the types are wrong here
+      <Component components={{ ...mdxComponents, ...components }} {...rest} />
+    );
+  }
+
+  return HNHMdxComponent;
+}
+
+// This exists so we don't have to call new Function for the given code
+// for every request for a given blog post/mdx file.
+const mdxComponentCache = new LRUCache<
+  string,
+  ReturnType<typeof getMdxComponent>
+>({
+  max: 1000,
+});
+
+function useMdxComponent(code: string) {
+  return React.useMemo(() => {
+    if (mdxComponentCache.has(code)) {
+      return mdxComponentCache.get(code)!;
+    }
+    const component = getMdxComponent(code);
+    mdxComponentCache.set(code, component);
+    return component;
+  }, [code]);
+}
+
+export { getContentMdxListItems, getMdxDirList, getMdxPage, useMdxComponent };
 export type { CachifiedOptions };

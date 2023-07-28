@@ -1,6 +1,6 @@
 import type { ContentType } from "@/types";
 import { cache } from "@/utils/cache.server";
-import { getContentMdxListItems, getMdxPage } from "@/utils/mdx.server";
+import { getContentMdxListItems, getMdxPage } from "@/utils/mdx";
 import { getRequiredServerEnvVar } from "@/utils/misc";
 
 import { type DataFunctionArgs, json, redirect } from "@remix-run/node";

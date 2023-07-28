@@ -1,4 +1,4 @@
-import { getContentMdxListItems } from "@/utils/mdx.server";
+import { getContentMdxListItems } from "@/utils/mdx";
 
 import { type DataFunctionArgs } from "@remix-run/node";
 

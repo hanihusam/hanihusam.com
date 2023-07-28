@@ -1,6 +1,7 @@
 import appStyles from "@/styles/app.css";
 import fonts from "@/styles/fonts.css";
 import noScriptStyles from "@/styles/no-script.css";
+import proseStyles from "@/styles/prose.css";
 import tailwindStyles from "@/styles/tailwind.css";
 
 import { Footer } from "@/components/footer";
@@ -99,6 +100,7 @@ export const links: LinksFunction = () => {
     { rel: "manifest", href: "/favicons/manifest.json" },
     { rel: "stylesheet", href: appStyles },
     { rel: "stylesheet", href: tailwindStyles },
+    { rel: "stylesheet", href: proseStyles },
     { rel: "stylesheet", href: fonts },
   ];
 };
