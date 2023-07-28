@@ -76,7 +76,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         icon,
         additionalClasses: iconClassName,
       })}
-      <Paragraph className="text-light">{children}</Paragraph>
+      <Paragraph prose={false} className="text-light">
+        {children}
+      </Paragraph>
     </button>
   )
 );

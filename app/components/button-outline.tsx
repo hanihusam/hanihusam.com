@@ -77,6 +77,7 @@ export const ButtonOutline = React.forwardRef<HTMLButtonElement, ButtonProps>(
         additionalClasses: iconClassName,
       })}
       <Paragraph
+        prose={false}
         className={`text-${variant} group-hover:text-light group-focus:text-light group-active:text-light`}
       >
         {children}
