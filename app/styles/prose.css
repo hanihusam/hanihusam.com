@@ -277,19 +277,19 @@ pre {
   pointer-events: none;
 }
 
-.light .prose callout-base,
-.light .prose callout-base ol > li:before {
+.prose callout-muted,
+.prose callout-muted ol > li:before {
   color: #4c4b5e;
 }
-.light .prose callout-base:before {
+.prose callout-muted:before {
   background: #3c3e4d;
 }
 
-.prose callout-primary,
-.prose callout-primary ol > li:before {
+.prose callout-warning,
+.prose callout-warning ol > li:before {
   color: #e6813e;
 }
-.prose callout-primary:before {
+.prose callout-warning:before {
   background: #ec9e6a;
 }
 
@@ -301,11 +301,11 @@ pre {
   background: #ff4545;
 }
 
-.prose callout-secondary,
-.prose callout-secondary ol > li:before {
+.prose callout-info,
+.prose callout-info ol > li:before {
   color: #45577b;
 }
-.prose callout-secondary:before {
+.prose callout-info:before {
   background: #55749b;
 }
 
