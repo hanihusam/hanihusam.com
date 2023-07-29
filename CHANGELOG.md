@@ -1,5 +1,56 @@
 # Changelog
 
+## [1.1.0](https://github.com/hanihusam/hanihusam.com/compare/v1.0.0...v1.1.0) (2023-07-29)
+
+
+### Features
+
+* added config for server and refresh content ([3af4f68](https://github.com/hanihusam/hanihusam.com/commit/3af4f682757731c977c1b27fd8fd4167f7b00036))
+* added content watcher ([dea5cc3](https://github.com/hanihusam/hanihusam.com/commit/dea5cc36b2a29d8b3ed184efc230e740f0e0c766))
+* added link to home on logo ([3a1063d](https://github.com/hanihusam/hanihusam.com/commit/3a1063da11d65e3a7770aa7a911d6840dcc23c13))
+* added table of content and set the page structure ([e22aaba](https://github.com/hanihusam/hanihusam.com/commit/e22aabaf7ff749552d4b192338d10e6186370ae9))
+* added trycatch on refrech-changed-content ([c6c5862](https://github.com/hanihusam/hanihusam.com/commit/c6c5862db8bc48d746ba816cc22e33e6c7a3e57d))
+* changed content ([6ed6251](https://github.com/hanihusam/hanihusam.com/commit/6ed6251fc0960d3825f6765d96694b4c9423404b))
+* created blog page components ([997f91c](https://github.com/hanihusam/hanihusam.com/commit/997f91c523a32234eb2baef3db39e9e0b6585d1d))
+* created mdx bundler fn ([f44624c](https://github.com/hanihusam/hanihusam.com/commit/f44624c4b007fb0449d9722734710955fe4c656a))
+* finsinging 1st articla ([083a681](https://github.com/hanihusam/hanihusam.com/commit/083a68107cbde76343506066769fea76c5b167c7))
+* init blog page commit ([3fb9b03](https://github.com/hanihusam/hanihusam.com/commit/3fb9b035dc72e52765cdfc8dbb04c8204eb7e529))
+* made important style in grid on a case ([60605f2](https://github.com/hanihusam/hanihusam.com/commit/60605f26054d68a4b62864a2b9072af19c8cd0af))
+* post new content ([abca702](https://github.com/hanihusam/hanihusam.com/commit/abca702bbb75502ed797a0a14245e366f5d2dcac))
+* post new content ([2cab3cc](https://github.com/hanihusam/hanihusam.com/commit/2cab3cceefefb89f0431944aa094852ed748abec))
+* removed await ([665e789](https://github.com/hanihusam/hanihusam.com/commit/665e789552eb72b09e83590888aef54b49e5bbbb))
+* removed await ([e17cc79](https://github.com/hanihusam/hanihusam.com/commit/e17cc794f173767e48ca4e6884df3d42a5517803))
+* removed runfile ([0aac153](https://github.com/hanihusam/hanihusam.com/commit/0aac1531d215917261959ce347b4ce0332492dcc))
+* revert back the fetured post ([2d17151](https://github.com/hanihusam/hanihusam.com/commit/2d171512114d99b89718642309c265050498da5e))
+* tried to update content ([f15cc88](https://github.com/hanihusam/hanihusam.com/commit/f15cc880a7f21981a52bcb5de88413a32a540b10))
+
+
+### Bug Fixes
+
+* changed featured post ([d6a1c6a](https://github.com/hanihusam/hanihusam.com/commit/d6a1c6a6eb79a2e7151f7230dcb7f455ba6e1f59))
+* changed seed data ([f0384d8](https://github.com/hanihusam/hanihusam.com/commit/f0384d8ab5b37dac51e83e6406b119fe84dcffb0))
+* default typography style ([d6efe9c](https://github.com/hanihusam/hanihusam.com/commit/d6efe9c1d82559c1c9bee27dec4cb12c97159104))
+* delayed naviagte to id elm ([097a0d0](https://github.com/hanihusam/hanihusam.com/commit/097a0d031d7d9a138f952e2ef8baa4edf9e41ad4))
+* fixed add missing sha var ([0ea6dd2](https://github.com/hanihusam/hanihusam.com/commit/0ea6dd27fb2792c25f302f105bfa2f138eda1ad1))
+* fixed add style in mdx ([8c3d108](https://github.com/hanihusam/hanihusam.com/commit/8c3d1084c3fe244392d7a5087f465646a0a3498b))
+* fixed cannot read env fly app name ([b9dd157](https://github.com/hanihusam/hanihusam.com/commit/b9dd15728e8000cd9f7338128e1ca7c7dcea21e3))
+* fixed export module ([fe81eae](https://github.com/hanihusam/hanihusam.com/commit/fe81eae2d669e86da58b1416440f7a45f840c084))
+* fixed fly app name is not read ([41e9e63](https://github.com/hanihusam/hanihusam.com/commit/41e9e639ed9e1f553fd6d4dcc5c48621213bbe3b))
+* fixed grid mx ([fd15afd](https://github.com/hanihusam/hanihusam.com/commit/fd15afde02585c6d4924e66e2d6298fab0d83911))
+* fixed refresh content ga ([2291334](https://github.com/hanihusam/hanihusam.com/commit/2291334584132ba9bb52fd65a984818739a2f500))
+* fixed syntax call env ([37b47f8](https://github.com/hanihusam/hanihusam.com/commit/37b47f80ff6064ece8a9733e0ca157f3ada5970d))
+* fixed updated content cycle ([554347e](https://github.com/hanihusam/hanihusam.com/commit/554347e99c64d0ab7790e56b939e971485e15898))
+* fixed var ([887f7b3](https://github.com/hanihusam/hanihusam.com/commit/887f7b32cab159f725dc69c9df219d1d7c8b2084))
+* fixed wrong env var ([ed43fdf](https://github.com/hanihusam/hanihusam.com/commit/ed43fdf8fd66357f866e6bf8a20939668c3371b2))
+* fixed wrong type on content ([f28ba5b](https://github.com/hanihusam/hanihusam.com/commit/f28ba5b73f28ededed7a4140714c5408bc1a2d85))
+* merge issues ([c813440](https://github.com/hanihusam/hanihusam.com/commit/c813440fd9c8a74389aac12a6fd5bc1aec265e57))
+* runfile format ([a15737a](https://github.com/hanihusam/hanihusam.com/commit/a15737ad702f8a5d4a7db6562807d3ed519afc57))
+* sticky toc ([da851e3](https://github.com/hanihusam/hanihusam.com/commit/da851e3a9abeac3f2c37add5cc24425347436124))
+* table of content component ([d313ac6](https://github.com/hanihusam/hanihusam.com/commit/d313ac6df7751bb8abeb1551e035231f8a76729b))
+* typhography style in content ([a7448a2](https://github.com/hanihusam/hanihusam.com/commit/a7448a2bb9ff58deba3ed8ed71c109a639ea3f81))
+* unset prose in button text ([17f41fa](https://github.com/hanihusam/hanihusam.com/commit/17f41fa1bccbf3fec04dbcd31b83be1eeea6085e))
+* wrong cloudinaryId ([c5a30ab](https://github.com/hanihusam/hanihusam.com/commit/c5a30abb758043a25a3504ea0258d0d39529a10a))
+
 ## 1.0.0 (2023-07-03)
 
 
