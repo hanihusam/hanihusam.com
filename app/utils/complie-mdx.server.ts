@@ -190,11 +190,18 @@ async function compileMdx<FrontmatterType>(
           ...(options?.rehypePlugins ?? []),
           rehypeSlug,
           rehypePrism,
+          [
+            rehypeAutolinkHeadings,
+            {
+              properties: {
+                className: ["hash-anchor"],
+              },
+            },
+          ],
           () =>
             rehypePrettyCode({
               theme: "css-variables",
             }),
-          [rehypeAutolinkHeadings, { behavior: "wrap" }],
           ...rehypePlugins,
         ];
 
