@@ -88,7 +88,7 @@ function ThemeToggler() {
   return (
     <Switch
       checked={theme === Theme.DARK}
-      className="relative inline-flex h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-base bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2  focus-visible:ring-white focus-visible:ring-opacity-75"
+      className="relative inline-flex h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-base bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
       onChange={() => {
         setTheme((prevTheme) =>
           prevTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK
@@ -160,7 +160,7 @@ export function Navbar() {
           ))}
         </div>
 
-        <Popover className="relative block lg:hidden">
+        <Popover className="relative block md:hidden">
           {({ open, close }) => (
             <>
               <Popover.Button
@@ -178,7 +178,7 @@ export function Navbar() {
           )}
         </Popover>
 
-        <div className="hidden lg:block">
+        <div className="hidden md:block">
           <ThemeToggler />
         </div>
       </nav>
