@@ -141,7 +141,7 @@ export default function Blog() {
       <Spacer size="xs" />
 
       <div className="mx-10vw">
-        <section className="lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
+        <section className="mx-auto max-w-7xl lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
           <article className="prose prose-light mb-24 w-full break-words dark:prose-dark">
             <Component />
           </article>

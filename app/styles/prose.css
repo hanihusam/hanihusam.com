@@ -277,12 +277,20 @@ pre {
   pointer-events: none;
 }
 
-.prose callout-muted,
-.prose callout-muted ol > li:before {
+.light .prose callout-muted,
+.light .prose callout-muted ol > li:before {
   color: #4c4b5e;
 }
-.prose callout-muted:before {
+.light .prose callout-muted:before {
   background: #3c3e4d;
+}
+
+.prose callout-muted,
+.prose callout-muted ol > li:before {
+  color: #ffffff;
+}
+.prose callout-muted:before {
+  background: #e0e0e0;
 }
 
 .prose callout-warning,
