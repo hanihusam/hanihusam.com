@@ -27,9 +27,9 @@ type ButtonProps = ButtonBaseProps &
 function buttonModifierStyle(variant: "primary" | "secondary") {
   switch (variant) {
     case "primary":
-      return "hover:bg-primary-600 focus:ring-2 focus:ring-primary-500/20 active:bg-primary-700 disabled:bg-primary-300";
+      return "bg-primary-500 hover:bg-primary-600 focus:ring-2 focus:ring-primary-500/20 active:bg-primary-700 disabled:bg-primary-300";
     case "secondary":
-      return "hover:bg-secondary-600 focus:ring-2 focus:ring-secondary-500/20 active:bg-secondary-700 disabled:bg-secondary-300";
+      return "bg-secondary-500 hover:bg-secondary-600 focus:ring-2 focus:ring-secondary-500/20 active:bg-secondary-700 disabled:bg-secondary-300";
     default:
       return "hover:bg-primary-600 focus:ring-2 focus:ring-primary-500/20 active:bg-primary-700 disabled:bg-primary-300";
   }
@@ -62,7 +62,6 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         buttonBlockStyles(block),
         buttonModifierStyle(variant),
         "items-center justify-center rounded-md px-5 py-3 duration-200 focus:outline-none",
-        `bg-${variant}-500`,
         disabledStyles,
         className
       )}

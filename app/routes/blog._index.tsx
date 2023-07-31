@@ -2,6 +2,7 @@ import * as React from "react";
 
 import { ArticleCard } from "@/components/blog/article-card";
 import { HeaderSection } from "@/components/blog/header-section";
+import { Button } from "@/components/button";
 import { ButtonOutline } from "@/components/button-outline";
 import { Grid } from "@/components/grid";
 import { Spacer } from "@/components/spacer";
@@ -47,7 +48,7 @@ export default function BlogIndex() {
   const [indexToShow, setIndexToShow] = React.useState(initialIndexToShow);
 
   const posts = blogs.slice(0, indexToShow);
-  const hasMorePosts = indexToShow < posts.length - 1;
+  const hasMorePosts = indexToShow < blogs.length - 1;
 
   return (
     <React.Fragment>
@@ -67,11 +68,19 @@ export default function BlogIndex() {
       {hasMorePosts ? (
         <div className="mb-64 flex w-full justify-center">
           <ButtonOutline
+            className="dark:hidden"
             variant="secondary"
             onClick={() => setIndexToShow((i) => i + PAGE_SIZE)}
           >
             Load more posts
           </ButtonOutline>
+          <Button
+            className="hidden dark:flex"
+            variant="secondary"
+            onClick={() => setIndexToShow((i) => i + PAGE_SIZE)}
+          >
+            Load more posts
+          </Button>
         </div>
       ) : null}
     </React.Fragment>
