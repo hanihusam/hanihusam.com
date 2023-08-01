@@ -29,6 +29,10 @@ export type BlogFrontmatter = {
   tags: Array<string>;
   bannerBlurDataUrl?: string;
   repost?: string;
+  meta?: {
+    keywords?: Array<string>;
+    [key as string]: string;
+  };
 };
 
 export type ContentType = "blog" | "projects";

@@ -2,7 +2,7 @@ import { Grid } from "@/components/grid";
 import { Header } from "@/components/header";
 import { Spacer } from "@/components/spacer";
 import type { BlogFrontmatter, InjectedMeta } from "@/types";
-import clsxm from "@/utils/clsxm";
+import { clsxm } from "@/utils/clsxm";
 
 import { ArticleCard } from "../blog/article-card";
 

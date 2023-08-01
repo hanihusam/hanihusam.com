@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import clsxm from "@/utils/clsxm";
+import { clsxm } from "@/utils/clsxm";
 import { Theme, useTheme } from "@/utils/theme-provider";
 
 import logo from "../../public/images/hnh-logo.png";

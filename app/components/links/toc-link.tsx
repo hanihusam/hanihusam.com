@@ -1,4 +1,4 @@
-import clsxm from "@/utils/clsxm";
+import { clsxm } from "@/utils/clsxm";
 
 import { AnchorOrLink } from "./anchor-or-link";
 

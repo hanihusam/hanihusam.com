@@ -1,4 +1,4 @@
-import clsxm from "@/utils/clsxm";
+import { clsxm } from "@/utils/clsxm";
 
 import { Grid } from "./grid";
 import { H2, H5, H6 } from "./typography";

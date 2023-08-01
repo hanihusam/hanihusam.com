@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import clsxm from "./clsxm";
+import { clsxm } from "./clsxm";
 
 function buttonBlockStyles(block?: boolean) {
   return [block ? "flex w-full" : "inline-flex", "flex-row"];
