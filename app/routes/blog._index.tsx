@@ -113,10 +113,10 @@ export default function BlogIndex() {
       {tags.length > 0 ? (
         <Grid>
           <div
-            className="text-gray-600 dark:text-gray-300 col-span-full mt-2 flex flex-wrap items-baseline justify-start gap-2 text-sm"
+            className="col-span-full mt-2 flex flex-wrap items-baseline justify-start gap-2"
             data-fade="3"
           >
-            <H6 variant="secondary" as="div">
+            <H6 className="mr-5" variant="secondary" as="span">
               Choose topics:
             </H6>
 
