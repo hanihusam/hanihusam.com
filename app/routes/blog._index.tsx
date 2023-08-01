@@ -67,7 +67,8 @@ export default function BlogIndex() {
     setIndexToShow(initialIndexToShow);
   }, [query]);
 
-  const visibleTags = new Set(tags);
+  const isSearching = query.length > 0;
+
   const regularQuery = query.replace(specialQueryRegex, "").trim();
 
   const matchingPosts = React.useMemo(() => {
@@ -78,7 +79,13 @@ export default function BlogIndex() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allPosts, query, regularQuery]);
 
-  const hasMorePosts = indexToShow < matchingPosts.length - 1;
+  const visibleTags = isSearching
+    ? new Set(matchingPosts.flatMap((post) => post.tags).filter(Boolean))
+    : new Set(data.tags);
+
+  const hasMorePosts = isSearching
+    ? indexToShow < matchingPosts.length
+    : indexToShow < matchingPosts.length - 1;
   const posts = matchingPosts.slice(0, indexToShow);
 
   function toggleTag(tag: string) {
@@ -102,26 +109,32 @@ export default function BlogIndex() {
         subTitle="Thoughts, story, career, and anything that come from me and my mind"
       />
       <Spacer size="2xs" />
-      {tags.length > 0 ? (
-        <div
-          className="text-gray-600 dark:text-gray-300 mt-2 flex flex-wrap items-baseline justify-start gap-2 text-sm"
-          data-fade="3"
-        >
-          <H6 as="div">Choose topic:</H6>
 
-          {tags.map((tag) => {
-            const selected = regularQuery.includes(tag);
-            return (
-              <Tag
-                key={tag}
-                tag={tag}
-                selected={selected}
-                onClick={() => toggleTag(tag)}
-                disabled={!visibleTags.has(tag) ? !selected : false}
-              />
-            );
-          })}
-        </div>
+      {tags.length > 0 ? (
+        <Grid>
+          <div
+            className="text-gray-600 dark:text-gray-300 col-span-full mt-2 flex flex-wrap items-baseline justify-start gap-2 text-sm"
+            data-fade="3"
+          >
+            <H6 variant="secondary" as="div">
+              Choose topics:
+            </H6>
+
+            {tags.map((tag) => {
+              const selected = regularQuery.includes(tag);
+
+              return (
+                <Tag
+                  key={tag}
+                  tag={tag}
+                  selected={selected}
+                  onClick={() => toggleTag(tag)}
+                  disabled={!visibleTags.has(tag) ? !selected : false}
+                />
+              );
+            })}
+          </div>
+        </Grid>
       ) : null}
       <Spacer size="xs" />
       <Grid className="mb-64 gap-10">

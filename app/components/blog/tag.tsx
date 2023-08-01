@@ -18,10 +18,10 @@ function Tag({ tag, selected, onClick, disabled }: TagProps) {
       checked={selected}
       onChange={onClick}
       className={clsxm(
-        "relative mb-4 mr-4 block h-auto w-auto cursor-pointer rounded-full px-6 py-3 transition",
+        "relative mb-3 mr-3 block h-auto w-auto cursor-pointer rounded-full px-4 py-1.5 transition",
         {
-          "text-primary bg-secondary": !selected,
-          "text-inverse bg-inverse": selected,
+          "bg-base text-black dark:bg-body dark:text-white": !selected,
+          "bg-body text-white dark:bg-base dark:text-dark": selected,
           "focus-ring opacity-100": !disabled,
           "opacity-25": disabled,
         }
