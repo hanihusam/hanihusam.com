@@ -5,7 +5,7 @@ import {
   disabledStyles,
   renderButtonIcon,
 } from "@/utils/button";
-import clsxm from "@/utils/clsxm";
+import { clsxm } from "@/utils/clsxm";
 
 import { Paragraph } from "./typography";
 
