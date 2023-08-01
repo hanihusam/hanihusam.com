@@ -1,5 +1,30 @@
 # Changelog
 
+## [1.2.0](https://github.com/hanihusam/hanihusam.com/compare/v1.1.0...v1.2.0) (2023-08-01)
+
+
+### Features
+
+* add meta data in blog frontmatter ([6593f32](https://github.com/hanihusam/hanihusam.com/commit/6593f328da378c5e074b9c2e3d87f2487871ca2e))
+* add new contents ([54a8ca9](https://github.com/hanihusam/hanihusam.com/commit/54a8ca9db605d7544c65d93de375c45ef00701ee))
+* add new contents ([b6b15b0](https://github.com/hanihusam/hanihusam.com/commit/b6b15b08264ea202f9c4234c6028da8bee2f1b7c))
+* add new contents ([828ff8c](https://github.com/hanihusam/hanihusam.com/commit/828ff8c1461298d71926cf8c618d943bc7040774))
+* added className on anchor mdx ([247c1ae](https://github.com/hanihusam/hanihusam.com/commit/247c1aeb340d13b14ecf610c5d0e8b6535b1cb76))
+* created filterPosts fn ([f4e465a](https://github.com/hanihusam/hanihusam.com/commit/f4e465a3078c4bc8efb74c7c03f16b27b18f3cc7))
+* init tag component ([e31bec1](https://github.com/hanihusam/hanihusam.com/commit/e31bec14e14fa1f5faf0034d7829af7d445eead0))
+* post new content ([47abc8f](https://github.com/hanihusam/hanihusam.com/commit/47abc8f3256da984f16dcbef1071f95895a61bee))
+
+
+### Bug Fixes
+
+* callout muted style on dark ([7bb5c2b](https://github.com/hanihusam/hanihusam.com/commit/7bb5c2b33ba53ddecda33d5f0ffbc53d004f64fe))
+* content header ([90ea227](https://github.com/hanihusam/hanihusam.com/commit/90ea2270c17fd2a3568dba7de81c421c835179b4))
+* fix secondary btn in blog page ([c8df7ca](https://github.com/hanihusam/hanihusam.com/commit/c8df7ca6cd570ff4914ae13a3aa1b5c76d971d8b))
+* gap style ([e775fbd](https://github.com/hanihusam/hanihusam.com/commit/e775fbd23dd02989050d42d91c7817d17d807489))
+* hide/show navbar toggler ([ab36808](https://github.com/hanihusam/hanihusam.com/commit/ab3680813110287e06dbc3cc230ef75ec8515d52))
+* removed quotes in data ([a7d7c57](https://github.com/hanihusam/hanihusam.com/commit/a7d7c57e5039eda28438700f650fe3e832d2e1a8))
+* selected, disabled tags ([d9e9e94](https://github.com/hanihusam/hanihusam.com/commit/d9e9e9493c7425f671b73910a167c52313c6afa0))
+
 ## [1.1.0](https://github.com/hanihusam/hanihusam.com/compare/v1.0.0...v1.1.0) (2023-07-29)
 
 ### Features
