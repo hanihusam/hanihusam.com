@@ -2,7 +2,8 @@ import { getEnv, init } from "./utils/env.server.ts";
 import { NonceProvider } from "./utils/nonce-provider.ts";
 import { makeTimings } from "./utils/timing.server.ts";
 
-import { type HandleDocumentRequestFunction, Response } from "@remix-run/node";
+import { type HandleDocumentRequestFunction } from "@remix-run/node";
+import { createReadableStreamFromReadable } from "@remix-run/node";
 import { RemixServer } from "@remix-run/react";
 import isbot from "isbot";
 import { getInstanceInfo } from "litefs-js";
@@ -49,13 +50,15 @@ export default async function handleRequest(...args: DocRequestArgs) {
       {
         [callbackName]: () => {
           const body = new PassThrough();
+          const stream = createReadableStreamFromReadable(body);
+
           responseHeaders.set("Content-Type", "text/html");
           responseHeaders.append("Server-Timing", timings.toString());
           resolve(
-            new Response(body, {
+            new Response(stream, {
               headers: responseHeaders,
               status: didError ? 500 : responseStatusCode,
-            })
+            }),
           );
           pipe(body);
         },
@@ -67,7 +70,7 @@ export default async function handleRequest(...args: DocRequestArgs) {
 
           console.error(error);
         },
-      }
+      },
     );
 
     setTimeout(abort, ABORT_DELAY);

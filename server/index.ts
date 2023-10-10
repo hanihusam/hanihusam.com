@@ -1,4 +1,5 @@
 import { createRequestHandler } from "@remix-run/express";
+import { broadcastDevReady } from "@remix-run/node";
 import compression from "compression";
 import express from "express";
 import morgan from "morgan";
@@ -58,7 +59,7 @@ app.disable("x-powered-by");
 // Remix fingerprints its assets so we can cache forever.
 app.use(
   "/build",
-  express.static("public/build", { immutable: true, maxAge: "1y" })
+  express.static("public/build", { immutable: true, maxAge: "1y" }),
 );
 
 // Everything else (like favicon.ico) is cached for an hour. You may want to be
@@ -69,27 +70,39 @@ app.use(morgan("tiny"));
 
 const MODE = process.env.NODE_ENV;
 const BUILD_DIR = path.join(process.cwd(), "build");
+const BUILD_PATH = path.resolve("build/index.js");
+
+const initialBuild = reimportServer();
+
+function reimportServer() {
+  // 2. re-import the server build
+  return require(BUILD_PATH);
+}
 
 app.all(
   "*",
   MODE === "production"
-    ? createRequestHandler({ build: require(BUILD_DIR) })
+    ? createRequestHandler({ build: initialBuild })
     : (...args) => {
         purgeRequireCache();
         const requestHandler = createRequestHandler({
-          build: require(BUILD_DIR),
+          build: initialBuild,
           mode: MODE,
         });
         return requestHandler(...args);
-      }
+      },
 );
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
+app.listen(port, async () => {
+  console.log(`✅ Express server listening on port ${port}`);
   // require the built app so we're ready when the first request comes in
-  require(BUILD_DIR);
-  console.log(`✅ app ready: http://localhost:${port}`);
+  // require(BUILD_DIR);
+
+  if (process.env.NODE_ENV === "development") {
+    broadcastDevReady(initialBuild);
+  }
 });
 
 const publicAbsolutePath = here("../public");
@@ -113,7 +126,7 @@ app.use(
         res.setHeader("cache-control", "public, max-age=31536000, immutable");
       }
     },
-  })
+  }),
 );
 
 function purgeRequireCache() {
