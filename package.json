@@ -25,7 +25,7 @@
     "dev": "run-p dev:*",
     "dev:build": "npm run build:server -- --watch",
     "dev:content": "node -r esbuild-register -r dotenv/config other/refresh-on-content-change.ts",
-    "dev:app": "remix dev --manual -c 'node --inspect --require dotenv/config --require ./mocks ./build/server.js'",
+    "dev:app": "remix dev -c 'node --inspect --require dotenv/config --require ./mocks ./build/server.js'",
     "format": "prettier --write .",
     "format:repo": "npm run format && npm run lint:repo -- --fix",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",

@@ -6,17 +6,21 @@ import { Grid } from "@/components/grid";
 import { Spacer } from "@/components/spacer";
 import type { HeadingScrollSpy } from "@/components/table-of-content";
 import TableOfContents from "@/components/table-of-content";
-import { H5 } from "@/components/typography";
+import { H5, H6 } from "@/components/typography";
 import useScrollSpy from "@/hooks/useScrollSpy";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 import { getMdxPage, useMdxComponent } from "@/utils/mdx";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
-import { ArrowLeftCircleIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowLeftCircleIcon,
+  HandThumbUpIcon,
+} from "@heroicons/react/24/outline";
 import { Link, useLoaderData } from "@remix-run/react";
 import type { DataFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import format from "date-fns/format";
+import { motion } from "framer-motion";
 
 export const loader = async ({ request, params }: DataFunctionArgs) => {
   if (!params.slug) {
@@ -26,7 +30,7 @@ export const loader = async ({ request, params }: DataFunctionArgs) => {
 
   const page = await getMdxPage(
     { contentDir: "blog", slug: params.slug },
-    { request, timings }
+    { request, timings },
   );
   const headers = {
     "Cache-Control": "private, max-age=3600",
@@ -47,7 +51,7 @@ export default function Blog() {
   const Component = useMdxComponent(code);
   const dateDisplay = format(
     new Date(frontmatter.lastUpdated ?? frontmatter.publishedAt),
-    "MMMM dd, yyyy"
+    "MMMM dd, yyyy",
   );
 
   //#region  //*=========== Scrollspy ===========
@@ -59,7 +63,7 @@ export default function Blog() {
 
   React.useEffect(() => {
     const headings = document.querySelectorAll(
-      ".prose h1, .prose h2, .prose h3"
+      ".prose h1, .prose h2, .prose h3",
     );
 
     const headingArr: HeadingScrollSpy = [];
@@ -117,7 +121,7 @@ export default function Blog() {
                   {...getImgProps(
                     getImageBuilder(
                       frontmatter.bannerCloudinaryId,
-                      `image-${frontmatter.title}`
+                      `image-${frontmatter.title}`,
                     ),
                     {
                       widths: [280, 560, 840, 1100, 1650, 2500, 2100, 3100],
@@ -129,7 +133,7 @@ export default function Blog() {
                       transformations: {
                         background: "rgb:e6e9ee",
                       },
-                    }
+                    },
                   )}
                 />
               }
@@ -156,6 +160,24 @@ export default function Blog() {
             </div>
           </aside>
         </section>
+
+        <Spacer size="xs" />
+
+        <div className="flex items-center justify-center space-y-5 flex-col">
+          <H6 className="text-black dark:text-light">
+            How do you like this article?
+          </H6>
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="border border-primary-300 hover:border-primary-500 p-2 text-primary-300 hover:text-primary-500 h-12 w-12 rounded-full"
+          >
+            <HandThumbUpIcon />
+          </motion.button>
+          <H6>288</H6>
+        </div>
+
+        <Spacer size="xs" />
       </div>
     </React.Fragment>
   );
