@@ -24,11 +24,15 @@ async function seed() {
             sessionId,
           },
         });
-      })
+      }),
     );
 
-    await prisma.contentMeta.create({
-      data: {
+    await prisma.contentMeta.upsert({
+      where: {
+        slug: datum.slug,
+      },
+      update: {},
+      create: {
         slug: datum.slug,
         views,
         likes,

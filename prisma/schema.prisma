@@ -10,7 +10,7 @@ generator client {
 model ContentMeta {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  slug      String
+  slug      String   @unique
   likes     Like[]
   views     View[]
 }
