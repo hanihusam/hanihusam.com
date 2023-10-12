@@ -1,5 +1,3 @@
-import type { SingleContentMeta } from "../types";
-
 import { prisma } from "./db.server";
 import type { CachifiedOptions } from "./mdx";
 import { getContentMdxListItems } from "./mdx";
@@ -103,10 +101,51 @@ async function incrementViews({
   };
 }
 
-async function incrementLikes(slug: string) {
-  const res = await fetch(`/action/like/${slug}`, { method: "POST" });
+async function incrementLikes({
+  sessionId,
+  slug,
+}: {
+  sessionId: string;
+  slug: string;
+}) {
+  const likeCount = await getUserLikeCount({ sessionId, slug });
 
-  return res.json() as Promise<SingleContentMeta>;
+  if (likeCount >= 5) throw new Error("Max like count is 5");
+
+  const content = await prisma.contentMeta.upsert({
+    where: {
+      slug: slug,
+    },
+    create: {
+      slug,
+      likes: {
+        create: {
+          sessionId,
+        },
+      },
+    },
+    update: {
+      likes: {
+        create: {
+          sessionId,
+        },
+      },
+    },
+    include: {
+      _count: {
+        select: {
+          views: true,
+          likes: true,
+        },
+      },
+    },
+  });
+
+  return {
+    contentViews: content?._count.views ?? 0,
+    contentLikes: content?._count.likes ?? 0,
+    likesByUser: likeCount + 1,
+  };
 }
 
 export {
