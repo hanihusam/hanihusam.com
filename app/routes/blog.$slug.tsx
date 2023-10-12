@@ -9,7 +9,12 @@ import TableOfContents from "@/components/table-of-content";
 import { H5, H6 } from "@/components/typography";
 import { incrementMetaFlag } from "@/constants/env";
 import useScrollSpy from "@/hooks/useScrollSpy";
-import { getContentViews, incrementViews } from "@/utils/blog.server";
+import {
+  getContentViews,
+  incrementLikes,
+  incrementViews,
+} from "@/utils/blog.server";
+import { clsxm } from "@/utils/clsxm";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 import { getMdxPage, useMdxComponent } from "@/utils/mdx";
 import { getSessionId } from "@/utils/session.server";
@@ -19,6 +24,7 @@ import {
   ArrowLeftCircleIcon,
   HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
+import { HandThumbUpIcon as HandThumbUpSolidIcon } from "@heroicons/react/24/solid";
 import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import type { DataFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
@@ -32,10 +38,9 @@ export async function action({ params, request }: DataFunctionArgs) {
   const formData = await request.formData();
   const intent = formData.get("intent");
   const sessionId = getSessionId(request);
+  const { slug } = params;
   switch (intent) {
     case "mark-as-read": {
-      const { slug } = params;
-
       if (!incrementMetaFlag) {
         await incrementViews({ slug, sessionId });
 
@@ -43,6 +48,9 @@ export async function action({ params, request }: DataFunctionArgs) {
       }
 
       return null;
+    }
+    case "like-post": {
+      return await incrementLikes({ slug, sessionId });
     }
     default: {
       throw new Error(`Unknown intent: ${intent}`);
@@ -160,6 +168,20 @@ export default function Blog() {
     new Date(frontmatter.lastUpdated ?? frontmatter.publishedAt),
     "MMMM dd, yyyy",
   );
+
+  //#region  //*=========== Like post ===========
+  const likePost = useFetcher();
+  const isUserLiked = meta.likesByUser >= 5;
+  const onLikePost = () => {
+    // Don't run if data not populated,
+    // and if maximum likes
+    if (!meta || isUserLiked) return;
+
+    likePost.submit({ intent: "like-post" }, { method: "POST" });
+  };
+  //#endregion  //*=========== Like post ===========
+
+  //#region  //*=========== Read/view post ===========
   const markAsRead = useFetcher();
   const markAsReadRef = React.useRef(markAsRead);
 
@@ -179,6 +201,7 @@ export default function Blog() {
       );
     }, []),
   });
+  //#endregion  //*=========== Read/view post ===========
 
   //#region  //*=========== Scrollspy ===========
   const activeSection = useScrollSpy();
@@ -294,13 +317,21 @@ export default function Blog() {
             How do you like this article?
           </H6>
           <motion.button
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="border border-primary-300 hover:border-primary-500 p-2 text-primary-300 hover:text-primary-500 h-12 w-12 rounded-full"
+            whileHover={{ scale: isUserLiked ? undefined : 1.1 }}
+            whileTap={{ scale: isUserLiked ? undefined : 0.9 }}
+            onClick={onLikePost}
+            disabled={isUserLiked}
+            className="border border-primary-500 hover:border-primary-700 p-2 text-primary-500 hover:text-primary-700 h-12 w-12 rounded-full disabled:cursor-not-allowed disabled:text-primary-300 disabled:border-primary-300"
           >
-            <HandThumbUpIcon />
+            {meta.likesByUser > 0 ? (
+              <HandThumbUpSolidIcon />
+            ) : (
+              <HandThumbUpIcon />
+            )}
           </motion.button>
-          <H6>{meta.contentLikes}</H6>
+          <H6 className={clsxm({ "text-primary-300": isUserLiked })}>
+            {meta.contentLikes}
+          </H6>
         </div>
 
         <Spacer size="xs" />
