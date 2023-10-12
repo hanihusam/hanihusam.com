@@ -6,7 +6,7 @@ import path from "path";
 async function go() {
   console.log("\nLet's create a new blog 💿\n");
 
-  const blogsPath = path.resolve(process.cwd(), "content", "blog");
+  const blogsPath = path.resolve(process.cwd(), "contents", "blog");
 
   if (!fs.existsSync(blogsPath)) {
     fs.mkdirSync(blogsPath);
@@ -121,7 +121,7 @@ published: ${published}
   }
 
   console.log(
-    `\nBlog created 🚀\n\`cd\` into ${relativePath}\nOpen it in you favorite text editor, and get started!\n`
+    `\nBlog created 🚀\n\`cd\` into ${relativePath}\nOpen it in you favorite text editor, and get started!\n`,
   );
 }
 
