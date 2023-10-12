@@ -20,4 +20,6 @@ if (process.env.NODE_ENV === "production") {
   prisma.$connect();
 }
 
-export { prisma };
+const sessionExpirationTime = 1000 * 60 * 60 * 24 * 365;
+
+export { prisma, sessionExpirationTime };

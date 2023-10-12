@@ -3,10 +3,17 @@ import * as React from "react";
 const useSSRLayoutEffect =
   typeof window === "undefined" ? () => {} : React.useLayoutEffect;
 
+function getFromLocalStorage(key: string) {
+  if (typeof localStorage !== "undefined") {
+    return localStorage.getItem(key);
+  }
+  return null;
+}
+
 function getRequiredEnvVarFromObj(
   obj: Record<string, string | undefined>,
   key: string,
-  devValue: string = `${key}-dev-value`
+  devValue: string = `${key}-dev-value`,
 ) {
   let value = devValue;
   const envVal = obj[key];
@@ -23,14 +30,14 @@ function getRequiredServerEnvVar(key: string, devValue?: string) {
 }
 
 function typedBoolean<T>(
-  value: T
+  value: T,
 ): value is Exclude<T, "" | 0 | false | null | undefined> {
   return Boolean(value);
 }
 
 function useUpdateQueryStringValueWithoutNavigation(
   queryKey: string,
-  queryValue: string
+  queryValue: string,
 ) {
   React.useEffect(() => {
     const currentSearchParams = new URLSearchParams(window.location.search);
@@ -58,6 +65,7 @@ function useUpdateQueryStringValueWithoutNavigation(
 }
 
 export {
+  getFromLocalStorage,
   getRequiredEnvVarFromObj,
   getRequiredServerEnvVar,
   typedBoolean,
