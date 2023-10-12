@@ -7,27 +7,57 @@ import { Spacer } from "@/components/spacer";
 import type { HeadingScrollSpy } from "@/components/table-of-content";
 import TableOfContents from "@/components/table-of-content";
 import { H5, H6 } from "@/components/typography";
+import { incrementMetaFlag } from "@/constants/env";
 import useScrollSpy from "@/hooks/useScrollSpy";
+import { getContentViews, incrementViews } from "@/utils/blog.server";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 import { getMdxPage, useMdxComponent } from "@/utils/mdx";
+import { getSessionId } from "@/utils/session.server";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
 import {
   ArrowLeftCircleIcon,
   HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link, useFetcher, useLoaderData } from "@remix-run/react";
 import type { DataFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import format from "date-fns/format";
 import { motion } from "framer-motion";
+
+export async function action({ params, request }: DataFunctionArgs) {
+  if (!params.slug) {
+    throw new Error("params.slug is not defined");
+  }
+  const formData = await request.formData();
+  const intent = formData.get("intent");
+  const sessionId = getSessionId(request);
+  switch (intent) {
+    case "mark-as-read": {
+      const { slug } = params;
+
+      if (!incrementMetaFlag) {
+        await incrementViews({ slug, sessionId });
+
+        return json({ success: true });
+      }
+
+      return null;
+    }
+    default: {
+      throw new Error(`Unknown intent: ${intent}`);
+    }
+  }
+}
 
 export const loader = async ({ request, params }: DataFunctionArgs) => {
   if (!params.slug) {
     throw new Error("params.slug is not defined");
   }
   const timings = {};
+  const sessionId = getSessionId(request);
 
+  const meta = await getContentViews({ slug: params.slug, sessionId });
   const page = await getMdxPage(
     { contentDir: "blog", slug: params.slug },
     { request, timings },
@@ -42,17 +72,113 @@ export const loader = async ({ request, params }: DataFunctionArgs) => {
     throw json(null, { status: 404, headers });
   }
 
-  return json(page, { status: 200, headers });
+  return json({ page, meta }, { status: 200, headers });
 };
 
+function useOnRead({
+  parentElRef,
+  time,
+  onRead,
+}: {
+  parentElRef: React.RefObject<HTMLElement>;
+  time: number | undefined;
+  onRead: () => void;
+}) {
+  React.useEffect(() => {
+    const parentEl = parentElRef.current;
+    if (!parentEl || !time) return;
+
+    const visibilityEl = document.createElement("div");
+
+    let scrolledTheMain = false;
+    const observer = new IntersectionObserver((entries) => {
+      const isVisible = entries.some((entry) => {
+        return entry.target === visibilityEl && entry.isIntersecting;
+      });
+      if (isVisible) {
+        scrolledTheMain = true;
+        maybeMarkAsRead();
+        observer.disconnect();
+        visibilityEl.remove();
+      }
+    });
+
+    let startTime = new Date().getTime();
+    let timeoutTime = time * 0.6;
+    let timerId: ReturnType<typeof setTimeout>;
+    let timerFinished = false;
+    function startTimer() {
+      timerId = setTimeout(() => {
+        timerFinished = true;
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange,
+        );
+        maybeMarkAsRead();
+      }, timeoutTime);
+    }
+
+    function handleVisibilityChange() {
+      if (document.hidden) {
+        clearTimeout(timerId);
+        const timeElapsedSoFar = new Date().getTime() - startTime;
+        timeoutTime = timeoutTime - timeElapsedSoFar;
+      } else {
+        startTime = new Date().getTime();
+        startTimer();
+      }
+    }
+
+    function maybeMarkAsRead() {
+      if (timerFinished && scrolledTheMain) {
+        cleanup();
+        onRead();
+      }
+    }
+
+    // dirty-up
+    parentEl.append(visibilityEl);
+    observer.observe(visibilityEl);
+    startTimer();
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    function cleanup() {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearTimeout(timerId);
+      observer.disconnect();
+      visibilityEl.remove();
+    }
+    return cleanup;
+  }, [time, onRead, parentElRef]);
+}
+
 export default function Blog() {
-  const data = useLoaderData<typeof loader>();
-  const { frontmatter, code } = data;
+  const { page, meta } = useLoaderData<typeof loader>();
+  const { frontmatter, code } = page;
   const Component = useMdxComponent(code);
   const dateDisplay = format(
     new Date(frontmatter.lastUpdated ?? frontmatter.publishedAt),
     "MMMM dd, yyyy",
   );
+  const markAsRead = useFetcher();
+  const markAsReadRef = React.useRef(markAsRead);
+
+  React.useEffect(() => {
+    markAsReadRef.current = markAsRead;
+  }, [markAsRead]);
+
+  const readMarker = React.useRef<HTMLDivElement>(null);
+
+  useOnRead({
+    parentElRef: readMarker,
+    time: page.frontmatter.readingTime.time,
+    onRead: React.useCallback(() => {
+      markAsReadRef.current.submit(
+        { intent: "mark-as-read" },
+        { method: "POST" },
+      );
+    }, []),
+  });
 
   //#region  //*=========== Scrollspy ===========
   const activeSection = useScrollSpy();
@@ -174,7 +300,7 @@ export default function Blog() {
           >
             <HandThumbUpIcon />
           </motion.button>
-          <H6>288</H6>
+          <H6>{meta.contentLikes}</H6>
         </div>
 
         <Spacer size="xs" />

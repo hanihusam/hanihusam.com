@@ -13,7 +13,6 @@ export interface SingleContentMeta {
   contentViews: number;
   contentLikes: number;
   likesByUser: number;
-  devtoViews?: number;
 }
 
 export type BlogFrontmatter = {
