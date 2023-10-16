@@ -2,8 +2,10 @@ import { createRequestHandler } from "@remix-run/express";
 import { broadcastDevReady } from "@remix-run/node";
 import compression from "compression";
 import express from "express";
+import * as fs from "fs";
 import morgan from "morgan";
 import path from "path";
+import * as url from "url";
 
 const app = express();
 
@@ -72,17 +74,22 @@ const MODE = process.env.NODE_ENV;
 const BUILD_DIR = path.join(process.cwd(), "build");
 const BUILD_PATH = path.resolve("build/index.js");
 
-const initialBuild = reimportServer();
+const initialBuild = await reimportServer();
 
 function reimportServer() {
-  // 2. re-import the server build
-  return require(BUILD_PATH);
+  const stat = fs.statSync(BUILD_PATH);
+
+  // convert build path to URL for Windows compatibility with dynamic `import`
+  const BUILD_URL = url.pathToFileURL(BUILD_PATH).href;
+
+  // use a timestamp query parameter to bust the import cache
+  return import(BUILD_URL + "?t=" + stat.mtimeMs);
 }
 
 app.all(
   "*",
   MODE === "production"
-    ? createRequestHandler({ build: initialBuild })
+    ? createRequestHandler({ build: initialBuild, mode: initialBuild.mode })
     : (...args) => {
         purgeRequireCache();
         const requestHandler = createRequestHandler({
