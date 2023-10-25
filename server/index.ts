@@ -1,15 +1,31 @@
+import type { RequestHandler } from "@remix-run/express";
 import { createRequestHandler } from "@remix-run/express";
-import { broadcastDevReady } from "@remix-run/node";
+import type { ServerBuild } from "@remix-run/node";
+import { broadcastDevReady, installGlobals } from "@remix-run/node";
 import compression from "compression";
 import express from "express";
-import * as fs from "fs";
 import morgan from "morgan";
-import path from "path";
-import * as url from "url";
+import * as fs from "node:fs";
+import * as path from "node:path";
+import * as url from "node:url";
+import sourceMapSupport from "source-map-support";
+
+installGlobals();
+sourceMapSupport.install();
+
+const BUILD_PATH = path.resolve("build/index.js");
+const VERSION_PATH = path.resolve("build/version.txt");
+
+const initialBuild = await reimportServer();
+const remixHandler =
+  process.env.NODE_ENV === "development"
+    ? await createDevRequestHandler(initialBuild)
+    : createRequestHandler({
+        build: initialBuild,
+        mode: initialBuild.mode,
+      });
 
 const app = express();
-
-const here = (...d: Array<string>) => path.join(__dirname, ...d);
 
 app.use((req, res, next) => {
   // helpful headers:
@@ -70,13 +86,19 @@ app.use(express.static("public", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
 
-const MODE = process.env.NODE_ENV;
-const BUILD_DIR = path.join(process.cwd(), "build");
-const BUILD_PATH = path.resolve("build/index.js");
+app.all("*", remixHandler);
 
-const initialBuild = await reimportServer();
+const port = process.env.PORT || 3000;
 
-function reimportServer() {
+app.listen(port, () => {
+  console.log(`✅ Express server listening on port ${port}`);
+
+  if (process.env.NODE_ENV === "development") {
+    broadcastDevReady(initialBuild);
+  }
+});
+
+async function reimportServer(): Promise<ServerBuild> {
   const stat = fs.statSync(BUILD_PATH);
 
   // convert build path to URL for Windows compatibility with dynamic `import`
@@ -86,66 +108,31 @@ function reimportServer() {
   return import(BUILD_URL + "?t=" + stat.mtimeMs);
 }
 
-app.all(
-  "*",
-  MODE === "production"
-    ? createRequestHandler({ build: initialBuild, mode: initialBuild.mode })
-    : (...args) => {
-        purgeRequireCache();
-        const requestHandler = createRequestHandler({
-          build: initialBuild,
-          mode: MODE,
-        });
-        return requestHandler(...args);
-      },
-);
-
-const port = process.env.PORT || 3000;
-
-app.listen(port, async () => {
-  console.log(`✅ Express server listening on port ${port}`);
-  // require the built app so we're ready when the first request comes in
-  // require(BUILD_DIR);
-
-  if (process.env.NODE_ENV === "development") {
-    broadcastDevReady(initialBuild);
+async function createDevRequestHandler(
+  initialBuild: ServerBuild,
+): Promise<RequestHandler> {
+  let build = initialBuild;
+  async function handleServerUpdate() {
+    // 1. re-import the server build
+    build = await reimportServer();
+    // 2. tell Remix that this app server is now up-to-date and ready
+    broadcastDevReady(build);
   }
-});
+  const chokidar = await import("chokidar");
+  chokidar
+    .watch(VERSION_PATH, { ignoreInitial: true })
+    .on("add", handleServerUpdate)
+    .on("change", handleServerUpdate);
 
-const publicAbsolutePath = here("../public");
-
-app.use(
-  express.static(publicAbsolutePath, {
-    maxAge: "1w",
-    setHeaders(res, resourcePath) {
-      const relativePath = resourcePath.replace(`${publicAbsolutePath}/`, "");
-      if (relativePath.startsWith("build/info.json")) {
-        res.setHeader("cache-control", "no-cache");
-        return;
-      }
-      // If we ever change our font (which we quite possibly never will)
-      // then we'll just want to change the filename or something...
-      // Remix fingerprints its assets so we can cache forever
-      if (
-        relativePath.startsWith("fonts") ||
-        relativePath.startsWith("build")
-      ) {
-        res.setHeader("cache-control", "public, max-age=31536000, immutable");
-      }
-    },
-  }),
-);
-
-function purgeRequireCache() {
-  // purge require cache on requests for "server side HMR" this won't let
-  // you have in-memory objects between requests in development,
-  // alternatively you can set up nodemon/pm2-dev to restart the server on
-  // file changes, we prefer the DX of this though, so we've included it
-  // for you by default
-  for (const key in require.cache) {
-    if (key.startsWith(BUILD_DIR)) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete require.cache[key];
+  // wrap request handler to make sure its recreated with the latest build for every request
+  return async (req, res, next) => {
+    try {
+      return createRequestHandler({
+        build,
+        mode: "development",
+      })(req, res, next);
+    } catch (error) {
+      next(error);
     }
-  }
+  };
 }
