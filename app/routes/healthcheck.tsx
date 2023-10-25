@@ -1,4 +1,4 @@
-// import { getContentMdxListItems } from "@/utils/mdx";
+import { getContentMdxListItems } from "@/utils/mdx";
 
 import { type DataFunctionArgs } from "@remix-run/node";
 
@@ -11,6 +11,7 @@ export async function loader({ request }: DataFunctionArgs) {
     // if we can connect to the database and make a simple query
     // and make a HEAD request to ourselves, then we're good.
     await Promise.all([
+      getContentMdxListItems("blog", { request }),
       fetch(url.toString(), { method: "HEAD" }).then((r) => {
         if (!r.ok) return Promise.reject(r);
       }),
