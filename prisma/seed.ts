@@ -11,21 +11,22 @@ async function seed() {
     let views;
     let likes;
 
-    new Array(datum.views).forEach(async () => {
-      views = await prisma.view.create({
-        data: { sessionId: "5db2cdb52c8748af58d9de17ca080e77" },
-      });
-    });
-
-    Object.entries(datum.likesByUser).flatMap(([sessionId, likeCount]) =>
-      new Array(likeCount).forEach(async () => {
-        likes = await prisma.like.create({
-          data: {
-            sessionId,
-          },
+    await Promise.all([
+      new Array(datum.views).forEach(async () => {
+        views = await prisma.view.create({
+          data: { sessionId: "5db2cdb52c8748af58d9de17ca080e77" },
         });
       }),
-    );
+      Object.entries(datum.likesByUser).flatMap(([sessionId, likeCount]) =>
+        new Array(likeCount).forEach(async () => {
+          likes = await prisma.like.create({
+            data: {
+              sessionId,
+            },
+          });
+        }),
+      ),
+    ]);
 
     await prisma.contentMeta.upsert({
       where: {
