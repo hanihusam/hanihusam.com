@@ -146,7 +146,7 @@ function App() {
   const [theme] = useTheme();
 
   return (
-    <html className={theme ?? ""}>
+    <html className={theme ?? ""} lang="en">
       <head>
         <Meta />
         <Links />

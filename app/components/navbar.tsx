@@ -91,7 +91,7 @@ function ThemeToggler() {
       className="relative inline-flex h-10 w-[78px] shrink-0 cursor-pointer rounded-full border-2 border-base bg-base transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75"
       onChange={() => {
         setTheme((prevTheme) =>
-          prevTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK
+          prevTheme === Theme.DARK ? Theme.LIGHT : Theme.DARK,
         );
       }}
     >
@@ -127,7 +127,7 @@ function NavLink({
           "underlined block whitespace-nowrap text-lg font-medium text-black focus:outline-none dark:text-white",
           {
             active: isSelected,
-          }
+          },
         )}
         prefetch="intent"
         to={to}
@@ -143,8 +143,8 @@ export function Navbar() {
   const popoverButtonRef = React.useRef<HTMLButtonElement>(null);
 
   return (
-    <div className="flex items-start px-6 py-6 md:px-[5vw] lg:py-12">
-      <nav className="mx-auto flex w-full max-w-8xl items-center justify-between">
+    <nav className="flex items-start px-6 py-6 md:px-[5vw] lg:py-12">
+      <ul className="mx-auto flex w-full max-w-8xl items-center justify-between">
         <NavLink
           to="/"
           className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-light"
@@ -152,13 +152,13 @@ export function Navbar() {
           <img alt="HNH logo" className="h-10 w-10" src={logo} />
         </NavLink>
 
-        <div className="hidden items-start md:flex">
+        <li className="hidden items-start md:flex">
           {LINKS.map((link) => (
             <NavLink key={link.to} to={link.to}>
               {link.name}
             </NavLink>
           ))}
-        </div>
+        </li>
 
         <Popover className="relative block md:hidden">
           {({ open, close }) => (
@@ -178,10 +178,10 @@ export function Navbar() {
           )}
         </Popover>
 
-        <div className="hidden md:block">
+        <li className="hidden md:block">
           <ThemeToggler />
-        </div>
-      </nav>
-    </div>
+        </li>
+      </ul>
+    </nav>
   );
 }

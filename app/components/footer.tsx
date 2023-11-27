@@ -13,13 +13,22 @@ export function Footer() {
         <Paragraph className="text-dark dark:text-light">{`© ${new Date().getFullYear()} hanihusam. All rights reserved.`}</Paragraph>
 
         <div className="flex gap-6">
-          <IconLink href={externalLinks.linkedin}>
+          <IconLink
+            aria-label="Link to Linkedin profile"
+            href={externalLinks.linkedin}
+          >
             <LinkedinIcon className="h-6 w-6 text-secondary-500 dark:text-light" />
           </IconLink>
-          <IconLink href={externalLinks.github}>
+          <IconLink
+            aria-label="Link to Github repository"
+            href={externalLinks.github}
+          >
             <GithubIcon className="h-6 w-6 text-secondary-500 dark:text-light" />
           </IconLink>
-          <IconLink href={externalLinks.dribbble}>
+          <IconLink
+            aria-label="Link to Dribbble profile"
+            href={externalLinks.dribbble}
+          >
             <DribbbleIcon className="h-6 w-6 text-secondary-500 dark:text-light" />
           </IconLink>
         </div>

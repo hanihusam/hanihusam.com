@@ -26,13 +26,22 @@ export function HeroSection() {
         </div>
 
         <div className="flex items-start space-x-6">
-          <IconLink href={externalLinks.linkedin}>
+          <IconLink
+            aria-label="Link to Linkedin profile"
+            href={externalLinks.linkedin}
+          >
             <LinkedinIcon className="text-secondary-500 dark:text-light" />
           </IconLink>
-          <IconLink href={externalLinks.github}>
+          <IconLink
+            aria-label="Link to Github repository"
+            href={externalLinks.github}
+          >
             <GithubIcon className="text-secondary-500 dark:text-light" />
           </IconLink>
-          <IconLink href={externalLinks.dribbble}>
+          <IconLink
+            aria-label="Link to Dribbble profile"
+            href={externalLinks.dribbble}
+          >
             <DribbbleIcon className="text-secondary-500 dark:text-light" />
           </IconLink>
         </div>
@@ -47,7 +56,7 @@ export function HeroSection() {
         alt="Avatar of Han"
         className="col-span-full mx-auto mb-12 block lg:hidden"
         src={avatarMemoji}
-        width={380}
+        width={312}
       />
 
       <div className="col-span-full flex flex-col gap-8 self-stretch lg:col-span-4 lg:col-start-9">
