@@ -25,7 +25,7 @@ function ArticleCard({
 }: ArticleCardProps) {
   const dateDisplay = format(
     new Date(lastUpdated ?? publishedAt),
-    "MMMM dd, yyyy"
+    "MMMM dd, yyyy",
   );
 
   return (
@@ -59,7 +59,7 @@ function ArticleCard({
                       aspectRatio: "3:4",
                     },
                   },
-                }
+                },
               )}
               className="focus-ring w-full rounded-lg object-cover object-center transition"
               loading="lazy"
@@ -67,7 +67,7 @@ function ArticleCard({
           }
         />
 
-        <H6 className="mt-8 text-accent">
+        <H6 className="mt-8 text-body-dark">
           {[dateDisplay, readingTime?.text ?? "quick read"]
             .filter(Boolean)
             .join(" — ")}

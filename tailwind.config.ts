@@ -20,6 +20,7 @@ export default {
       dark: "var(--color-dark)",
       light: "var(--color-light)",
       body: "var(--color-body)",
+      "body-dark": "var(--color-body-dark)",
       accent: "var(--color-accent)",
       base: "var(--color-base)",
       primary: {
@@ -231,7 +232,7 @@ export default {
           dark: {
             css: [
               {
-                color: theme("colors.body"),
+                color: theme("colors.body-dark"),
                 a: {
                   color: theme("colors.primary.400"),
                 },
