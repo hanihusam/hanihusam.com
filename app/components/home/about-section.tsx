@@ -15,12 +15,12 @@ export function AboutSection() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <Paragraph className="text-base">
+            <Paragraph>
               I worked with a various background of client and different type of
               product as a software engineer (frontend) or UI designer. I help
               them to solve their business problem on the technology end.
             </Paragraph>
-            <Paragraph className="text-base">
+            <Paragraph>
               I have a principle that is &quot;stay simple and stay
               humble&quot;. I believe, simplicity hides a great deal of
               complexity and thoroughness. I see every project as a process of
