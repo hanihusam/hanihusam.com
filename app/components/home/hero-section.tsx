@@ -6,9 +6,7 @@ import { DribbbleIcon, GithubIcon, LinkedinIcon } from "@/components/icons";
 import { AnchorOrLink } from "@/components/links/anchor-or-link";
 import { H1, H2, H4, Paragraph } from "@/components/typography";
 import { externalLinks } from "@/external-links";
-
-import avatar from "../../../public/images/avatar-hani.png";
-import avatarMemoji from "../../../public/images/avatar-memoji.png";
+import { getImageBuilder, getImgProps } from "@/utils/images";
 
 import { ArrowDownTrayIcon } from "@heroicons/react/24/solid";
 
@@ -48,15 +46,38 @@ export function HeroSection() {
       </div>
 
       <img
-        alt="Avatar of Han"
         className="col-span-full hidden lg:col-span-6 lg:col-start-3 lg:block"
-        src={avatar}
+        {...getImgProps(
+          getImageBuilder(
+            "bapak2.dev/images/avatar-hani_ivyixv",
+            "Avatar of Han large",
+          ),
+          {
+            widths: [560, 840, 1100, 1650, 2500, 2100, 3100],
+            sizes: [
+              "(max-width:1023px) 80vw",
+              "(min-width:1024px) and (max-width:1620px) 67vw",
+              "1100px",
+            ],
+          },
+        )}
       />
       <img
-        alt="Avatar of Han"
         className="col-span-full mx-auto mb-12 block lg:hidden"
-        src={avatarMemoji}
-        width={312}
+        {...getImgProps(
+          getImageBuilder(
+            "bapak2.dev/images/avatar-memoji_phntzo",
+            "Avatar of Han small",
+          ),
+          {
+            widths: [312, 560],
+            sizes: [
+              "(max-width:1023px) 80vw",
+              "(min-width:1024px) and (max-width:1620px) 67vw",
+              "1100px",
+            ],
+          },
+        )}
       />
 
       <div className="col-span-full flex flex-col gap-8 self-stretch lg:col-span-4 lg:col-start-9">
