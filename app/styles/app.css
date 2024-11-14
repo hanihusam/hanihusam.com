@@ -1,75 +1,75 @@
 :root {
-  --color-black: #46434e;
-  --color-white: #ffffff;
-  --color-dark: #434343;
-  --color-light: #f2f2f2;
-  --color-body: #7c808b;
-  --color-body-dark: #94a3b8;
-  --color-accent: #7a8391;
-  --color-base: #e0e0e0;
-  --color-primary-300: #f2bb97;
-  --color-primary-400: #ec9e6a;
-  --color-primary-500: #e6813e;
-  --color-primary-600: #d4651b;
-  --color-primary-700: #a75016;
-  --color-secondary-300: #7398c7;
-  --color-secondary-400: #55749b;
-  --color-secondary-500: #45577b;
-  --color-secondary-600: #304258;
-  --color-secondary-700: #1f2a38;
+	--color-black: #46434e;
+	--color-white: #ffffff;
+	--color-dark: #434343;
+	--color-light: #f2f2f2;
+	--color-body: #7c808b;
+	--color-body-dark: #94a3b8;
+	--color-accent: #7a8391;
+	--color-base: #e0e0e0;
+	--color-primary-300: #f2bb97;
+	--color-primary-400: #ec9e6a;
+	--color-primary-500: #e6813e;
+	--color-primary-600: #d4651b;
+	--color-primary-700: #a75016;
+	--color-secondary-300: #7398c7;
+	--color-secondary-400: #55749b;
+	--color-secondary-500: #45577b;
+	--color-secondary-600: #304258;
+	--color-secondary-700: #1f2a38;
 }
 
 /* I kinda feel like this should be the default... 🤷‍♂️ */
 [hidden] {
-  pointer-events: none;
+	pointer-events: none;
 }
 
 /* These elements get removed before hydration but they can look funny before hydrating */
 dark-mode,
 light-mode {
-  display: none;
+	display: none;
 }
 
 .underlined {
-  position: relative;
-  text-decoration: none !important;
-  white-space: nowrap;
+	position: relative;
+	text-decoration: none !important;
+	white-space: nowrap;
 }
 
 .underlined:focus {
-  outline: none;
-  text-decoration: none !important;
+	outline: none;
+	text-decoration: none !important;
 }
 
 .underlined:after {
-  content: "";
-  height: 2px;
-  transform: scaleX(0);
-  transition: transform 0.25s ease;
-  transform-origin: left;
-  left: 0;
-  bottom: -4px;
-  width: 100%;
-  display: block;
-  position: absolute;
+	content: '';
+	height: 2px;
+	transform: scaleX(0);
+	transition: transform 0.25s ease;
+	transform-origin: left;
+	left: 0;
+	bottom: -4px;
+	width: 100%;
+	display: block;
+	position: absolute;
 }
 
 .underlined:hover:after,
 .underlined:focus:after,
 .active.underlined:after {
-  background-color: currentColor;
-  transform: scaleX(1);
+	background-color: currentColor;
+	transform: scaleX(1);
 }
 
 @media (prefers-reduced-motion) {
-  .underlined:after {
-    opacity: 0;
-    transition: opacity 0.25s ease;
-  }
+	.underlined:after {
+		opacity: 0;
+		transition: opacity 0.25s ease;
+	}
 
-  .underlined:hover:after,
-  .underlined:focus:after,
-  .active.underlined:after {
-    opacity: 1;
-  }
+	.underlined:hover:after,
+	.underlined:focus:after,
+	.active.underlined:after {
+		opacity: 1;
+	}
 }
