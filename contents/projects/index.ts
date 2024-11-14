@@ -1,3 +1,14 @@
+type Project = {
+  name: string;
+  description: string;
+  link: {
+    href: string;
+    label: string;
+  };
+  cover: string;
+  tags: string[];
+};
+
 export default [
   {
     name: "Depa's Infection",
@@ -36,4 +47,5 @@ export default [
     cover: "kawalcovid19Logo",
     tags: [],
   },
-];
+] satisfies Project[];
+export type { Project };
