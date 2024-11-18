@@ -13,6 +13,7 @@ export default [
 		},
 		rules: {
 			'no-console': 'off',
+			'@typescript-eslint/no-floating-promises': 'off', // we don't want to enforce this
 
 			'jsx-a11y/alt-text': 'off', // it's not smart enough
 			'jsx-a11y/media-has-caption': 'off',
