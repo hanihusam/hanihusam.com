@@ -18,10 +18,9 @@ import {
 } from '@/utils/theme-provider'
 
 import {
-	type DataFunctionArgs,
 	json,
 	type LinksFunction,
-	type SerializeFrom,
+	type LoaderFunctionArgs,
 } from '@remix-run/node'
 import {
 	isRouteErrorResponse,
@@ -122,7 +121,7 @@ export const meta = () => [
 	},
 ]
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
 	const themeSession = await getThemeSession(request)
 
 	const data = {
@@ -137,8 +136,6 @@ export async function loader({ request }: DataFunctionArgs) {
 
 	return json(data)
 }
-
-export type LoaderData = SerializeFrom<typeof loader>
 
 function App() {
 	const data = useLoaderData<typeof loader>()
@@ -181,7 +178,7 @@ function App() {
 }
 
 export default function AppWithProviders() {
-	const data = useLoaderData<LoaderData>()
+	const data = useLoaderData<typeof loader>()
 
 	return (
 		<ThemeProvider specifiedTheme={data.requestInfo.session.theme}>
