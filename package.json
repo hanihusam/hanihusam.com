@@ -118,6 +118,7 @@
     "@types/better-sqlite3": "^7.6.11",
     "@types/compression": "^1.7.2",
     "@types/express": "^5.0.0",
+    "@types/lodash": "^4.17.13",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.16.17",
     "@types/react": "^18.3.12",
