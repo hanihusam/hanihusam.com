@@ -1,148 +1,146 @@
-import type { RequestHandler } from "@remix-run/express";
-import { createRequestHandler } from "@remix-run/express";
-import type { ServerBuild } from "@remix-run/node";
-import { broadcastDevReady, installGlobals } from "@remix-run/node";
-import compression from "compression";
-import express from "express";
-import morgan from "morgan";
-import * as path from "node:path";
-import sourceMapSupport from "source-map-support";
+import { createRequestHandler, type RequestHandler } from '@remix-run/express'
+import {
+	broadcastDevReady,
+	installGlobals,
+	type ServerBuild,
+} from '@remix-run/node'
+import chokidar from 'chokidar'
+import compression from 'compression'
+import express from 'express'
+import { getInstanceInfo } from 'litefs-js'
+import morgan from 'morgan'
+import * as fs from 'node:fs'
+import * as path from 'node:path'
+import * as url from 'node:url'
+import sourceMapSupport from 'source-map-support'
 
-installGlobals();
-sourceMapSupport.install();
+installGlobals()
+sourceMapSupport.install()
 
-const BUILD_PATH = path.resolve("build/index.js");
-const VERSION_PATH = path.resolve("build/version.txt");
+const BUILD_PATH = path.resolve('./build/index.js')
+let initialBuild = await reimportServer()
 
-let initialBuild = require(BUILD_PATH);
-
-// We'll make chokidar a dev dependency so it doesn't get bundled in production.
-const chokidar =
-  process.env.NODE_ENV === "development" ? require("chokidar") : null;
+const primaryHost = 'hanihusam.com'
+const getHost = (req: { get: (key: string) => string | undefined }) =>
+	req.get('X-Forwarded-Host') ?? req.get('host') ?? ''
 
 const remixHandler =
-  process.env.NODE_ENV === "development"
-    ? createDevRequestHandler()
-    : createRequestHandler({
-        build: initialBuild,
-        mode: process.env.NODE_ENV,
-      });
+	process.env.NODE_ENV === 'development'
+		? await createDevRequestHandler()
+		: createRequestHandler({
+				build: initialBuild,
+				mode: process.env.NODE_ENV,
+			})
 
-const app = express();
+const app = express()
 
 app.use((req, res, next) => {
-  // helpful headers:
-  res.set("x-fly-region", process.env.FLY_REGION ?? "unknown");
-  res.set("Strict-Transport-Security", `max-age=${60 * 60 * 24 * 365 * 100}`);
+	// helpful headers:
+	res.set('x-fly-region', process.env.FLY_REGION ?? 'unknown')
+	res.set('Strict-Transport-Security', `max-age=${60 * 60 * 24 * 365 * 100}`)
 
-  // /clean-urls/ -> /clean-urls
-  if (req.path.endsWith("/") && req.path.length > 1) {
-    const query = req.url.slice(req.path.length);
-    const safepath = req.path.slice(0, -1).replace(/\/+/g, "/");
-    res.redirect(301, safepath + query);
-    return;
-  }
-  next();
-});
+	// /clean-urls/ -> /clean-urls
+	if (req.path.endsWith('/') && req.path.length > 1) {
+		const query = req.url.slice(req.path.length)
+		const safepath = req.path.slice(0, -1).replace(/\/+/g, '/')
+		res.redirect(301, safepath + query)
+		return
+	}
+	next()
+})
 
-// if we're not in the primary region, then we need to make sure all
-// non-GET/HEAD/OPTIONS requests hit the primary region rather than read-only
-// Postgres DBs.
-// learn more: https://fly.io/docs/getting-started/multi-region-databases/#replay-the-request
-app.all("*", function getReplayResponse(req, res, next) {
-  const { method, path: pathname } = req;
-  const { PRIMARY_REGION, FLY_REGION } = process.env;
+app.use(async (req, res, next) => {
+	const { currentInstance, primaryInstance } = await getInstanceInfo()
+	res.set('X-Powered-By', 'Han by bapak2.dev')
+	res.set('X-Fly-Region', process.env.FLY_REGION ?? 'unknown')
+	res.set('X-Fly-App', process.env.FLY_APP_NAME ?? 'unknown')
+	res.set('X-Fly-Instance', currentInstance)
+	res.set('X-Fly-Primary-Instance', primaryInstance)
+	res.set('X-Frame-Options', 'SAMEORIGIN')
+	const proto = req.get('X-Forwarded-Proto') ?? req.protocol
 
-  const isMethodReplayable = !["GET", "OPTIONS", "HEAD"].includes(method);
-  const isReadOnlyRegion =
-    FLY_REGION && PRIMARY_REGION && FLY_REGION !== PRIMARY_REGION;
+	const host = getHost(req)
+	if (!host.endsWith(primaryHost)) {
+		res.set('X-Robots-Tag', 'noindex')
+	}
+	res.set('Access-Control-Allow-Origin', `${proto}://${host}`)
 
-  const shouldReplay = isMethodReplayable && isReadOnlyRegion;
+	// if they connect once with HTTPS, then they'll connect with HTTPS for the next hundred years
+	res.set('Strict-Transport-Security', `max-age=${60 * 60 * 24 * 365 * 100}`)
+	next()
+})
 
-  if (!shouldReplay) return next();
-
-  const logInfo = {
-    pathname,
-    method,
-    PRIMARY_REGION,
-    FLY_REGION,
-  };
-  console.info(`Replaying:`, logInfo);
-  res.set("fly-replay", `region=${PRIMARY_REGION}`);
-  return res.sendStatus(409);
-});
-
-app.use(compression());
-
-// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
-app.disable("x-powered-by");
+app.use(compression())
 
 // Remix fingerprints its assets so we can cache forever.
 app.use(
-  "/build",
-  express.static("public/build", { immutable: true, maxAge: "1y" }),
-);
+	'/build',
+	express.static('public/build', { immutable: true, maxAge: '1y' }),
+)
 
 // Everything else (like favicon.ico) is cached for an hour. You may want to be
 // more aggressive with this caching.
-app.use(express.static("public", { maxAge: "1h" }));
+app.use(express.static('public', { maxAge: '1h' }))
 
-app.use(morgan("tiny"));
+app.use(morgan('tiny'))
 
-app.all("*", remixHandler);
+app.all('*', remixHandler)
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000
 
-app.listen(port, () => {
-  console.log(`✅ Express server listening on port ${port}`);
+app.listen(port, async () => {
+	console.log(`✅ Express server listening on port ${port}`)
 
-  if (process.env.NODE_ENV === "development") {
-    broadcastDevReady(initialBuild);
-  }
-});
+	if (process.env.NODE_ENV === 'development') {
+		await broadcastDevReady(initialBuild)
+	}
+})
 
 async function reimportServer(): Promise<ServerBuild> {
-  // 1. manually remove the server build from the require cache
-  Object.keys(require.cache).forEach((key) => {
-    if (key.startsWith(BUILD_PATH)) {
-      delete require.cache[key];
-    }
-  });
+	const stat = fs.statSync(BUILD_PATH)
 
-  // 2. re-import the server build
-  return require(BUILD_PATH);
+	// convert build path to URL for Windows compatibility with dynamic `import`
+	const BUILD_URL = url.pathToFileURL(BUILD_PATH).href
+
+	// use a timestamp query parameter to bust the import cache
+	return import(BUILD_URL + '?t=' + stat.mtimeMs)
 }
 
 // Create a request handler that watches for changes to the server build during development.
-function createDevRequestHandler(): RequestHandler {
-  async function handleServerUpdate() {
-    // 1. re-import the server build
-    initialBuild = await reimportServer();
+async function createDevRequestHandler(): Promise<RequestHandler> {
+	async function handleServerUpdate() {
+		// 1. re-import the server build
+		initialBuild = await reimportServer()
 
-    // Add debugger to assist in v2 dev debugging
-    if (initialBuild?.assets === undefined) {
-      console.log(initialBuild.assets);
-      debugger;
-    }
+		// Add debugger to assist in v2 dev debugging
+		if (initialBuild?.assets === undefined) {
+			console.log(initialBuild.assets)
+			debugger
+		}
 
-    // 2. tell dev server that this app server is now up-to-date and ready
-    broadcastDevReady(initialBuild);
-  }
+		// 2. tell dev server that this app server is now up-to-date and ready
+		await broadcastDevReady(initialBuild)
+	}
 
-  chokidar
-    .watch(VERSION_PATH, { ignoreInitial: true })
-    .on("add", handleServerUpdate)
-    .on("change", handleServerUpdate);
+	// watch the server build file for changes
+	chokidar.watch(BUILD_PATH).on('change', async () => {
+		console.log('🔁 Server build changed')
+		try {
+			await handleServerUpdate()
+		} catch (error) {
+			console.error('❌ Error re-importing server build:', error)
+		}
+	})
 
-  // wrap request handler to make sure its recreated with the latest build for every request
-  return async (req, res, next) => {
-    try {
-      return createRequestHandler({
-        build: initialBuild,
-        mode: "development",
-      })(req, res, next);
-    } catch (error) {
-      next(error);
-    }
-  };
+	// wrap request handler to make sure its recreated with the latest build for every request
+	return async (req, res, next) => {
+		try {
+			return createRequestHandler({
+				build: initialBuild,
+				mode: 'development',
+			})(req, res, next)
+		} catch (error) {
+			next(error)
+		}
+	}
 }
