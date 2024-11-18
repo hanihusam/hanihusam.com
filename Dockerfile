@@ -1,6 +1,5 @@
-# use the official Bun image
-# see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 AS base
+# base node image
+FROM node:18-bookworm-slim as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
@@ -14,8 +13,8 @@ FROM base as deps
 RUN mkdir /myapp/
 WORKDIR /myapp
 
-ADD package.json bun.lockb ./
-RUN bun install --frozen-lockfile
+ADD package.json .npmrc package-lock.json ./
+RUN npm install --include=dev
 
 # Setup production node_modules
 FROM base as production-deps
@@ -24,8 +23,8 @@ RUN mkdir /myapp/
 WORKDIR /myapp/
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json bun.lockb ./
-RUN bun install --frozen-lockfile --production
+ADD package.json .npmrc package-lock.json ./
+RUN npm prune --omit=dev
 
 # Build the app
 FROM base as build
@@ -44,7 +43,7 @@ ADD prisma /myapp/prisma
 RUN npx prisma generate
 
 ADD . .
-RUN bun run build
+RUN npm run build
 
 # Finally, build the production image with minimal footprint
 FROM base
