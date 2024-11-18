@@ -18,14 +18,16 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: ⎔ Setup bun
-        uses: oven-sh/setup-bun@v1
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
       - name: 📥 Install deps
-        run: bun install
+        run: npm install
 
       - name: 🔬 Lint
-        run: bun run lint
+        run: npm run lint
 
   typecheck:
     name: ʦ TypeScript
@@ -34,14 +36,16 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v3
 
-      - name: ⎔ Setup bun
-        uses: oven-sh/setup-bun@v1
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
       - name: 📥 Install deps
-        run: bun install
+        run: npm install
 
       - name: 🔎 Type check
-        run: bun run typecheck
+        run: npm run typecheck
 
   # vitest:
   #   name: ⚡ Vitest
@@ -50,7 +54,7 @@ jobs:
   #     - name: 🛑 Cancel Previous Runs
   #       uses: styfle/cancel-workflow-action@0.11.0
 
-  #     - name: ⬇️ Checkout repo
+  #     - name: ��️ Checkout repo
   #       uses: actions/checkout@v3
 
   #     - name: ⎔ Setup node
@@ -113,17 +117,19 @@ jobs:
       - name: 🏄 Copy test env vars
         run: cp .env.example .env
 
-      - name: ⎔ Setup bun
-        uses: oven-sh/setup-bun@v1
+      - name: ⎔ Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
       - name: 📥 Install deps
-        run: bun install
+        run: npm install
 
       - name: 🛠 Setup Database
         run: npx prisma migrate reset --force
 
       - name: ⚙️ Build
-        run: bun run build
+        run: npm run build
 
       # - name: 🌳 Cypress run
       #   uses: cypress-io/github-action@v5
