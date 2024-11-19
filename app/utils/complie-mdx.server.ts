@@ -7,7 +7,6 @@ import PQueue from 'p-queue'
 import readingTime from 'reading-time'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
-import rehypePrism from 'rehype-prism-plus'
 import rehypeSlug from 'rehype-slug'
 import gfm from 'remark-gfm'
 import type * as U from 'unified'
@@ -65,7 +64,6 @@ const cloudinaryUrlRegex =
 
 function optimizeCloudinaryImages() {
 	return async function transformer(tree: H.Root) {
-		// @ts-expect-error ugh
 		visit(
 			tree,
 			'mdxJsxFlowElement',
@@ -150,12 +148,6 @@ function removePreContainerDivs() {
 	}
 }
 
-const rehypePlugins: U.PluggableList = [
-	optimizeCloudinaryImages,
-	trimCodeBlocks,
-	removePreContainerDivs,
-]
-
 async function compileMdx<FrontmatterType>(
 	slug: string,
 	githubFiles: Array<GitHubFile>,
@@ -185,7 +177,6 @@ async function compileMdx<FrontmatterType>(
 				options.rehypePlugins = [
 					...(options?.rehypePlugins ?? []),
 					rehypeSlug,
-					rehypePrism,
 					[
 						rehypeAutolinkHeadings,
 						{
@@ -194,14 +185,16 @@ async function compileMdx<FrontmatterType>(
 							},
 						},
 					],
-					() =>
-						rehypePrettyCode({
+					[
+						rehypePrettyCode,
+						{
 							theme: {
 								light: 'github-light',
 								dark: 'github-dark',
 							},
-						}),
-					...rehypePlugins,
+						},
+					],
+					...[optimizeCloudinaryImages, trimCodeBlocks, removePreContainerDivs],
 				]
 
 				return options
