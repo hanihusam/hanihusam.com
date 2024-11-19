@@ -1,10 +1,10 @@
 import { type ContentType } from '@/types'
 import { cache } from '@/utils/cache.server'
+import { ensurePrimary } from '@/utils/cjs/litefs-js.server'
 import { getContentMdxListItems, getMdxPage } from '@/utils/mdx'
 import { getRequiredServerEnvVar } from '@/utils/misc'
 
-import { type DataFunctionArgs, json, redirect } from '@remix-run/node'
-import { ensurePrimary } from 'litefs-js/remix.js'
+import { type ActionFunctionArgs, json, redirect } from '@remix-run/node'
 import path from 'path'
 
 type Body =
@@ -29,7 +29,7 @@ export function isRefreshShaInfo(value: any): value is RefreshShaInfo {
 
 export const commitShaKey = 'meta:last-refresh-commit-sha'
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
 	await ensurePrimary()
 	if (
 		request.headers.get('auth') !== getRequiredServerEnvVar('REFRESH_TOKEN')

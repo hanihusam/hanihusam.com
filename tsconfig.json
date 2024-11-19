@@ -3,6 +3,7 @@
 	"include": [
 		"@epic-web/config/reset.d.ts",
 		"remix.env.d.ts",
+		"**/*.mdx",
 		"**/*.ts",
 		"**/*.tsx"
 	],
@@ -28,5 +29,8 @@
 
 		// Remix takes care of building everything in `remix build`.
 		"noEmit": true
+	},
+	"mdx": {
+		"checkMdx": true
 	}
 }

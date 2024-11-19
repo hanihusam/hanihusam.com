@@ -1,11 +1,11 @@
 import { cache } from '@/utils/cache.server'
+import { ensureInstance } from '@/utils/cjs/litefs-js.server'
 
 import { invariant } from '@epic-web/invariant'
-import { type DataFunctionArgs, json } from '@remix-run/node'
+import { json, type LoaderFunctionArgs } from '@remix-run/node'
 import { getAllInstances, getInstanceInfo } from 'litefs-js'
-import { ensureInstance } from 'litefs-js/remix'
 
-export async function loader({ request, params }: DataFunctionArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
 	const searchParams = new URL(request.url).searchParams
 	const currentInstanceInfo = await getInstanceInfo()
 	const allInstances = await getAllInstances()

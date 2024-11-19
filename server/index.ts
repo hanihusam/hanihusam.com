@@ -7,17 +7,17 @@ import {
 import chokidar from 'chokidar'
 import compression from 'compression'
 import express from 'express'
+import fs from 'fs'
 import { getInstanceInfo } from 'litefs-js'
 import morgan from 'morgan'
-import * as fs from 'node:fs'
-import * as path from 'node:path'
-import * as url from 'node:url'
+import path from 'path'
 import sourceMapSupport from 'source-map-support'
+import url from 'url'
 
 installGlobals()
 sourceMapSupport.install()
 
-const BUILD_PATH = path.resolve('./build/index.js')
+const BUILD_PATH = path.resolve('build/index.js')
 let initialBuild = await reimportServer()
 
 const primaryHost = 'hanihusam.com'

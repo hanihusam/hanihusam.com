@@ -2,6 +2,7 @@ import { postRefreshCache } from './utils.cjs'
 
 import chokidar from 'chokidar'
 import fs from 'fs'
+import http from 'http'
 import path from 'path'
 
 const watchPath = path.resolve(process.cwd(), 'contents')
@@ -15,7 +16,7 @@ chokidar.watch(watchPath).on('change', (changePath) => {
 	console.log('🛠 content changed', relativeChangePath)
 
 	postRefreshCache({
-		http: require('http'),
+		http,
 		postData: {
 			contentPaths: [relativeChangePath],
 		},
