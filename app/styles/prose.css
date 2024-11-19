@@ -1,41 +1,41 @@
 /* code syntax highlighting */
 /* dark is default: */
 pre {
-  --base00: #011627; /* editor background */
-  --base01: #2d2d2d; /* unused (currently) */
-  --base02: #424242; /* unused (currently) */
-  --base03: #637777; /* code comments */
-  --base04: #555555; /* unused (currently) */
-  --base05: #d6deeb; /* fallback font color */
-  --base06: #c8c8c8; /* unused (currently) */
-  --base07: #fafafa; /* unused (currently) */
-  --base08: #7fdbca; /* variable references */
-  --base09: #f78c6c; /* numbers */
-  --base0A: #c792ea; /* keywords */
-  --base0B: #ecc48d; /* strings */
-  --base0C: #f78c6c; /* escape characters in strings */
-  --base0D: #82aaff; /* function calls */
-  --base0E: #c792ea; /* operators */
-  --base0F: #d3423e; /* "Embedded" (whatever that means) */
+	--base00: #011627; /* editor background */
+	--base01: #2d2d2d; /* unused (currently) */
+	--base02: #424242; /* unused (currently) */
+	--base03: #637777; /* code comments */
+	--base04: #555555; /* unused (currently) */
+	--base05: #d6deeb; /* fallback font color */
+	--base06: #c8c8c8; /* unused (currently) */
+	--base07: #fafafa; /* unused (currently) */
+	--base08: #7fdbca; /* variable references */
+	--base09: #f78c6c; /* numbers */
+	--base0A: #c792ea; /* keywords */
+	--base0B: #ecc48d; /* strings */
+	--base0C: #f78c6c; /* escape characters in strings */
+	--base0D: #82aaff; /* function calls */
+	--base0E: #c792ea; /* operators */
+	--base0F: #d3423e; /* "Embedded" (whatever that means) */
 }
 
 .light pre {
-  --base00: #f3f3f3; /* editor background */
-  --base01: #e0e0e0; /* unused (currently) */
-  --base02: #d6d6d6; /* unused (currently) */
-  --base03: #989fb1; /* code comments */
-  --base04: #969896; /* unused (currently) */
-  --base05: #2e3039; /* fallback font color */
-  --base06: #282a2e; /* unused (currently) */
-  --base07: #1d1f21; /* unused (currently) */
-  --base08: #0c969b; /* variable references */
-  --base09: #aa0982; /* numbers */
-  --base0A: #994cc3; /* keywords */
-  --base0B: #c96765; /* strings */
-  --base0C: #aa0982; /* escape characters in strings */
-  --base0D: #4876d6; /* function calls */
-  --base0E: #994cc3; /* operators */
-  --base0F: #d3423e; /* "Embedded" (whatever that means) */
+	--base00: #f3f3f3; /* editor background */
+	--base01: #e0e0e0; /* unused (currently) */
+	--base02: #d6d6d6; /* unused (currently) */
+	--base03: #989fb1; /* code comments */
+	--base04: #969896; /* unused (currently) */
+	--base05: #2e3039; /* fallback font color */
+	--base06: #282a2e; /* unused (currently) */
+	--base07: #1d1f21; /* unused (currently) */
+	--base08: #0c969b; /* variable references */
+	--base09: #aa0982; /* numbers */
+	--base0A: #994cc3; /* keywords */
+	--base0B: #c96765; /* strings */
+	--base0C: #aa0982; /* escape characters in strings */
+	--base0D: #4876d6; /* function calls */
+	--base0E: #994cc3; /* operators */
+	--base0F: #d3423e; /* "Embedded" (whatever that means) */
 }
 
 /*
@@ -43,146 +43,146 @@ pre {
 * list items to display like list items. (Like for the list of translations)
 */
 .prose {
-  max-width: 50rem;
+	max-width: 50rem;
 }
 
 .prose a {
-  text-decoration: none;
+	text-decoration: none;
 }
 
 .prose :where(h1, h2, h3, h4) {
-  scroll-margin-top: 100px;
-  position: relative;
-  display: block;
-  margin-right: 0.5rem;
-  width: -moz-fit-content;
-  width: fit-content;
+	scroll-margin-top: 100px;
+	position: relative;
+	display: block;
+	margin-right: 0.5rem;
+	width: -moz-fit-content;
+	width: fit-content;
 }
 
 .prose :where(h1, h2, h3, h4) > a {
-  border-bottom: none;
+	border-bottom: none;
 }
 
 .prose ul.list-none > li {
-  padding-left: unset;
+	padding-left: unset;
 }
 .prose ul.list-none > li::before {
-  content: unset;
+	content: unset;
 }
 
 .dark .prose ol > li::before,
 .dark .prose ul > li::before {
-  color: var(--color-gray-300);
+	color: var(--color-gray-300);
 }
 
 /* I think this is a bug in the tailwind/typography thing */
 .dark .dark\:prose-dark thead {
-  color: var(--color-slate-500);
+	color: var(--color-slate-500);
 }
 
-.prose pre[data-line-numbers="true"]:not([data-lang="sh"]) {
-  padding-left: 0rem;
-  padding-right: 0rem;
-}
-
-.prose
-  pre[data-line-numbers="true"]:not([data-lang="sh"])
-  [data-line-number]:before {
-  padding-left: 0rem;
-  content: attr(data-line-number);
-  text-align: right;
-  display: inline-block;
-  width: 3.5rem;
-  color: var(--base03);
-  padding-right: 1.5rem;
-  position: sticky;
-  left: 0;
-  background-color: var(--base00);
+.prose pre[data-line-numbers='true']:not([data-lang='sh']) {
+	padding-left: 0rem;
+	padding-right: 0rem;
 }
 
 .prose
-  pre[data-line-numbers="true"]:not([data-lang="sh"])
-  [data-line-number]:before
-  .codeblock-line[data-highlight="true"]:before {
-  background: var(--base0E);
+	pre[data-line-numbers='true']:not([data-lang='sh'])
+	[data-line-number]:before {
+	padding-left: 0rem;
+	content: attr(data-line-number);
+	text-align: right;
+	display: inline-block;
+	width: 3.5rem;
+	color: var(--base03);
+	padding-right: 1.5rem;
+	position: sticky;
+	left: 0;
+	background-color: var(--base00);
 }
 
-.prose pre[data-add]:not([data-lang="sh"]) [data-diff-line-number]:before,
-.prose pre[data-remove]:not([data-lang="sh"]) [data-diff-line-number]:before {
-  content: attr(data-diff-line-number);
+.prose
+	pre[data-line-numbers='true']:not([data-lang='sh'])
+	[data-line-number]:before
+	.codeblock-line[data-highlight='true']:before {
+	background: var(--base0E);
+}
+
+.prose pre[data-add]:not([data-lang='sh']) [data-diff-line-number]:before,
+.prose pre[data-remove]:not([data-lang='sh']) [data-diff-line-number]:before {
+	content: attr(data-diff-line-number);
 }
 
 .prose pre > code {
-  display: inline-block;
-  min-width: 100%;
+	display: inline-block;
+	min-width: 100%;
 }
 
 .codeblock-line {
-  display: block;
-  position: relative;
-  padding-right: 1rem;
+	display: block;
+	position: relative;
+	padding-right: 1rem;
 }
 
-.codeblock-line[data-highlight="true"]:after,
-.prose pre[data-remove] .codeblock-line[data-remove="true"]:after,
-.prose pre[data-add] .codeblock-line[data-add="true"]:after {
-  content: " ";
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  opacity: 0.15;
-  pointer-events: none;
+.codeblock-line[data-highlight='true']:after,
+.prose pre[data-remove] .codeblock-line[data-remove='true']:after,
+.prose pre[data-add] .codeblock-line[data-add='true']:after {
+	content: ' ';
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	opacity: 0.15;
+	pointer-events: none;
 }
 
-.codeblock-line[data-highlight="true"]:before {
-  border-left: 6px solid var(--base0E);
+.codeblock-line[data-highlight='true']:before {
+	border-left: 6px solid var(--base0E);
 }
 
-.codeblock-line[data-highlight="true"]:after {
-  background: var(--base0E);
+.codeblock-line[data-highlight='true']:after {
+	background: var(--base0E);
 }
 
-.prose pre[data-remove] .codeblock-line[data-remove="true"]:before {
-  content: "-";
+.prose pre[data-remove] .codeblock-line[data-remove='true']:before {
+	content: '-';
 }
 
-.prose pre[data-remove] .codeblock-line[data-remove="true"]:after {
-  background: var(--color-red-500);
+.prose pre[data-remove] .codeblock-line[data-remove='true']:after {
+	background: var(--color-red-500);
 }
 
-.prose pre[data-add] .codeblock-line[data-add="true"]:before {
-  content: "+";
+.prose pre[data-add] .codeblock-line[data-add='true']:before {
+	content: '+';
 }
 
-.prose pre[data-add] .codeblock-line[data-add="true"]:after {
-  background: var(--color-green-500);
+.prose pre[data-add] .codeblock-line[data-add='true']:after {
+	background: var(--color-green-500);
 }
 
 .prose pre {
-  position: relative;
+	position: relative;
 }
 
 .prose pre[data-filename]:before {
-  content: attr(data-filename);
-  position: absolute;
-  left: 8px;
-  top: 4px;
-  font-size: 0.7rem;
-  opacity: 0.7;
+	content: attr(data-filename);
+	position: absolute;
+	left: 8px;
+	top: 4px;
+	font-size: 0.7rem;
+	opacity: 0.7;
 }
 
 .prose pre[data-lang]:after {
-  content: attr(data-lang);
-  position: sticky;
-  right: 0;
-  font-size: 0.7rem;
-  opacity: 0.7;
-  display: inline-block;
-  transform: translate(-16px, 24px);
-  text-align: right;
-  width: 200px;
-  margin-left: -200px;
+	content: attr(data-lang);
+	position: sticky;
+	right: 0;
+	font-size: 0.7rem;
+	opacity: 0.7;
+	display: inline-block;
+	transform: translate(-16px, 24px);
+	text-align: right;
+	width: 200px;
+	margin-left: -200px;
 }
 
 .prose callout-muted a,
@@ -190,7 +190,7 @@ pre {
 .prose callout-warning a,
 .prose callout-danger a,
 .prose callout-success a {
-  text-decoration: underline;
+	text-decoration: underline;
 }
 
 .prose callout-muted p,
@@ -198,7 +198,7 @@ pre {
 .prose callout-warning p,
 .prose callout-danger p,
 .prose callout-success p {
-  margin-bottom: 0;
+	margin-bottom: 0;
 }
 
 .prose callout-muted,
@@ -206,8 +206,8 @@ pre {
 .prose callout-warning,
 .prose callout-danger,
 .prose callout-success {
-  margin-top: 0;
-  margin-bottom: 2rem;
+	margin-top: 0;
+	margin-bottom: 2rem;
 }
 
 .prose callout-muted,
@@ -215,12 +215,12 @@ pre {
 .prose callout-warning,
 .prose callout-danger,
 .prose callout-success {
-  display: block;
-  border-left: solid 4px;
-  padding: 0.5rem 1rem;
-  position: relative;
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+	display: block;
+	border-left: solid 4px;
+	padding: 0.5rem 1rem;
+	position: relative;
+	border-top-right-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
 }
 
 .prose callout-muted,
@@ -233,7 +233,7 @@ pre {
 .prose callout-warning *,
 .prose callout-danger *,
 .prose callout-success * {
-  font-size: 1.2rem;
+	font-size: 1.2rem;
 }
 
 .prose callout-muted.aside,
@@ -246,7 +246,7 @@ pre {
 .prose callout-warning.aside *,
 .prose callout-danger.aside *,
 .prose callout-success.aside * {
-  font-size: 0.875rem;
+	font-size: 0.875rem;
 }
 
 .prose callout-muted.important,
@@ -259,8 +259,8 @@ pre {
 .prose callout-warning.important *,
 .prose callout-danger.important *,
 .prose callout-success.important * {
-  font-size: 1.4rem;
-  font-weight: bold;
+	font-size: 1.4rem;
+	font-weight: bold;
 }
 
 .prose callout-muted:before,
@@ -268,65 +268,65 @@ pre {
 .prose callout-warning:before,
 .prose callout-danger:before,
 .prose callout-success:before {
-  border-top-right-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.1;
-  pointer-events: none;
+	border-top-right-radius: 0.5rem;
+	border-bottom-right-radius: 0.5rem;
+	content: '';
+	position: absolute;
+	inset: 0;
+	opacity: 0.1;
+	pointer-events: none;
 }
 
 .light .prose callout-muted,
 .light .prose callout-muted ol > li:before {
-  color: #4c4b5e;
+	color: #4c4b5e;
 }
 .light .prose callout-muted:before {
-  background: #3c3e4d;
+	background: #3c3e4d;
 }
 
 .prose callout-muted,
 .prose callout-muted ol > li:before {
-  color: #ffffff;
+	color: #ffffff;
 }
 .prose callout-muted:before {
-  background: #e0e0e0;
+	background: #e0e0e0;
 }
 
 .prose callout-warning,
 .prose callout-warning ol > li:before {
-  color: #e6813e;
+	color: #e6813e;
 }
 .prose callout-warning:before {
-  background: #ec9e6a;
+	background: #ec9e6a;
 }
 
 .prose callout-danger,
 .prose callout-danger ol > li:before {
-  color: #ff4545;
+	color: #ff4545;
 }
 .prose callout-danger:before {
-  background: #ff4545;
+	background: #ff4545;
 }
 
 .prose callout-info,
 .prose callout-info ol > li:before {
-  color: #45577b;
+	color: #45577b;
 }
 .prose callout-info:before {
-  background: #55749b;
+	background: #55749b;
 }
 
 /* #region  /**=========== Hash Anchor =========== */
 .hash-anchor {
-  @apply inset-y-0 inline-flex w-full items-center;
-  position: absolute;
-  background-image: none;
-  transition: none;
+	@apply inset-y-0 inline-flex w-full items-center;
+	position: absolute;
+	background-image: none;
+	transition: none;
 }
 
 .hash-anchor:after {
-  @apply invisible absolute -right-5 top-1/2 -translate-y-1/2 text-lg text-primary-400 dark:text-primary-300;
-  content: "#";
+	@apply invisible absolute -right-5 top-1/2 -translate-y-1/2 text-lg text-primary-400 dark:text-primary-300;
+	content: '#';
 }
 /* #endregion  /**======== Hash Anchor =========== */
