@@ -9,7 +9,6 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
 import rehypeSlug from 'rehype-slug'
 import gfm from 'remark-gfm'
-import type * as U from 'unified'
 import { visit } from 'unist-util-visit'
 
 function arrayToObj<ItemType extends Record<string, unknown>>(
