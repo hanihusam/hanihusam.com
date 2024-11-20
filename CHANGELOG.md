@@ -1,5 +1,48 @@
 # Changelog
 
+## [1.3.0](https://github.com/hanihusam/hanihusam.com/compare/v1.2.0...v1.3.0) (2024-11-20)
+
+
+### Features
+
+* db seed ([5ade044](https://github.com/hanihusam/hanihusam.com/commit/5ade044cea80273df46c9b086948cb3cf06cdddb))
+* increment likes fn ([43dd46f](https://github.com/hanihusam/hanihusam.com/commit/43dd46f8b22db4af32dea8dd97f9a7231f11b712))
+* increment views on read article ([50a7639](https://github.com/hanihusam/hanihusam.com/commit/50a7639121fe3a420dc16be1a5cfbfe8651105ac))
+* incrementMetaFlag ([8182c82](https://github.com/hanihusam/hanihusam.com/commit/8182c820853ced23c396507933b129bb21b3b880))
+* init project card ([34902af](https://github.com/hanihusam/hanihusam.com/commit/34902afa3f64138597bb946b40d8ffdd81f39383))
+* init project section ([5ab02eb](https://github.com/hanihusam/hanihusam.com/commit/5ab02eb19efba59f0ee2bb104264b4a428155f5b))
+* init projects ([4d4a3b1](https://github.com/hanihusam/hanihusam.com/commit/4d4a3b1632db083d37e2c79713f2cc100c3d55bf))
+* like button section ([3b6f785](https://github.com/hanihusam/hanihusam.com/commit/3b6f785f70b36a3e0b19c93b758397ac2336d6ab))
+* like post action ([a62a758](https://github.com/hanihusam/hanihusam.com/commit/a62a758ad852bc71d3c061d39d8c764d033075ef))
+* migration file ([411cca2](https://github.com/hanihusam/hanihusam.com/commit/411cca2317068f6a57aa9463b05b2fd12fb114c6))
+* project section ([c219c9c](https://github.com/hanihusam/hanihusam.com/commit/c219c9cae22842585c0ef839e3e0abae22ee85c4))
+* projects content ([616c84e](https://github.com/hanihusam/hanihusam.com/commit/616c84e7ec282c84eb90eb7cb4f5a602fb5be4f5))
+* remove one healthcheck ([2de1859](https://github.com/hanihusam/hanihusam.com/commit/2de1859eacfc980872e2e883c8f6eae001659909))
+* remove unnecessary fns ([55b6ae2](https://github.com/hanihusam/hanihusam.com/commit/55b6ae2a5a071c6294a97611aacdec63a37f95fc))
+* session functions ([8298345](https://github.com/hanihusam/hanihusam.com/commit/8298345a2c403118fc2df561571cc1c88ca513f8))
+* update prisma ([16497eb](https://github.com/hanihusam/hanihusam.com/commit/16497ebcb9a1d1c981a12f2d12bc4553085e1f3b))
+
+
+### Bug Fixes
+
+* add missing deps ([4014f5b](https://github.com/hanihusam/hanihusam.com/commit/4014f5b98afdbcb6bb4d9e8cb33bc20d86cd02c3))
+* build-info ([0f7bd1d](https://github.com/hanihusam/hanihusam.com/commit/0f7bd1dfd73b07d63f68ac88153a1ff67e0d107f))
+* header reverse position ([a77c991](https://github.com/hanihusam/hanihusam.com/commit/a77c991e25191cb5838ba73a66a8561dfee8d7d1))
+* healthcheck ([057a907](https://github.com/hanihusam/hanihusam.com/commit/057a907b92f902a0708ae39f2af46b9e450db7dd))
+* init import loader data ([7af843d](https://github.com/hanihusam/hanihusam.com/commit/7af843d61f2a27ede63b0cdea0feac2f404aac36))
+* lodash throttle ([3a14eb3](https://github.com/hanihusam/hanihusam.com/commit/3a14eb3a232e050d0b79d16b35cd71a7278fb6a3))
+* merge issues ([69e960a](https://github.com/hanihusam/hanihusam.com/commit/69e960a2c45f15965d77491819bbb2491397e71d))
+* rehypePlugins type Err ([244d5e3](https://github.com/hanihusam/hanihusam.com/commit/244d5e379feb0f1f07d50557ddddf5e2ef7d0219))
+* running dev mode ([d00fa03](https://github.com/hanihusam/hanihusam.com/commit/d00fa035b47b50d8e68ee446145d459df954acd6))
+* semantic and a11y ([52db444](https://github.com/hanihusam/hanihusam.com/commit/52db44445c3209d6993e72d9ed917e1daf7bbd80))
+* server fn on client ([8bd424f](https://github.com/hanihusam/hanihusam.com/commit/8bd424fdfe704806da0e6a5ecb8396fc1c10c34a))
+* some issue on migrate bun to npm ([f9d0bb8](https://github.com/hanihusam/hanihusam.com/commit/f9d0bb8133415b04ec9be28643e9e15fb95b4eed))
+* some lines ([938f4b3](https://github.com/hanihusam/hanihusam.com/commit/938f4b37d242f6c7ad6eba59246f930b0da1a882))
+* title symbol ([7b42777](https://github.com/hanihusam/hanihusam.com/commit/7b4277754cb3fd04b3a804e97d2dc779a6d6ab34))
+* types error ([1d5175e](https://github.com/hanihusam/hanihusam.com/commit/1d5175e61188f15a9c7bfc5d55b60b7e9f94c97f))
+* typescript eslint ([5ef11c6](https://github.com/hanihusam/hanihusam.com/commit/5ef11c6a2b969f4070e1635197ab5e5b1d789f1d))
+* use node 20 ([e662be2](https://github.com/hanihusam/hanihusam.com/commit/e662be2774a2c21424f51ba53c6982f2eb726113))
+
 ## [1.2.0](https://github.com/hanihusam/hanihusam.com/compare/v1.1.0...v1.2.0) (2023-08-01)
 
 ### Features
