@@ -1,6 +1,7 @@
 import { vitePlugin as remix } from '@remix-run/dev'
 import { installGlobals } from '@remix-run/node'
 import { defineConfig } from 'vite'
+import { envOnlyMacros } from 'vite-env-only'
 import tsconfigPaths from 'vite-tsconfig-paths'
 
 declare module '@remix-run/node' {
@@ -17,6 +18,7 @@ export default defineConfig({
 		port: 3000,
 	},
 	plugins: [
+		envOnlyMacros(),
 		remix({
 			ignoredRouteFiles: ['**/.*', '**/*.test.{js,jsx,ts,tsx}'],
 			future: {

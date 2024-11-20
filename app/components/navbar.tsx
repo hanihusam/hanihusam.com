@@ -3,7 +3,7 @@ import * as React from 'react'
 import { clsxm } from '@/utils/clsxm'
 import { Theme, useTheme } from '@/utils/theme-provider'
 
-import logo from '../../public/images/hnh-logo.png'
+import logo from '../../public/images/hnh-logo.png?url'
 
 import { Popover, Switch } from '@headlessui/react'
 import { Bars3Icon, SunIcon, XMarkIcon } from '@heroicons/react/24/outline'

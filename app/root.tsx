@@ -1,12 +1,11 @@
-import appStyles from '@/styles/app.css'
-import fonts from '@/styles/fonts.css'
-import noScriptStyles from '@/styles/no-script.css'
-import proseStyles from '@/styles/prose.css'
-import tailwindStyles from '@/styles/tailwind.css'
-
 import { Footer } from '@/components/footer'
 import { LayoutRoot } from '@/components/layout'
 import { Navbar } from '@/components/navbar'
+import appStyles from '@/styles/app.css?url'
+import fonts from '@/styles/fonts.css?url'
+import noScriptStyles from '@/styles/no-script.css?url'
+import proseStyles from '@/styles/prose.css?url'
+import tailwindStyles from '@/styles/tailwind.css?url'
 import { getEnv } from '@/utils/env.server'
 import { toErrorWithMessage } from '@/utils/helpers'
 import { useNonce } from '@/utils/nonce-provider'
@@ -25,7 +24,6 @@ import {
 import {
 	isRouteErrorResponse,
 	Links,
-	LiveReload,
 	Meta,
 	Outlet,
 	Scripts,
@@ -171,7 +169,6 @@ function App() {
 						__html: `window.ENV = ${JSON.stringify(data.ENV)};`,
 					}}
 				/>
-				{ENV.NODE_ENV === 'development' ? <LiveReload nonce={nonce} /> : null}
 			</body>
 		</html>
 	)
