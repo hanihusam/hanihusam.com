@@ -1,6 +1,6 @@
-const path = require('path')
-const fs = require('fs')
-const fetch = require('node-fetch')
+import fs from 'fs'
+import path from 'path'
+import { fileURLToPath } from 'url'
 
 const SHA = process.env.COMMIT_SHA
 
@@ -24,15 +24,20 @@ async function getCommitInfo() {
 	}
 }
 
-async function run() {
-	const data = {
-		timestamp: Date.now(),
-		data: await getCommitInfo(),
-	}
-
-	fs.writeFileSync(
-		path.join(__dirname, '../public/build/info.json'),
-		JSON.stringify(data, null, 2),
-	)
+const buildInfo = {
+	buildTime: Date.now(),
+	commit: await getCommitInfo(),
 }
-run()
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const destDir = path.join(__dirname, '../build/client/build')
+if (!fs.existsSync(destDir)) {
+	fs.mkdirSync(destDir, { recursive: true })
+}
+
+fs.writeFileSync(
+	path.join(destDir, 'info.json'),
+	JSON.stringify(buildInfo, null, 2),
+)
+
+console.log('build info generated', buildInfo)
