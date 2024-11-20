@@ -17,7 +17,8 @@ import {
 } from '@/utils/blog.server'
 import { clsxm } from '@/utils/clsxm'
 import { getImageBuilder, getImgProps } from '@/utils/images'
-import { getMdxPage, useMdxComponent } from '@/utils/mdx'
+import { useMdxComponent } from '@/utils/mdx'
+import { getMdxPage } from '@/utils/mdx.server'
 import { getSessionId } from '@/utils/session.server'
 import { getServerTimeHeader } from '@/utils/timing.server'
 

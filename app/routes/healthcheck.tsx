@@ -1,4 +1,4 @@
-import { getContentMdxListItems } from '@/utils/mdx'
+import { getContentMdxListItems } from '@/utils/mdx.server'
 
 import { type LoaderFunctionArgs } from '@remix-run/node'
 

@@ -11,7 +11,7 @@ import { getBlogsFeatured } from '@/utils/blog.server'
 
 import { useLoaderData } from '@remix-run/react'
 import { json, type LoaderFunction } from '@remix-run/server-runtime'
-import projects from 'contents/projects'
+// import projects from 'contents/projects'
 
 type LoaderData = {
 	featuredPosts: BlogFrontmatter[]

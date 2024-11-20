@@ -1,7 +1,7 @@
 import { type ContentType } from '@/types'
 import { cache } from '@/utils/cache.server'
 import { ensurePrimary } from '@/utils/cjs/litefs-js.server'
-import { getContentMdxListItems, getMdxPage } from '@/utils/mdx'
+import { getContentMdxListItems, getMdxPage } from '@/utils/mdx.server'
 import { getRequiredServerEnvVar } from '@/utils/misc'
 
 import { type ActionFunctionArgs, json, redirect } from '@remix-run/node'
