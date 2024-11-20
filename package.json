@@ -81,6 +81,7 @@
     "gray-matter": "^4.0.3",
     "isbot": "^3.7.0",
     "litefs-js": "^1.1.2",
+    "lodash": "^4.17.21",
     "lodash.throttle": "^4.1.1",
     "lru-cache": "^9.1.2",
     "match-sorter": "^6.3.1",
