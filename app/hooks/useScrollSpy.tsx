@@ -51,7 +51,6 @@ export default function useScrollSpy() {
 		return () => {
 			window.removeEventListener('scroll', actionSectionScrollSpy)
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return activeSection

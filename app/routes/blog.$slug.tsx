@@ -17,7 +17,8 @@ import {
 } from '@/utils/blog.server'
 import { clsxm } from '@/utils/clsxm'
 import { getImageBuilder, getImgProps } from '@/utils/images'
-import { getMdxPage, useMdxComponent } from '@/utils/mdx'
+import { useMdxComponent } from '@/utils/mdx'
+import { getMdxPage } from '@/utils/mdx.server'
 import { getSessionId } from '@/utils/session.server'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
@@ -27,11 +28,15 @@ import {
 } from '@heroicons/react/24/outline'
 import { HandThumbUpIcon as HandThumbUpSolidIcon } from '@heroicons/react/24/solid'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
-import { type DataFunctionArgs, json } from '@remix-run/server-runtime'
+import {
+	type ActionFunctionArgs,
+	json,
+	type LoaderFunctionArgs,
+} from '@remix-run/server-runtime'
 import { format } from 'date-fns/format'
 import { motion } from 'framer-motion'
 
-export async function action({ params, request }: DataFunctionArgs) {
+export async function action({ params, request }: ActionFunctionArgs) {
 	if (!params.slug) {
 		throw new Error('params.slug is not defined')
 	}
@@ -58,7 +63,7 @@ export async function action({ params, request }: DataFunctionArgs) {
 	}
 }
 
-export const loader = async ({ request, params }: DataFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	if (!params.slug) {
 		throw new Error('params.slug is not defined')
 	}

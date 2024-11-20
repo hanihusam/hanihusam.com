@@ -1,5 +1,5 @@
 import { prisma } from './db.server'
-import { type CachifiedOptions, getContentMdxListItems } from './mdx'
+import { type CachifiedOptions, getContentMdxListItems } from './mdx.server'
 
 /**
  * Get and order frontmatters by specified array

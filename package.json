@@ -21,14 +21,13 @@
   "scripts": {
     "prepare": "husky install",
     "build": "run-s build:*",
-    "build:remix": "remix build",
-    "build:info": "node ./other/build-info.cjs",
+    "build:remix": "remix vite:build",
+    "build:info": "node ./other/build-info.js",
     "build:server": "esbuild --target=es2022 --platform=node --format=esm ./server/index.ts --outfile=build/server.js",
     "dev": "run-p dev:*",
     "dev:build": "cross-env NODE_ENV=development npm run build:server -- --watch",
     "dev:content": "tsx -r esbuild-register -r dotenv/config other/refresh-on-content-change.ts",
-    "dev:app": "remix dev --manual -c \"npm run dev:server\"",
-    "dev:server": "cross-env NODE_ENV=development tsx watch --clear-screen=false --ignore 'app/**' --ignore 'build/**' --ignore 'node_modules/**' --inspect ./server/index.ts",
+    "dev:app": "node ./server/dev-server.js",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production node ./build/server.js",
     "curl:blog": "curl --HEAD --silent http://localhost:$PORT/blog > /dev/null || true",
@@ -45,7 +44,6 @@
     "typecheck": "tsc --noEmit --incremental false",
     "validate": "./other/validate"
   },
-  "prettier": "@epic-web/config/prettier",
   "eslintIgnore": [
     "/node_modules",
     "/build",
@@ -76,6 +74,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.3.1",
     "esbuild": "^0.24.0",
+    "execa": "^9.5.1",
     "express": "^4.21.0",
     "framer-motion": "^10.16.4",
     "gray-matter": "^4.0.3",
@@ -144,12 +143,14 @@
     "tsx": "^4.19.2",
     "typescript": "^5.1.3",
     "vite": "^5.4.11",
+    "vite-env-only": "^3.0.3",
     "vite-tsconfig-paths": "^5.1.2",
     "vitest": "^2.1.5"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
+  "prettier": "@epic-web/config/prettier",
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "eslint --cache --fix",

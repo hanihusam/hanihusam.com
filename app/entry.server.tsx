@@ -12,7 +12,8 @@ import { getInstanceInfo } from 'litefs-js'
 import { renderToPipeableStream } from 'react-dom/server'
 import { PassThrough } from 'stream'
 
-const ABORT_DELAY = 5000
+// Reject/cancel all pending promises after 5 seconds
+export const streamTimeout = 5000
 
 init()
 global.ENV = getEnv()
@@ -75,7 +76,9 @@ export default async function handleRequest(...args: DocRequestArgs) {
 			},
 		)
 
-		setTimeout(abort, ABORT_DELAY)
+		// Automatically timeout the React renderer after 6 seconds, which ensures
+		// React has enough time to flush down the rejected boundary contents
+		setTimeout(abort, streamTimeout + 1000)
 	})
 }
 

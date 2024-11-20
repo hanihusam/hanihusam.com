@@ -9,14 +9,14 @@ import { Grid } from '@/components/grid'
 import { Spacer } from '@/components/spacer'
 import { H6 } from '@/components/typography'
 import { filterPosts } from '@/utils/blog'
-import { getContentMdxListItems } from '@/utils/mdx'
+import { getContentMdxListItems } from '@/utils/mdx.server'
 import { useUpdateQueryStringValueWithoutNavigation } from '@/utils/misc'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
 import { useLoaderData, useSearchParams } from '@remix-run/react'
-import { type DataFunctionArgs, json } from '@remix-run/server-runtime'
+import { json, type LoaderFunctionArgs } from '@remix-run/server-runtime'
 
-export const loader = async ({ request }: DataFunctionArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const timings = {}
 	const blogs = await getContentMdxListItems('blog', { request, timings })
 
@@ -74,8 +74,6 @@ export default function BlogIndex() {
 		let filteredPosts = allPosts
 
 		return filterPosts(filteredPosts, regularQuery)
-
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [allPosts, query, regularQuery])
 
 	const visibleTags = isSearching

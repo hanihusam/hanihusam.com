@@ -1,36 +1,38 @@
 import { createRequestHandler, type RequestHandler } from '@remix-run/express'
-import {
-	broadcastDevReady,
-	installGlobals,
-	type ServerBuild,
-} from '@remix-run/node'
-import chokidar from 'chokidar'
+import { installGlobals, type ServerBuild } from '@remix-run/node'
 import compression from 'compression'
 import express from 'express'
-import fs from 'fs'
 import { getInstanceInfo } from 'litefs-js'
 import morgan from 'morgan'
 import path from 'path'
 import sourceMapSupport from 'source-map-support'
-import url from 'url'
+import { fileURLToPath } from 'url'
 
 installGlobals()
 sourceMapSupport.install()
 
+const viteDevServer =
+	process.env.NODE_ENV === 'production'
+		? undefined
+		: await import('vite').then((vite) =>
+				vite.createServer({
+					server: { middlewareMode: true },
+				}),
+			)
+const getBuild = async (): Promise<ServerBuild> => {
+	if (viteDevServer) {
+		return viteDevServer.ssrLoadModule('virtual:remix/server-build') as any
+	}
+	// @ts-ignore (this file may or may not exist yet)
+	return import('../build/server/index.js') as Promise<ServerBuild>
+}
 const BUILD_PATH = path.resolve('build/index.js')
-let initialBuild = await reimportServer()
 
 const primaryHost = 'hanihusam.com'
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const here = (...d: Array<string>) => path.join(__dirname, ...d)
 const getHost = (req: { get: (key: string) => string | undefined }) =>
 	req.get('X-Forwarded-Host') ?? req.get('host') ?? ''
-
-const remixHandler =
-	process.env.NODE_ENV === 'development'
-		? await createDevRequestHandler()
-		: createRequestHandler({
-				build: initialBuild,
-				mode: process.env.NODE_ENV,
-			})
 
 const app = express()
 
@@ -72,75 +74,54 @@ app.use(async (req, res, next) => {
 
 app.use(compression())
 
-// Remix fingerprints its assets so we can cache forever.
-app.use(
-	'/build',
-	express.static('public/build', { immutable: true, maxAge: '1y' }),
-)
+const publicAbsolutePath = here('../build/client')
 
+if (viteDevServer) {
+	app.use(viteDevServer.middlewares)
+} else {
+	app.use(
+		express.static(publicAbsolutePath, {
+			maxAge: '1w',
+			setHeaders(res, resourcePath) {
+				const relativePath = resourcePath.replace(`${publicAbsolutePath}/`, '')
+				if (relativePath.startsWith('build/info.json')) {
+					res.setHeader('cache-control', 'no-cache')
+					return
+				}
+				// If we ever change our font (which we quite possibly never will)
+				// then we'll just want to change the filename or something...
+				// Remix fingerprints its assets so we can cache forever
+				if (
+					relativePath.startsWith('fonts') ||
+					relativePath.startsWith('build')
+				) {
+					res.setHeader('cache-control', 'public, max-age=31536000, immutable')
+				}
+			},
+		}),
+	)
+}
 // Everything else (like favicon.ico) is cached for an hour. You may want to be
 // more aggressive with this caching.
-app.use(express.static('public', { maxAge: '1h' }))
+app.use(express.static('build/client', { maxAge: '1h' }))
 
 app.use(morgan('tiny'))
 
-app.all('*', remixHandler)
+async function getRequestHandler(): Promise<RequestHandler> {
+	function getLoadContext(req: any, res: any) {
+		return { cspNonce: res.locals.cspNonce }
+	}
+	return createRequestHandler({
+		build: process.env.NODE_ENV === 'development' ? getBuild : await getBuild(),
+		mode: process.env.NODE_ENV,
+		getLoadContext,
+	})
+}
+
+app.all('*', await getRequestHandler())
 
 const port = process.env.PORT || 3000
 
 app.listen(port, async () => {
 	console.log(`✅ Express server listening on port ${port}`)
-
-	if (process.env.NODE_ENV === 'development') {
-		await broadcastDevReady(initialBuild)
-	}
 })
-
-async function reimportServer(): Promise<ServerBuild> {
-	const stat = fs.statSync(BUILD_PATH)
-
-	// convert build path to URL for Windows compatibility with dynamic `import`
-	const BUILD_URL = url.pathToFileURL(BUILD_PATH).href
-
-	// use a timestamp query parameter to bust the import cache
-	return import(BUILD_URL + '?t=' + stat.mtimeMs)
-}
-
-// Create a request handler that watches for changes to the server build during development.
-async function createDevRequestHandler(): Promise<RequestHandler> {
-	async function handleServerUpdate() {
-		// 1. re-import the server build
-		initialBuild = await reimportServer()
-
-		// Add debugger to assist in v2 dev debugging
-		if (initialBuild?.assets === undefined) {
-			console.log(initialBuild.assets)
-			debugger
-		}
-
-		// 2. tell dev server that this app server is now up-to-date and ready
-		await broadcastDevReady(initialBuild)
-	}
-
-	// watch the server build file for changes
-	chokidar.watch(BUILD_PATH).on('change', async () => {
-		console.log('🔁 Server build changed')
-		try {
-			await handleServerUpdate()
-		} catch (error) {
-			console.error('❌ Error re-importing server build:', error)
-		}
-	})
-
-	// wrap request handler to make sure its recreated with the latest build for every request
-	return async (req, res, next) => {
-		try {
-			return createRequestHandler({
-				build: initialBuild,
-				mode: 'development',
-			})(req, res, next)
-		} catch (error) {
-			next(error)
-		}
-	}
-}

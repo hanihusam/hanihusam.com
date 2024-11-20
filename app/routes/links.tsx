@@ -4,7 +4,7 @@ import { AnchorOrLink } from '@/components/links/anchor-or-link'
 import { H3, Paragraph } from '@/components/typography'
 import { externalLinks } from '@/external-links'
 
-import logo from '../../public/images/hnh-logo.png'
+import logo from '../../public/images/hnh-logo.png?url'
 
 export default function Links() {
 	return (
