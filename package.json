@@ -21,7 +21,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "run-s build:*",
-    "build:remix": "vite build --sourcemap && vite build --ssr --sourcemap",
+    "build:remix": "remix vite:build",
     "build:info": "node ./other/build-info.cjs",
     "build:server": "esbuild --target=es2022 --platform=node --format=esm ./server/index.ts --outfile=build/server.js",
     "dev": "run-p dev:*",
