@@ -76,7 +76,7 @@ export const cache: CachifiedCache = {
 					value: JSON.stringify(entry.value),
 					metadata: JSON.stringify(entry.metadata),
 				})
-		} else {
+		} else if (updatePrimaryCacheValue) {
 			// fire-and-forget cache update
 			void updatePrimaryCacheValue({
 				key,
@@ -95,7 +95,7 @@ export const cache: CachifiedCache = {
 		const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
 		if (currentIsPrimary) {
 			cacheDb.prepare('DELETE FROM cache WHERE key = ?').run(key)
-		} else {
+		} else if (updatePrimaryCacheValue) {
 			// fire-and-forget cache update
 			void updatePrimaryCacheValue({
 				key,
@@ -193,10 +193,3 @@ export async function cachified<Value>({
 	cachifiedResolved = true
 	return result
 }
-
-/*
-eslint
-  max-depth: "off",
-  no-multi-assign: "off",
-  @typescript-eslint/no-explicit-any: "off",
-*/
