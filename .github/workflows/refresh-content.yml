@@ -11,16 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: '50'
 
       - name: ⎔ Setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
 
       - name: 🥬 Refresh Content
-        run: node ./other/refresh-changed-content.js ${{ github.sha }}
+        run: node ./other/refresh-changed-content.cjs ${{ github.sha }}
         env:
           REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}

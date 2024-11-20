@@ -73,7 +73,7 @@ export default function TableOfContents({
 								minLevel={minLevel}
 								text={text}
 							/>
-					  ))
+						))
 					: null}
 			</div>
 		</div>

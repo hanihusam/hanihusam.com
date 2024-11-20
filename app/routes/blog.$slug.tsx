@@ -27,11 +27,15 @@ import {
 } from '@heroicons/react/24/outline'
 import { HandThumbUpIcon as HandThumbUpSolidIcon } from '@heroicons/react/24/solid'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
-import { type DataFunctionArgs, json } from '@remix-run/server-runtime'
-import format from 'date-fns/format'
+import {
+	type ActionFunctionArgs,
+	json,
+	type LoaderFunctionArgs,
+} from '@remix-run/server-runtime'
+import { format } from 'date-fns/format'
 import { motion } from 'framer-motion'
 
-export async function action({ params, request }: DataFunctionArgs) {
+export async function action({ params, request }: ActionFunctionArgs) {
 	if (!params.slug) {
 		throw new Error('params.slug is not defined')
 	}
@@ -58,7 +62,7 @@ export async function action({ params, request }: DataFunctionArgs) {
 	}
 }
 
-export const loader = async ({ request, params }: DataFunctionArgs) => {
+export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	if (!params.slug) {
 		throw new Error('params.slug is not defined')
 	}

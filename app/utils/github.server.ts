@@ -10,20 +10,15 @@ const octokit = new Octokit({
 	auth: process.env.BOT_GITHUB_TOKEN,
 	throttle: {
 		onRateLimit: (retryAfter, options) => {
-			octokit.log.warn(
-				`Request quota exhausted for request ${options.method} ${options.url}`,
+			console.warn(
+				`Request quota exhausted for request ${options.method} ${options.url}. Retrying after ${retryAfter} seconds.`,
 			)
 
-			// Retry twice after hitting a rate limit error, then give up
-			if (options.request.retryCount <= 2) {
-				console.log(`Retrying after ${retryAfter} seconds!`)
-				return true
-			}
+			return true
 		},
-		onSecondaryRateLimit: (_, options, octokit) => {
-			// does not retry, only logs a warning
+		onSecondaryRateLimit: (_, options) => {
 			octokit.log.warn(
-				`Secondary quota detected for request ${options.method} ${options.url}`,
+				`Abuse detected for request ${options.method} ${options.url}`,
 			)
 		},
 	},

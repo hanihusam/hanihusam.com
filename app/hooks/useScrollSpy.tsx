@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import throttle from 'lodash/throttle'
+import throttle from 'lodash.throttle'
 
 // originally based on
 // https://github.com/NotionX/react-notion-x/blob/master/packages/react-notion-x/src/block.tsx#L128-L161
@@ -19,16 +19,18 @@ export default function useScrollSpy() {
 			const section = sections[i]
 
 			if (!currentSectionId) {
-				currentSectionId = section.getAttribute('href')?.split('#')[1] ?? null
+				currentSectionId = section?.getAttribute('href')?.split('#')[1] ?? null
 			}
 
-			const bbox = section.getBoundingClientRect()
+			const bbox = section?.getBoundingClientRect()
+			if (!bbox) continue
+
 			const prevHeight = prevBBox ? bbox.top - prevBBox.bottom : 0
 			const offset = Math.max(200, prevHeight / 4)
 
 			// GetBoundingClientRect returns values relative to viewport
 			if (bbox.top - offset < 0) {
-				currentSectionId = section.getAttribute('href')?.split('#')[1] ?? null
+				currentSectionId = section?.getAttribute('href')?.split('#')[1] ?? null
 
 				prevBBox = bbox
 				continue

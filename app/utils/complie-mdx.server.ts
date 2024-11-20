@@ -3,10 +3,13 @@ import { type GitHubFile } from '@/types'
 import type * as H from 'hast'
 import type * as MDX from 'mdast-util-mdx-jsx'
 import { bundleMDX } from 'mdx-bundler'
-import type TPQueue from 'p-queue'
+import PQueue from 'p-queue'
 import readingTime from 'reading-time'
+import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypePrettyCode from 'rehype-pretty-code'
-import type * as U from 'unified'
+import rehypeSlug from 'rehype-slug'
+import gfm from 'remark-gfm'
+import { visit } from 'unist-util-visit'
 
 function arrayToObj<ItemType extends Record<string, unknown>>(
 	array: Array<ItemType>,
@@ -29,8 +32,6 @@ function arrayToObj<ItemType extends Record<string, unknown>>(
 
 function trimCodeBlocks() {
 	return async function transformer(tree: H.Root) {
-		const { visit } = await import('unist-util-visit')
-
 		visit(tree, 'element', (preNode: H.Element) => {
 			if (preNode.tagName !== 'pre' || !preNode.children.length) {
 				return
@@ -62,8 +63,6 @@ const cloudinaryUrlRegex =
 
 function optimizeCloudinaryImages() {
 	return async function transformer(tree: H.Root) {
-		const { visit } = await import('unist-util-visit')
-
 		visit(
 			tree,
 			'mdxJsxFlowElement',
@@ -135,8 +134,6 @@ function optimizeCloudinaryImages() {
 
 function removePreContainerDivs() {
 	return async function preContainerDivsTransformer(tree: H.Root) {
-		const { visit } = await import('unist-util-visit')
-
 		visit(
 			tree,
 			{ type: 'element', tagName: 'pre' },
@@ -150,23 +147,10 @@ function removePreContainerDivs() {
 	}
 }
 
-const rehypePlugins: U.PluggableList = [
-	optimizeCloudinaryImages,
-	trimCodeBlocks,
-	removePreContainerDivs,
-]
-
 async function compileMdx<FrontmatterType>(
 	slug: string,
 	githubFiles: Array<GitHubFile>,
 ) {
-	const { default: rehypeAutolinkHeadings } = await import(
-		'rehype-autolink-headings'
-	)
-	const { default: rehypePrism } = await import('rehype-prism-plus')
-	const { default: rehypeSlug } = await import('rehype-slug')
-	const { default: gfm } = await import('remark-gfm')
-
 	const indexRegex = new RegExp(`${slug}\\/index.mdx?$`)
 	const indexFile = githubFiles.find(({ path }) => indexRegex.test(path))
 	if (!indexFile) return null
@@ -192,7 +176,6 @@ async function compileMdx<FrontmatterType>(
 				options.rehypePlugins = [
 					...(options?.rehypePlugins ?? []),
 					rehypeSlug,
-					rehypePrism,
 					[
 						rehypeAutolinkHeadings,
 						{
@@ -201,11 +184,16 @@ async function compileMdx<FrontmatterType>(
 							},
 						},
 					],
-					() =>
-						rehypePrettyCode({
-							theme: 'css-variables',
-						}),
-					...rehypePlugins,
+					[
+						rehypePrettyCode,
+						{
+							theme: {
+								light: 'github-light',
+								dark: 'github-dark',
+							},
+						},
+					],
+					...[optimizeCloudinaryImages, trimCodeBlocks, removePreContainerDivs],
 				]
 
 				return options
@@ -227,9 +215,8 @@ async function compileMdx<FrontmatterType>(
 	}
 }
 
-let _queue: TPQueue | null = null
+let _queue: PQueue | null = null
 async function getQueue() {
-	const { default: PQueue } = await import('p-queue')
 	if (_queue) return _queue
 
 	_queue = new PQueue({

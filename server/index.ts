@@ -1,26 +1,36 @@
-import { createRequestHandler } from '@remix-run/express'
-import { broadcastDevReady, installGlobals } from '@remix-run/node'
+import { createRequestHandler, type RequestHandler } from '@remix-run/express'
+import {
+	broadcastDevReady,
+	installGlobals,
+	type ServerBuild,
+} from '@remix-run/node'
+import chokidar from 'chokidar'
 import compression from 'compression'
 import express from 'express'
+import fs from 'fs'
+import { getInstanceInfo } from 'litefs-js'
 import morgan from 'morgan'
-import * as path from 'node:path'
+import path from 'path'
 import sourceMapSupport from 'source-map-support'
+import url from 'url'
 
 installGlobals()
 sourceMapSupport.install()
 
 const BUILD_PATH = path.resolve('build/index.js')
+let initialBuild = await reimportServer()
 
-let initialBuild = require(BUILD_PATH)
+const primaryHost = 'hanihusam.com'
+const getHost = (req: { get: (key: string) => string | undefined }) =>
+	req.get('X-Forwarded-Host') ?? req.get('host') ?? ''
 
-const viteDevServer =
-	process.env.NODE_ENV === 'production'
-		? undefined
-		: await import('vite').then((vite) =>
-				vite.createServer({
-					server: { middlewareMode: true },
-				}),
-		  )
+const remixHandler =
+	process.env.NODE_ENV === 'development'
+		? await createDevRequestHandler()
+		: createRequestHandler({
+				build: initialBuild,
+				mode: process.env.NODE_ENV,
+			})
 
 const app = express()
 
@@ -39,47 +49,34 @@ app.use((req, res, next) => {
 	next()
 })
 
-// if we're not in the primary region, then we need to make sure all
-// non-GET/HEAD/OPTIONS requests hit the primary region rather than read-only
-// Postgres DBs.
-// learn more: https://fly.io/docs/getting-started/multi-region-databases/#replay-the-request
-app.all('*', function getReplayResponse(req, res, next) {
-	const { method, path: pathname } = req
-	const { PRIMARY_REGION, FLY_REGION } = process.env
+app.use(async (req, res, next) => {
+	const { currentInstance, primaryInstance } = await getInstanceInfo()
+	res.set('X-Powered-By', 'Han by bapak2.dev')
+	res.set('X-Fly-Region', process.env.FLY_REGION ?? 'unknown')
+	res.set('X-Fly-App', process.env.FLY_APP_NAME ?? 'unknown')
+	res.set('X-Fly-Instance', currentInstance)
+	res.set('X-Fly-Primary-Instance', primaryInstance)
+	res.set('X-Frame-Options', 'SAMEORIGIN')
+	const proto = req.get('X-Forwarded-Proto') ?? req.protocol
 
-	const isMethodReplayable = !['GET', 'OPTIONS', 'HEAD'].includes(method)
-	const isReadOnlyRegion =
-		FLY_REGION && PRIMARY_REGION && FLY_REGION !== PRIMARY_REGION
-
-	const shouldReplay = isMethodReplayable && isReadOnlyRegion
-
-	if (!shouldReplay) return next()
-
-	const logInfo = {
-		pathname,
-		method,
-		PRIMARY_REGION,
-		FLY_REGION,
+	const host = getHost(req)
+	if (!host.endsWith(primaryHost)) {
+		res.set('X-Robots-Tag', 'noindex')
 	}
-	console.info(`Replaying:`, logInfo)
-	res.set('fly-replay', `region=${PRIMARY_REGION}`)
-	return res.sendStatus(409)
+	res.set('Access-Control-Allow-Origin', `${proto}://${host}`)
+
+	// if they connect once with HTTPS, then they'll connect with HTTPS for the next hundred years
+	res.set('Strict-Transport-Security', `max-age=${60 * 60 * 24 * 365 * 100}`)
+	next()
 })
 
 app.use(compression())
 
-// http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
-app.disable('x-powered-by')
-
-if (viteDevServer) {
-	app.use(viteDevServer.middlewares)
-} else {
-	// Remix fingerprints its assets so we can cache forever.
-	app.use(
-		'/build',
-		express.static('public/build', { immutable: true, maxAge: '1y' }),
-	)
-}
+// Remix fingerprints its assets so we can cache forever.
+app.use(
+	'/build',
+	express.static('public/build', { immutable: true, maxAge: '1y' }),
+)
 
 // Everything else (like favicon.ico) is cached for an hour. You may want to be
 // more aggressive with this caching.
@@ -87,21 +84,63 @@ app.use(express.static('public', { maxAge: '1h' }))
 
 app.use(morgan('tiny'))
 
-app.all(
-	'*',
-	createRequestHandler({
-		build: viteDevServer
-			? () => viteDevServer.ssrLoadModule('virtual:remix/server-build')
-			: initialBuild,
-	}),
-)
+app.all('*', remixHandler)
 
 const port = process.env.PORT || 3000
 
-app.listen(port, () => {
+app.listen(port, async () => {
 	console.log(`✅ Express server listening on port ${port}`)
 
 	if (process.env.NODE_ENV === 'development') {
-		broadcastDevReady(initialBuild)
+		await broadcastDevReady(initialBuild)
 	}
 })
+
+async function reimportServer(): Promise<ServerBuild> {
+	const stat = fs.statSync(BUILD_PATH)
+
+	// convert build path to URL for Windows compatibility with dynamic `import`
+	const BUILD_URL = url.pathToFileURL(BUILD_PATH).href
+
+	// use a timestamp query parameter to bust the import cache
+	return import(BUILD_URL + '?t=' + stat.mtimeMs)
+}
+
+// Create a request handler that watches for changes to the server build during development.
+async function createDevRequestHandler(): Promise<RequestHandler> {
+	async function handleServerUpdate() {
+		// 1. re-import the server build
+		initialBuild = await reimportServer()
+
+		// Add debugger to assist in v2 dev debugging
+		if (initialBuild?.assets === undefined) {
+			console.log(initialBuild.assets)
+			debugger
+		}
+
+		// 2. tell dev server that this app server is now up-to-date and ready
+		await broadcastDevReady(initialBuild)
+	}
+
+	// watch the server build file for changes
+	chokidar.watch(BUILD_PATH).on('change', async () => {
+		console.log('🔁 Server build changed')
+		try {
+			await handleServerUpdate()
+		} catch (error) {
+			console.error('❌ Error re-importing server build:', error)
+		}
+	})
+
+	// wrap request handler to make sure its recreated with the latest build for every request
+	return async (req, res, next) => {
+		try {
+			return createRequestHandler({
+				build: initialBuild,
+				mode: 'development',
+			})(req, res, next)
+		} catch (error) {
+			next(error)
+		}
+	}
+}

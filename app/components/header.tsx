@@ -32,15 +32,11 @@ function Header({
 			<div
 				className={clsxm(
 					'col-span-full flex flex-col space-y-6 lg:flex-row lg:items-end lg:justify-between lg:space-y-0',
-					{ 'lg:flex-row-reverse': reverse, 'flex-col-reverse': reverse },
+					{ 'flex-row-reverse': reverse, 'flex-col-reverse': reverse },
 					className,
 				)}
 			>
-				<div
-					className={clsxm('flex flex-col space-y-2 self-stretch', {
-						'items-end': reverse,
-					})}
-				>
+				<div className="flex flex-col space-y-2 self-stretch">
 					<H6>{subTitle}</H6>
 					<H2 variant="secondary">{title}</H2>
 				</div>

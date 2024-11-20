@@ -104,8 +104,7 @@ async function postRefreshCache({
 					res.on('end', () => {
 						try {
 							resolve(JSON.parse(data))
-						} catch (error) {
-							console.error('Error parsing response', error)
+						} catch {
 							reject(data)
 						}
 					})

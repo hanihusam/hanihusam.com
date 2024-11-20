@@ -3,11 +3,10 @@ import { updatePrimaryCacheValue } from '@/routes/cache.sqlite'
 import { getRequiredServerEnvVar } from './misc'
 import { time, type Timings } from './timing.server'
 
+import * as C from '@epic-web/cachified'
 import {
 	type Cache as CachifiedCache,
 	type CacheEntry,
-	cachified as epicCachified,
-	type CachifiedOptions,
 	verboseReporter,
 } from '@epic-web/cachified'
 import { remember } from '@epic-web/remember'
@@ -156,13 +155,13 @@ export async function cachified<Value>({
 	request,
 	timings,
 	...options
-}: Omit<CachifiedOptions<Value>, 'forceFresh'> & {
+}: Omit<C.CachifiedOptions<Value>, 'forceFresh'> & {
 	request?: Request
 	timings?: Timings
 	forceFresh?: boolean | string
 }): Promise<Value> {
 	let cachifiedResolved = false
-	const cachifiedPromise = epicCachified(
+	const cachifiedPromise = C.cachified(
 		{
 			...options,
 			forceFresh: await shouldForceFresh({

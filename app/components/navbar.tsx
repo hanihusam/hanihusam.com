@@ -98,8 +98,7 @@ function ThemeToggler() {
 			<span className="sr-only">Use theme</span>
 			<span
 				aria-hidden="true"
-				className={`${theme === 'dark' ? 'translate-x-9' : 'translate-x-0'}
-            pointer-events-none inline-block  transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
+				className={`${theme === 'dark' ? 'translate-x-9' : 'translate-x-0'} pointer-events-none inline-block transform rounded-full bg-white shadow-lg ring-0 transition duration-200 ease-in-out`}
 			>
 				{theme === 'dark' ? (
 					<MoonIcon className="h-9 w-9 text-secondary-500" />
