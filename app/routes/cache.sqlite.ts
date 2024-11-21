@@ -5,7 +5,7 @@ import {
 } from '@/utils/cjs/litefs-js.server'
 import { getRequiredServerEnvVar } from '@/utils/misc'
 
-import { type ActionFunctionArgs, json, redirect } from '@remix-run/node'
+import { type ActionFunctionArgs, redirect } from '@remix-run/node'
 import { serverOnly$ } from 'vite-env-only/macros'
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -33,7 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
 		console.log(`Setting ${key} in the cache from remote`)
 		await cache.set(key, cacheValue)
 	}
-	return json({ success: true })
+	return { success: true }
 }
 
 export const updatePrimaryCacheValue = serverOnly$(

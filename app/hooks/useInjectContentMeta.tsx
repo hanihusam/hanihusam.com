@@ -10,7 +10,6 @@ import { cleanBlogPrefix } from '@/utils/clean-blog-prefix'
 import { pickContentMeta } from '@/utils/content-meta'
 
 import { PrismaClient } from '@prisma/client'
-import { json } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
 
 const prismaClient = new PrismaClient()
@@ -36,7 +35,7 @@ export async function loader() {
 	// Sort alphabetically
 	content.sort((a, b) => a.slug.localeCompare(b.slug))
 
-	return json(content)
+	return content
 }
 
 export default function useInjectContentMeta<T extends ContentType>(

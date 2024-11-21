@@ -6,12 +6,10 @@ import {
 	type RefreshShaInfo,
 } from './action.refresh-cache'
 
-import { json } from '@remix-run/node'
-
 export async function loader() {
 	const result = await cache.get(refreshCacheCommitShaKey)
 	if (!result) {
-		return json(null)
+		return null
 	}
 
 	let value: RefreshShaInfo
@@ -23,8 +21,8 @@ export async function loader() {
 	} catch (error: unknown) {
 		console.error(`Error parsing commit sha from cache: ${error}`)
 		cache.delete(refreshCacheCommitShaKey)
-		return json(null)
+		return null
 	}
 
-	return json(value)
+	return value
 }

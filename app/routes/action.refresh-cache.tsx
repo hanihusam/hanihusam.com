@@ -4,7 +4,7 @@ import { ensurePrimary } from '@/utils/cjs/litefs-js.server'
 import { getContentMdxListItems, getMdxPage } from '@/utils/mdx.server'
 import { getRequiredServerEnvVar } from '@/utils/misc'
 
-import { type ActionFunctionArgs, json, redirect } from '@remix-run/node'
+import { type ActionFunctionArgs, data, redirect } from '@remix-run/node'
 import path from 'path'
 
 type Body =
@@ -59,11 +59,11 @@ export async function action({ request }: ActionFunctionArgs) {
 			void cache.delete(key)
 		}
 		setShaInCache()
-		return json({
+		return {
 			message: 'Deleting cache keys',
 			keys: body.keys,
 			commitSha: body.commitSha,
-		})
+		}
 	}
 	if ('contentPaths' in body && Array.isArray(body.contentPaths)) {
 		const refreshingContentPaths = []
@@ -108,13 +108,13 @@ export async function action({ request }: ActionFunctionArgs) {
 		}
 
 		setShaInCache()
-		return json({
+		return {
 			message: 'Refreshing cache for content paths',
 			contentPaths: refreshingContentPaths,
 			commitSha: body.commitSha,
-		})
+		}
 	}
-	return json({ message: 'no action taken' }, { status: 400 })
+	return data({ message: 'no action taken' }, { status: 400 })
 }
 
 export const loader = () => redirect('/', { status: 404 })

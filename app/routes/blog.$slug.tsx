@@ -27,12 +27,12 @@ import {
 	HandThumbUpIcon,
 } from '@heroicons/react/24/outline'
 import { HandThumbUpIcon as HandThumbUpSolidIcon } from '@heroicons/react/24/solid'
-import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import {
 	type ActionFunctionArgs,
-	json,
+	data,
 	type LoaderFunctionArgs,
-} from '@remix-run/server-runtime'
+} from '@remix-run/node'
+import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { format } from 'date-fns/format'
 import { motion } from 'framer-motion'
 
@@ -49,7 +49,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 			if (!incrementMetaFlag) {
 				await incrementViews({ slug, sessionId })
 
-				return json({ success: true })
+				return { success: true }
 			}
 
 			return null
@@ -82,10 +82,10 @@ export const loader = async ({ request, params }: LoaderFunctionArgs) => {
 	}
 
 	if (!page) {
-		throw json(null, { status: 404, headers })
+		throw data(null, { status: 404, headers })
 	}
 
-	return json({ page, meta }, { status: 200, headers })
+	return data({ page, meta }, { status: 200, headers })
 }
 
 function useOnRead({
