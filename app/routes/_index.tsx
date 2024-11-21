@@ -9,8 +9,8 @@ import { Spacer } from '@/components/spacer'
 import { type BlogFrontmatter } from '@/types'
 import { getBlogsFeatured } from '@/utils/blog.server'
 
+import { data, type LoaderFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { json, type LoaderFunction } from '@remix-run/server-runtime'
 // import projects from 'contents/projects'
 
 type LoaderData = {
@@ -29,16 +29,17 @@ export const loader: LoaderFunction = async ({ request }) => {
 		{ request, timings },
 	)
 
-	const data: LoaderData = {
-		featuredPosts,
-	}
-
-	return json(data, {
-		headers: {
-			'Cache-Control': 'private, max-age=3600',
-			Vary: 'Cookie',
+	return data(
+		{
+			featuredPosts,
 		},
-	})
+		{
+			headers: {
+				'Cache-Control': 'private, max-age=3600',
+				Vary: 'Cookie',
+			},
+		},
+	)
 }
 
 export default function IndexRoute() {

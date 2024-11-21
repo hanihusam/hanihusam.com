@@ -1,7 +1,7 @@
 import { getThemeSession } from '@/utils/theme.server'
 import { isTheme } from '@/utils/theme-provider'
 
-import { type ActionFunction, json, redirect } from '@remix-run/node'
+import { type ActionFunction, data, redirect } from '@remix-run/node'
 
 export const action: ActionFunction = async ({ request }) => {
 	const themeSession = await getThemeSession(request)
@@ -10,7 +10,7 @@ export const action: ActionFunction = async ({ request }) => {
 	const theme = form.get('theme')
 
 	if (!isTheme(theme)) {
-		return json({
+		return data({
 			success: false,
 			message: `theme value of ${theme} is not a valid theme.`,
 		})
@@ -18,7 +18,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 	themeSession.setTheme(theme)
 
-	return json(
+	return data(
 		{ success: true },
 		{
 			headers: { 'Set-Cookie': await themeSession.commit() },

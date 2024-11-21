@@ -13,8 +13,8 @@ import { getContentMdxListItems } from '@/utils/mdx.server'
 import { useUpdateQueryStringValueWithoutNavigation } from '@/utils/misc'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
+import { data, type LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData, useSearchParams } from '@remix-run/react'
-import { json, type LoaderFunctionArgs } from '@remix-run/server-runtime'
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
 	const timings = {}
@@ -27,18 +27,19 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 		}
 	}
 
-	const data = {
-		blogs,
-		tags: Array.from(tags),
-	}
-
-	return json(data, {
-		headers: {
-			'Cache-Control': 'private, max-age=3600',
-			Vary: 'Cookie',
-			'Server-Timing': getServerTimeHeader(timings),
+	return data(
+		{
+			blogs,
+			tags: Array.from(tags),
 		},
-	})
+		{
+			headers: {
+				'Cache-Control': 'private, max-age=3600',
+				Vary: 'Cookie',
+				'Server-Timing': getServerTimeHeader(timings),
+			},
+		},
+	)
 }
 
 // should be divisible by 3 and 2 (large screen, and medium screen).

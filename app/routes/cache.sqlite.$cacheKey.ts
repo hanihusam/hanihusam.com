@@ -2,7 +2,7 @@ import { cache } from '@/utils/cache.server'
 import { ensureInstance } from '@/utils/cjs/litefs-js.server'
 
 import { invariant } from '@epic-web/invariant'
-import { json, type LoaderFunctionArgs } from '@remix-run/node'
+import { type LoaderFunctionArgs } from '@remix-run/node'
 import { getAllInstances, getInstanceInfo } from 'litefs-js'
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
@@ -15,7 +15,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
 	const { cacheKey } = params
 	invariant(cacheKey, 'cacheKey is required')
-	return json({
+	return {
 		instance: {
 			hostname: instance,
 			region: allInstances[instance],
@@ -23,5 +23,5 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 		},
 		cacheKey,
 		value: cache.get(cacheKey),
-	})
+	}
 }

@@ -16,11 +16,7 @@ import {
 	useTheme,
 } from '@/utils/theme-provider'
 
-import {
-	json,
-	type LinksFunction,
-	type LoaderFunctionArgs,
-} from '@remix-run/node'
+import { type LinksFunction, type LoaderFunctionArgs } from '@remix-run/node'
 import {
 	isRouteErrorResponse,
 	Links,
@@ -132,7 +128,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		},
 	}
 
-	return json(data)
+	return data
 }
 
 function App() {
