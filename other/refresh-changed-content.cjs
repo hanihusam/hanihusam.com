@@ -13,7 +13,7 @@ async function go() {
 	let compareSha = shaInfo?.sha
 	if (!compareSha) {
 		const buildInfo = await fetchJson(
-			'https://hanihusam-com.fly.dev/build/info.json',
+			'https://hanihusam-com.fly.dev/build/client/build/info.json',
 			{
 				timeoutTime: 10_000,
 			},
