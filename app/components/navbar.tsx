@@ -8,7 +8,7 @@ import logo from '../../public/images/hnh-logo.png?url'
 import { Popover, Switch } from '@headlessui/react'
 import { Bars3Icon, SunIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { MoonIcon } from '@heroicons/react/24/solid'
-import { Link, useLocation } from '@remix-run/react'
+import { Link, useLocation } from 'react-router'
 
 const LINKS = [
 	{ name: 'Blog', to: '/blog' },

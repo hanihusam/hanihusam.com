@@ -16,17 +16,18 @@ import {
 	useTheme,
 } from '@/utils/theme-provider'
 
-import { type LinksFunction, type LoaderFunctionArgs } from '@remix-run/node'
 import {
 	isRouteErrorResponse,
 	Links,
+	type LinksFunction,
+	type LoaderFunctionArgs,
 	Meta,
 	Outlet,
 	Scripts,
 	ScrollRestoration,
 	useLoaderData,
 	useRouteError,
-} from '@remix-run/react'
+} from 'react-router'
 
 export const links: LinksFunction = () => {
 	return [

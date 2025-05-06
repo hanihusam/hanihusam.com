@@ -6,18 +6,18 @@ import { CtaSection } from '@/components/home/cta-section'
 import { HeroSection } from '@/components/home/hero-section'
 import { ServicesSection } from '@/components/home/services-section'
 import { Spacer } from '@/components/spacer'
-import { type BlogFrontmatter } from '@/types'
 import { getBlogsFeatured } from '@/utils/blog.server'
 
-import { data, type LoaderFunction } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { type Route } from './+types/_index'
+
+import { data, type HeadersArgs } from 'react-router'
 // import projects from 'contents/projects'
 
-type LoaderData = {
-	featuredPosts: BlogFrontmatter[]
+export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
+	return actionHeaders ? actionHeaders : loaderHeaders
 }
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
 	const timings = {}
 
 	const featuredPosts = await getBlogsFeatured(
@@ -42,8 +42,8 @@ export const loader: LoaderFunction = async ({ request }) => {
 	)
 }
 
-export default function IndexRoute() {
-	const data = useLoaderData<LoaderData>()
+export default function IndexRoute({ loaderData }: Route.ComponentProps) {
+	const { featuredPosts } = loaderData
 
 	return (
 		<React.Fragment>
@@ -56,7 +56,7 @@ export default function IndexRoute() {
 				title="Find the latest of my writing here"
 				subTitle="blog"
 				cta="See the full blog"
-				posts={data.featuredPosts}
+				posts={featuredPosts}
 			/>
 			<Spacer size="lg" />
 			<CtaSection />

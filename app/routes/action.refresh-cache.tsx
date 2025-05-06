@@ -4,8 +4,10 @@ import { ensurePrimary } from '@/utils/cjs/litefs-js.server'
 import { getContentMdxListItems, getMdxPage } from '@/utils/mdx.server'
 import { getRequiredServerEnvVar } from '@/utils/misc'
 
-import { type ActionFunctionArgs, data, redirect } from '@remix-run/node'
+import { type Route } from './+types/action.refresh-cache'
+
 import path from 'path'
+import { data, redirect } from 'react-router'
 
 type Body =
 	| { keys: Array<string>; commitSha?: string }
@@ -29,7 +31,7 @@ export function isRefreshShaInfo(value: any): value is RefreshShaInfo {
 
 export const commitShaKey = 'meta:last-refresh-commit-sha'
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
 	await ensurePrimary()
 	if (
 		request.headers.get('auth') !== getRequiredServerEnvVar('REFRESH_TOKEN')

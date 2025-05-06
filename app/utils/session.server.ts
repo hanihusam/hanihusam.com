@@ -1,8 +1,8 @@
 import { sessionExpirationTime } from './db.server.ts'
 import { getRequiredServerEnvVar } from './misc.tsx'
 
-import { createCookieSessionStorage } from '@remix-run/node'
 import { createHash } from 'crypto'
+import { createCookieSessionStorage } from 'react-router'
 
 const sessionIdKey = '__session_id__'
 

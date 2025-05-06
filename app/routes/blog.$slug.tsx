@@ -22,21 +22,25 @@ import { getMdxPage } from '@/utils/mdx.server'
 import { getSessionId } from '@/utils/session.server'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
+import { type Route } from './+types/blog.$slug'
+
 import {
 	ArrowLeftCircleIcon,
 	HandThumbUpIcon,
 } from '@heroicons/react/24/outline'
 import { HandThumbUpIcon as HandThumbUpSolidIcon } from '@heroicons/react/24/solid'
+import { format } from 'date-fns/format'
+import { motion } from 'framer-motion'
 import {
 	type ActionFunctionArgs,
 	data,
+	Link,
 	type LoaderFunctionArgs,
-} from '@remix-run/node'
-import { Link, useFetcher, useLoaderData } from '@remix-run/react'
-import { format } from 'date-fns/format'
-import { motion } from 'framer-motion'
+	useFetcher,
+	useLoaderData,
+} from 'react-router'
 
-export async function action({ params, request }: ActionFunctionArgs) {
+export async function action({ params, request }: Route.ActionArgs) {
 	if (!params.slug) {
 		throw new Error('params.slug is not defined')
 	}
@@ -63,7 +67,7 @@ export async function action({ params, request }: ActionFunctionArgs) {
 	}
 }
 
-export const loader = async ({ request, params }: LoaderFunctionArgs) => {
+export const loader = async ({ request, params }: Route.LoaderArgs) => {
 	if (!params.slug) {
 		throw new Error('params.slug is not defined')
 	}
@@ -162,8 +166,8 @@ function useOnRead({
 	}, [time, onRead, parentElRef])
 }
 
-export default function Blog() {
-	const { page, meta } = useLoaderData<typeof loader>()
+export default function Blog({ loaderData }: Route.ComponentProps) {
+	const { page, meta } = loaderData
 	const { frontmatter, code } = page
 	const Component = useMdxComponent(code)
 	const dateDisplay = format(

@@ -2,14 +2,11 @@ import { getEnv, init } from './utils/env.server.ts'
 import { NonceProvider } from './utils/nonce-provider.ts'
 import { makeTimings } from './utils/timing.server.ts'
 
-import {
-	createReadableStreamFromReadable,
-	type HandleDocumentRequestFunction,
-} from '@remix-run/node'
-import { RemixServer } from '@remix-run/react'
-import isbot from 'isbot'
+import { createReadableStreamFromReadable } from '@react-router/node'
+import { isbot } from 'isbot'
 import { getInstanceInfo } from 'litefs-js'
 import { renderToPipeableStream } from 'react-dom/server'
+import { type HandleDocumentRequestFunction, ServerRouter } from 'react-router'
 import { PassThrough } from 'stream'
 
 // Reject/cancel all pending promises after 5 seconds
@@ -25,7 +22,7 @@ export default async function handleRequest(...args: DocRequestArgs) {
 		request,
 		responseStatusCode,
 		responseHeaders,
-		remixContext,
+		reactRouterContext,
 		loadContext,
 	] = args
 	const { currentInstance, primaryInstance } = await getInstanceInfo()
@@ -48,7 +45,7 @@ export default async function handleRequest(...args: DocRequestArgs) {
 
 		const { pipe, abort } = renderToPipeableStream(
 			<NonceProvider value={nonce}>
-				<RemixServer context={remixContext} url={request.url} />
+				<ServerRouter context={reactRouterContext} url={request.url} />
 			</NonceProvider>,
 			{
 				[callbackName]: () => {

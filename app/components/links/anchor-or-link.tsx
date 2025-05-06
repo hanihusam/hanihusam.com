@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { Link, type LinkProps } from '@remix-run/react'
+import { Link, type LinkProps } from 'react-router'
 
 type AnchorProps = React.DetailedHTMLProps<
 	React.AnchorHTMLAttributes<HTMLAnchorElement>,

@@ -1,11 +1,12 @@
 import { cache } from '@/utils/cache.server'
 import { ensureInstance } from '@/utils/cjs/litefs-js.server'
 
+import { type Route } from './+types/cache.sqlite.$cacheKey'
+
 import { invariant } from '@epic-web/invariant'
-import { type LoaderFunctionArgs } from '@remix-run/node'
 import { getAllInstances, getInstanceInfo } from 'litefs-js'
 
-export async function loader({ request, params }: LoaderFunctionArgs) {
+export async function loader({ request, params }: Route.LoaderArgs) {
 	const searchParams = new URL(request.url).searchParams
 	const currentInstanceInfo = await getInstanceInfo()
 	const allInstances = await getAllInstances()
