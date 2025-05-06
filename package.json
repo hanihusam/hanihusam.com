@@ -19,7 +19,6 @@
   },
   "homepage": "https://github.com/hanihusam/hanihusam.com#readme",
   "scripts": {
-    "prepare": "husky install",
     "build": "run-s build:*",
     "build:rr": "react-router build",
     "build:info": "node ./other/build-info.js",
@@ -64,7 +63,7 @@
     "@react-router/fs-routes": "^7.5.3",
     "@react-router/node": "^7.5.3",
     "@react-router/serve": "^7.5.3",
-    "better-sqlite3": "^11.8.1",
+    "better-sqlite3": "^11.9.1",
     "chokidar": "^4.0.3",
     "cloudinary-build-url": "^0.2.4",
     "clsx": "^2.1.1",
