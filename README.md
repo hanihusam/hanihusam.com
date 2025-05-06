@@ -1,11 +1,8 @@
-# Hani Husam' site (rewritten with Remix)
+# Han's site
 
-[![Build Status][build-badge]][build]
-[![GPL 3.0 License][license-badge]][license]
+Han's personal website. Made with React Router and Tailwind.
 
-## Contributing
-
-Read CONTRIBUTING.md (work in progress)
+Under active development.
 
 <!-- prettier-ignore-start -->
 [build-badge]: https://img.shields.io/github/workflow/status/hanihusam/hanihusam.com/pipeline?logo=github&style=flat-square
