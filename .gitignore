@@ -14,3 +14,5 @@ app/**/*.ignore.*
 /prisma/data.db
 /prisma/data.db-journal
 /other/cache.db
+
+.react-router/
