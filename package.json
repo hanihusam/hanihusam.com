@@ -63,7 +63,7 @@
     "@reach/checkbox": "^0.18.0",
     "@remix-run/node": "^2.14.0",
     "@remix-run/react": "^2.14.0",
-    "@remix-run/serve": "^2.14.0",
+    "@remix-run/serve": "^2.16.5",
     "@remix-run/server-runtime": "^2.14.0",
     "better-sqlite3": "^11.5.0",
     "chokidar": "^4.0.1",
