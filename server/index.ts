@@ -30,7 +30,6 @@ const getBuild = async (): Promise<ServerBuild> => {
 	// @ts-ignore (this file may or may not exist yet)
 	return import('../build/server/index.js') as Promise<ServerBuild>
 }
-const BUILD_PATH = path.resolve('build/index.js')
 
 const primaryHost = 'hanihusam.com'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))

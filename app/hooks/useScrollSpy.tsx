@@ -51,7 +51,7 @@ export default function useScrollSpy() {
 		return () => {
 			window.removeEventListener('scroll', actionSectionScrollSpy)
 		}
-	}, [])
+	}, [actionSectionScrollSpy])
 
 	return activeSection
 }

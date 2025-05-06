@@ -13,9 +13,7 @@ FROM base as deps
 RUN mkdir /myapp/
 WORKDIR /myapp
 
-ADD package.json .npmrc ./
-# If you have a bun.lockb file, add it too
-ADD bun.lockb ./
+ADD package.json .npmrc bun.lockb ./
 RUN bun install
 
 # Setup production dependencies
@@ -25,9 +23,7 @@ RUN mkdir /myapp/
 WORKDIR /myapp/
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json .npmrc ./
-# If you have a bun.lockb file, add it too
-ADD bun.lockb ./
+ADD package.json .npmrc bun.lockb ./
 RUN bun install --production
 
 # Build the app
