@@ -1,8 +1,8 @@
 import { getContentMdxListItems } from '@/utils/mdx.server'
 
-import { type LoaderFunctionArgs } from '@remix-run/node'
+import { type Route } from './+types/healthcheck'
 
-export async function loader({ request }: LoaderFunctionArgs) {
+export async function loader({ request }: Route.LoaderArgs) {
 	const host =
 		request.headers.get('X-Forwarded-Host') ?? request.headers.get('host')
 

@@ -5,10 +5,12 @@ import {
 } from '@/utils/cjs/litefs-js.server'
 import { getRequiredServerEnvVar } from '@/utils/misc'
 
-import { type ActionFunctionArgs, redirect } from '@remix-run/node'
+import { type Route } from './+types/cache.sqlite'
+
+import { redirect } from 'react-router'
 import { serverOnly$ } from 'vite-env-only/macros'
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request }: Route.ActionArgs) {
 	const { currentIsPrimary, primaryInstance } = await getInstanceInfo()
 	if (!currentIsPrimary) {
 		throw new Error(

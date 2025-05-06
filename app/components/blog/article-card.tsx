@@ -4,8 +4,8 @@ import { getImageBuilder, getImgProps } from '@/utils/images'
 import { BlurrableImage } from '../blurrable-image'
 import { H4, H6 } from '../typography'
 
-import { Link } from '@remix-run/react'
 import { format } from 'date-fns'
+import { Link } from 'react-router'
 
 type ArticleCardProps = {
 	post: BlogFrontmatter & InjectedMeta

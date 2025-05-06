@@ -13,10 +13,20 @@ import { getContentMdxListItems } from '@/utils/mdx.server'
 import { useUpdateQueryStringValueWithoutNavigation } from '@/utils/misc'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
-import { data, type LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData, useSearchParams } from '@remix-run/react'
+import { type Route } from './+types/blog._index'
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+import {
+	data,
+	type HeadersArgs,
+	useLoaderData,
+	useSearchParams,
+} from 'react-router'
+
+export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
+	return actionHeaders ? actionHeaders : loaderHeaders
+}
+
+export const loader = async ({ request }: Route.LoaderArgs) => {
 	const timings = {}
 	const blogs = await getContentMdxListItems('blog', { request, timings })
 
@@ -49,9 +59,8 @@ const initialIndexToShow = PAGE_SIZE
 // temporary special query case
 const specialQueryRegex = /(?<not>!)?leader:(?<team>\w+)(\s|$)?/g
 
-export default function BlogIndex() {
-	const data = useLoaderData<typeof loader>()
-	const { blogs: allPosts, tags } = data
+export default function BlogIndex({ loaderData }: Route.ComponentProps) {
+	const { blogs: allPosts, tags } = loaderData
 
 	const [searchParams] = useSearchParams()
 	const [queryValue, setQuery] = React.useState<string>(
@@ -79,7 +88,7 @@ export default function BlogIndex() {
 
 	const visibleTags = isSearching
 		? new Set(matchingPosts.flatMap((post) => post.tags).filter(Boolean))
-		: new Set(data.tags)
+		: new Set(tags)
 
 	const hasMorePosts = isSearching
 		? indexToShow < matchingPosts.length

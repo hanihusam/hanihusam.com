@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { useFetcher } from '@remix-run/react'
+import { useFetcher } from 'react-router'
 
 enum Theme {
 	DARK = 'dark',

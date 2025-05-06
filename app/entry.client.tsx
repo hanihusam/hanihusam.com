@@ -2,13 +2,13 @@ import { startTransition } from 'react'
 
 import { handleDarkAndLightModeEls } from './utils/theme-provider'
 
-import { RemixBrowser } from '@remix-run/react'
 import { hydrateRoot } from 'react-dom/client'
+import { HydratedRouter } from 'react-router/dom'
 
 function hydrate() {
 	handleDarkAndLightModeEls()
 	startTransition(() => {
-		hydrateRoot(document, <RemixBrowser />)
+		hydrateRoot(document, <HydratedRouter />)
 	})
 }
 

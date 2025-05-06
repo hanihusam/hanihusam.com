@@ -1,7 +1,7 @@
 import { getRequiredServerEnvVar } from './misc'
 import { isTheme, Theme } from './theme-provider'
 
-import { createCookieSessionStorage } from '@remix-run/node'
+import { createCookieSessionStorage } from 'react-router'
 
 const themeStorage = createCookieSessionStorage({
 	cookie: {

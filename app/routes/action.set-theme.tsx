@@ -1,9 +1,11 @@
 import { getThemeSession } from '@/utils/theme.server'
 import { isTheme } from '@/utils/theme-provider'
 
-import { type ActionFunction, data, redirect } from '@remix-run/node'
+import { type Route } from './+types/action.set-theme'
 
-export const action: ActionFunction = async ({ request }) => {
+import { data, redirect } from 'react-router'
+
+export const action = async ({ request }: Route.ActionArgs) => {
 	const themeSession = await getThemeSession(request)
 	const requestText = await request.text()
 	const form = new URLSearchParams(requestText)

@@ -4,7 +4,7 @@ import { Grid } from './grid'
 import { H2, H5, H6 } from './typography'
 
 import { ArrowRightCircleIcon } from '@heroicons/react/24/outline'
-import { Link } from '@remix-run/react'
+import { Link } from 'react-router'
 
 interface HeaderProps {
 	title: string

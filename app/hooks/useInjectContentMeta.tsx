@@ -10,7 +10,7 @@ import { cleanBlogPrefix } from '@/utils/clean-blog-prefix'
 import { pickContentMeta } from '@/utils/content-meta'
 
 import { PrismaClient } from '@prisma/client'
-import { useFetcher } from '@remix-run/react'
+import { useFetcher } from 'react-router'
 
 const prismaClient = new PrismaClient()
 

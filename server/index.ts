@@ -1,14 +1,16 @@
-import { createRequestHandler, type RequestHandler } from '@remix-run/express'
-import { installGlobals, type ServerBuild } from '@remix-run/node'
+import {
+	createRequestHandler,
+	type RequestHandler,
+} from '@react-router/express'
 import compression from 'compression'
 import express from 'express'
 import { getInstanceInfo } from 'litefs-js'
 import morgan from 'morgan'
 import path from 'path'
+import { type ServerBuild } from 'react-router'
 import sourceMapSupport from 'source-map-support'
 import { fileURLToPath } from 'url'
 
-installGlobals()
 sourceMapSupport.install()
 
 const viteDevServer =
@@ -21,7 +23,9 @@ const viteDevServer =
 			)
 const getBuild = async (): Promise<ServerBuild> => {
 	if (viteDevServer) {
-		return viteDevServer.ssrLoadModule('virtual:remix/server-build') as any
+		return viteDevServer.ssrLoadModule(
+			'virtual:react-router/server-build',
+		) as any
 	}
 	// @ts-ignore (this file may or may not exist yet)
 	return import('../build/server/index.js') as Promise<ServerBuild>
@@ -109,7 +113,7 @@ app.use(morgan('tiny'))
 
 async function getRequestHandler(): Promise<RequestHandler> {
 	function getLoadContext(req: any, res: any) {
-		return { cspNonce: res.locals.cspNonce }
+		return { cspNonce: res.locals.cspNonce, whatever: 'default value' }
 	}
 	return createRequestHandler({
 		build: process.env.NODE_ENV === 'development' ? getBuild : await getBuild(),
