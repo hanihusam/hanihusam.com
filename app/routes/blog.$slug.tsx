@@ -31,14 +31,7 @@ import {
 import { HandThumbUpIcon as HandThumbUpSolidIcon } from '@heroicons/react/24/solid'
 import { format } from 'date-fns/format'
 import { motion } from 'framer-motion'
-import {
-	type ActionFunctionArgs,
-	data,
-	Link,
-	type LoaderFunctionArgs,
-	useFetcher,
-	useLoaderData,
-} from 'react-router'
+import { data, Link, useFetcher } from 'react-router'
 
 export async function action({ params, request }: Route.ActionArgs) {
 	if (!params.slug) {

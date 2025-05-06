@@ -15,12 +15,7 @@ import { getServerTimeHeader } from '@/utils/timing.server'
 
 import { type Route } from './+types/blog._index'
 
-import {
-	data,
-	type HeadersArgs,
-	useLoaderData,
-	useSearchParams,
-} from 'react-router'
+import { data, type HeadersArgs, useSearchParams } from 'react-router'
 
 export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
 	return actionHeaders ? actionHeaders : loaderHeaders
@@ -84,7 +79,7 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
 		let filteredPosts = allPosts
 
 		return filterPosts(filteredPosts, regularQuery)
-	}, [allPosts, query, regularQuery])
+	}, [allPosts, regularQuery])
 
 	const visibleTags = isSearching
 		? new Set(matchingPosts.flatMap((post) => post.tags).filter(Boolean))
