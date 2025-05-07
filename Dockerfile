@@ -1,5 +1,5 @@
 # base bun image
-FROM oven/bun:1-debian as base
+FROM oven/bun:latest as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
@@ -13,7 +13,7 @@ FROM base as deps
 RUN mkdir /myapp/
 WORKDIR /myapp
 
-ADD package.json .npmrc bun.lockb ./
+ADD package.json bun.lockb ./
 RUN bun install
 
 # Setup production dependencies
@@ -23,8 +23,8 @@ RUN mkdir /myapp/
 WORKDIR /myapp/
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json .npmrc bun.lockb ./
-RUN bun install --production
+ADD package.json bun.lockb ./
+RUN bun install
 
 # Build the app
 FROM base as build
