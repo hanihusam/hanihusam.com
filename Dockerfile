@@ -1,30 +1,30 @@
-# base bun image
-FROM oven/bun:latest as base
+# base node image
+FROM node:20-bookworm-slim as base
 
 # set for base and all layer that inherit from it
 ENV NODE_ENV production
 
-# Install required dependencies
+# Install openssl for Prisma
 RUN apt-get update && apt-get install -y fuse3 openssl sqlite3 ca-certificates
 
-# Install all dependencies, including dev dependencies
+# Install all node_modules, including dev dependencies
 FROM base as deps
 
 RUN mkdir /myapp/
 WORKDIR /myapp
 
-ADD package.json bun.lockb ./
-RUN bun install
+ADD package.json .npmrc package-lock.json ./
+RUN npm install --include=dev
 
-# Setup production dependencies
+# Setup production node_modules
 FROM base as production-deps
 
 RUN mkdir /myapp/
 WORKDIR /myapp/
 
 COPY --from=deps /myapp/node_modules /myapp/node_modules
-ADD package.json bun.lockb ./
-RUN bun install
+ADD package.json .npmrc package-lock.json ./
+RUN npm prune --omit=dev
 
 # Build the app
 FROM base as build
@@ -40,10 +40,10 @@ COPY --from=deps /myapp/node_modules /myapp/node_modules
 # schema doesn't change much so these will stay cached
 ADD prisma /myapp/prisma
 
-RUN bunx prisma generate
+RUN npx prisma generate
 
 ADD . .
-RUN bun run build
+RUN npm run build
 
 # Finally, build the production image with minimal footprint
 FROM base
