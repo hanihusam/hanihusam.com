@@ -64,3 +64,8 @@ added — primitives (`@theme`), semantic tokens light/dark (`:root` +
 `[data-theme='dark']`), motion + layout vars. Old `--color-primary-*` /
 `--color-secondary-*` tokens removed from `app.css`. Tailwind v4 migration
 required to activate `@theme` primitives — deferred to Phase 5.
+
+## 2026-04-23
+
+2026-04-23 | Button component complete | Primary, Secondary, Ghost × Icon Text,
+Text Only × Default, Hover, Focus, Disabled | design work
