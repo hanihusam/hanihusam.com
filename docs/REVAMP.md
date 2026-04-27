@@ -69,3 +69,18 @@ required to activate `@theme` primitives — deferred to Phase 5.
 
 2026-04-23 | Button component complete | Primary, Secondary, Ghost × Icon Text,
 Text Only × Default, Hover, Focus, Disabled | design work
+
+## 2026-04-24
+
+2026-04-24 | Phase 2 components complete | Button, Nav, Project Card, Article
+Card, Tag, Avatar, Code Block | Callout, Split-view, Tooltip deferred to Phase
+3/5
+
+2026-04-24 | Jumping Phase 4 home page before Phase 3 | Layout redesign before
+dark mode to avoid double work
+
+2026-04-24 | Light mode default confirmed | Dark mode duplicate after home
+redesign
+
+2026-04-24 | Phase 3 deferred until Phase 6 content work begins | No case study
+content ready yet
