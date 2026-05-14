@@ -17,7 +17,8 @@ interface ButtonProps {
 function getBaseClassName({ className }: { className?: string }) {
 	return clsxm(
 		'group relative inline-flex items-center justify-center',
-		'font-medium transition-colors duration-250',
+		'font-medium transition duration-150 ease-out',
+		'active:scale-[0.97]',
 		'focus:outline-none',
 		'disabled:pointer-events-none',
 		'rounded-md',
@@ -107,7 +108,7 @@ function LinkButton({
 		<button
 			{...buttonProps}
 			className={clsxm(
-				'text-(--text-link) transition-colors duration-250',
+				'text-(--text-link) transition-colors duration-150',
 				'hover:opacity-80 focus:outline-none focus-visible:underline',
 				underlined ? 'underline' : 'hover:underline',
 				className,
