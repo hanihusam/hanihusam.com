@@ -1,13 +1,13 @@
 import * as React from 'react'
 
 import { ArticleCard } from '@/components/blog/article-card'
+import { FilterTag } from '@/components/blog/filter-tag'
 import { HeaderSection } from '@/components/blog/header-section'
-import { Tag } from '@/components/blog/tag'
 import { Button } from '@/components/button'
 import { ButtonOutline } from '@/components/button-outline'
 import { Grid } from '@/components/grid'
 import { Spacer } from '@/components/spacer'
-import { H6 } from '@/components/typography'
+import { H4 } from '@/components/typography'
 import { filterPosts } from '@/utils/blog'
 import { getContentMdxListItems } from '@/utils/mdx.server'
 import { useUpdateQueryStringValueWithoutNavigation } from '@/utils/misc'
@@ -118,19 +118,19 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
 						className="col-span-full mt-2 flex flex-wrap items-baseline justify-start gap-2"
 						data-fade="3"
 					>
-						<H6 className="mr-5" variant="secondary" as="span">
+						<H4 className="mr-5" variant="secondary" as="span">
 							Choose topics:
-						</H6>
+						</H4>
 
 						{tags.map((tag) => {
 							const selected = regularQuery.includes(tag)
 
 							return (
-								<Tag
+								<FilterTag
 									key={tag}
 									tag={tag}
 									selected={selected}
-									onClick={() => toggleTag(tag)}
+									onChange={() => toggleTag(tag)}
 									disabled={!visibleTags.has(tag) ? !selected : false}
 								/>
 							)

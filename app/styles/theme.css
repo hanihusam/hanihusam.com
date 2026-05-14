@@ -122,6 +122,14 @@
 :root {
 	color-scheme: light;
 
+	/* Filter Tag */
+	--filter-tag-surface-default: var(--color-neutral-50);
+	--filter-tag-text-default: var(--color-neutral-700);
+	--filter-tag-surface-selected: var(--color-sunset-50);
+	--filter-tag-text-selected: var(--color-neutral-50);
+	--filter-tag-surface-disabled: rgb(255 255 255 / 0.5);
+	--filter-tag-text-disabled: rgb(80 85 95 / 0.5);
+
 	/* Line heights — pixel-based (rem), different from Tailwind's unitless ratios */
 	--display-leading: 115.2px;
 	--h1-leading-desktop: 60px;
@@ -194,6 +202,11 @@
 
 [data-theme='dark'] {
 	color-scheme: dark;
+
+	/* Filter Tag */
+	--filter-tag-surface-default: var(--color-neutral-800);
+	--filter-tag-text-default: var(--color-neutral-300);
+	--filter-tag-text-disabled: rgb(255 255 255 / 0.5);
 
 	/* Surface */
 	--surface-primary: var(--color-neutral-950); /* #28262d   */

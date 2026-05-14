@@ -28,7 +28,14 @@ type TextProps = {
 	className?: string
 	as?: React.ElementType
 	id?: string
-}
+} & (
+	| { children: React.ReactNode }
+	| {
+			dangerouslySetInnerHTML: {
+				__html: string
+			}
+	  }
+)
 
 const fontSize = {
 	display: 'font-black text-8xl leading-(--display-leading)',
