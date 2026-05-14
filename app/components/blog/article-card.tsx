@@ -2,7 +2,7 @@ import { type BlogFrontmatter, type InjectedMeta } from '@/types'
 import { getImageBuilder, getImgProps } from '@/utils/images'
 
 import { BlurrableImage } from '../blurrable-image'
-import { H4, H6 } from '../typography'
+import { H4 } from '../typography'
 
 import { format } from 'date-fns'
 import { Link } from 'react-router'
@@ -67,11 +67,11 @@ function ArticleCard({
 					}
 				/>
 
-				<H6 className="mt-8 text-body-dark">
+				<H4 className="text-body-dark mt-8">
 					{[dateDisplay, readingTime?.text ?? 'quick read']
 						.filter(Boolean)
 						.join(' — ')}
-				</H6>
+				</H4>
 				<H4 as="div" variant="secondary" className="mt-2">
 					{title}
 				</H4>

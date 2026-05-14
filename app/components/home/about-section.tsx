@@ -1,16 +1,16 @@
 import { AboutIllustration } from '@/assets/illustrations'
 import { Grid } from '@/components/grid'
-import { H2, H6, Paragraph } from '@/components/typography'
+import { H2, H4, Paragraph } from '@/components/typography'
 
 export function AboutSection() {
 	return (
 		<Grid smFull>
-			<div className="col-span-full grid grid-cols-4 gap-6 rounded-xl bg-black px-10vw py-[72px] md:grid-cols-8 md:flex-row md:px-10 lg:grid-cols-12">
+			<div className="px-10vw col-span-full grid grid-cols-4 gap-6 rounded-xl bg-black py-[72px] md:grid-cols-8 md:flex-row md:px-10 lg:grid-cols-12">
 				<AboutIllustration className="col-span-full col-start-1 row-start-1 w-[340px] md:w-[500px] lg:col-span-4" />
 
 				<div className="col-span-full flex flex-col items-start gap-8 self-stretch lg:col-span-5 lg:col-start-8">
 					<div className="flex flex-col gap-2 self-stretch">
-						<H6>About</H6>
+						<H4>About</H4>
 						<H2 className="text-light">Why hire me for your next project?</H2>
 					</div>
 

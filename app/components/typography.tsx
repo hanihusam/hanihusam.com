@@ -1,4 +1,4 @@
-import * as React from 'react'
+import { createElement } from 'react'
 
 import { clsxm } from '@/utils/clsxm'
 
@@ -15,19 +15,46 @@ type TitleProps = {
 			}
 	  }
 )
+type ParagraphProps = {
+	className?: string
+	prose?: boolean
+	textColorClassName?: string
+	as?: React.ElementType
+} & (
+	| { children: React.ReactNode }
+	| { dangerouslySetInnerHTML: { __html: string } }
+)
+type TextProps = {
+	className?: string
+	as?: React.ElementType
+	id?: string
+}
 
 const fontSize = {
-	h1: 'leading-tight font-black text-4xl md:text-7xl',
-	h2: 'leading-tight font-bold text-3xl md:text-4xl',
-	h3: 'text-2xl font-medium md:text-3xl',
-	h4: 'text-xl font-medium md:text-2xl',
-	h5: 'text-lg font-medium md:text-xl',
-	h6: 'text-lg font-medium',
+	display: 'font-black text-8xl leading-(--display-leading)',
+	h1: 'font-black text-4xl md:text-5xl leading-(--h1-leading-mobile) md:leading-(--h1-leading-desktop) md:text-5xl',
+	h2: 'font-bold text-3xl md:text-4xl leading-(--h2-leading-mobile) md:leading-(--h2-leading-desktop)',
+	h3: 'font-bold text-2xl md:text-3xl leading-(--h3-leading-mobile) md:leading-(--h3-leading-desktop)',
+	h4: 'font-medium text-xl md:text-2xl leading-(--h4-leading-mobile) md:leading-(--h4-leading-desktop)',
 }
 
 const titleColors = {
-	primary: 'text-primary-500',
-	secondary: 'text-secondary-500 dark:text-light',
+	primary: 'text-sky-600 dark:text-neutral-100',
+	secondary: 'text-sunset-400',
+}
+
+const textSize = {
+	caption: 'text-xs leading-(--caption-leading)',
+	lead: 'text-lg leading-(--lead-leading)',
+	label: 'text-xs leading-(--label-leading) tracking-[0.8px]',
+	overline: 'text-xs leading-(--overline-leading) tracking-[1.6px] uppercase',
+}
+
+const textColors = {
+	caption: 'text-(--text-caption)',
+	lead: 'text-(--text-lead)',
+	label: 'text-(--text-label)',
+	overline: 'text-(--text-overline)',
 }
 
 function Title({
@@ -37,13 +64,17 @@ function Title({
 	className,
 	...rest
 }: TitleProps & { size: keyof typeof fontSize }) {
-	const Tag = as ?? size
+	const Tag = (as ?? size === 'display') ? 'h1' : size
 	return (
 		<Tag
 			className={clsxm(fontSize[size], titleColors[variant], className)}
 			{...rest}
 		/>
 	)
+}
+
+function Display(props: TitleProps) {
+	return <Title {...props} size="display" />
 }
 
 function H1(props: TitleProps) {
@@ -62,37 +93,39 @@ function H4(props: TitleProps) {
 	return <Title {...props} size="h4" />
 }
 
-function H5(props: TitleProps) {
-	return <Title {...props} size="h5" />
+function Text({
+	variant = 'label',
+	as,
+	className,
+	...rest
+}: TextProps & { variant: keyof typeof textSize }) {
+	const Tag = as ?? 'span'
+	return (
+		<Tag
+			className={clsxm(textSize[variant], textColors[variant], className)}
+			{...rest}
+		/>
+	)
 }
-
-function H6(props: TitleProps) {
-	return <Title {...props} size="h6" />
-}
-
-type ParagraphProps = {
-	className?: string
-	prose?: boolean
-	textColorClassName?: string
-	as?: React.ElementType
-} & (
-	| { children: React.ReactNode }
-	| { dangerouslySetInnerHTML: { __html: string } }
-)
 
 function Paragraph({
 	className,
 	prose = true,
 	as = 'p',
-	textColorClassName = 'text-body',
+	textColorClassName = 'text-(--text-paragraph)',
 	...rest
 }: ParagraphProps) {
-	return React.createElement(as, {
-		className: clsxm('max-w-full text-lg', textColorClassName, className, {
-			'prose prose-light dark:prose-dark': prose,
-		}),
+	return createElement(as, {
+		className: clsxm(
+			'max-w-full text-base leading-(--paragraph-leading)',
+			textColorClassName,
+			className,
+			{
+				'prose prose-light dark:prose-dark': prose,
+			},
+		),
 		...rest,
 	})
 }
 
-export { H1, H2, H3, H4, H5, H6, Paragraph }
+export { Display, H1, H2, H3, H4, Paragraph, Text }

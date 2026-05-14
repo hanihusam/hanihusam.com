@@ -7,17 +7,25 @@ type AnchorProps = React.DetailedHTMLProps<
 	HTMLAnchorElement
 >
 
-const AnchorOrLink = React.forwardRef<
-	HTMLAnchorElement,
-	AnchorProps & {
-		reload?: boolean
-		to?: LinkProps['to']
-		prefetch?: LinkProps['prefetch']
-	}
->(function AnchorOrLink(props, ref) {
-	const { to, href, reload = false, prefetch, children, ...rest } = props
+export const AnchorOrLink = function AnchorOrLink({
+	ref,
+	...props
+}: AnchorProps & {
+	reload?: boolean
+	to?: LinkProps['to']
+	prefetch?: LinkProps['prefetch']
+}) {
+	const {
+		to,
+		href,
+		download,
+		reload = false,
+		prefetch,
+		children,
+		...rest
+	} = props
 	let toUrl = ''
-	let shouldUserRegularAnchor = reload
+	let shouldUserRegularAnchor = reload || download
 
 	if (!shouldUserRegularAnchor && typeof href === 'string') {
 		shouldUserRegularAnchor = href.includes(':') || href.startsWith('#')
@@ -32,22 +40,20 @@ const AnchorOrLink = React.forwardRef<
 		toUrl = `${to.pathname ?? ''}${to.hash ? `#${to.hash}` : ''}${
 			to.search ? `?${to.search}` : ''
 		}`
-		shouldUserRegularAnchor = to.pathname?.includes(':') ?? false
+		shouldUserRegularAnchor = to.pathname?.includes(':')
 	}
 
 	if (shouldUserRegularAnchor) {
 		return (
-			<a {...rest} href={href ?? toUrl} ref={ref}>
+			<a {...rest} download={download} href={href ?? toUrl} ref={ref}>
 				{children}
 			</a>
 		)
+	} else {
+		return (
+			<Link prefetch={prefetch} to={to ?? href ?? ''} {...rest} ref={ref}>
+				{children}
+			</Link>
+		)
 	}
-
-	return (
-		<Link prefetch={prefetch} to={to ?? href ?? ''} {...rest} ref={ref}>
-			{children}
-		</Link>
-	)
-})
-
-export { AnchorOrLink }
+}

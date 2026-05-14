@@ -1,6 +1,6 @@
 import { Grid } from '@/components/grid'
 import { Header } from '@/components/header'
-import { H4, H5, Paragraph } from '@/components/typography'
+import { H4, Paragraph } from '@/components/typography'
 
 import { ComputerDesktopIcon, PaintBrushIcon } from '@heroicons/react/24/solid'
 
@@ -22,17 +22,17 @@ export function ServicesSection() {
 						doesn&apos;t have a modern look and optimal user experience across
 						various devices, and browsers?
 					</Paragraph>
-					<H5 className="text-dark dark:text-light">
+					<H4 className="text-dark dark:text-light">
 						Well, you&apos;re in the right place.
-					</H5>
+					</H4>
 				</div>
 			</div>
 
 			<div className="col-span-full grid grid-cols-6 gap-8 md:gap-10 lg:col-span-6 lg:col-start-7">
 				<div className="col-span-full lg:col-span-3">
 					<div className="relative h-full w-full pt-10">
-						<ComputerDesktopIcon className="absolute left-8 top-0 z-[1] h-20 w-20 text-secondary-500 dark:text-primary-500" />
-						<div className="relative flex h-full w-full flex-col space-y-2.5 rounded-xl bg-white px-8 pb-8 pt-16 dark:bg-black">
+						<ComputerDesktopIcon className="text-secondary-500 dark:text-primary-500 absolute top-0 left-8 z-[1] h-20 w-20" />
+						<div className="relative flex h-full w-full flex-col space-y-2.5 rounded-xl bg-white px-8 pt-16 pb-8 dark:bg-black">
 							<div className="flex flex-col space-y-6 self-stretch">
 								<H4 variant="secondary">Frontend Web Developer</H4>
 								<Paragraph>
@@ -46,8 +46,8 @@ export function ServicesSection() {
 
 				<div className="col-span-full lg:col-span-3">
 					<div className="relative h-full w-full pt-10">
-						<PaintBrushIcon className="absolute left-8 top-0 z-[1] h-20 w-20 text-secondary-500 dark:text-primary-500" />
-						<div className="relative flex h-full w-full flex-col space-y-2.5 rounded-xl bg-white px-8 pb-8 pt-16 dark:bg-black">
+						<PaintBrushIcon className="text-secondary-500 dark:text-primary-500 absolute top-0 left-8 z-[1] h-20 w-20" />
+						<div className="relative flex h-full w-full flex-col space-y-2.5 rounded-xl bg-white px-8 pt-16 pb-8 dark:bg-black">
 							<div className="flex flex-col space-y-6 self-stretch">
 								<H4 variant="secondary">User Interface Designer</H4>
 								<Paragraph>

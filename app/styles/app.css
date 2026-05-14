@@ -1,5 +1,3 @@
-@import './theme.css';
-
 /* I kinda feel like this should be the default... 🤷‍♂️ */
 [hidden] {
 	pointer-events: none;

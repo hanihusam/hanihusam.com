@@ -84,3 +84,31 @@ redesign
 
 2026-04-24 | Phase 3 deferred until Phase 6 content work begins | No case study
 content ready yet
+
+## 2026-05-13
+
+2026-05-13 | Tailwind v3 → v4 migration complete | PostCSS replaced with
+`@tailwindcss/vite` in `vite.config.ts`. `tailwind.css` now uses
+`@import "tailwindcss"` + `@import "./theme.css"` + `@config` +
+`@variant dark (&:where(.dark, .dark *))`. `app.css` no longer imports
+`theme.css` (ownership moved to `tailwind.css`). `postcss.config.mjs` emptied —
+Lightning CSS handles autoprefixing.
+
+2026-05-13 | `tailwind.config.ts` slimmed | Removed: `darkMode`,
+`theme.screens`, `theme.colors` (referenced dead CSS vars),
+`theme.extend.fontFamily`, `theme.extend.fontSize`, `theme.extend.spacing`,
+`theme.extend.maxWidth`, `theme.extend.maxHeight`,
+`theme.extend.gridTemplateRows`. Kept: `theme.extend.typography` + `plugins`.
+`screens.lg` and `spacing.10vw` references hardcoded as literals (`1024px`,
+`10vw`). Custom color refs in prose config updated to new semantic tokens
+(`--color-sunset-*`, `--color-neutral-*`, `--text-paragraph`).
+
+2026-05-13 | `theme.css` @theme additions | Breakpoints: `--breakpoint-sm/2xl`
+reset to `initial`, `--breakpoint-md: 640px`, `--breakpoint-lg: 1024px`,
+`--breakpoint-xl: 1440px`. vw spacing: `--spacing-5vw/8vw/10vw`. Max-width:
+`--max-width-8xl: 96rem`.
+
+2026-05-13 | `@tailwindcss/typography` stays on `0.5.0-alpha.3` via `@config` |
+Installed `insiders` build supports v4 natively but is unstable. Typography
+prose config (`prose-light`, `prose-dark`, grid breakout) kept in JS — migrate
+when stable v4 typography releases.

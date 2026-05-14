@@ -1,4 +1,5 @@
 import { reactRouter } from '@react-router/dev/vite'
+import tailwindcss from '@tailwindcss/vite'
 import { defineConfig } from 'vite'
 import { envOnlyMacros } from 'vite-env-only'
 import tsconfigPaths from 'vite-tsconfig-paths'
@@ -10,5 +11,5 @@ export default defineConfig({
 	resolve: {
 		dedupe: ['react', 'react-dom'],
 	},
-	plugins: [envOnlyMacros(), reactRouter(), tsconfigPaths()],
+	plugins: [tailwindcss(), envOnlyMacros(), reactRouter(), tsconfigPaths()],
 })

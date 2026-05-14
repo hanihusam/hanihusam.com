@@ -1,7 +1,4 @@
-/* purgecss start ignore */
-@tailwind base;
-@tailwind components;
-/* purgecss end ignore */
-
-@tailwind utilities;
-@tailwind screens;
+@import "tailwindcss";
+@import "./theme.css";
+@config "../../tailwind.config.ts";
+@variant dark (&:where(.dark, .dark *));

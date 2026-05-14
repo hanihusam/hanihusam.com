@@ -319,14 +319,19 @@ pre {
 
 /* #region  /**=========== Hash Anchor =========== */
 .hash-anchor {
-	@apply inset-y-0 inline-flex w-full items-center;
+	display: inline-flex;
+	width: 100%;
+	align-items: center;
+	top: 0;
+	bottom: 0;
 	position: absolute;
 	background-image: none;
 	transition: none;
 }
 
 .hash-anchor:after {
-	@apply invisible absolute -right-5 top-1/2 -translate-y-1/2 text-lg text-primary-400 dark:text-primary-300;
+	/* @apply text-primary-400 dark:text-primary-300 invisible absolute top-1/2 -right-5 -translate-y-1/2 text-lg; */
+	color: var(--text-link);
 	content: '#';
 }
 /* #endregion  /**======== Hash Anchor =========== */
