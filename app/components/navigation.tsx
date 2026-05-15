@@ -1,6 +1,3 @@
-import { clsxm } from '@/utils/clsxm'
-import { Theme, useTheme } from '@/utils/theme-provider'
-
 import NavigationItem from './ui/navigation-item'
 
 import {
@@ -30,7 +27,7 @@ const links = [
 
 export function Navigation() {
 	return (
-		<nav className="fixed bottom-8 left-1/2 z-20 flex border-separate translate-x-[-50%] items-center rounded-md border border-(--border-primary) bg-(--surface-primary) shadow-lg transition-colors">
+		<nav className="fixed inset-x-0 bottom-8 z-20 mx-auto flex w-fit items-center rounded-md border border-(--border-primary) bg-(--surface-primary) shadow-lg transition-colors">
 			{links.map((link, idx) => (
 				<NavigationItem
 					className={idx === 0 ? 'ml-1' : ''}

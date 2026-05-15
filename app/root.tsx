@@ -1,6 +1,5 @@
 import { Footer } from '@/components/footer'
 import { LayoutRoot } from '@/components/layout'
-import { Navbar } from '@/components/navbar'
 import appStyles from '@/styles/app.css?url'
 import fonts from '@/styles/fonts.css?url'
 import noScriptStyles from '@/styles/no-script.css?url'
@@ -159,7 +158,6 @@ function App() {
 			</head>
 			<body>
 				<LayoutRoot>
-					<Navbar />
 					<Outlet />
 					<Footer />
 					<Navigation />

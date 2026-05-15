@@ -26,20 +26,16 @@ export default function NavigationItem({
 	return (
 		<Provider delayDuration={100}>
 			<Root>
-				<Trigger>
+				<Trigger asChild>
 					<NavLink
 						to={href}
-						className={({ isActive }) =>
-							clsxm(
-								'my-1 mr-1 grid size-9 place-items-center rounded-md transition-colors hover:bg-(--nav-item-surface-active) focus:bg-(--nav-item-surface-active)',
-								className,
-								{
-									'bg-(--nav-item-surface-active)': isActive,
-								},
-							)
-						}
+						className={clsxm(
+							'group relative my-1 mr-1 grid size-9 place-items-center rounded-md focus:outline-none',
+							className,
+						)}
 					>
-						{children}
+						<span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100 group-aria-[current=page]:opacity-100" />
+						<span className="relative">{children}</span>
 					</NavLink>
 				</Trigger>
 				<Content className="TooltipContent" sideOffset={5}>
