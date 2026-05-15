@@ -1,4 +1,47 @@
-@import "tailwindcss";
-@import "./theme.css";
+@import 'tailwindcss';
+@import './theme.css';
 @config "../../tailwind.config.ts";
-@variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer components {
+	.TooltipContent {
+		border-radius: var(--radius-md);
+		padding: --spacing(2) --spacing(3);
+		background-color: var(--color-neutral-950);
+		box-shadow:
+			hsl(206 22% 7% / 35%) 0px 10px 38px -10px,
+			hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+		user-select: none;
+		animation-duration: 400ms;
+		animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+		will-change: transform, opacity;
+	}
+	.dark .TooltipContent {
+		@media (prefers-color-scheme: dark) {
+			background-color: var(--color-neutral-50);
+		}
+	}
+
+	.TooltipArrow {
+		fill: var(--color-neutral-950);
+	}
+	.dark .TooltipArrow {
+		@media (prefers-color-scheme: dark) {
+			fill: var(--color-neutral-50);
+		}
+	}
+	.TooltipContent[data-state='delayed-open'][data-side='top'] {
+		animation-name: slideDownAndFade;
+	}
+
+	@keyframes slideDownAndFade {
+		from {
+			opacity: 0;
+			transform: translateY(-2px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+}

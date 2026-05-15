@@ -16,6 +16,8 @@ import {
 	useTheme,
 } from '@/utils/theme-provider'
 
+import { Navigation } from './components/navigation'
+
 import {
 	isRouteErrorResponse,
 	Links,
@@ -160,6 +162,7 @@ function App() {
 					<Navbar />
 					<Outlet />
 					<Footer />
+					<Navigation />
 				</LayoutRoot>
 
 				<ScrollRestoration nonce={nonce} />

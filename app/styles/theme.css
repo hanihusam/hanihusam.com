@@ -191,6 +191,9 @@
 	--btn-ghost-bg-focus: var(--color-sunset-50);
 	--btn-ghost-text: var(--color-neutral-800);
 	--btn-ghost-text-hover: var(--color-neutral-900);
+
+	/* Component — Nav item */
+	--nav-item-surface-active: var(--color-sunset-50);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -200,7 +203,8 @@
          Values below are estimated. Update after dark mode Figma pass.
    ───────────────────────────────────────────────────────────────────────── */
 
-[data-theme='dark'] {
+.dark *,
+.dark {
 	color-scheme: dark;
 
 	/* Filter Tag */
@@ -254,6 +258,9 @@
 	--btn-ghost-bg-focus: var(--color-sunset-900);
 	--btn-ghost-text: var(--color-neutral-50);
 	--btn-ghost-text-hover: var(--color-neutral-200);
+
+	/* Component — Nav item */
+	--nav-item-surface-active: var(--color-sunset-950);
 
 	/* Shadows — increased opacity on dark */
 	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);

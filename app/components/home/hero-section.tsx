@@ -1,10 +1,8 @@
-import { Button } from '@/components/button'
-import { ButtonText } from '@/components/button-text'
 import { Grid } from '@/components/grid'
 import { IconLink } from '@/components/icon-link'
 import { DribbbleIcon, GithubIcon, LinkedinIcon } from '@/components/icons'
-import { AnchorOrLink } from '@/components/links/anchor-or-link'
 import { H1, H2, H4, Paragraph } from '@/components/typography'
+import { ButtonLink } from '@/components/ui/button'
 import { externalLinks } from '@/external-links'
 import { getImageBuilder, getImgProps } from '@/utils/images'
 
@@ -18,7 +16,7 @@ export function HeroSection() {
 						<H1 className="text-secondary-500 dark:text-light">Han</H1>
 					</div>
 
-					<div className="h-2 w-20 bg-primary-500" />
+					<div className="bg-primary-500 h-2 w-20" />
 				</div>
 
 				<div className="flex items-start space-x-6">
@@ -80,7 +78,7 @@ export function HeroSection() {
 
 			<div className="col-span-full flex flex-col gap-8 self-stretch lg:col-span-4 lg:col-start-9">
 				<div className="flex flex-col gap-4">
-					<H4 className="block text-primary-500 md:hidden">
+					<H4 className="text-primary-500 block md:hidden">
 						Hi{' '}
 						<span aria-labelledby="hi emoji" role="img">
 							👋
@@ -101,12 +99,10 @@ export function HeroSection() {
 				</Paragraph>
 
 				<div className="flex space-x-2">
-					<AnchorOrLink to="links">
-						<Button>Reach Me</Button>
-					</AnchorOrLink>
-					<AnchorOrLink href="https://cv.hanihusam.com">
-						<ButtonText>See CV</ButtonText>
-					</AnchorOrLink>
+					<ButtonLink to="links">Reach Me</ButtonLink>
+					<ButtonLink href="https://cv.hanihusam.com" variant="ghost">
+						See CV
+					</ButtonLink>
 				</div>
 			</div>
 		</Grid>
