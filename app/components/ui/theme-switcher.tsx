@@ -1,4 +1,6 @@
 import { Text } from "@/components/typography";
+import { useRequestInfo } from "@/utils/request-info";
+import { THEME_FETCHER_KEY, useOptimisticThemeMode } from "@/utils/theme";
 
 import {
   Arrow,
@@ -7,43 +9,55 @@ import {
   Root,
   Trigger,
 } from "@radix-ui/react-tooltip";
+import { useFetcher } from "react-router";
 
 export default function ThemeSwitcher() {
+  const requestInfo = useRequestInfo();
+  const fetcher = useFetcher({ key: THEME_FETCHER_KEY });
+
+  const optimisticMode = useOptimisticThemeMode();
+  const mode = optimisticMode ?? requestInfo.userPrefs.theme;
+  const nextMode = mode === "dark" ? "light" : "dark";
   return (
     <Provider delayDuration={100}>
       <Root>
         <Trigger asChild>
-          <button
-            aria-live="polite"
-            className="toggle-theme-switcher group relative m-1 grid size-9 cursor-pointer place-items-center overflow-hidden rounded-md p-2 text-(--icon-primary) focus:outline-none"
-          >
-            <span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100" />
-            {/* Moon icon */}
-            <svg
-              id="moon-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="relative"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"
-                clipRule="evenodd"
-              />
-            </svg>
+          <fetcher.Form method="POST" action="/action/set-theme">
+            <input type="hidden" name="theme" value={nextMode} />
 
-            {/* Sun icon */}
-            <svg
-              id="sun-icon"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="relative"
+            <button
+              type="submit"
+              aria-live="polite"
+              className="toggle-theme-switcher group relative m-1 grid size-9 cursor-pointer place-items-center overflow-hidden rounded-md p-2 text-(--icon-primary) focus:outline-none"
             >
-              <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
-            </svg>
-          </button>
+              <span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100" />
+              {/* Moon icon */}
+              <svg
+                id="moon-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="relative"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.7-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z"
+                  clipRule="evenodd"
+                />
+              </svg>
+
+              {/* Sun icon */}
+              <svg
+                id="sun-icon"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="relative"
+              >
+                <path d="M12 2.25a.75.75 0 0 1 .75.75v2.25a.75.75 0 0 1-1.5 0V3a.75.75 0 0 1 .75-.75ZM7.5 12a4.5 4.5 0 1 1 9 0 4.5 4.5 0 0 1-9 0ZM18.894 6.166a.75.75 0 0 0-1.06-1.06l-1.591 1.59a.75.75 0 1 0 1.06 1.061l1.591-1.59ZM21.75 12a.75.75 0 0 1-.75.75h-2.25a.75.75 0 0 1 0-1.5H21a.75.75 0 0 1 .75.75ZM17.834 18.894a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 1 0-1.061 1.06l1.59 1.591ZM12 18a.75.75 0 0 1 .75.75V21a.75.75 0 0 1-1.5 0v-2.25A.75.75 0 0 1 12 18ZM7.758 17.303a.75.75 0 0 0-1.061-1.06l-1.591 1.59a.75.75 0 0 0 1.06 1.061l1.591-1.59ZM6 12a.75.75 0 0 1-.75.75H3a.75.75 0 0 1 0-1.5h2.25A.75.75 0 0 1 6 12ZM6.697 7.757a.75.75 0 0 0 1.06-1.06l-1.59-1.591a.75.75 0 0 0-1.061 1.06l1.59 1.591Z" />
+              </svg>
+            </button>
+          </fetcher.Form>
         </Trigger>
         <Content className="TooltipContent" sideOffset={5}>
           <Text

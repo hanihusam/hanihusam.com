@@ -55,16 +55,23 @@ light-mode {
 
 /* Toggle Switch Theme */
 .toggle-theme-switcher svg {
-  transition: 600ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
   transition-property: transform;
   grid-area: 1/1;
 }
-.toggle-theme-switcher:hover svg#moon-icon {
-  transform: translateY(0);
-}
-.toggle-theme-switcher:hover svg#sun-icon {
-  transform: translateY(150%);
-}
+
+/* Light mode (default): sun visible, moon hidden */
 .toggle-theme-switcher svg#moon-icon {
   transform: translateY(-150%);
+}
+.toggle-theme-switcher svg#sun-icon {
+  transform: translateY(0);
+}
+
+/* Dark mode: moon visible, sun hidden */
+.dark .toggle-theme-switcher svg#moon-icon {
+  transform: translateY(0);
+}
+.dark .toggle-theme-switcher svg#sun-icon {
+  transform: translateY(150%);
 }

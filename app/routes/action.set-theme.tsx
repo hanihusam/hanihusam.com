@@ -1,35 +1,43 @@
-import { getThemeSession } from '@/utils/theme.server'
-import { isTheme } from '@/utils/theme-provider'
+import { setTheme } from "@/utils/theme.server.ts";
+import { ThemeFormSchema } from "@/utils/theme.tsx";
 
-import { type Route } from './+types/action.set-theme'
+import { type Route } from "./+types/action.set-theme";
 
-import { data, redirect } from 'react-router'
+import { parseWithZod } from "@conform-to/zod/v4";
+import { data as json, redirect } from "react-router";
 
-export const action = async ({ request }: Route.ActionArgs) => {
-	const themeSession = await getThemeSession(request)
-	const requestText = await request.text()
-	const form = new URLSearchParams(requestText)
-	const theme = form.get('theme')
-
-	if (!isTheme(theme)) {
-		return data({
-			success: false,
-			message: `theme value of ${theme} is not a valid theme.`,
-		})
-	}
-
-	themeSession.setTheme(theme)
-
-	return data(
-		{ success: true },
-		{
-			headers: { 'Set-Cookie': await themeSession.commit() },
-		},
-	)
+export async function loader() {
+  return redirect("/");
 }
 
-export const loader = () => redirect('/', { status: 404 })
+export async function action({ request }: Route.ActionArgs) {
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch (error) {
+    if (error instanceof TypeError) {
+      return json({ error: "Invalid form body." }, { status: 400 });
+    }
+    throw error;
+  }
+
+  const submission = parseWithZod(formData, {
+    schema: ThemeFormSchema,
+  });
+  if (submission.status !== "success") {
+    return json(
+      { result: submission.reply() },
+      { status: submission.status === "error" ? 400 : 200 },
+    );
+  }
+  const { theme } = submission.value;
+
+  const responseInit = {
+    headers: { "set-cookie": setTheme(theme) },
+  };
+  return json({ success: true, submission }, responseInit);
+}
 
 export default function MarkRead() {
-	return <div>Oops... You should not see this.</div>
+  return <div>Oops... You should not see this.</div>;
 }
