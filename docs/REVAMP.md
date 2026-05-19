@@ -112,3 +112,40 @@ reset to `initial`, `--breakpoint-md: 640px`, `--breakpoint-lg: 1024px`,
 Installed `insiders` build supports v4 natively but is unstable. Typography
 prose config (`prose-light`, `prose-dark`, grid breakout) kept in JS — migrate
 when stable v4 typography releases.
+
+## 2026-05-14
+
+2026-05-14 | Phase 3 design system + button + typography complete | Tailwind v4
+config finalized (CSS-first, PostCSS updated, vite plugin). Button component
+aligned with Figma specs: per-variant focus rings + disabled bg, modern CSS var
+syntax. Typography layer simplified: H5/H6 removed, usages remapped to H3/H4.
+New `app/components/ui/` directory established. Added
+`types/third-party.d.ts` for third-party type augmentations.
+
+2026-05-14 | Button micro-interactions: press animation added |
+`active:scale-[0.97]` for tactile feedback, `transition` updated to animate both
+colors + transform, `ease-out` for interaction easing, `duration-250` → `duration-150`
+for snappy timing.
+
+2026-05-14 | Blog: Tag → FilterTag refactor + semantic tokens | Renamed
+`tag.tsx` → `filter-tag.tsx` with updated prop API (onChange callback).
+Added `--filter-tag-*` semantic tokens (light + dark) to `theme.css`.
+`typography.tsx` extended TextProps to support inner HTML for rich content.
+`writing._index.tsx` updated: Tag → FilterTag swap, H6 → H4 for topics label
+(aligns with simplified typography layer).
+
+## 2026-05-15
+
+2026-05-15 | Navigation component complete: new Navigation + NavigationItem |
+Hero section migrated to new `ButtonLink` component from `ui/button`. New
+`app/components/navigation.tsx` + `app/components/ui/navigation-item.tsx`
+integrated into root. Supporting tokens and styles added to tailwind.css and
+theme.css.
+
+2026-05-15 | Navigation rendering fixes: icon blur resolved + Navbar deleted |
+Removed `translate-x-[-50%]` centering that caused subpixel rasterization blur
+on icons (replaced with `inset-x-0 mx-auto w-fit` for integer pixel centering).
+`asChild` prop eliminates invalid nested `button>a` HTML structure. Nav item
+hover now transitions opacity on background child span (keeps icon on separate
+compositor layer). Tooltip animation-duration: `400ms` → `150ms`. Old
+`navbar.tsx` deleted, Navigation integrated in root.

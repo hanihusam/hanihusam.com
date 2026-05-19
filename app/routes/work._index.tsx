@@ -1,3 +1,3 @@
-import { redirect } from 'react-router'
+import { redirect } from "react-router";
 
-export const loader = () => redirect('/works', 301)
+export const loader = () => redirect("/works", 301);
