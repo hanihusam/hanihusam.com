@@ -149,3 +149,32 @@ on icons (replaced with `inset-x-0 mx-auto w-fit` for integer pixel centering).
 hover now transitions opacity on background child span (keeps icon on separate
 compositor layer). Tooltip animation-duration: `400ms` → `150ms`. Old
 `navbar.tsx` deleted, Navigation integrated in root.
+
+## 2026-05-19
+
+2026-05-19 | Dependency upgrades | react-router → v7, react/react-dom → v19,
+typescript, eslint, vitest, vite, and all related type packages upgraded to
+latest.
+
+2026-05-19 | tailwind.config.ts deleted; prose.css rewritten CSS-first |
+`tailwind.config.ts` removed entirely. All prose typography customization
+migrated to plain CSS in `prose.css` using `.prose.prose-light` and
+`.dark .dark\:prose-dark` selectors — no JS config or `--tw-prose-*` variables
+required.
+
+2026-05-19 | @tailwindcss/aspect-ratio removed | Plugin dropped; all
+`aspect-h-*`/`aspect-w-*` classes migrated to native Tailwind v4 `aspect-[w/h]`
+syntax in `article-card.tsx` and `writing.$slug.tsx`.
+
+2026-05-19 | Theme system overhauled | Replaced `theme-provider.tsx` with a
+client hints system (`client-hints.tsx`, `request-info.ts`, `theme.tsx`) for
+OS-preference-aware theme detection on first visit. `ThemeSwitcher` component
+added to `app/components/ui/`. Toggle cycle simplified: "system" removed as a
+clickable state — button now toggles dark↔light directly in one click.
+
+2026-05-19 | ThemeSwitcher icon animation refined | Icons animate on `.dark`
+class change (not hover). Easing changed from `ease-in-out-circ` to
+`ease-out-quart` (`cubic-bezier(0.165, 0.84, 0.44, 1)`) — icons enter/exit on
+user action so ease-out is correct. Duration `400ms` → `350ms`. Added
+`@media (prefers-reduced-motion: reduce)` to disable transition for users who
+prefer reduced motion.

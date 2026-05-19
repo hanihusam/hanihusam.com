@@ -55,7 +55,7 @@ light-mode {
 
 /* Toggle Switch Theme */
 .toggle-theme-switcher svg {
-  transition: 400ms cubic-bezier(0.785, 0.135, 0.15, 0.86);
+  transition: 350ms cubic-bezier(0.165, 0.84, 0.44, 1);
   transition-property: transform;
   grid-area: 1/1;
 }
@@ -74,4 +74,10 @@ light-mode {
 }
 .dark .toggle-theme-switcher svg#sun-icon {
   transform: translateY(150%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toggle-theme-switcher svg {
+    transition: none;
+  }
 }
