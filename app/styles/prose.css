@@ -1,3 +1,228 @@
+/* prose customization migrated from Tailwind config */
+.prose > * {
+  grid-column: 1 / -1;
+}
+
+.prose p,
+.prose > div {
+  margin-top: 0;
+  margin-bottom: 2rem;
+  font-size: 1.125rem;
+}
+
+.prose a {
+  text-decoration: none;
+}
+
+.prose a:hover,
+.prose a:focus {
+  text-decoration: underline;
+  outline: none;
+}
+
+.prose strong {
+  font-weight: 500;
+  font-size: 1.125rem;
+}
+
+.prose hr {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+}
+
+.prose pre {
+  color: var(--base05);
+  background-color: var(--base00);
+  margin-top: 0;
+  margin-bottom: 2rem;
+  margin-left: -10vw;
+  margin-right: -10vw;
+  padding: 2rem;
+  border-radius: 0;
+}
+
+.prose ul,
+.prose ol {
+  margin-top: 0;
+  margin-bottom: 2rem;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.prose h1,
+.prose h2 {
+  font-size: 1.5rem;
+  margin-top: 5rem;
+  margin-bottom: 2.5rem;
+}
+
+.prose h1:first-child,
+.prose h2:first-child {
+  margin-top: 0;
+}
+
+.prose h3 {
+  font-size: 1.25rem;
+  margin-top: 4rem;
+  margin-bottom: 2.5rem;
+}
+
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-size: 1.125rem;
+}
+
+.prose img {
+  margin-top: 0;
+  margin-bottom: 0;
+  border-radius: 0.5rem;
+}
+
+.prose blockquote {
+  font-weight: 400;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 2rem;
+  margin-top: 0;
+  margin-bottom: 2.5rem;
+  background-color: var(--color-neutral-950);
+}
+
+.prose blockquote p {
+  font-size: 1.25rem;
+}
+
+.prose blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* Light prose theme */
+.prose.prose-light {
+  color: var(--text-paragraph);
+}
+
+.prose.prose-light a {
+  color: var(--color-sunset-400);
+}
+
+.prose.prose-light strong {
+  color: var(--color-neutral-950);
+}
+
+.prose.prose-light hr {
+  border-color: var(--color-neutral-200);
+}
+
+.prose.prose-light code {
+  color: var(--color-neutral-800);
+}
+
+.prose.prose-light h1,
+.prose.prose-light h2,
+.prose.prose-light h3,
+.prose.prose-light h4,
+.prose.prose-light h5,
+.prose.prose-light h6,
+.prose.prose-light thead th {
+  color: var(--color-sunset-500);
+}
+
+.prose.prose-light blockquote {
+  color: var(--color-neutral-50);
+}
+
+.prose.prose-light thead,
+.prose.prose-light tbody tr {
+  border-bottom-color: var(--color-neutral-200);
+}
+
+/* Dark prose theme */
+.dark .dark\:prose-dark {
+  color: var(--text-paragraph);
+}
+
+.dark .dark\:prose-dark a {
+  color: var(--color-sunset-400);
+}
+
+.dark .dark\:prose-dark strong {
+  color: var(--color-neutral-50);
+}
+
+.dark .dark\:prose-dark hr {
+  border-color: var(--color-neutral-600);
+}
+
+.dark .dark\:prose-dark code {
+  color: var(--color-neutral-100);
+}
+
+.dark .dark\:prose-dark h1,
+.dark .dark\:prose-dark h2,
+.dark .dark\:prose-dark h3,
+.dark .dark\:prose-dark h4,
+.dark .dark\:prose-dark h5,
+.dark .dark\:prose-dark h6,
+.dark .dark\:prose-dark thead th {
+  color: var(--color-sunset-500);
+}
+
+.dark .dark\:prose-dark blockquote {
+  color: var(--color-neutral-50);
+}
+
+.dark .dark\:prose-dark thead,
+.dark .dark\:prose-dark tbody tr {
+  border-bottom-color: var(--color-neutral-600);
+}
+
+@media (min-width: 1024px) {
+  .prose > * {
+    grid-column: 3 / span 8;
+  }
+
+  .prose pre {
+    border-radius: 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
+    grid-column: 2 / span 10;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    font-weight: 500;
+  }
+
+  .prose h1,
+  .prose h2 {
+    font-size: 1.875rem;
+  }
+
+  .prose h3 {
+    font-size: 1.5rem;
+  }
+
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    font-size: 1.25rem;
+  }
+}
+
 /* code syntax highlighting */
 /* dark is default: */
 pre {
@@ -44,10 +269,6 @@ pre {
 */
 .prose {
   max-width: 50rem;
-}
-
-.prose a {
-  text-decoration: none;
 }
 
 .prose :where(h1, h2, h3, h4) {
@@ -325,7 +546,6 @@ pre {
 }
 
 .hash-anchor:after {
-  /* @apply text-primary-400 dark:text-primary-300 invisible absolute top-1/2 -right-5 -translate-y-1/2 text-lg; */
   color: var(--text-link);
   content: "#";
 }

@@ -1,34 +1,8 @@
 @import 'tailwindcss';
 @import './theme.css';
 @plugin "@tailwindcss/typography";
-@config "../../tailwind.config.ts";
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ── Prose color modifiers (v4 @utility + --tw-prose-* variables) ────────── */
-
-@utility prose-light {
-  --tw-prose-body: var(--text-paragraph);
-  --tw-prose-headings: var(--color-sunset-500);
-  --tw-prose-links: var(--color-sunset-400);
-  --tw-prose-bold: var(--color-neutral-950);
-  --tw-prose-hr: var(--color-neutral-200);
-  --tw-prose-quotes: var(--color-neutral-50);
-  --tw-prose-code: var(--color-neutral-800);
-  --tw-prose-th-borders: var(--color-neutral-200);
-  --tw-prose-td-borders: var(--color-neutral-200);
-}
-
-@utility prose-dark {
-  --tw-prose-body: var(--text-paragraph);
-  --tw-prose-headings: var(--color-sunset-500);
-  --tw-prose-links: var(--color-sunset-400);
-  --tw-prose-bold: var(--color-neutral-50);
-  --tw-prose-hr: var(--color-neutral-600);
-  --tw-prose-quotes: var(--color-neutral-50);
-  --tw-prose-code: var(--color-neutral-100);
-  --tw-prose-th-borders: var(--color-neutral-600);
-  --tw-prose-td-borders: var(--color-neutral-600);
-}
 
 @layer components {
 	.TooltipContent {
