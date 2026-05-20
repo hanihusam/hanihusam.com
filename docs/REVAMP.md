@@ -178,3 +178,21 @@ class change (not hover). Easing changed from `ease-in-out-circ` to
 user action so ease-out is correct. Duration `400ms` → `350ms`. Added
 `@media (prefers-reduced-motion: reduce)` to disable transition for users who
 prefer reduced motion.
+
+## 2026-05-20
+
+2026-05-20 | Footer redesign | Replaced icon-only social links (Dribbble,
+GitHub, LinkedIn via `IconLink`) with a centered layout: `Logo` component on
+top, text link row (About, Mail, GitHub, LinkedIn via `AnchorOrLink`), and a
+bottom row with tagline "Keep calm and stay humble." + copyright year using
+`Text variant="label"`. Dribbble link removed from footer contacts. `Grid` now
+rendered as `<footer>` element with `bottom-18 md:bottom-0` offset for mobile
+nav clearance.
+
+2026-05-20 | `app/components/ui/logo.tsx` added | New `Logo` SVG component
+extracted as a reusable React component. Accepts optional `className` prop for
+sizing (e.g. `w-8`). Used in the redesigned footer.
+
+2026-05-20 | `grid.tsx` Tailwind v4 important modifier fix | `!mx-0` →
+`mx-0!` in the `smFull` variant to match Tailwind v4 important-modifier
+syntax.
