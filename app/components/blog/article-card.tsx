@@ -1,11 +1,11 @@
+import { BlurrableImage } from "@/components/blurrable-image";
+import { AnchorOrLink } from "@/components/links/anchor-or-link";
+import { H4, Text } from "@/components/typography";
+import { ClipboardCopyButton } from "@/components/ui/clipboard-copy-button";
 import { type BlogFrontmatter, type InjectedMeta } from "@/types";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 
-import { BlurrableImage } from "../blurrable-image";
-import { H4, Text } from "../typography";
-
 import { format } from "date-fns";
-import { Link } from "react-router";
 
 type ArticleCardProps = {
   post: BlogFrontmatter & InjectedMeta;
@@ -30,10 +30,10 @@ function ArticleCard({
 
   return (
     <div className="relative w-full" onClick={onClick}>
-      <Link
+      <AnchorOrLink
         prefetch="intent"
         className="group peer relative block w-full focus:outline-none"
-        to={`/writing/${slug}`}
+        href={`/writing/${slug}`}
       >
         <BlurrableImage
           key={bannerCloudinaryId}
@@ -73,7 +73,12 @@ function ArticleCard({
             .join(" — ")}
         </Text>
         <H4 className="mt-2">{title}</H4>
-      </Link>
+      </AnchorOrLink>
+
+      <ClipboardCopyButton
+        value={slug}
+        className="absolute top-6 left-6 z-10"
+      />
     </div>
   );
 }
