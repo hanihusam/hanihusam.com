@@ -85,9 +85,9 @@ function Button({
     <button
       {...buttonProps}
       className={clsxm(
-        getBaseClassName({ className }),
         getVariantClassName(variant),
         getSizeClassName(size),
+        getBaseClassName({ className }),
       )}
     >
       <ButtonInner iconLeft={iconLeft} iconRight={iconRight}>

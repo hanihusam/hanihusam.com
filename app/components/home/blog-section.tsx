@@ -19,8 +19,8 @@ export function BlogSection({ title, subTitle, cta, posts }: BlogSectionProps) {
   return (
     <>
       <Header title={title} subTitle={subTitle} cta={cta} ctaUrl="/writing" />
-      <Spacer size="2xs" />
-      <Grid className="gap-10">
+      <Spacer size="lg" />
+      <Grid className="gap-6">
         {posts.map((post, idx) => (
           <div
             key={post.slug}

@@ -1,11 +1,11 @@
+import { BlurrableImage } from "@/components/blurrable-image";
+import { AnchorOrLink } from "@/components/links/anchor-or-link";
+import { H4, Text } from "@/components/typography";
+import { ClipboardCopyButton } from "@/components/ui/clipboard-copy-button";
 import { type BlogFrontmatter, type InjectedMeta } from "@/types";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 
-import { BlurrableImage } from "../blurrable-image";
-import { H4 } from "../typography";
-
 import { format } from "date-fns";
-import { Link } from "react-router";
 
 type ArticleCardProps = {
   post: BlogFrontmatter & InjectedMeta;
@@ -30,15 +30,15 @@ function ArticleCard({
 
   return (
     <div className="relative w-full" onClick={onClick}>
-      <Link
+      <AnchorOrLink
         prefetch="intent"
         className="group peer relative block w-full focus:outline-none"
-        to={`/writing/${slug}`}
+        href={`/writing/${slug}`}
       >
         <BlurrableImage
           key={bannerCloudinaryId}
           blurDataUrl={bannerBlurDataUrl}
-          className="aspect-[3/4] rounded-lg"
+          className="aspect-3/4 overflow-hidden rounded-lg"
           img={
             <img
               title={title}
@@ -61,21 +61,24 @@ function ArticleCard({
                   },
                 },
               )}
-              className="focus-ring w-full rounded-lg object-cover object-center transition"
+              className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-in-out motion-safe:group-hover:scale-105"
               loading="lazy"
             />
           }
         />
 
-        <H4 className="text-body-dark mt-8">
+        <Text as="p" variant="overline" className="mt-8">
           {[dateDisplay, readingTime?.text ?? "quick read"]
             .filter(Boolean)
             .join(" — ")}
-        </H4>
-        <H4 as="div" variant="secondary" className="mt-2">
-          {title}
-        </H4>
-      </Link>
+        </Text>
+        <H4 className="mt-2">{title}</H4>
+      </AnchorOrLink>
+
+      <ClipboardCopyButton
+        value={slug}
+        className="absolute top-6 left-6 z-10"
+      />
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import { clsxm } from "@/utils/clsxm";
 
+import { ButtonLink } from "./ui/button";
 import { Grid } from "./grid";
-import { H2, H3, H4 } from "./typography";
+import { H2, Text } from "./typography";
 
 import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
-import { Link } from "react-router";
 
 interface HeaderProps {
   title: string;
@@ -37,15 +37,18 @@ function Header({
         )}
       >
         <div className="flex flex-col space-y-2 self-stretch">
-          <H4>{subTitle}</H4>
-          <H2 variant="secondary">{title}</H2>
+          <H2 variant="primary">{title}</H2>
+          <Text variant="lead">{subTitle}</Text>
         </div>
 
         {cta && ctaUrl ? (
-          <Link className="group flex items-center space-x-6" to={ctaUrl}>
-            <H3>{cta}</H3>
-            <ArrowRightCircleIcon className="dark:text-light h-8 w-8 text-black duration-500 group-hover:translate-x-1.5" />
-          </Link>
+          <ButtonLink
+            variant="ghost"
+            href={ctaUrl}
+            iconRight={<ArrowRightCircleIcon />}
+          >
+            {cta}
+          </ButtonLink>
         ) : null}
       </div>
     </Grid>

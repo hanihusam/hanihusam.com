@@ -24,7 +24,7 @@ const contacts = [
 
 export function Footer() {
   return (
-    <Grid as="footer" className="bottom-18 gap-8 md:bottom-0">
+    <Grid as="footer" className="gap-8">
       <div className="col-span-full mx-auto flex flex-col items-center gap-y-4 md:pb-12">
         <Logo className="w-8" />
         <div className="flex items-center space-x-4">
