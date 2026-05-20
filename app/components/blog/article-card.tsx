@@ -38,7 +38,7 @@ function ArticleCard({
         <BlurrableImage
           key={bannerCloudinaryId}
           blurDataUrl={bannerBlurDataUrl}
-          className="aspect-3/4 rounded-lg"
+          className="aspect-3/4 overflow-hidden rounded-lg"
           img={
             <img
               title={title}
@@ -61,7 +61,7 @@ function ArticleCard({
                   },
                 },
               )}
-              className="focus-ring w-full rounded-lg object-cover object-center transition"
+              className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-in-out motion-safe:group-hover:scale-105"
               loading="lazy"
             />
           }
