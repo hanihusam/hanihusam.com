@@ -70,19 +70,24 @@ function BlurrableImage({
   });
 
   return (
-    <div {...rest}>
+    <div {...rest} className={clsxm(rest.className, "relative")}>
+      {jsImgEl}
       {blurDataUrl ? (
-        <>
+        <div
+          className={clsxm(
+            "pointer-events-none absolute inset-0 transition-opacity",
+            { "opacity-0": visible },
+          )}
+        >
           <img
             key={blurDataUrl}
             src={blurDataUrl}
-            className={img.props.className}
+            className="h-full w-full rounded-lg object-cover object-center"
             alt={img.props.alt}
           />
-          <div className={clsxm(img.props.className, "backdrop-blur-xl")} />
-        </>
+          <div className="absolute inset-0 rounded-lg backdrop-blur-xl" />
+        </div>
       ) : null}
-      {jsImgEl}
       <noscript>{img}</noscript>
     </div>
   );

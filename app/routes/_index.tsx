@@ -48,18 +48,14 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
   return (
     <React.Fragment>
       <HeroSection />
-      <AboutSection />
-      <Spacer size="lg" />
-      <ServicesSection />
+
       <Spacer size="lg" />
       <BlogSection
-        title="Find the latest of my writing here"
-        subTitle="blog"
-        cta="See the full blog"
+        title="Recent Writing"
+        subTitle="Find the latest of my writing here."
+        cta="See more posts"
         posts={featuredPosts}
       />
-      <Spacer size="lg" />
-      <CtaSection />
       <Spacer size="lg" />
     </React.Fragment>
   );

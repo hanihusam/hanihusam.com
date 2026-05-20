@@ -2,7 +2,7 @@ import { type BlogFrontmatter, type InjectedMeta } from "@/types";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 
 import { BlurrableImage } from "../blurrable-image";
-import { H4 } from "../typography";
+import { H4, Text } from "../typography";
 
 import { format } from "date-fns";
 import { Link } from "react-router";
@@ -38,7 +38,7 @@ function ArticleCard({
         <BlurrableImage
           key={bannerCloudinaryId}
           blurDataUrl={bannerBlurDataUrl}
-          className="aspect-[3/4] rounded-lg"
+          className="aspect-3/4 rounded-lg"
           img={
             <img
               title={title}
@@ -67,14 +67,12 @@ function ArticleCard({
           }
         />
 
-        <H4 className="text-body-dark mt-8">
+        <Text as="p" variant="overline" className="mt-8">
           {[dateDisplay, readingTime?.text ?? "quick read"]
             .filter(Boolean)
             .join(" — ")}
-        </H4>
-        <H4 as="div" variant="secondary" className="mt-2">
-          {title}
-        </H4>
+        </Text>
+        <H4 className="mt-2">{title}</H4>
       </Link>
     </div>
   );
