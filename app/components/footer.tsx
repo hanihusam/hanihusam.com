@@ -6,7 +6,7 @@ import { Paragraph, Text } from "./typography";
 const contacts = [
   {
     label: "About",
-    to: "/about",
+    href: "/about",
   },
   {
     label: "Mail",
@@ -29,12 +29,13 @@ export function Footer() {
         <Logo className="w-8" />
         <div className="flex items-center space-x-4">
           {contacts.map((contact) => (
-            <AnchorOrLink
-              key={contact.label}
-              to={contact.to}
-              href={contact.href}
-            >
-              <Paragraph>{contact.label}</Paragraph>
+            <AnchorOrLink key={contact.label} href={contact.href}>
+              <Paragraph
+                prose={false}
+                className="transition-colors hover:text-(--text-link) focus:text-(--text-link)"
+              >
+                {contact.label}
+              </Paragraph>
             </AnchorOrLink>
           ))}
         </div>
