@@ -1,10 +1,9 @@
 import * as React from "react";
 
-import { AboutSection } from "@/components/home/about-section";
+import { Footer } from "@/components/footer";
 import { BlogSection } from "@/components/home/blog-section";
-import { CtaSection } from "@/components/home/cta-section";
 import { HeroSection } from "@/components/home/hero-section";
-import { ServicesSection } from "@/components/home/services-section";
+import LayoutSecondary from "@/components/layout/layout-secondary";
 import { Spacer } from "@/components/spacer";
 import { getBlogsFeatured } from "@/utils/blog.server";
 
@@ -49,14 +48,17 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
     <React.Fragment>
       <HeroSection />
 
-      <Spacer size="lg" />
-      <BlogSection
-        title="Recent Writing"
-        subTitle="Find the latest of my writing here."
-        cta="See more posts"
-        posts={featuredPosts}
-      />
-      <Spacer size="lg" />
+      <LayoutSecondary>
+        <Spacer size="lg" />
+        <BlogSection
+          title="Recent Writing"
+          subTitle="Find the latest of my writing here."
+          cta="See more posts"
+          posts={featuredPosts}
+        />
+        <Spacer size="lg" />
+        <Footer />
+      </LayoutSecondary>
     </React.Fragment>
   );
 }

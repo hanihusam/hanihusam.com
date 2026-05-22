@@ -16,7 +16,7 @@ interface ButtonProps {
 
 function getBaseClassName({ className }: { className?: string }) {
   return clsxm(
-    "group relative inline-flex items-center justify-center",
+    "group relative inline-flex w-fit shrink-0 items-center justify-center",
     "font-medium transition duration-150 ease-out",
     "active:scale-[0.97]",
     "focus:outline-none",
@@ -52,9 +52,9 @@ function getVariantClassName(variant: ButtonVariant) {
 
 function getSizeClassName(size: ButtonSize) {
   return {
-    sm: "px-3 py-1.5 text-base gap-1",
-    md: "px-4 py-2.5 text-lg gap-1",
-    lg: "px-6 py-3 text-xl gap-1.5",
+    sm: "px-4 py-2 text-base gap-1",
+    md: "px-4 py-3 text-base gap-1",
+    lg: "px-6 py-3 text-lg gap-1.5",
   }[size];
 }
 
