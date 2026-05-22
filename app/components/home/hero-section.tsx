@@ -1,7 +1,7 @@
 import { Grid } from "@/components/grid";
 import { AnchorOrLink } from "@/components/links/anchor-or-link";
 import { Display, H3, Paragraph, Text } from "@/components/typography";
-import { Button, LinkButton } from "@/components/ui/button";
+import { Button, ButtonLink, LinkButton } from "@/components/ui/button";
 import Logo from "@/components/ui/logo";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 
@@ -12,7 +12,7 @@ import {
 
 export function HeroSection() {
   return (
-    <Grid className="mb-24 min-h-screen place-content-center pt-20">
+    <Grid className="min-h-screen place-content-center pt-20">
       <Logo className="absolute top-8" />
 
       <img
@@ -53,17 +53,17 @@ export function HeroSection() {
           </Text>
           <AnchorOrLink className="hidden md:inline-flex" to="about">
             <LinkButton className="relative inline-flex items-center justify-center gap-1 text-(--text-paragraph)">
-              <Paragraph>More about me</Paragraph>
+              <Paragraph as="span">More about me</Paragraph>
               <ArrowRightCircleIcon className="size-5 shrink-0" />
             </LinkButton>
           </AnchorOrLink>
           <div className="flex w-full gap-x-2 md:hidden">
-            <Button size="sm" iconRight={<ArrowDownIcon />}>
+            <ButtonLink to="#projects" size="sm" iconRight={<ArrowDownIcon />}>
               View My Works
-            </Button>
-            <Button size="sm" variant="ghost">
+            </ButtonLink>
+            <ButtonLink to="about" size="sm" variant="ghost">
               More about me
-            </Button>
+            </ButtonLink>
           </div>
         </div>
       </div>

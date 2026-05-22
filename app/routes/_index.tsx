@@ -1,7 +1,9 @@
 import * as React from "react";
 
+import { Footer } from "@/components/footer";
 import { BlogSection } from "@/components/home/blog-section";
 import { HeroSection } from "@/components/home/hero-section";
+import LayoutSecondary from "@/components/layout/layout-secondary";
 import { Spacer } from "@/components/spacer";
 import { getBlogsFeatured } from "@/utils/blog.server";
 
@@ -46,14 +48,17 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
     <React.Fragment>
       <HeroSection />
 
-      <Spacer size="lg" />
-      <BlogSection
-        title="Recent Writing"
-        subTitle="Find the latest of my writing here."
-        cta="See more posts"
-        posts={featuredPosts}
-      />
-      <Spacer size="lg" />
+      <LayoutSecondary>
+        <Spacer size="lg" />
+        <BlogSection
+          title="Recent Writing"
+          subTitle="Find the latest of my writing here."
+          cta="See more posts"
+          posts={featuredPosts}
+        />
+        <Spacer size="lg" />
+        <Footer />
+      </LayoutSecondary>
     </React.Fragment>
   );
 }
