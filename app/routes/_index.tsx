@@ -1,10 +1,7 @@
 import * as React from "react";
 
-import { AboutSection } from "@/components/home/about-section";
 import { BlogSection } from "@/components/home/blog-section";
-import { CtaSection } from "@/components/home/cta-section";
 import { HeroSection } from "@/components/home/hero-section";
-import { ServicesSection } from "@/components/home/services-section";
 import { Spacer } from "@/components/spacer";
 import { getBlogsFeatured } from "@/utils/blog.server";
 

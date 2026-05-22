@@ -1,108 +1,70 @@
 import { Grid } from "@/components/grid";
-import { IconLink } from "@/components/icon-link";
-import { DribbbleIcon, GithubIcon, LinkedinIcon } from "@/components/icons";
-import { H1, H2, H4, Paragraph } from "@/components/typography";
-import { ButtonLink } from "@/components/ui/button";
-import { externalLinks } from "@/external-links";
+import { AnchorOrLink } from "@/components/links/anchor-or-link";
+import { Display, H3, Paragraph, Text } from "@/components/typography";
+import { Button, LinkButton } from "@/components/ui/button";
+import Logo from "@/components/ui/logo";
 import { getImageBuilder, getImgProps } from "@/utils/images";
+
+import {
+  ArrowDownIcon,
+  ArrowRightCircleIcon,
+} from "@heroicons/react/24/outline";
 
 export function HeroSection() {
   return (
-    <Grid className="mb-24 h-auto pt-24 lg:min-h-[40rem] xl:mb-0">
-      <div className="hidden gap-16 lg:col-span-2 lg:col-start-1 lg:row-start-1 lg:flex lg:flex-col">
-        <div className="flex flex-col gap-6">
-          <div className="flex flex-col">
-            <H4 className="text-primary-500">Hi, I am</H4>
-            <H1 className="text-secondary-500 dark:text-light">Han</H1>
-          </div>
-
-          <div className="bg-primary-500 h-2 w-20" />
-        </div>
-
-        <div className="flex items-start space-x-6">
-          <IconLink
-            aria-label="Link to Linkedin profile"
-            href={externalLinks.linkedin}
-          >
-            <LinkedinIcon className="text-secondary-500 dark:text-light" />
-          </IconLink>
-          <IconLink
-            aria-label="Link to Github repository"
-            href={externalLinks.github}
-          >
-            <GithubIcon className="text-secondary-500 dark:text-light" />
-          </IconLink>
-          <IconLink
-            aria-label="Link to Dribbble profile"
-            href={externalLinks.dribbble}
-          >
-            <DribbbleIcon className="text-secondary-500 dark:text-light" />
-          </IconLink>
-        </div>
-      </div>
+    <Grid className="mb-24 min-h-screen place-content-center pt-20">
+      <Logo className="absolute top-8" />
 
       <img
-        className="col-span-full hidden lg:col-span-6 lg:col-start-3 lg:block"
+        className="absolute top-0 right-0 hidden h-auto w-87.5 translate-x-[25%] translate-y-[20vh] md:top-auto md:right-auto md:bottom-0 md:left-0 md:block md:w-lg md:translate-x-[-16%] md:translate-y-0 lg:left-1/2 lg:w-3xl lg:-translate-x-1/2"
         {...getImgProps(
           getImageBuilder(
-            "bapak2.dev/images/avatar-hani_ivyixv",
+            "bapak2.dev/images/avatar-front_l3oexq",
             "Avatar of Han large",
           ),
           {
-            widths: [560, 840, 1100, 1650, 2500, 2100, 3100],
+            widths: [350, 512, 700, 768, 1024, 1536],
             sizes: [
-              "(max-width:1023px) 80vw",
-              "(min-width:1024px) and (max-width:1620px) 67vw",
-              "1100px",
-            ],
-          },
-        )}
-      />
-      <img
-        className="col-span-full mx-auto mb-12 block lg:hidden"
-        {...getImgProps(
-          getImageBuilder(
-            "bapak2.dev/images/avatar-memoji_phntzo",
-            "Avatar of Han small",
-          ),
-          {
-            widths: [312, 560],
-            sizes: [
-              "(max-width:1023px) 80vw",
-              "(min-width:1024px) and (max-width:1620px) 67vw",
-              "1100px",
+              "(min-width: 1024px) 768px",
+              "(min-width: 768px) 512px",
+              "350px",
             ],
           },
         )}
       />
 
-      <div className="col-span-full flex flex-col gap-8 self-stretch lg:col-span-4 lg:col-start-9">
-        <div className="flex flex-col gap-4">
-          <H4 className="text-primary-500 block md:hidden">
-            Hi{" "}
-            <span aria-labelledby="hi emoji" role="img">
-              👋
-            </span>
-            , I am Han
-          </H4>
-          <H2 className="text-secondary-500 dark:text-light">
-            UI Engineer based on Yogyakarta, Indonesia
-          </H2>
+      <div className="col-span-full flex flex-col items-start gap-y-8 self-stretch md:h-[50vh] lg:flex-row lg:items-center">
+        <div className="flex flex-col justify-end gap-y-8 lg:h-77.5">
+          <Display>I'm Han</Display>
+          <Button
+            className="hidden self-start md:inline-flex"
+            iconRight={<ArrowDownIcon />}
+          >
+            View My Works
+          </Button>
         </div>
-
-        <Paragraph>
-          I am a multi-disciplinary Frontend Developer and UI Designer who have
-          experience creating projects in a various industry and have worked
-          with diverse clients from all over the world. I merge technical and
-          design skills to create innovative product with beautiful and
-          functional user experiences.
-        </Paragraph>
-
-        <div className="flex space-x-2">
-          <ButtonLink to="links">Reach Me</ButtonLink>
-          <ButtonLink href="https://cv.hanihusam.com" variant="ghost">
-            See CV
-          </ButtonLink>
+        <div className="flex w-full flex-col gap-y-4 md:ml-auto md:w-90 lg:w-100">
+          <H3 className="text-(--text-paragraph)">
+            A Frontend Engineer based in Yogyakarta, Indonesia.
+          </H3>
+          <Text variant="lead">
+            Engineer who designs. Designer who ships. End to end, with the Figma
+            files and commit history to prove it.
+          </Text>
+          <AnchorOrLink className="hidden md:inline-flex" to="about">
+            <LinkButton className="relative inline-flex items-center justify-center gap-1 text-(--text-paragraph)">
+              <Paragraph>More about me</Paragraph>
+              <ArrowRightCircleIcon className="size-5 shrink-0" />
+            </LinkButton>
+          </AnchorOrLink>
+          <div className="flex w-full gap-x-2 md:hidden">
+            <Button size="sm" iconRight={<ArrowDownIcon />}>
+              View My Works
+            </Button>
+            <Button size="sm" variant="ghost">
+              More about me
+            </Button>
+          </div>
         </div>
       </div>
     </Grid>
