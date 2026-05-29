@@ -3,6 +3,7 @@ import * as React from "react";
 import { Footer } from "@/components/footer";
 import { BlogSection } from "@/components/home/blog-section";
 import { HeroSection } from "@/components/home/hero-section";
+import { ProjectSection } from "@/components/home/project-section";
 import LayoutSecondary from "@/components/layout/layout-secondary";
 import { Spacer } from "@/components/spacer";
 import { getBlogsFeatured } from "@/utils/blog.server";
@@ -49,6 +50,15 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
       <HeroSection />
 
       <LayoutSecondary>
+        <Spacer size="lg" />
+        <Spacer size="lg" />
+        <ProjectSection
+          title="Featured Projects"
+          subTitle="A bunch of projects that I worked on."
+          cta="See more projects"
+          posts={featuredPosts}
+        />
+        <Spacer size="lg" />
         <Spacer size="lg" />
         <BlogSection
           title="Recent Writing"

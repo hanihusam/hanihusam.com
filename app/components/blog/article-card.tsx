@@ -38,7 +38,7 @@ function ArticleCard({
         <BlurrableImage
           key={bannerCloudinaryId}
           blurDataUrl={bannerBlurDataUrl}
-          className="aspect-3/4 overflow-hidden rounded-lg"
+          className="aspect-3/4 overflow-hidden rounded-xl"
           img={
             <img
               title={title}
