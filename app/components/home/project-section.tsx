@@ -66,17 +66,14 @@ export function ProjectSection({
       <Spacer size="lg" />
       <Grid className="gap-6">
         {projects.map((project, idx) => (
-          <div
+          <ProjectCard
             key={project.slug}
             className={clsxm("col-span-full", {
-              "hidden lg:block": idx >= 2,
+              "lg:flex-row-reverse": idx % 2 === 0,
+              "hidden lg:flex": idx >= 2,
             })}
-          >
-            <ProjectCard
-              className={idx % 2 === 0 ? "lg:flex-row-reverse" : ""}
-              project={project}
-            />
-          </div>
+            project={project}
+          />
         ))}
       </Grid>
     </>

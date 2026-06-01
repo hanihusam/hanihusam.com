@@ -31,13 +31,8 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
                     `image-${project.title}`,
                   ),
                   {
-                    widths: [280, 560, 840, 1100, 1300, 1650],
-                    sizes: [
-                      "(max-width:639px) 80vw",
-                      "(min-width:640px) and (max-width:1023px) 40vw",
-                      "(min-width:1024px) and (max-width:1620px) 25vw",
-                      "420px",
-                    ],
+                    widths: [284, 568],
+                    sizes: ["284px"],
                     transformations: {
                       background: "rgb:e6e9ee",
                       resize: {
@@ -67,13 +62,8 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
                     `image-${project.title}`,
                   ),
                   {
-                    widths: [280, 560, 840, 1100, 1300, 1650],
-                    sizes: [
-                      "(max-width:639px) 80vw",
-                      "(min-width:640px) and (max-width:1023px) 40vw",
-                      "(min-width:1024px) and (max-width:1620px) 25vw",
-                      "420px",
-                    ],
+                    widths: [280, 560, 840, 1100],
+                    sizes: ["(max-width:639px) 80vw", "(min-width:640px) 40vw"],
                     transformations: {
                       background: "rgb:e6e9ee",
                       resize: {

@@ -185,7 +185,7 @@
 
   /* Component — Button ghost */
   --btn-ghost-bg: transparent;
-  --btn-ghost-bg-hover: var(--color-neutral-100);
+  --btn-ghost-bg-hover: var(--color-neutral-200);
   --btn-ghost-bg-focus: var(--color-sunset-50);
   --btn-ghost-text: var(--color-neutral-800);
   --btn-ghost-text-hover: var(--color-neutral-900);
@@ -230,7 +230,7 @@
   --text-inverse: var(--color-neutral-950);
 
   /* Border */
-  --border-primary: var(--color-neutral-800); /* fixed — was wrong in Figma */
+  --border-primary: var(--color-neutral-700); /* fixed — was wrong in Figma */
   --border-default: var(--color-neutral-700); /* fixed — was wrong in Figma */
   --border-focus: var(--color-sunset-400);
 
@@ -255,7 +255,7 @@
   --btn-ghost-bg-hover: var(--color-neutral-800); /* fixed — was neutral/100 */
   --btn-ghost-bg-focus: var(--color-sunset-900);
   --btn-ghost-text: var(--color-neutral-50);
-  --btn-ghost-text-hover: var(--color-neutral-200);
+  --btn-ghost-text-hover: var(--color-neutral-100);
 
   /* Component — Nav item */
   --nav-item-surface-active: var(--color-sunset-950);
