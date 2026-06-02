@@ -1,12 +1,12 @@
 import { Grid } from "@/components/grid";
 import { Header } from "@/components/header";
 import { Spacer } from "@/components/spacer";
-import { type BlogFrontmatter, type InjectedMeta } from "@/types";
+import { type InjectedMeta, type ProjectFrontmatter } from "@/types";
 import { clsxm } from "@/utils/clsxm";
 
 import { ProjectCard } from "../projects/project-card";
 
-type Posts = BlogFrontmatter & InjectedMeta;
+type Posts = ProjectFrontmatter & InjectedMeta;
 
 type ProjectSectionProps = {
   title: string;
