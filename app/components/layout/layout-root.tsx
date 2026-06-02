@@ -4,7 +4,7 @@ type LayoutRootProps = {
 
 function LayoutRoot({ children }: LayoutRootProps) {
   return (
-    <div className="relative flex min-h-screen flex-col overflow-hidden bg-(--surface-primary) pb-24 md:pb-0">
+    <div className="relative flex min-h-screen flex-col overflow-hidden bg-(--surface-primary)">
       {children}
     </div>
   );

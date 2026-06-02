@@ -62,7 +62,6 @@ export type ProjectFrontmatter = {
   bannerCloudinaryId: string;
   link?: string;
   github?: string;
-  youtube?: string;
   bannerBlurDataUrl?: string;
 };
 
