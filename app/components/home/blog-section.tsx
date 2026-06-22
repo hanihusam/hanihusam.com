@@ -32,6 +32,7 @@ export function BlogSection({ title, subTitle, cta, posts }: BlogSectionProps) {
           </div>
         ))}
       </Grid>
+      <Spacer size="lg" />
     </>
   );
 }
