@@ -1,38 +1,49 @@
-import { externalLinks } from '@/external-links'
+import { AnchorOrLink } from "./links/anchor-or-link";
+import Logo from "./ui/logo";
+import { Grid } from "./grid";
+import { Paragraph, Text } from "./typography";
 
-import { Grid } from './grid'
-import { IconLink } from './icon-link'
-import { DribbbleIcon, GithubIcon, LinkedinIcon } from './icons'
-import { Paragraph } from './typography'
+const contacts = [
+  {
+    label: "About",
+    href: "/about",
+  },
+  {
+    label: "Mail",
+    href: "mailto:me@hanihusam.com",
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/hanihusam",
+  },
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/hanihusam/",
+  },
+];
 
 export function Footer() {
-	return (
-		<Grid className="gap-8">
-			<hr className="col-span-full w-full border-accent" />
-			<div className="col-span-full mb-8 flex flex-col gap-4 lg:flex-row lg:justify-between">
-				<Paragraph className="text-dark dark:text-light">{`© ${new Date().getFullYear()} hanihusam. All rights reserved.`}</Paragraph>
-
-				<div className="flex gap-6">
-					<IconLink
-						aria-label="Link to Linkedin profile"
-						href={externalLinks.linkedin}
-					>
-						<LinkedinIcon className="h-6 w-6 text-secondary-500 dark:text-light" />
-					</IconLink>
-					<IconLink
-						aria-label="Link to Github repository"
-						href={externalLinks.github}
-					>
-						<GithubIcon className="h-6 w-6 text-secondary-500 dark:text-light" />
-					</IconLink>
-					<IconLink
-						aria-label="Link to Dribbble profile"
-						href={externalLinks.dribbble}
-					>
-						<DribbbleIcon className="h-6 w-6 text-secondary-500 dark:text-light" />
-					</IconLink>
-				</div>
-			</div>
-		</Grid>
-	)
+  return (
+    <Grid as="footer" className="gap-8">
+      <div className="col-span-full mx-auto flex flex-col items-center gap-y-4 md:pb-12">
+        <Logo className="w-8" />
+        <div className="flex items-center space-x-4">
+          {contacts.map((contact) => (
+            <AnchorOrLink key={contact.label} href={contact.href}>
+              <Paragraph
+                prose={false}
+                className="transition-colors hover:text-(--text-link) focus:text-(--text-link)"
+              >
+                {contact.label}
+              </Paragraph>
+            </AnchorOrLink>
+          ))}
+        </div>
+      </div>
+      <div className="col-span-full mb-8 flex flex-row justify-between">
+        <Text variant="label">Keep calm and stay humble.</Text>
+        <Text variant="label">{`© ${new Date().getFullYear()}`}</Text>
+      </div>
+    </Grid>
+  );
 }

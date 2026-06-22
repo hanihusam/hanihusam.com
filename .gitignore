@@ -16,3 +16,7 @@ app/**/*.ignore.*
 /other/cache.db
 
 .react-router/
+
+# Claude Code
+.claude/
+.playwright-mcp/

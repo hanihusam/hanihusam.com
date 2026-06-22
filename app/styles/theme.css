@@ -1,0 +1,301 @@
+/*
+ * hanihusam.com — Design System v2
+ * Tailwind v4 @theme + semantic token layer
+ *
+ * SOURCE OF TRUTH: Figma file hanihusam-site-v2
+ * Synced: 2026-04-22
+ *
+ * NAMING CONVENTION:
+ *   Figma uses slash  → color/brand/sunset/500
+ *   CSS uses hyphens  → --color-sunset-500
+ *   They map 1:1, separator is the only difference.
+ *
+ * LAYER RULES:
+ *   @theme       = primitives (Figma: Primitives collection)
+ *   :root        = semantic tokens, light mode (Figma: Tokens → Light)
+ *   [data-theme] = semantic tokens, dark mode  (Figma: Tokens → Dark)
+ *   Components reference semantic tokens ONLY, never primitives directly.
+ *
+ * NOTE ON REDUNDANCY:
+ *   Tokens already covered by Tailwind v4 defaults with identical values are
+ *   omitted here. Only overrides and project-specific additions are declared.
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   PRIMITIVES
+   Figma collection: Primitives
+   These generate Tailwind utilities: bg-sunset-500, text-sky-600, etc.
+   ───────────────────────────────────────────────────────────────────────── */
+
+@theme {
+  /* Sunset — warm orange, primary brand */
+  --color-sunset-50: #fdebde;
+  --color-sunset-100: #fbd7bd;
+  --color-sunset-200: #f2bb97;
+  --color-sunset-300: #ec9e6a;
+  --color-sunset-400: #e6813e;
+  --color-sunset-500: #d4651b; /* primary CTA */
+  --color-sunset-600: #a75016; /* hover */
+  --color-sunset-700: #8b4212;
+  --color-sunset-800: #72360f;
+  --color-sunset-900: #5e2d0d;
+  --color-sunset-950: #381a07;
+
+  /* Sky — blue-slate, secondary brand */
+  --color-sky-50: #f1f5fa;
+  --color-sky-100: #d9e4f2; /* project card gradient */
+  --color-sky-200: #b3c9e5;
+  --color-sky-300: #87a5d1;
+  --color-sky-400: #7398c7;
+  --color-sky-500: #55749b;
+  --color-sky-600: #45577b; /* title text, secondary button */
+  --color-sky-700: #304258;
+  --color-sky-800: #1f2a38;
+  --color-sky-900: #18212d;
+  --color-sky-950: #0d1219;
+
+  /* Neutral-warm — body text, backgrounds, borders */
+  /* Overrides Tailwind's oklch neutral scale with project hex values */
+  --color-neutral-50: #ffffff; /* white — surface/primary light */
+  --color-neutral-100: #f2f3f2; /* surface/secondary light */
+  --color-neutral-200: #e0e3e2; /* border/primary */
+  --color-neutral-300: #cbd1d1; /* border/default */
+  --color-neutral-400: #a2a8ac;
+  --color-neutral-500: #7a8391; /* text/caption, text/overline */
+  --color-neutral-600: #5f6571;
+  --color-neutral-700: #50555f; /* text/label */
+  --color-neutral-800: #434343; /* button ghost text */
+  --color-neutral-900: #46434e; /* text/paragraph (warm dark) */
+  --color-neutral-950: #28262d; /* surface/primary dark */
+
+  /* Intent */
+  --color-danger-400: #f87171;
+  --color-danger-500: #ef4444;
+  --color-success-400: #4ade80;
+  --color-success-500: #22c55e;
+  --color-warning-400: #fbbf24;
+  --color-warning-500: #f59e0b;
+
+  /* ─── Typography ──────────────────────────────────────────────────────── */
+
+  /* Font families — override Tailwind defaults with project fonts */
+  --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "Fira Code", monospace;
+
+  /* Font weights — medium/bold/black identical to Tailwind, omitted.
+	   Only `regular` is kept: Tailwind uses `normal` for 400, not `regular`. */
+  --font-weight-regular: 400;
+
+  /* ─── Spacing ─────────────────────────────────────────────────────────
+	   Tailwind v4 generates all numeric steps dynamically from --spacing: 0.25rem
+	   (p-1, m-4, w-0.5, gap-2.5, etc.) — no named declarations needed.
+	   Only vw-based values are declared here as they have no dynamic equivalent. */
+  --spacing-5vw: 5vw; /* page margin pull */
+  --spacing-8vw: 8vw; /* hero image offset */
+  --spacing-10vw: 10vw; /* page margin */
+
+  /* ─── Shadow — sm/md differ from Tailwind; lg/xl are identical and omitted */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md:
+    0 4px 6px -4px rgb(0 0 0 / 0.1), 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+  /* ─── Layout */
+  --container-prose: 45rem; /* 720px  — body copy max-width */
+  --container-site: 72rem; /* 1152px — content column */
+
+  /* ─── Max-width */
+  --max-width-8xl: 96rem;
+
+  /* ─── Breakpoints — override Tailwind defaults with project values */
+  --breakpoint-md: 640px; /* Tailwind default: 48rem (768px) */
+  --breakpoint-lg: 1024px; /* Tailwind default: 64rem (1024px) — same px, kept explicit */
+  --breakpoint-xl: 1440px; /* Tailwind default: 80rem (1280px) */
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SEMANTIC TOKENS — LIGHT
+   Figma collection: Tokens → Light mode (60:0)
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* Filter Tag */
+  --filter-tag-surface-default: var(--color-neutral-50);
+  --filter-tag-text-default: var(--color-neutral-700);
+  --filter-tag-surface-selected: var(--color-sunset-50);
+  --filter-tag-text-selected: var(--color-neutral-50);
+  --filter-tag-surface-disabled: rgb(255 255 255 / 0.5);
+  --filter-tag-text-disabled: rgb(80 85 95 / 0.5);
+
+  /* Line heights — pixel-based (rem), different from Tailwind's unitless ratios */
+  --display-leading: 115.2px;
+  --h1-leading-desktop: 60px;
+  --h2-leading-desktop: 45px;
+  --h3-leading-desktop: 37.5px;
+  --h4-leading-desktop: 33px;
+  --h1-leading-mobile: 45px;
+  --h2-leading-mobile: 37.5px;
+  --h3-leading-mobile: 33px;
+  --h4-leading-mobile: 27.5px;
+  --paragraph-leading: 20px;
+  --caption-leading: 18px;
+  --lead-leading: 25.2px;
+  --label-leading: 12px;
+
+  /* Surface */
+  --surface-primary: var(--color-neutral-50); /* neutral/50 → white   */
+  --surface-secondary: var(--color-neutral-100); /* neutral/100          */
+  --surface-thumbnail: var(--color-sky-100); /* sky/100 → #d9e4f2    */
+
+  /* Text */
+  --text-title-primary: var(--color-sky-600); /* sky/600 → #45577b   */
+  --text-title-secondary: var(
+    --color-sunset-400
+  ); /* sunset/400 → orange accent */
+  --text-paragraph: var(--color-neutral-900); /* neutral/900 → #46434e */
+  --text-lead: var(--color-neutral-900); /* same as paragraph   */
+  --text-caption: var(--color-neutral-500); /* neutral/500         */
+  --text-overline: var(--color-neutral-500); /* neutral/500         */
+  --text-label: var(--color-neutral-700); /* neutral/700         */
+  --text-code: var(--color-neutral-800); /* neutral/800         */
+  --text-link: var(--color-sky-600); /* sky/600 (added)     */
+  --text-inverse: var(--color-neutral-50); /* white (added)       */
+
+  /* Border */
+  --border-primary: var(--color-neutral-200); /* #e0e3e2 */
+  --border-default: var(--color-neutral-300); /* #cbd1d1 */
+  --border-focus: var(--color-sunset-500); /* brand focus ring */
+
+  /* Icon */
+  --icon-primary: var(--color-neutral-900);
+  --icon-secondary: var(--color-neutral-400);
+
+  /* Component — Button primary (sunset) */
+  --btn-primary-bg: var(--color-sunset-500);
+  --btn-primary-bg-hover: var(--color-sunset-600);
+  --btn-primary-bg-disabled: var(--color-sunset-300);
+  --btn-primary-text: var(--color-neutral-50);
+
+  /* Component — Button secondary (sky) */
+  --btn-secondary-bg: var(--color-sky-600);
+  --btn-secondary-bg-hover: var(--color-sky-700);
+  --btn-secondary-bg-disabled: var(--color-sky-300);
+  --btn-secondary-text: var(--color-neutral-50);
+
+  /* Component — Button ghost */
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: var(--color-neutral-200);
+  --btn-ghost-bg-focus: var(--color-sunset-50);
+  --btn-ghost-text: var(--color-neutral-800);
+  --btn-ghost-text-hover: var(--color-neutral-900);
+
+  /* Component — Nav item */
+  --nav-item-surface-active: var(--color-sunset-50);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SEMANTIC TOKENS — DARK
+   Figma collection: Tokens → Dark mode (60:1)
+   NOTE: Dark mode not yet fully designed in Figma.
+         Values below are estimated. Update after dark mode Figma pass.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.dark *,
+.dark {
+  color-scheme: dark;
+
+  /* Filter Tag */
+  --filter-tag-surface-default: var(--color-neutral-800);
+  --filter-tag-text-default: var(--color-neutral-300);
+  --filter-tag-text-disabled: rgb(255 255 255 / 0.5);
+
+  /* Surface */
+  --surface-primary: var(--color-neutral-950); /* #28262d   */
+  --surface-secondary: var(--color-neutral-900); /* #46434e — warm dark */
+  --surface-thumbnail: var(--color-sky-800); /* #1f2a38  */
+
+  /* Text */
+  --text-title-primary: var(--color-neutral-100); /* near-white */
+  --text-title-secondary: var(
+    --color-sunset-400
+  ); /* same — orange reads well on dark */
+  --text-paragraph: var(--color-neutral-200); /* #e0e3e2    */
+  --text-lead: var(--color-neutral-200);
+  --text-caption: var(--color-neutral-400); /* #a2a8ac    */
+  --text-overline: var(--color-neutral-400);
+  --text-label: var(--color-neutral-300); /* #cbd1d1    */
+  --text-code: var(--color-neutral-200);
+  --text-link: var(--color-sky-400); /* lighter on dark */
+  --text-inverse: var(--color-neutral-950);
+
+  /* Border */
+  --border-primary: var(--color-neutral-700); /* fixed — was wrong in Figma */
+  --border-default: var(--color-neutral-700); /* fixed — was wrong in Figma */
+  --border-focus: var(--color-sunset-400);
+
+  /* Icon */
+  --icon-primary: var(--color-neutral-200);
+  --icon-secondary: var(--color-neutral-600); /* fixed — was wrong in Figma */
+
+  /* Component — Button primary */
+  --btn-primary-bg: var(--color-sunset-500); /* same — brand color */
+  --btn-primary-bg-hover: var(--color-sunset-400);
+  --btn-primary-bg-disabled: var(--color-sunset-700);
+  --btn-primary-text: var(--color-neutral-50);
+
+  /* Component — Button secondary */
+  --btn-secondary-bg: var(--color-sky-600);
+  --btn-secondary-bg-hover: var(--color-sky-500);
+  --btn-secondary-bg-disabled: var(--color-sky-800);
+  --btn-secondary-text: var(--color-neutral-50);
+
+  /* Component — Button ghost */
+  --btn-ghost-bg: transparent;
+  --btn-ghost-bg-hover: var(--color-neutral-800); /* fixed — was neutral/100 */
+  --btn-ghost-bg-focus: var(--color-sunset-900);
+  --btn-ghost-text: var(--color-neutral-50);
+  --btn-ghost-text-hover: var(--color-neutral-100);
+
+  /* Component — Nav item */
+  --nav-item-surface-active: var(--color-sunset-950);
+
+  /* Shadows — increased opacity on dark */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md:
+    0 4px 6px -4px rgb(0 0 0 / 0.4), 0 10px 15px -3px rgb(0 0 0 / 0.4);
+  --shadow-lg:
+    0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+  --shadow-xl:
+    0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   REDUCED MOTION
+   ───────────────────────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+    --duration-slow: 0ms;
+    --duration-slower: 0ms;
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   BASE
+   ───────────────────────────────────────────────────────────────────────── */
+
+html {
+  font-family: var(--font-sans);
+  background-color: var(--surface-primary);
+  color: var(--text-paragraph);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* View Transitions — native, no library needed */
+@view-transition {
+  navigation: auto;
+}

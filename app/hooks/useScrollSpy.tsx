@@ -1,57 +1,69 @@
-import * as React from 'react'
-
-import throttle from 'lodash.throttle'
+import * as React from "react";
 
 // originally based on
 // https://github.com/NotionX/react-notion-x/blob/master/packages/react-notion-x/src/block.tsx#L128-L161
 
+function throttle<T extends (...args: unknown[]) => void>(
+  fn: T,
+  delay: number,
+): T {
+  let last = 0;
+  return ((...args) => {
+    const now = Date.now();
+    if (now - last >= delay) {
+      last = now;
+      fn(...args);
+    }
+  }) as T;
+}
+
 export default function useScrollSpy() {
-	const [activeSection, setActiveSection] = React.useState<string | null>(null)
-	const throttleMs = 100
+  const [activeSection, setActiveSection] = React.useState<string | null>(null);
+  const throttleMs = 100;
 
-	const actionSectionScrollSpy = throttle(() => {
-		const sections = document.getElementsByClassName('hash-anchor')
+  const actionSectionScrollSpy = throttle(() => {
+    const sections = document.getElementsByClassName("hash-anchor");
 
-		let prevBBox = null
-		let currentSectionId = activeSection
+    let prevBBox = null;
+    let currentSectionId = activeSection;
 
-		for (let i = 0; i < sections.length; ++i) {
-			const section = sections[i]
+    for (let i = 0; i < sections.length; ++i) {
+      const section = sections[i];
 
-			if (!currentSectionId) {
-				currentSectionId = section?.getAttribute('href')?.split('#')[1] ?? null
-			}
+      if (!currentSectionId) {
+        currentSectionId = section?.getAttribute("href")?.split("#")[1] ?? null;
+      }
 
-			const bbox = section?.getBoundingClientRect()
-			if (!bbox) continue
+      const bbox = section?.getBoundingClientRect();
+      if (!bbox) continue;
 
-			const prevHeight = prevBBox ? bbox.top - prevBBox.bottom : 0
-			const offset = Math.max(200, prevHeight / 4)
+      const prevHeight = prevBBox ? bbox.top - prevBBox.bottom : 0;
+      const offset = Math.max(200, prevHeight / 4);
 
-			// GetBoundingClientRect returns values relative to viewport
-			if (bbox.top - offset < 0) {
-				currentSectionId = section?.getAttribute('href')?.split('#')[1] ?? null
+      // GetBoundingClientRect returns values relative to viewport
+      if (bbox.top - offset < 0) {
+        currentSectionId = section?.getAttribute("href")?.split("#")[1] ?? null;
 
-				prevBBox = bbox
-				continue
-			}
+        prevBBox = bbox;
+        continue;
+      }
 
-			// No need to continue loop, if last element has been detected
-			break
-		}
+      // No need to continue loop, if last element has been detected
+      break;
+    }
 
-		setActiveSection(currentSectionId)
-	}, throttleMs)
+    setActiveSection(currentSectionId);
+  }, throttleMs);
 
-	React.useEffect(() => {
-		window.addEventListener('scroll', actionSectionScrollSpy)
+  React.useEffect(() => {
+    window.addEventListener("scroll", actionSectionScrollSpy);
 
-		actionSectionScrollSpy()
+    actionSectionScrollSpy();
 
-		return () => {
-			window.removeEventListener('scroll', actionSectionScrollSpy)
-		}
-	}, [actionSectionScrollSpy])
+    return () => {
+      window.removeEventListener("scroll", actionSectionScrollSpy);
+    };
+  }, [actionSectionScrollSpy]);
 
-	return activeSection
+  return activeSection;
 }
