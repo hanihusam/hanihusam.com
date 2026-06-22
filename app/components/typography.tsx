@@ -38,7 +38,8 @@ type TextProps = {
 );
 
 const fontSize = {
-  display: "font-black text-8xl leading-(--display-leading)",
+  display:
+    "font-black text-5xl md:text-8xl md:leading-(--display-leading) leading-(--h1-leading-desktop)",
   h1: "font-black text-4xl md:text-5xl leading-(--h1-leading-mobile) md:leading-(--h1-leading-desktop) md:text-5xl",
   h2: "font-bold text-3xl md:text-4xl leading-(--h2-leading-mobile) md:leading-(--h2-leading-desktop)",
   h3: "font-bold text-2xl md:text-3xl leading-(--h3-leading-mobile) md:leading-(--h3-leading-desktop)",

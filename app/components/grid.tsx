@@ -1,5 +1,3 @@
-import * as React from "react";
-
 import { clsxm } from "@/utils/clsxm";
 
 interface GridProps {
@@ -14,25 +12,23 @@ interface GridProps {
   featured?: boolean;
 }
 
-const Grid = React.forwardRef<HTMLElement, GridProps>(function Grid(
-  {
-    children,
-    className,
-    as: Tag = "div",
-    featured,
-    nested,
-    smFull,
-    rowGap,
-    id,
-  },
+const Grid = function Grid({
+  children,
+  className,
+  as: Tag = "div",
+  featured,
+  nested,
+  smFull,
+  rowGap,
+  id,
   ref,
-) {
+}: GridProps & { ref?: React.RefObject<HTMLElement | null> }) {
   return (
     <Tag
       className={clsxm("relative", {
-        "mx-10vw": !nested,
+        "mx-8vw": !nested,
         "w-full": nested,
-        "md:mx-10vw mx-0! w-full md:w-auto": smFull,
+        "md:mx-8vw mx-0! w-full md:w-auto": smFull,
         "py-10 md:py-24 lg:pt-36 lg:pb-40": featured,
       })}
       id={id}
@@ -58,6 +54,6 @@ const Grid = React.forwardRef<HTMLElement, GridProps>(function Grid(
       </div>
     </Tag>
   );
-});
+};
 
 export { Grid };
