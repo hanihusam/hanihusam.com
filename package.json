@@ -70,7 +70,7 @@
     "cross-env": "^7.0.3",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
-    "esbuild": "^0.25.4",
+    "esbuild": "^0.28.1",
     "execa": "^9.5.2",
     "express": "^5.1.0",
     "gray-matter": "^4.0.3",
