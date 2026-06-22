@@ -1,12 +1,13 @@
 import * as React from "react";
 
 import { Footer } from "@/components/footer";
-import { BlogSection } from "@/components/home/blog-section";
 import { HeroSection } from "@/components/home/hero-section";
 import { ProjectSection } from "@/components/home/project-section";
+import { SubstackSection } from "@/components/home/substack-section";
 import LayoutSecondary from "@/components/layout/layout-secondary";
 import { Spacer } from "@/components/spacer";
 import { getBlogsFeatured } from "@/utils/blog.server";
+import { getFeaturedSubstackPosts } from "@/utils/substack.server";
 
 import { type Route } from "./+types/_index";
 
@@ -20,18 +21,22 @@ export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
 export const loader = async ({ request }: Route.LoaderArgs) => {
   const timings = {};
 
-  const featuredPosts = await getBlogsFeatured(
-    [
-      "my-first-1k-upwork",
-      "for-you-who-wants-to-be-freelancer",
-      "why-i-become-freelancer",
-    ],
-    { request, timings },
-  );
+  const [featuredPosts, substackPosts] = await Promise.all([
+    getBlogsFeatured(
+      [
+        "my-first-1k-upwork",
+        "for-you-who-wants-to-be-freelancer",
+        "why-i-become-freelancer",
+      ],
+      { request, timings },
+    ),
+    getFeaturedSubstackPosts(3),
+  ]);
 
   return data(
     {
       featuredPosts,
+      substackPosts,
     },
     {
       headers: {
@@ -43,7 +48,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function IndexRoute({ loaderData }: Route.ComponentProps) {
-  const { featuredPosts } = loaderData;
+  const { featuredPosts, substackPosts } = loaderData;
 
   return (
     <React.Fragment>
@@ -60,11 +65,11 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
         />
         <Spacer size="lg" />
         <Spacer size="lg" />
-        <BlogSection
+        <SubstackSection
           title="Recent Writing"
           subTitle="Find the latest of my writing here."
-          cta="See more posts"
-          posts={featuredPosts}
+          cta="Read on Substack"
+          posts={substackPosts}
         />
         <Spacer size="lg" />
         <Footer />
