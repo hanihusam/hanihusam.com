@@ -232,7 +232,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
 
   return (
     <React.Fragment>
-      <Spacer size="xs" />
+      <Spacer size="sm" />
 
       <Grid>
         <Link
@@ -244,7 +244,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
         </Link>
       </Grid>
 
-      <Spacer size="xs" />
+      <Spacer size="sm" />
 
       <BlogTitle
         title={frontmatter.title}
@@ -256,7 +256,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
           .join(" — ")}`}
       />
 
-      <Spacer size="xs" />
+      <Spacer size="sm" />
 
       {frontmatter.bannerCloudinaryId ? (
         <Grid>
@@ -293,7 +293,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
         </Grid>
       ) : null}
 
-      <Spacer size="xs" />
+      <Spacer size="sm" />
 
       <div className="mx-10vw">
         <section className="mx-auto max-w-7xl lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
@@ -312,7 +312,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
           </aside>
         </section>
 
-        <Spacer size="xs" />
+        <Spacer size="sm" />
 
         <div className="flex flex-col items-center justify-center space-y-5">
           <H4 className="dark:text-light text-black">
@@ -336,7 +336,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
           </H4>
         </div>
 
-        <Spacer size="xs" />
+        <Spacer size="sm" />
       </div>
     </React.Fragment>
   );

@@ -6,7 +6,6 @@ import { ProjectSection } from "@/components/home/project-section";
 import { SubstackSection } from "@/components/home/substack-section";
 import LayoutSecondary from "@/components/layout/layout-secondary";
 import { Spacer } from "@/components/spacer";
-import { getBlogsFeatured } from "@/utils/blog.server";
 import { getFeaturedSubstackPosts } from "@/utils/substack.server";
 
 import { type Route } from "./+types/_index";
@@ -18,24 +17,11 @@ export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
   return actionHeaders ? actionHeaders : loaderHeaders;
 }
 
-export const loader = async ({ request }: Route.LoaderArgs) => {
-  const timings = {};
-
-  const [featuredPosts, substackPosts] = await Promise.all([
-    getBlogsFeatured(
-      [
-        "my-first-1k-upwork",
-        "for-you-who-wants-to-be-freelancer",
-        "why-i-become-freelancer",
-      ],
-      { request, timings },
-    ),
-    getFeaturedSubstackPosts(3),
-  ]);
+export const loader = async (_: Route.LoaderArgs) => {
+  const substackPosts = await getFeaturedSubstackPosts(3);
 
   return data(
     {
-      featuredPosts,
       substackPosts,
     },
     {
@@ -48,7 +34,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 };
 
 export default function IndexRoute({ loaderData }: Route.ComponentProps) {
-  const { featuredPosts, substackPosts } = loaderData;
+  const { substackPosts } = loaderData;
 
   return (
     <React.Fragment>
@@ -61,7 +47,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
           title="Featured Projects"
           subTitle="A bunch of projects that I worked on."
           cta="See more projects"
-          posts={featuredPosts}
+          posts={[]}
         />
         <Spacer size="lg" />
         <Spacer size="lg" />
