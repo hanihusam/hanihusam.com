@@ -316,13 +316,6 @@ pre {
   background-color: var(--base00);
 }
 
-.prose
-  pre[data-line-numbers="true"]:not([data-lang="sh"])
-  [data-line-number]:before
-  .codeblock-line[data-highlight="true"]:before {
-  background: var(--base0E);
-}
-
 .prose pre[data-add]:not([data-lang="sh"]) [data-diff-line-number]:before,
 .prose pre[data-remove]:not([data-lang="sh"]) [data-diff-line-number]:before {
   content: attr(data-diff-line-number);
