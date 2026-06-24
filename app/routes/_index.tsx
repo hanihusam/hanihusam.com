@@ -41,7 +41,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
       <HeroSection />
 
       <LayoutSecondary>
-        <Spacer size="lg" />
+        <Spacer id="projects" size="lg" />
         <Spacer size="lg" />
         <ProjectSection
           title="Featured Projects"

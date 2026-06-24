@@ -6,12 +6,17 @@ const spacerSizes = {
 
 function Spacer({
   size,
+  id,
   className = "",
 }: {
   size: keyof typeof spacerSizes;
+  /**
+   * Optional id for the spacer element. This can be used to create anchor links to specific sections of the page.
+   */
+  id?: string;
   className?: string;
 }) {
-  return <div className={`${className} ${spacerSizes[size]}`} />;
+  return <div id={id} className={`${className} ${spacerSizes[size]}`} />;
 }
 
 export { Spacer };

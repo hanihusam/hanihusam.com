@@ -36,12 +36,13 @@ export function HeroSection() {
       <div className="col-span-full flex flex-col items-start gap-y-8 self-stretch md:h-[50vh] lg:flex-row lg:items-center">
         <div className="flex flex-col justify-end gap-y-8 lg:h-77.5">
           <Display>I'm Han</Display>
-          <Button
+          <ButtonLink
+            to="#projects"
             className="hidden self-start md:inline-flex"
             iconRight={<ArrowDownIcon />}
           >
             View My Works
-          </Button>
+          </ButtonLink>
         </div>
         <div className="flex w-full flex-col gap-y-4 md:ml-auto md:w-90 lg:w-100">
           <H3 className="text-(--text-paragraph)">
