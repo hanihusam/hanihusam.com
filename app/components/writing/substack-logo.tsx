@@ -1,18 +1,26 @@
 export function SubstackLogo({
-  width = 16,
-  height = 16,
+  width = 21,
+  height = 24,
   ...rest
 }: React.SVGProps<SVGSVGElement>) {
   return (
     <svg
-      xmlns="http://www.w3.org/2000/svg"
+      role="img"
       width={width}
       height={height}
-      fill="currentColor"
-      viewBox="0 0 16 16"
+      viewBox="0 0 21 24"
+      fill="#ff6719"
+      stroke-width="1.8"
+      stroke="none"
+      xmlns="http://www.w3.org/2000/svg"
       {...rest}
     >
-      <path d="M15 3.604H1v1.891h14v-1.89ZM1 7.208V16l7-3.926L15 16V7.208zM15 0H1v1.89h14z" />
+      <g>
+        <title></title>
+        <path d="M20.9991 5.40625H0V8.24275H20.9991V5.40625Z"></path>
+        <path d="M0 10.8125V24.0004L10.4991 18.1107L21 24.0004V10.8125H0Z"></path>
+        <path d="M20.9991 0H0V2.83603H20.9991V0Z"></path>
+      </g>
     </svg>
   );
 }

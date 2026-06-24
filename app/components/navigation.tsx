@@ -1,11 +1,9 @@
+import { SubstackLogo } from "@/components/writing/substack-logo";
+
 import NavigationItem from "./ui/navigation-item";
 import ThemeSwitcher from "./ui/theme-switcher";
 
-import {
-  BookmarkIcon,
-  HomeIcon,
-  WrenchScrewdriverIcon,
-} from "@heroicons/react/24/outline";
+import { HomeIcon, WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
 
 const links = [
   {
@@ -20,9 +18,9 @@ const links = [
     icon: WrenchScrewdriverIcon,
   },
   {
-    href: "/writing",
-    label: "Writing",
-    icon: BookmarkIcon,
+    href: "https://bapak2dev.substack.com/",
+    label: "Substack",
+    icon: SubstackLogo,
   },
 ];
 
