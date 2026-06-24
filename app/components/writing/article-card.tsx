@@ -11,18 +11,17 @@ import { format } from "date-fns";
 
 type ArticleCardProps = {
   post: SubstackPost;
-} & React.ComponentPropsWithoutRef<"div">;
+};
 
 function ArticleCard({
   post: { title, url, publishedAt, readingTime, coverImage, coverBlurDataUrl },
-  onClick,
 }: ArticleCardProps) {
   const dateDisplay = publishedAt
     ? format(new Date(publishedAt), "MMMM dd, yyyy")
     : null;
 
   return (
-    <div className="relative w-full" onClick={onClick}>
+    <div className="relative w-full">
       <AnchorOrLink
         href={url}
         target="_blank"
@@ -36,7 +35,6 @@ function ArticleCard({
             className="aspect-3/4 overflow-hidden rounded-xl"
             img={
               <img
-                title={title}
                 {...getImgProps(getFetchImageBuilder(coverImage, title), {
                   widths: [280, 560, 840, 1100, 1300, 1650],
                   sizes: [
