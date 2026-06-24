@@ -1,5 +1,15 @@
 import { type ReadTimeResults } from "reading-time";
 
+export type SubstackPost = {
+  title: string;
+  url: string;
+  publishedAt: string;
+  excerpt: string;
+  coverImage: string | null;
+  readingTime: ReadTimeResults;
+  coverBlurDataUrl?: string;
+};
+
 export type GitHubFile = { path: string; content: string };
 
 export interface ContentMeta {
