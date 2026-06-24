@@ -24,13 +24,8 @@ global.ENV = getEnv();
 type DocRequestArgs = Parameters<HandleDocumentRequestFunction>;
 
 export default async function handleRequest(...args: DocRequestArgs) {
-  const [
-    request,
-    responseStatusCode,
-    responseHeaders,
-    reactRouterContext,
-    loadContext,
-  ] = args;
+  const [request, responseStatusCode, responseHeaders, reactRouterContext] =
+    args;
   const { currentInstance, primaryInstance } = await getInstanceInfo();
   responseHeaders.set("fly-region", process.env.FLY_REGION ?? "unknown");
   responseHeaders.set("fly-app", process.env.FLY_APP_NAME ?? "unknown");
@@ -41,7 +36,9 @@ export default async function handleRequest(...args: DocRequestArgs) {
     ? "onAllReady"
     : "onShellReady";
 
-  const nonce = String(loadContext.cspNonce) ?? undefined;
+  // CSP nonce is not currently wired through middleware/getLoadContext, so the
+  // NonceProvider falls back to its empty default.
+  const nonce = "";
   return new Promise((resolve, reject) => {
     let didError = false;
 

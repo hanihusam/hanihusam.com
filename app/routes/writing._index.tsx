@@ -110,7 +110,7 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
         title="the blog"
         subTitle="Thoughts, story, career, and anything that come from me and my mind"
       />
-      <Spacer size="2xs" />
+      <Spacer size="sm" />
 
       {tags.length > 0 ? (
         <Grid>
@@ -138,7 +138,7 @@ export default function BlogIndex({ loaderData }: Route.ComponentProps) {
           </div>
         </Grid>
       ) : null}
-      <Spacer size="xs" />
+      <Spacer size="sm" />
       <Grid className="mb-64 gap-10">
         {posts.map((post) => (
           <div key={post.slug} className="col-span-4">
