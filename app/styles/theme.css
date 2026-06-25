@@ -128,6 +128,17 @@
   --filter-tag-surface-disabled: rgb(255 255 255 / 0.5);
   --filter-tag-text-disabled: rgb(80 85 95 / 0.5);
 
+  /* Tag (content labels — default/brand/secondary) */
+  --tag-surface-default: var(--color-neutral-100);
+  --tag-border-default: var(--color-neutral-200);
+  --tag-text-default: var(--color-neutral-700);
+  --tag-surface-brand: var(--color-sunset-50);
+  --tag-border-brand: var(--color-sunset-200);
+  --tag-text-brand: var(--color-sunset-600);
+  --tag-surface-secondary: var(--color-sky-50);
+  --tag-border-secondary: var(--color-sky-200);
+  --tag-text-secondary: var(--color-sky-600);
+
   /* Line heights — pixel-based (rem), different from Tailwind's unitless ratios */
   --display-leading: 115.2px;
   --h1-leading-desktop: 60px;
@@ -209,6 +220,17 @@
   --filter-tag-surface-default: var(--color-neutral-800);
   --filter-tag-text-default: var(--color-neutral-300);
   --filter-tag-text-disabled: rgb(255 255 255 / 0.5);
+
+  /* Tag (content labels — default/brand/secondary) */
+  --tag-surface-default: var(--color-neutral-800);
+  --tag-border-default: var(--color-neutral-700);
+  --tag-text-default: var(--color-neutral-300);
+  --tag-surface-brand: var(--color-sunset-950);
+  --tag-border-brand: var(--color-sunset-700);
+  --tag-text-brand: var(--color-sunset-300);
+  --tag-surface-secondary: var(--color-sky-900);
+  --tag-border-secondary: var(--color-sky-700);
+  --tag-text-secondary: var(--color-sky-300);
 
   /* Surface */
   --surface-primary: var(--color-neutral-950); /* #28262d   */

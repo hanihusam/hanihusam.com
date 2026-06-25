@@ -6,7 +6,6 @@ const externalLinks = {
   linkedin: "https://linkedin.com/in/hanihusam",
   instagram: "https://instagram.com/bapak2dev",
   figma: "https://figma.com/@hani.husam",
-  rss: "https://hanihusam.com/blog/rss.xml",
   telegram: "https://t.me/bapak2dev",
   email: "https://mailto:hi@hanihusam.com",
   pitcDeckFigma:

@@ -1,17 +1,4 @@
 import { prisma } from "./db.server";
-import { type CachifiedOptions, getContentMdxListItems } from "./mdx.server";
-
-/**
- * Get and order frontmatters by specified array
- */
-async function getBlogsFeatured(features: string[], options: CachifiedOptions) {
-  const { request, timings } = options;
-  const contents = await getContentMdxListItems("blog", { request, timings });
-  // override as T because there is no typechecking on the features array
-  return features.map((feat) =>
-    contents.find((content) => content.slug === feat),
-  ) as typeof contents;
-}
 
 const getUserLikeCount = async ({
   sessionId,
@@ -147,10 +134,4 @@ async function incrementLikes({
   };
 }
 
-export {
-  getBlogsFeatured,
-  getContentViews,
-  getUserLikeCount,
-  incrementLikes,
-  incrementViews,
-};
+export { getContentViews, getUserLikeCount, incrementLikes, incrementViews };

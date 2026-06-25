@@ -2,7 +2,7 @@ import {
   type ContentType,
   type GitHubFile,
   type PageContent,
-  type PickFrontmatter,
+  type ProjectFrontmatter,
 } from "@/types";
 
 import { cache, cachified } from "./cache.server";
@@ -26,13 +26,13 @@ const checkCompiledValue = (value: unknown) =>
   typeof value === "object" &&
   (value === null || ("code" in value && "frontmatter" in value));
 
-async function compileMdxCached<T extends ContentType>({
+async function compileMdxCached({
   contentDir,
   slug,
   files,
   options,
 }: {
-  contentDir: T;
+  contentDir: ContentType;
   slug: string;
   files: Array<GitHubFile>;
   options: CachifiedOptions;
@@ -46,7 +46,7 @@ async function compileMdxCached<T extends ContentType>({
     key,
     checkValue: checkCompiledValue,
     getFreshValue: async () => {
-      const compiledPage = await compileMdx<PickFrontmatter<T>>(slug, files);
+      const compiledPage = await compileMdx<ProjectFrontmatter>(slug, files);
       if (compiledPage) {
         if (
           compiledPage.frontmatter.bannerCloudinaryId &&
@@ -122,49 +122,62 @@ export async function downloadMdxFilesCached(
 
 const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`;
 
-async function getMdxPage<T extends ContentType>(
+async function getMdxPage(
   {
     contentDir,
     slug,
   }: {
-    contentDir: T;
+    contentDir: ContentType;
     slug: string;
   },
   options: CachifiedOptions,
-): Promise<PageContent<T> | null> {
+): Promise<PageContent | null> {
   const { forceFresh, ttl = defaultTTL, request, timings } = options;
   const key = `mdx-page:${contentDir}:${slug}:compiled`;
-  const page = await cachified({
-    key,
-    cache,
-    request,
-    timings,
-    ttl,
-    staleWhileRevalidate: defaultStaleWhileRevalidate,
-    forceFresh,
-    checkValue: checkCompiledValue,
-    getFreshValue: async () => {
-      const pageFiles = await downloadMdxFilesCached(contentDir, slug, options);
-      const compiledPage = await compileMdxCached({
-        contentDir,
-        slug,
-        ...pageFiles,
-        options,
-      }).catch((err) => {
-        console.error(`Failed to get a fresh value for mdx:`, {
+  try {
+    const page = await cachified({
+      key,
+      cache,
+      request,
+      timings,
+      ttl,
+      staleWhileRevalidate: defaultStaleWhileRevalidate,
+      forceFresh,
+      checkValue: checkCompiledValue,
+      getFreshValue: async () => {
+        const pageFiles = await downloadMdxFilesCached(
           contentDir,
           slug,
+          options,
+        );
+        const compiledPage = await compileMdxCached({
+          contentDir,
+          slug,
+          ...pageFiles,
+          options,
+        }).catch((err) => {
+          console.error(`Failed to get a fresh value for mdx:`, {
+            contentDir,
+            slug,
+          });
+          return Promise.reject(err);
         });
-        return Promise.reject(err);
-      });
-      return compiledPage;
-    },
-  });
-  if (!page) {
-    // if there's no page, let's remove it from the cache
+        return compiledPage;
+      },
+    });
+    if (!page) {
+      // if there's no page, let's remove it from the cache
+      void cache.delete(key);
+    }
+    return page;
+  } catch (error: unknown) {
+    console.error(
+      `mdx: failed to load page ${contentDir}/${slug}, returning null`,
+      error,
+    );
     void cache.delete(key);
+    return null;
   }
-  return page;
 }
 
 async function getMdxDirList(contentDir: string, options?: CachifiedOptions) {
@@ -181,23 +194,33 @@ async function getMdxDirList(contentDir: string, options?: CachifiedOptions) {
     checkValue: (value: unknown) => Array.isArray(value),
     getFreshValue: async () => {
       const fullContentDirPath = `contents/${contentDir}`;
-      const dirList = (await downloadDirList(fullContentDirPath))
-        .map(({ name, path }) => ({
-          name,
-          slug: path
-            .replace(/\\/g, "/")
-            .replace(`${fullContentDirPath}/`, "")
-            .replace(/\.mdx$/, ""),
-        }))
-        .filter(({ name }) => name !== "README.md");
-
-      return dirList;
+      try {
+        return (await downloadDirList(fullContentDirPath))
+          .filter(
+            ({ name, type }) =>
+              type === "dir" || name.endsWith(".mdx") || name.endsWith(".md"),
+          )
+          .map(({ name, path }) => ({
+            name,
+            slug: path
+              .replace(/\\/g, "/")
+              .replace(`${fullContentDirPath}/`, "")
+              .replace(/\.mdx?$/, ""),
+          }))
+          .filter(({ name }) => name !== "README.md");
+      } catch (error: unknown) {
+        console.error(
+          `mdx: failed to fetch dir list for ${contentDir}, returning empty`,
+          error,
+        );
+        return [];
+      }
     },
   });
 }
 
-async function getMdxPagesInDirectory<T extends ContentType>(
-  contentDir: T,
+async function getMdxPagesInDirectory(
+  contentDir: ContentType,
   options: CachifiedOptions,
 ) {
   const dirList = await getMdxDirList(contentDir, options);
@@ -223,15 +246,13 @@ async function getMdxPagesInDirectory<T extends ContentType>(
 /**
  * This is useful for when you don't want to send all the code for a page to the client.
  */
-function mapFromMdxPageToMdxListItem<T extends ContentType>(
-  page: PageContent<T>,
-) {
+function mapFromMdxPageToMdxListItem(page: PageContent) {
   const { code, ...mdxListItem } = page;
   return mdxListItem.frontmatter;
 }
 
-async function getContentMdxListItems<T extends ContentType>(
-  type: T,
+async function getContentMdxListItems(
+  type: ContentType,
   options: CachifiedOptions,
 ) {
   const { request, forceFresh, ttl = defaultTTL, timings } = options;
@@ -253,9 +274,7 @@ async function getContentMdxListItems<T extends ContentType>(
         return aTime > zTime ? -1 : aTime === zTime ? 0 : 1;
       });
 
-      return pages.map((page) =>
-        mapFromMdxPageToMdxListItem<typeof type>(page),
-      );
+      return pages.map((page) => mapFromMdxPageToMdxListItem(page));
     },
   });
 }

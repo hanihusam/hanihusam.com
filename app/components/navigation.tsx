@@ -13,7 +13,7 @@ const links = [
     key: "Home",
   },
   {
-    href: "/projects",
+    href: "/works",
     label: "Projects",
     icon: WrenchScrewdriverIcon,
   },

@@ -92,7 +92,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         </ul>
         <div className="mt-10 flex w-full flex-wrap items-center justify-between gap-4">
           <ButtonLink
-            to={`/projects/${project.slug}`}
+            to={`/works/${project.slug}`}
             iconRight={<ArrowRightCircleIcon />}
           >
             View Project
