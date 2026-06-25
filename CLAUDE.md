@@ -3,6 +3,10 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with
 code in this repository.
 
+> **Writing UI code?** Read [`docs/code-style-guidelines.md`](docs/code-style-guidelines.md)
+> first — it captures the project's component, styling, typography, and
+> data-loading conventions so new code matches the existing codebase.
+
 ## Quick Start
 
 **Node version:** 20 (required)

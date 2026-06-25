@@ -1,3 +1,4 @@
+import { Footer } from "@/components/footer";
 import { LayoutRoot } from "@/components/layout";
 import appStyles from "@/styles/app.css?url";
 import fonts from "@/styles/fonts.css?url";
@@ -22,6 +23,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useMatches,
   useRouteError,
 } from "react-router";
 
@@ -137,6 +139,14 @@ function App({
 }) {
   const nonce = useNonce();
   const theme = useTheme();
+  const matches = useMatches();
+  const surface = matches.some(
+    (match) =>
+      (match.handle as { surface?: "primary" | "secondary" } | undefined)
+        ?.surface === "secondary",
+  )
+    ? "secondary"
+    : "primary";
 
   return (
     <html className={theme} lang="en">
@@ -158,8 +168,9 @@ function App({
         />
       </head>
       <body>
-        <LayoutRoot>
+        <LayoutRoot surface={surface}>
           <Outlet />
+          <Footer />
           <Navigation />
         </LayoutRoot>
 
