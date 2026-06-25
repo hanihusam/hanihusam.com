@@ -1,10 +1,8 @@
 import * as React from "react";
 
-import { Footer } from "@/components/footer";
 import { HeroSection } from "@/components/home/hero-section";
 import { ProjectSection } from "@/components/home/project-section";
 import { SubstackSection } from "@/components/home/substack-section";
-import LayoutSecondary from "@/components/layout/layout-secondary";
 import { Spacer } from "@/components/spacer";
 import { getContentMdxListItems } from "@/utils/mdx.server";
 import { getFeaturedSubstackPosts } from "@/utils/substack.server";
@@ -12,6 +10,8 @@ import { getFeaturedSubstackPosts } from "@/utils/substack.server";
 import { type Route } from "./+types/_index";
 
 import { data, type HeadersArgs } from "react-router";
+
+export const handle = { surface: "secondary" as const };
 
 export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
   return actionHeaders ? actionHeaders : loaderHeaders;
@@ -44,26 +44,23 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
     <React.Fragment>
       <HeroSection />
 
-      <LayoutSecondary>
-        <Spacer id="projects" size="lg" />
-        <Spacer size="lg" />
-        <ProjectSection
-          title="Featured Projects"
-          subTitle="A bunch of projects that I worked on."
-          cta="See more projects"
-          posts={projects}
-        />
-        <Spacer size="lg" />
-        <Spacer size="lg" />
-        <SubstackSection
-          title="Recent Writing"
-          subTitle="Find the latest of my writing here."
-          cta="Read on Substack"
-          posts={substackPosts}
-        />
-        <Spacer size="lg" />
-        <Footer />
-      </LayoutSecondary>
+      <Spacer id="projects" size="lg" />
+      <Spacer size="lg" />
+      <ProjectSection
+        title="Featured Projects"
+        subTitle="A bunch of projects that I worked on."
+        cta="See more projects"
+        posts={projects}
+      />
+      <Spacer size="lg" />
+      <Spacer size="lg" />
+      <SubstackSection
+        title="Recent Writing"
+        subTitle="Find the latest of my writing here."
+        cta="Read on Substack"
+        posts={substackPosts}
+      />
+      <Spacer size="lg" />
     </React.Fragment>
   );
 }

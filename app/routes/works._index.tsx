@@ -1,22 +1,32 @@
 import * as React from "react";
 
-import { HeaderSection } from "@/components/blog/header-section";
-import { BlurrableImage } from "@/components/blurrable-image";
 import { Grid } from "@/components/grid";
+import { ProjectCard } from "@/components/projects/project-card";
 import { Spacer } from "@/components/spacer";
-import { H3, Paragraph } from "@/components/typography";
-import { Tag } from "@/components/ui/tag";
+import { Paragraph } from "@/components/typography";
+import { Button } from "@/components/ui/button";
+import { FilterTag } from "@/components/ui/filter-tag";
+import { CallToAction } from "@/components/works/call-to-action";
+import { WorksHero } from "@/components/works/works-hero";
 import { clsxm } from "@/utils/clsxm";
-import { getImageBuilder, getImgProps } from "@/utils/images";
 import { getContentMdxListItems } from "@/utils/mdx.server";
+import { useUpdateQueryStringValueWithoutNavigation } from "@/utils/misc";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
 import { type Route } from "./+types/works._index";
 
-import { data, type HeadersArgs, Link } from "react-router";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { data, type HeadersArgs, useSearchParams } from "react-router";
 
 export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
   return actionHeaders ? actionHeaders : loaderHeaders;
+}
+
+function toTags(techs: string) {
+  return techs
+    .split(",")
+    .map((tech) => tech.trim().toLowerCase())
+    .filter(Boolean);
 }
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -26,8 +36,15 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
     timings,
   });
 
+  const tags = new Set<string>();
+  for (const project of projects) {
+    for (const tag of toTags(project.techs)) {
+      tags.add(tag);
+    }
+  }
+
   return data(
-    { projects },
+    { projects, tags: Array.from(tags) },
     {
       headers: {
         "Cache-Control": "private, max-age=3600",
@@ -38,107 +55,120 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
   );
 };
 
+const PAGE_SIZE = 5;
+
 export default function WorksIndex({ loaderData }: Route.ComponentProps) {
-  const { projects } = loaderData;
+  const { projects, tags } = loaderData;
+
+  const [searchParams] = useSearchParams();
+  const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
+    () => new Set(searchParams.get("tags")?.split(",").filter(Boolean) ?? []),
+  );
+
+  useUpdateQueryStringValueWithoutNavigation(
+    "tags",
+    Array.from(selectedTags).join(","),
+  );
+
+  const [indexToShow, setIndexToShow] = React.useState(PAGE_SIZE);
+  React.useEffect(() => {
+    setIndexToShow(PAGE_SIZE);
+  }, [selectedTags]);
+
+  function toggleTag(tag: string) {
+    setSelectedTags((prev) => {
+      const next = new Set(prev);
+      if (next.has(tag)) {
+        next.delete(tag);
+      } else {
+        next.add(tag);
+      }
+      return next;
+    });
+  }
+
+  const matchingProjects = React.useMemo(() => {
+    if (selectedTags.size === 0) return projects;
+    return projects.filter((project) =>
+      toTags(project.techs).some((tag) => selectedTags.has(tag)),
+    );
+  }, [projects, selectedTags]);
+
+  // Tags that still yield results given the current selection, so we can
+  // disable the rest without hiding the user's active picks.
+  const visibleTags =
+    selectedTags.size === 0
+      ? new Set(tags)
+      : new Set(matchingProjects.flatMap((project) => toTags(project.techs)));
+
+  const visibleProjects = matchingProjects.slice(0, indexToShow);
+  const hasMoreProjects = indexToShow < matchingProjects.length;
 
   return (
     <React.Fragment>
-      <HeaderSection
-        title="projects"
-        subTitle="A selection of work I've built and shipped."
-      />
-      <Spacer size="sm" />
-      <Grid className="gap-10">
-        {projects.map((project, idx) => (
-          <Link
-            key={project.slug}
-            to={`/works/${project.slug}`}
-            className={clsxm(
-              "group col-span-full flex flex-col gap-4 lg:flex-row lg:gap-8",
-              { "lg:flex-row-reverse": idx % 2 !== 0 },
-            )}
-          >
-            <div className="relative aspect-video shrink-0 lg:aspect-square lg:h-72">
-              <figure className="pointer-events-none isolate z-1 hidden h-full overflow-hidden rounded-xl lg:block lg:aspect-square">
-                <BlurrableImage
-                  key={project.bannerCloudinaryId}
-                  blurDataUrl={project.bannerBlurDataUrl}
-                  className="aspect-square h-full overflow-hidden rounded-xl"
-                  img={
-                    <img
-                      title={project.title}
-                      {...getImgProps(
-                        getImageBuilder(
-                          project.bannerCloudinaryId,
-                          `image-${project.title}`,
-                        ),
-                        {
-                          widths: [288, 576],
-                          sizes: ["288px"],
-                          transformations: {
-                            background: "rgb:e6e9ee",
-                            resize: { type: "fill", aspectRatio: "1:1" },
-                          },
-                        },
-                      )}
-                      className="h-full w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-in-out motion-safe:group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  }
-                />
-              </figure>
-              <figure className="pointer-events-none isolate z-1 aspect-video overflow-hidden rounded-xl lg:hidden">
-                <BlurrableImage
-                  key={project.bannerCloudinaryId}
-                  blurDataUrl={project.bannerBlurDataUrl}
-                  className="aspect-video overflow-hidden rounded-xl"
-                  img={
-                    <img
-                      title={project.title}
-                      {...getImgProps(
-                        getImageBuilder(
-                          project.bannerCloudinaryId,
-                          `image-${project.title}`,
-                        ),
-                        {
-                          widths: [280, 560, 840, 1100],
-                          sizes: [
-                            "(max-width:639px) 80vw",
-                            "(min-width:640px) 40vw",
-                          ],
-                          transformations: {
-                            background: "rgb:e6e9ee",
-                            resize: { type: "fill", aspectRatio: "16:9" },
-                          },
-                        },
-                      )}
-                      className="h-full w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-300 motion-safe:ease-in-out motion-safe:group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  }
-                />
-              </figure>
-            </div>
+      <WorksHero />
 
-            <div className="grow rounded-xl border border-(--border-primary) p-6 lg:p-8">
-              <H3>{project.title}</H3>
-              <Paragraph className="mt-4">{project.description}</Paragraph>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {project.techs
-                  .split(",")
-                  .map((t) => t.trim())
-                  .filter(Boolean)
-                  .map((tech) => (
-                    <Tag key={tech} color="secondary">
-                      {tech}
-                    </Tag>
-                  ))}
+      <div className="bg-(--surface-secondary)">
+        <Spacer size="lg" />
+
+        {tags.length > 0 ? (
+          <Grid>
+            <div className="col-span-full flex flex-col gap-6">
+              <Paragraph prose={false}>Search projects by tags</Paragraph>
+              <div className="flex flex-wrap gap-3">
+                {tags.map((tag) => {
+                  const selected = selectedTags.has(tag);
+
+                  return (
+                    <FilterTag
+                      key={tag}
+                      tag={tag}
+                      selected={selected}
+                      onChange={() => toggleTag(tag)}
+                      disabled={!visibleTags.has(tag) ? !selected : false}
+                    />
+                  );
+                })}
               </div>
             </div>
-          </Link>
-        ))}
-      </Grid>
-      <Spacer size="lg" />
+          </Grid>
+        ) : null}
+
+        <Spacer size="lg" />
+
+        <Grid className="gap-6">
+          {visibleProjects.map((project, idx) => (
+            <ProjectCard
+              key={project.slug}
+              className={clsxm("col-span-full", {
+                "lg:flex-row-reverse": idx % 2 !== 0,
+              })}
+              project={project}
+            />
+          ))}
+        </Grid>
+
+        {hasMoreProjects ? (
+          <>
+            <Spacer size="lg" />
+            <Grid>
+              <div className="col-span-full flex justify-center">
+                <Button
+                  variant="ghost"
+                  iconLeft={<PlusIcon />}
+                  onClick={() => setIndexToShow((i) => i + PAGE_SIZE)}
+                >
+                  Load more projects
+                </Button>
+              </div>
+            </Grid>
+          </>
+        ) : null}
+
+        <Spacer size="lg" />
+      </div>
+
+      <CallToAction />
     </React.Fragment>
   );
 }

@@ -123,10 +123,10 @@
   /* Filter Tag */
   --filter-tag-surface-default: var(--color-neutral-50);
   --filter-tag-text-default: var(--color-neutral-700);
-  --filter-tag-surface-selected: var(--color-sunset-50);
+  --filter-tag-surface-selected: var(--color-sunset-500);
   --filter-tag-text-selected: var(--color-neutral-50);
-  --filter-tag-surface-disabled: rgb(255 255 255 / 0.5);
-  --filter-tag-text-disabled: rgb(80 85 95 / 0.5);
+  --filter-tag-surface-disabled: rgb(255 255 255 / 0.4);
+  --filter-tag-text-disabled: rgb(80 85 95 / 0.4);
 
   /* Tag (content labels — default/brand/secondary) */
   --tag-surface-default: var(--color-neutral-100);
@@ -219,7 +219,7 @@
   /* Filter Tag */
   --filter-tag-surface-default: var(--color-neutral-800);
   --filter-tag-text-default: var(--color-neutral-300);
-  --filter-tag-text-disabled: rgb(255 255 255 / 0.5);
+  --filter-tag-text-disabled: rgb(255 255 255 / 0.4);
 
   /* Tag (content labels — default/brand/secondary) */
   --tag-surface-default: var(--color-neutral-800);
