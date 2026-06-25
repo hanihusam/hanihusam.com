@@ -75,10 +75,7 @@ export async function action({ request }: Route.ActionArgs) {
         continue;
       }
 
-      if (
-        contentPath.startsWith("blog") ||
-        contentPath.startsWith("projects")
-      ) {
+      if (contentPath.startsWith("projects")) {
         const [content, dirOrFilename] = contentPath.split("/");
         const contentDir = content as ContentType;
         if (!contentDir || !dirOrFilename) {
@@ -91,19 +88,16 @@ export async function action({ request }: Route.ActionArgs) {
       }
     }
 
-    // if any blog contentPaths were changed then let's update the dir list
-    // so it will appear on the blog page.
-    if (refreshingContentPaths.some((p) => p.startsWith("blog"))) {
+    // if any projects contentPaths were changed then let's update the dir list
+    // so it will appear on the works page.
+    if (refreshingContentPaths.some((p) => p.startsWith("projects"))) {
       promises.push(
-        getContentMdxListItems("blog", {
+        getContentMdxListItems("projects", {
           request,
-          forceFresh: "blog:dir-list,blog:mdx-list-items",
+          forceFresh: "projects:dir-list,projects:mdx-list-items",
         }),
       );
     }
-    // if (refreshingContentPaths.some((p) => p.startsWith("projects"))) {
-    //   promises.push(getMdxDirList("projects", { forceFresh: true }));
-    // }
 
     if (promises.length) {
       await Promise.all(promises);

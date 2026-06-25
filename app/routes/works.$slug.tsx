@@ -1,13 +1,14 @@
 import * as React from "react";
 
-import { BlogTitle } from "@/components/blog/blog-title";
 import { BlurrableImage } from "@/components/blurrable-image";
 import { Grid } from "@/components/grid";
+import { ProjectHeader } from "@/components/projects/project-header";
 import { Spacer } from "@/components/spacer";
 import TableOfContents, {
   type HeadingScrollSpy,
 } from "@/components/table-of-content";
 import { H4 } from "@/components/typography";
+import { Tag } from "@/components/ui/tag";
 import { incrementMetaFlag } from "@/constants/env";
 import useScrollSpy from "@/hooks/useScrollSpy";
 import {
@@ -22,14 +23,15 @@ import { getMdxPage } from "@/utils/mdx.server";
 import { getSessionId } from "@/utils/session.server";
 import { getServerTimeHeader } from "@/utils/timing.server";
 
-import { type Route } from "./+types/writing.$slug";
+import { type Route } from "./+types/works.$slug";
 
 import {
   ArrowLeftCircleIcon,
+  ArrowTopRightOnSquareIcon,
+  CodeBracketIcon,
   HandThumbUpIcon,
 } from "@heroicons/react/24/outline";
 import { HandThumbUpIcon as HandThumbUpSolidIcon } from "@heroicons/react/24/solid";
-import { format } from "date-fns/format";
 import { motion } from "framer-motion";
 import { data, Link, useFetcher } from "react-router";
 
@@ -41,14 +43,13 @@ export async function action({ params, request }: Route.ActionArgs) {
   const intent = formData.get("intent");
   const sessionId = getSessionId(request);
   const { slug } = params;
+
   switch (intent) {
     case "mark-as-read": {
       if (!incrementMetaFlag) {
         await incrementViews({ slug, sessionId });
-
         return { success: true };
       }
-
       return null;
     }
     case "like-post": {
@@ -69,9 +70,10 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 
   const meta = await getContentViews({ slug: params.slug, sessionId });
   const page = await getMdxPage(
-    { contentDir: "blog", slug: params.slug },
+    { contentDir: "projects", slug: params.slug },
     { request, timings },
   );
+
   const headers = {
     "Cache-Control": "private, max-age=3600",
     Vary: "Cookie",
@@ -102,9 +104,9 @@ function useOnRead({
 
     let scrolledTheMain = false;
     const observer = new IntersectionObserver((entries) => {
-      const isVisible = entries.some((entry) => {
-        return entry.target === visibilityEl && entry.isIntersecting;
-      });
+      const isVisible = entries.some(
+        (entry) => entry.target === visibilityEl && entry.isIntersecting,
+      );
       if (isVisible) {
         scrolledTheMain = true;
         maybeMarkAsRead();
@@ -117,6 +119,7 @@ function useOnRead({
     let timeoutTime = time * 0.6;
     let timerId: ReturnType<typeof setTimeout>;
     let timerFinished = false;
+
     function startTimer() {
       timerId = setTimeout(() => {
         timerFinished = true;
@@ -146,7 +149,6 @@ function useOnRead({
       }
     }
 
-    // dirty-up
     parentEl.append(visibilityEl);
     observer.observe(visibilityEl);
     startTimer();
@@ -162,23 +164,16 @@ function useOnRead({
   }, [time, onRead, parentElRef]);
 }
 
-export default function Blog({ loaderData }: Route.ComponentProps) {
+export default function WorksSlug({ loaderData }: Route.ComponentProps) {
   const { page, meta } = loaderData;
   const { frontmatter, code } = page;
   const Component = useMdxComponent(code);
-  const dateDisplay = format(
-    new Date(frontmatter.lastUpdated ?? frontmatter.publishedAt),
-    "MMMM dd, yyyy",
-  );
 
   //#region  //*=========== Like post ===========
   const likePost = useFetcher();
   const isUserLiked = meta.likesByUser >= 5;
   const onLikePost = () => {
-    // Don't run if data not populated,
-    // and if maximum likes
     if (!meta || isUserLiked) return;
-
     likePost.submit({ intent: "like-post" }, { method: "POST" });
   };
   //#endregion  //*=========== Like post ===========
@@ -195,7 +190,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
 
   useOnRead({
     parentElRef: readMarker,
-    time: page.frontmatter.readingTime.time,
+    time: frontmatter.readingTime?.time,
     onRead: React.useCallback(() => {
       markAsReadRef.current.submit(
         { intent: "mark-as-read" },
@@ -216,19 +211,24 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
     const headings = document.querySelectorAll(
       ".prose h1, .prose h2, .prose h3",
     );
-
     const headingArr: HeadingScrollSpy = [];
     headings.forEach((heading) => {
-      const id = heading.id;
-      const level = +heading.tagName.replace("H", "");
-      const text = heading.textContent + "";
-
-      headingArr.push({ id, level, text });
+      headingArr.push({
+        id: heading.id,
+        level: +heading.tagName.replace("H", ""),
+        text: heading.textContent + "",
+      });
     });
-
     setToc(headingArr);
   }, [frontmatter.slug]);
   //#endregion  //*======== Scrollspy ===========
+
+  const techs = frontmatter.techs
+    ? frontmatter.techs
+        .split(",")
+        .map((t) => t.trim())
+        .filter(Boolean)
+    : [];
 
   return (
     <React.Fragment>
@@ -237,24 +237,63 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
       <Grid>
         <Link
           className="group col-span-full flex items-center space-x-6"
-          to="/writing"
+          to="/works"
         >
           <ArrowLeftCircleIcon className="dark:text-light h-8 w-8 text-black duration-500 group-hover:-translate-x-1.5" />
-          <H4 className="dark:text-light text-black">Back to overview</H4>
+          <H4 className="dark:text-light text-black">Back to projects</H4>
         </Link>
       </Grid>
 
       <Spacer size="sm" />
 
-      <BlogTitle
+      <ProjectHeader
         title={frontmatter.title}
-        blogInfo={`Written on ${[
-          dateDisplay,
-          frontmatter.readingTime?.text ?? "quick read",
-        ]
-          .filter(Boolean)
-          .join(" — ")}`}
+        description={frontmatter.description}
+        category={frontmatter.category}
       />
+
+      <Spacer size="sm" />
+
+      {techs.length > 0 ? (
+        <Grid>
+          <div className="col-span-full flex flex-wrap gap-2">
+            {techs.map((tech) => (
+              <Tag key={tech} color="secondary">
+                {tech}
+              </Tag>
+            ))}
+          </div>
+        </Grid>
+      ) : null}
+
+      {frontmatter.link || frontmatter.github ? (
+        <Grid>
+          <div className="col-span-full mt-4 flex flex-wrap gap-4">
+            {frontmatter.link ? (
+              <a
+                href={frontmatter.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-(--text-link) hover:underline"
+              >
+                <ArrowTopRightOnSquareIcon className="size-4" />
+                Live Site
+              </a>
+            ) : null}
+            {frontmatter.github ? (
+              <a
+                href={frontmatter.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-sm text-(--text-link) hover:underline"
+              >
+                <CodeBracketIcon className="size-4" />
+                GitHub
+              </a>
+            ) : null}
+          </div>
+        </Grid>
+      ) : null}
 
       <Spacer size="sm" />
 
@@ -295,7 +334,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
 
       <Spacer size="sm" />
 
-      <div className="mx-10vw">
+      <div className="mx-10vw" ref={readMarker}>
         <section className="mx-auto max-w-7xl lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
           <article className="prose prose-light dark:prose-dark mb-24 w-full break-words">
             <Component />
@@ -316,7 +355,7 @@ export default function Blog({ loaderData }: Route.ComponentProps) {
 
         <div className="flex flex-col items-center justify-center space-y-5">
           <H4 className="dark:text-light text-black">
-            How do you like this article?
+            Did you find this useful?
           </H4>
           <motion.button
             whileHover={{ scale: isUserLiked ? undefined : 1.1 }}

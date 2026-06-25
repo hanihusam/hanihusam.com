@@ -12,56 +12,13 @@ export type SubstackPost = {
 
 export type GitHubFile = { path: string; content: string };
 
-export interface ContentMeta {
-  slug: string;
-  views: number;
-  likes: number;
-  likesByUser: number;
-}
-
-export interface SingleContentMeta {
-  contentViews: number;
-  contentLikes: number;
-  likesByUser: number;
-}
-
-export type BlogFrontmatter = {
-  wordCount: number;
-  readingTime: ReadTimeResults;
-  slug: string;
-  englishOnly?: boolean;
-  title: string;
-  description: string;
-  bannerCloudinaryId: string;
-  publishedAt: string;
-  lastUpdated?: string;
-  tags: Array<string>;
-  bannerBlurDataUrl?: string;
-  repost?: string;
-  meta?: {
-    keywords?: Array<string>;
-    [key as string]: string;
-  };
-};
-
-export type ContentType = "blog" | "projects";
-
-export type PickFrontmatter<T extends ContentType> = T extends "blog"
-  ? BlogFrontmatter
-  : ProjectFrontmatter;
-
-export type PickContent<T extends ContentType> = T extends "blog"
-  ? BlogType
-  : ProjectType;
+export type ContentType = "projects";
 
 export type InjectedMeta = { views?: number; likes?: number };
 
-export type BlogType = {
-  code: string;
-  frontmatter: BlogFrontmatter;
-};
-
 export type ProjectFrontmatter = {
+  wordCount?: number;
+  readingTime?: ReadTimeResults;
   slug: string;
   title: string;
   publishedAt: string;
@@ -75,16 +32,7 @@ export type ProjectFrontmatter = {
   bannerBlurDataUrl?: string;
 };
 
-export type ProjectType = {
+export type PageContent = {
   code: string;
   frontmatter: ProjectFrontmatter;
 };
-
-export type PageContent<T extends ContentType> = {
-  code: string;
-  frontmatter: PickFrontmatter<T>;
-};
-
-export type FrontmatterWithTags = BlogFrontmatter;
-export type FrontmatterWithDate = BlogFrontmatter | ProjectFrontmatter;
-export type Frontmatter = FrontmatterWithDate;
