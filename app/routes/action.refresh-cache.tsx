@@ -1,6 +1,5 @@
 import { type ContentType } from "@/types";
 import { cache } from "@/utils/cache.server";
-import { ensurePrimary } from "@/utils/cjs/litefs-js.server";
 import { getContentMdxListItems, getMdxPage } from "@/utils/mdx.server";
 import { getRequiredServerEnvVar } from "@/utils/misc";
 
@@ -32,7 +31,6 @@ export function isRefreshShaInfo(value: any): value is RefreshShaInfo {
 export const commitShaKey = "meta:last-refresh-commit-sha";
 
 export async function action({ request }: Route.ActionArgs) {
-  await ensurePrimary();
   if (
     request.headers.get("auth") !== getRequiredServerEnvVar("REFRESH_TOKEN")
   ) {

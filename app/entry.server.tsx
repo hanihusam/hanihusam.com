@@ -5,7 +5,6 @@ import { makeTimings } from "./utils/timing.server.ts";
 import { createReadableStreamFromReadable } from "@react-router/node";
 import chalk from "chalk";
 import { isbot } from "isbot";
-import { getInstanceInfo } from "litefs-js";
 import { renderToPipeableStream } from "react-dom/server";
 import {
   type ActionFunctionArgs,
@@ -26,11 +25,8 @@ type DocRequestArgs = Parameters<HandleDocumentRequestFunction>;
 export default async function handleRequest(...args: DocRequestArgs) {
   const [request, responseStatusCode, responseHeaders, reactRouterContext] =
     args;
-  const { currentInstance, primaryInstance } = await getInstanceInfo();
   responseHeaders.set("fly-region", process.env.FLY_REGION ?? "unknown");
   responseHeaders.set("fly-app", process.env.FLY_APP_NAME ?? "unknown");
-  responseHeaders.set("fly-primary-instance", primaryInstance);
-  responseHeaders.set("fly-instance", currentInstance);
 
   const callbackName = isbot(request.headers.get("user-agent"))
     ? "onAllReady"
@@ -82,12 +78,9 @@ export default async function handleRequest(...args: DocRequestArgs) {
   });
 }
 
-export async function handleDataRequest(response: Response) {
-  const { currentInstance, primaryInstance } = await getInstanceInfo();
+export function handleDataRequest(response: Response) {
   response.headers.set("fly-region", process.env.FLY_REGION ?? "unknown");
   response.headers.set("fly-app", process.env.FLY_APP_NAME ?? "unknown");
-  response.headers.set("fly-primary-instance", primaryInstance);
-  response.headers.set("fly-instance", currentInstance);
 
   return response;
 }

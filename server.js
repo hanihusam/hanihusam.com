@@ -1,7 +1,6 @@
 import { createRequestHandler } from "@react-router/express";
 import compression from "compression";
 import express from "express";
-import { getInstanceInfo } from "litefs-js";
 import morgan from "morgan";
 
 const BUILD_PATH = "./build/server/index.js";
@@ -29,13 +28,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(async (req, res, next) => {
-  const { currentInstance, primaryInstance } = await getInstanceInfo();
+app.use((req, res, next) => {
   res.set("X-Powered-By", "Bapak2dev by Han");
   res.set("X-Fly-Region", process.env.FLY_REGION ?? "unknown");
   res.set("X-Fly-App", process.env.FLY_APP_NAME ?? "unknown");
-  res.set("X-Fly-Instance", currentInstance);
-  res.set("X-Fly-Primary-Instance", primaryInstance);
   res.set("X-Frame-Options", "SAMEORIGIN");
   const proto = req.get("X-Forwarded-Proto") ?? req.protocol;
 
