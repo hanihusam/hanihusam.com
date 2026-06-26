@@ -81,3 +81,57 @@ light-mode {
     transition: none;
   }
 }
+
+/*
+ * Progressive blur overlay (top of viewport).
+ * Stacked layers each apply a stronger backdrop blur, masked to an
+ * overlapping band so the blur ramps up smoothly toward the top edge
+ * (clear at the bottom, fully blurred at the top) as content scrolls under.
+ */
+.top-blur > div {
+  position: absolute;
+  inset: 0;
+}
+.top-blur > div:nth-child(1) {
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  mask: linear-gradient(to top, #000 0%, #000 12.5%, transparent 25%);
+}
+.top-blur > div:nth-child(2) {
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  mask: linear-gradient(
+    to top,
+    transparent 12.5%,
+    #000 25%,
+    #000 37.5%,
+    transparent 50%
+  );
+}
+.top-blur > div:nth-child(3) {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  mask: linear-gradient(
+    to top,
+    transparent 37.5%,
+    #000 50%,
+    #000 62.5%,
+    transparent 75%
+  );
+}
+.top-blur > div:nth-child(4) {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  mask: linear-gradient(
+    to top,
+    transparent 62.5%,
+    #000 75%,
+    #000 87.5%,
+    transparent 100%
+  );
+}
+.top-blur > div:nth-child(5) {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  mask: linear-gradient(to top, transparent 87.5%, #000 100%);
+}
