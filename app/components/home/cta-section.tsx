@@ -3,7 +3,7 @@ import { H2 } from "@/components/typography";
 import { ButtonLink } from "@/components/ui/button";
 import { externalLinks } from "@/external-links";
 
-import { EnvelopeIcon } from "@heroicons/react/24/solid";
+import { EnvelopeIcon } from "@phosphor-icons/react";
 
 export function CtaSection() {
   return (
@@ -12,7 +12,10 @@ export function CtaSection() {
         <H2 className="text-light">Interested working with me?</H2>
 
         <div className="flex gap-2 self-stretch">
-          <ButtonLink href={externalLinks.email} iconLeft={<EnvelopeIcon />}>
+          <ButtonLink
+            href={externalLinks.email}
+            iconLeft={<EnvelopeIcon weight="fill" />}
+          >
             Email Me
           </ButtonLink>
         </div>

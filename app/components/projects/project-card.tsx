@@ -7,7 +7,7 @@ import { getImageBuilder, getImgProps } from "@/utils/images";
 
 import { TechIcon } from "./tech-icon";
 
-import { ArrowRightCircleIcon, LinkIcon } from "@heroicons/react/24/outline";
+import { ArrowCircleRightIcon, LinkIcon } from "@phosphor-icons/react";
 
 type ProjectCardProps = {
   project: ProjectFrontmatter;
@@ -93,7 +93,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
         <div className="mt-10 flex w-full flex-wrap items-center justify-between gap-4">
           <ButtonLink
             to={`/works/${project.slug}`}
-            iconRight={<ArrowRightCircleIcon />}
+            iconRight={<ArrowCircleRightIcon />}
           >
             View Project
           </ButtonLink>
