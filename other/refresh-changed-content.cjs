@@ -3,26 +3,37 @@ const { fetchJson, getChangedFiles, postRefreshCache } = require('./utils.cjs')
 
 const [currentCommitSha] = process.argv.slice(2)
 
+// dep-free fetch that never throws — returns null on any failure (404 HTML,
+// timeout, bad JSON) so a missing endpoint degrades gracefully instead of
+// crashing the whole job.
+async function safeFetchJson(url) {
+	try {
+		return await fetchJson(url, { timeoutTime: 10_000 })
+	} catch (error) {
+		console.log(`Could not read ${url}:`, error?.message ?? error)
+		return null
+	}
+}
+
 async function go() {
-	const shaInfo = await fetchJson(
+	const shaInfo = await safeFetchJson(
 		'https://hanihusam-com.fly.dev/refresh-commit-sha.json',
-		{
-			timeoutTime: 10_000,
-		},
 	)
 	let compareSha = shaInfo?.sha
 	if (!compareSha) {
-		const buildInfo = await fetchJson(
-			'https://hanihusam-com.fly.dev/build/client/build/info.json',
-			{
-				timeoutTime: 10_000,
-			},
+		// Static build info is served from the build/client root, so it lives at
+		// /build/info.json (not /build/client/build/info.json). Shape is
+		// { buildTime, commit: { sha, ... } }.
+		const buildInfo = await safeFetchJson(
+			'https://hanihusam-com.fly.dev/build/info.json',
 		)
-		compareSha = buildInfo.data.sha
-		console.log(`No compare sha found, using build sha: ${buildInfo.data.sha}`)
+		compareSha = buildInfo?.commit?.sha
+		if (compareSha) {
+			console.log(`No compare sha found, using build sha: ${compareSha}`)
+		}
 	}
 	if (typeof compareSha !== 'string') {
-		console.log('🤷‍♂️ No sha to compare to. Unsure what to refresh.')
+		console.log('🤷‍♂️ No sha to compare to. Nothing to refresh.')
 		return
 	}
 
