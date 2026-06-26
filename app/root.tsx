@@ -14,6 +14,7 @@ import { getTheme } from "@/utils/theme.server";
 
 import { type Route } from "./+types/root";
 import { Navigation } from "./components/navigation";
+import { TopBlurOverlay } from "./components/top-blur-overlay";
 
 import {
   isRouteErrorResponse,
@@ -169,6 +170,7 @@ function App({
       </head>
       <body>
         <LayoutRoot surface={surface}>
+          <TopBlurOverlay />
           <Outlet />
           <Footer />
           <Navigation />
