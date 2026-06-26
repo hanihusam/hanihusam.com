@@ -45,7 +45,7 @@ concurrently)
 - **Styling:** Tailwind CSS + custom CSS
 - **Database:** SQLite with Prisma ORM
 - **Content:** MDX files via GitHub API (fetched dynamically)
-- **Deployment:** Fly.io (with LiteFS for distributed SQLite)
+- **Deployment:** Fly.io (single machine, SQLite on a mounted volume)
 - **Testing:** Vitest (unit/components) + Cypress (E2E)
 
 ### Project Structure
@@ -83,7 +83,7 @@ other/                # Build utilities and scripts
 ### Entry Points
 
 - **Server:** `entry.server.tsx` - Handles SSR with streaming, CSP nonce
-  injection, Fly.io instance tracking
+  injection, Fly.io region/app response headers
 - **Client:** `entry.client.tsx` - Hydration and client-side setup
 - **Root:** `app/root.tsx` - Global layout, theme provider, stylesheet
   injection, error boundaries
@@ -144,13 +144,55 @@ For development: Use `npm run dev` which watches all three in parallel.
 
 ### Content Management
 
-Blog posts are MDX files managed via GitHub. The system:
+Project/works content is MDX files in `contents/projects/` — flat files
+(`<slug>.mdx`), no colocated subdirectories. Images are served via Cloudinary,
+not colocated.
 
-1. Fetches from GitHub API using `downloadFileBySha()` (requires
-   `BOT_GITHUB_TOKEN`)
-2. Caches in SQLite via `@epic-web/cachified`
-3. Compiles MDX with `mdx-bundler` + syntax highlighting (Shiki/Rehype)
-4. Watches local `contents/` directory for dev hot reload
+The MDX pipeline follows a **hybrid local-dev / GitHub-production model**
+(adapted from kentcdodds.com):
+
+- **Development** (`NODE_ENV=development`): `github.server.ts` reads directly
+  from the working tree via `node:fs`. New or edited `.mdx` files appear
+  immediately — no push to GitHub required.
+- **Production**: same functions fall through to the GitHub API (Octokit) and
+  fetch by SHA.
+
+The branch point is the `useLocalContent` flag at the top of
+`app/utils/github.server.ts`:
+
+```ts
+const useLocalContent = process.env.NODE_ENV === "development";
+```
+
+Both `downloadMdxFileOrDirectory` and `downloadDirList` check this flag.
+
+The full pipeline per request:
+
+1. `downloadDirList("contents/projects")` → slugs
+2. `downloadMdxFileOrDirectory("projects/<slug>")` → raw `GitHubFile[]`
+3. `compileMdx()` (`mdx-bundler` + Shiki/rehype) → `{ code, frontmatter }`
+4. Blur URL injected from Cloudinary for `bannerCloudinaryId`
+5. Result cached in `other/cache.db` via `@epic-web/cachified`
+
+The content watcher (`other/refresh-on-content-change.ts`) triggers cache
+invalidation when local content files change during dev.
+
+**`ContentType = "projects"`** — the type is intentionally narrowed to a single
+literal. There is no blog; content has been moved to Substack. All generic
+`<T extends ContentType>` signatures in `mdx.server.ts` have been collapsed to
+concrete types. Do not widen this back to `"blog" | "projects"`.
+
+**Stale cache in dev:** If the works list appears empty after switching branches
+or clearing content, clear the cache manually:
+
+```sh
+sqlite3 other/cache.db "DELETE FROM cache WHERE key LIKE 'projects:%'"
+```
+
+**Views and likes** are tracked in the `ContentMeta` Prisma table, keyed purely
+by `slug`. The same `getContentViews` / `incrementViews` / `incrementLikes`
+functions from `app/utils/blog.server.ts` serve both the list and the detail
+page unchanged.
 
 ### Database
 
@@ -158,7 +200,11 @@ Blog posts are MDX files managed via GitHub. The system:
 - **Database:** SQLite (main: `prisma/data.db`, cache: `other/cache.db`)
 - **Migrations:** Auto-applied on startup via `npm run setup`
 - **Seeding:** `prisma/seed.ts` (uses Faker for test data)
-- **Fly.io:** Uses LiteFS for distributed SQLite with automatic failover
+- **Fly.io:** A single machine with both SQLite files (`sqlite.db`, `cache.db`)
+  stored directly on the mounted volume at `/data`. The container boots via
+  `start.sh` (runs `prisma migrate deploy`, then the Express server on port
+  8080). No LiteFS/replication — the app is single-region, so cache writes go
+  straight to the local SQLite with no primary/replica forwarding.
 
 ### Caching Strategy
 
@@ -166,7 +212,8 @@ Uses `@epic-web/cachified` for intelligent caching:
 
 - GitHub content cached with TTL
 - Cache invalidated via refresh endpoint (`action.refresh-cache.tsx`)
-- Cache stored in separate SQLite database to avoid conflicts with main DB
+- Cache stored in a separate SQLite database (`cache.db`) to avoid conflicts
+  with the main DB; an in-process `LRUCache` sits in front of it
 
 ### Performance Considerations
 
