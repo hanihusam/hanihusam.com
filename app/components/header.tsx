@@ -4,7 +4,7 @@ import { ButtonLink } from "./ui/button";
 import { Grid } from "./grid";
 import { H2, Text } from "./typography";
 
-import { ArrowRightCircleIcon } from "@heroicons/react/24/outline";
+import { ArrowCircleRightIcon } from "@phosphor-icons/react";
 
 interface HeaderProps {
   title: string;
@@ -45,7 +45,7 @@ function Header({
           <ButtonLink
             variant="ghost"
             href={ctaUrl}
-            iconRight={<ArrowRightCircleIcon />}
+            iconRight={<ArrowCircleRightIcon />}
           >
             {cta}
           </ButtonLink>

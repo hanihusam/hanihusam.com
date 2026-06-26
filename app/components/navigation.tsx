@@ -3,19 +3,19 @@ import { SubstackLogo } from "@/components/writing/substack-logo";
 import NavigationItem from "./ui/navigation-item";
 import ThemeSwitcher from "./ui/theme-switcher";
 
-import { HomeIcon, WrenchScrewdriverIcon } from "@heroicons/react/24/outline";
+import { HouseIcon, WrenchIcon } from "@phosphor-icons/react";
 
 const links = [
   {
     href: "/",
     label: "Home",
-    icon: HomeIcon,
+    icon: HouseIcon,
     key: "Home",
   },
   {
     href: "/works",
     label: "Projects",
-    icon: WrenchScrewdriverIcon,
+    icon: WrenchIcon,
   },
   {
     href: "https://bapak2dev.substack.com/",

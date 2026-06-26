@@ -26,12 +26,11 @@ import { getServerTimeHeader } from "@/utils/timing.server";
 import { type Route } from "./+types/works.$slug";
 
 import {
-  ArrowLeftCircleIcon,
-  ArrowTopRightOnSquareIcon,
-  CodeBracketIcon,
-  HandThumbUpIcon,
-} from "@heroicons/react/24/outline";
-import { HandThumbUpIcon as HandThumbUpSolidIcon } from "@heroicons/react/24/solid";
+  ArrowCircleLeftIcon,
+  ArrowSquareOutIcon,
+  CodeIcon,
+  ThumbsUpIcon,
+} from "@phosphor-icons/react";
 import { motion } from "framer-motion";
 import { data, Link, useFetcher } from "react-router";
 
@@ -239,7 +238,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
           className="group col-span-full flex items-center space-x-6"
           to="/works"
         >
-          <ArrowLeftCircleIcon className="dark:text-light h-8 w-8 text-black duration-500 group-hover:-translate-x-1.5" />
+          <ArrowCircleLeftIcon className="dark:text-light h-8 w-8 text-black duration-500 group-hover:-translate-x-1.5" />
           <H4 className="dark:text-light text-black">Back to projects</H4>
         </Link>
       </Grid>
@@ -276,7 +275,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm text-(--text-link) hover:underline"
               >
-                <ArrowTopRightOnSquareIcon className="size-4" />
+                <ArrowSquareOutIcon className="size-4" />
                 Live Site
               </a>
             ) : null}
@@ -287,7 +286,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 text-sm text-(--text-link) hover:underline"
               >
-                <CodeBracketIcon className="size-4" />
+                <CodeIcon className="size-4" />
                 GitHub
               </a>
             ) : null}
@@ -365,9 +364,9 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
             className="border-primary-500 text-primary-500 hover:border-primary-700 hover:text-primary-700 disabled:border-primary-300 disabled:text-primary-300 h-12 w-12 rounded-full border p-2 disabled:cursor-not-allowed"
           >
             {meta.likesByUser > 0 ? (
-              <HandThumbUpSolidIcon />
+              <ThumbsUpIcon weight="fill" />
             ) : (
-              <HandThumbUpIcon />
+              <ThumbsUpIcon />
             )}
           </motion.button>
           <H4 className={clsxm({ "text-primary-300": isUserLiked })}>
