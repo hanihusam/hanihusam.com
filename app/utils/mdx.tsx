@@ -3,6 +3,7 @@ import * as React from "react";
 import { CloudinaryImg } from "@/components/blog/cloudinary-img";
 import { ThemedBlogImage } from "@/components/blog/themed-blog-image";
 import { AnchorOrLink } from "@/components/links/anchor-or-link";
+import { CodeBlock } from "@/components/mdx/code-block";
 
 import { Themed } from "./theme";
 
@@ -11,6 +12,7 @@ import * as mdxBundler from "mdx-bundler/client/index.js";
 
 const mdxComponents = {
   a: AnchorOrLink,
+  pre: CodeBlock,
   Themed,
   ThemedBlogImage,
   CloudinaryImg,

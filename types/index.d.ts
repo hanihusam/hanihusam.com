@@ -25,6 +25,7 @@ export type ProjectFrontmatter = {
   lastUpdated?: string;
   description: string;
   category?: string;
+  role?: string;
   techs: string;
   bannerCloudinaryId: string;
   link?: string;

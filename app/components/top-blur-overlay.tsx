@@ -29,8 +29,6 @@ export function TopBlurOverlay() {
       <div />
       <div />
       <div />
-      <div />
-      <div />
     </div>
   );
 }

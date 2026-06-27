@@ -188,10 +188,8 @@ async function compileMdx<FrontmatterType>(
           [
             rehypePrettyCode,
             {
-              theme: {
-                light: "github-light",
-                dark: "github-dark",
-              },
+              theme: "github-dark",
+              keepBackground: false,
             },
           ],
           ...[optimizeCloudinaryImages, trimCodeBlocks, removePreContainerDivs],
