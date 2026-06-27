@@ -6,7 +6,7 @@
 .prose p,
 .prose > div {
   margin-top: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
   font-size: 1.125rem;
 }
 
@@ -31,20 +31,21 @@
 }
 
 .prose pre {
-  color: var(--base05);
-  background-color: var(--base00);
-  margin-top: 0;
-  margin-bottom: 2rem;
-  margin-left: -10vw;
-  margin-right: -10vw;
-  padding: 2rem;
+  margin: 0;
+  padding: 1rem 1.25rem;
+  overflow-x: auto;
   border-radius: 0;
+  background-color: transparent;
+  color: var(--color-neutral-100);
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 22.4px;
 }
 
 .prose ul,
 .prose ol {
   margin-top: 0;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 .prose h1,
@@ -61,8 +62,8 @@
 .prose h1,
 .prose h2 {
   font-size: 1.5rem;
-  margin-top: 5rem;
-  margin-bottom: 2.5rem;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
 }
 
 .prose h1:first-child,
@@ -72,14 +73,16 @@
 
 .prose h3 {
   font-size: 1.25rem;
-  margin-top: 4rem;
-  margin-bottom: 2.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .prose h4,
 .prose h5,
 .prose h6 {
   font-size: 1.125rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .prose img {
@@ -124,7 +127,19 @@
 }
 
 .prose.prose-light code {
-  color: var(--color-neutral-800);
+  color: var(--color-neutral-100);
+}
+
+/* Inline code pill (Figma 235-69) — always-dark to match the code-block chrome. */
+.prose.prose-light :not(pre) > code,
+.dark .dark\:prose-dark :not(pre) > code {
+  background-color: var(--color-neutral-950);
+  color: var(--color-neutral-100);
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
 .prose.prose-light h1,
@@ -189,13 +204,6 @@
 @media (min-width: 1024px) {
   .prose > * {
     grid-column: 3 / span 8;
-  }
-
-  .prose pre {
-    border-radius: 0.5rem;
-    margin-left: 0;
-    margin-right: 0;
-    grid-column: 2 / span 10;
   }
 
   .prose h1,
@@ -527,6 +535,10 @@ pre {
 }
 
 /* #region  /**=========== Hash Anchor =========== */
+/*
+ * The autolinked heading anchor stays for deep-linking but is invisible — no
+ * leading `#`. Hovering the heading underlines its text instead.
+ */
 .hash-anchor {
   display: inline-flex;
   width: 100%;
@@ -538,8 +550,8 @@ pre {
   transition: none;
 }
 
-.hash-anchor:after {
-  color: var(--text-link);
-  content: "#";
+.prose :where(h1, h2, h3, h4):hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 /* #endregion  /**======== Hash Anchor =========== */
