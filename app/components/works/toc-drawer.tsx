@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { type HeadingScrollSpy, TocList } from "@/components/works/toc-list";
 
-import { ListBulletIcon } from "@heroicons/react/24/outline";
+import { ListBulletsIcon } from "@phosphor-icons/react";
 import { Drawer } from "vaul";
 
 type WorkTocDrawerProps = {
@@ -31,7 +31,7 @@ export function WorkTocDrawer({
         aria-label="Open table of contents"
         className="fixed right-8 bottom-8 z-20 grid size-11 place-items-center rounded-md border border-(--border-primary) bg-(--surface-primary) text-(--icon-primary) shadow-lg transition-colors hover:bg-(--nav-item-surface-active) focus:outline-none lg:hidden"
       >
-        <ListBulletIcon className="h-5 w-5" />
+        <ListBulletsIcon className="h-5 w-5" />
       </Drawer.Trigger>
 
       <Drawer.Portal>
