@@ -23,13 +23,11 @@ import { getServerTimeHeader } from "@/utils/timing.server";
 import { type Route } from "./+types/works.$slug";
 
 import {
-  ArrowCircleLeftIcon,
+  ArrowLeftIcon,
   ArrowSquareOutIcon,
   CodeIcon,
-  ThumbsUpIcon,
 } from "@phosphor-icons/react";
-import { motion } from "framer-motion";
-import { data, Link, useFetcher } from "react-router";
+import { data, useFetcher } from "react-router";
 
 export async function action({ params, request }: Route.ActionArgs) {
   if (!params.slug) {
@@ -240,7 +238,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
               to="/works"
               variant="ghost"
               size="md"
-              iconLeft={<ArrowSmallLeftIcon />}
+              iconLeft={<ArrowLeftIcon />}
             >
               Back to the list
             </ButtonLink>
@@ -287,7 +285,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-base text-(--text-paragraph) transition-colors hover:text-(--text-link)"
                       >
-                        <CodeBracketIcon className="size-5" />
+                        <CodeIcon className="size-5" />
                         Repository
                       </a>
                     ) : null}
@@ -298,7 +296,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-base text-(--text-paragraph) transition-colors hover:text-(--text-link)"
                       >
-                        <ArrowTopRightOnSquareIcon className="size-5" />
+                        <ArrowSquareOutIcon className="size-5" />
                         Open Live Site
                       </a>
                     ) : null}

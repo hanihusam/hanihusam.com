@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { clsxm } from "@/utils/clsxm";
 
-import { CheckIcon, ClipboardIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, ClipboardIcon } from "@phosphor-icons/react";
 
 type CodeBlockProps = React.ComponentPropsWithoutRef<"pre"> & {
   "data-language"?: string;
