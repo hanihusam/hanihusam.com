@@ -23,11 +23,13 @@ import { getServerTimeHeader } from "@/utils/timing.server";
 import { type Route } from "./+types/works.$slug";
 
 import {
-  ArrowSmallLeftIcon,
-  ArrowTopRightOnSquareIcon,
-  CodeBracketIcon,
-} from "@heroicons/react/24/outline";
-import { data, useFetcher } from "react-router";
+  ArrowCircleLeftIcon,
+  ArrowSquareOutIcon,
+  CodeIcon,
+  ThumbsUpIcon,
+} from "@phosphor-icons/react";
+import { motion } from "framer-motion";
+import { data, Link, useFetcher } from "react-router";
 
 export async function action({ params, request }: Route.ActionArgs) {
   if (!params.slug) {

@@ -5,10 +5,7 @@ import { Button, ButtonLink, LinkButton } from "@/components/ui/button";
 import Logo from "@/components/ui/logo";
 import { getImageBuilder, getImgProps } from "@/utils/images";
 
-import {
-  ArrowDownIcon,
-  ArrowRightCircleIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowCircleRightIcon, ArrowDownIcon } from "@phosphor-icons/react";
 
 export function HeroSection() {
   return (
@@ -56,7 +53,7 @@ export function HeroSection() {
             <AnchorOrLink className="hidden md:inline-flex" to="about">
               <LinkButton className="relative inline-flex items-center justify-center gap-1 text-(--text-paragraph)">
                 <Paragraph as="span">More about me</Paragraph>
-                <ArrowRightCircleIcon className="size-5 shrink-0" />
+                <ArrowCircleRightIcon className="size-5 shrink-0" />
               </LinkButton>
             </AnchorOrLink>
             <div className="flex w-full gap-x-2 md:hidden">

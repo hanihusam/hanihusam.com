@@ -15,7 +15,7 @@ import { getServerTimeHeader } from "@/utils/timing.server";
 
 import { type Route } from "./+types/works._index";
 
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { PlusIcon } from "@phosphor-icons/react";
 import { data, type HeadersArgs, useSearchParams } from "react-router";
 
 export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {

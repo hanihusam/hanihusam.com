@@ -4,8 +4,7 @@ import { clsxm } from "@/utils/clsxm.ts";
 
 import { Button } from "./button";
 
-import { DocumentDuplicateIcon } from "@heroicons/react/24/outline";
-import { CheckCircleIcon } from "@heroicons/react/24/solid";
+import { CheckCircleIcon, CopyIcon } from "@phosphor-icons/react";
 
 async function copyToClipboard(value: string) {
   try {
@@ -71,7 +70,7 @@ export function ClipboardCopyButton({
             copied ? "opacity-0 blur-sm" : "opacity-100 blur-none",
           )}
         >
-          <DocumentDuplicateIcon />
+          <CopyIcon />
         </span>
         <span
           className={clsxm(
@@ -79,7 +78,7 @@ export function ClipboardCopyButton({
             copied ? "opacity-100 blur-none" : "opacity-0 blur-sm",
           )}
         >
-          <CheckCircleIcon />
+          <CheckCircleIcon weight="fill" />
         </span>
       </span>
     </Button>
