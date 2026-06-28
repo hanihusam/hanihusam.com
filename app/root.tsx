@@ -1,5 +1,6 @@
 import { Footer } from '@/components/footer'
 import { LayoutRoot } from '@/components/layout'
+import { NotFound } from '@/components/not-found'
 import appStyles from '@/styles/app.css?url'
 import fonts from '@/styles/fonts.css?url'
 import noScriptStyles from '@/styles/no-script.css?url'
@@ -26,6 +27,7 @@ import {
 	ScrollRestoration,
 	useMatches,
 	useRouteError,
+	useRouteLoaderData,
 } from 'react-router'
 
 export const links: LinksFunction = () => {
@@ -133,22 +135,17 @@ export async function loader({ request }: Route.LoaderArgs) {
 	return data
 }
 
-function App({
-	loaderData: data,
+function Document({
+	children,
+	nonce,
+	theme = 'light',
+	env,
 }: {
-	loaderData: Route.ComponentProps['loaderData']
+	children: React.ReactNode
+	nonce: string
+	theme?: string
+	env?: Record<string, unknown>
 }) {
-	const nonce = useNonce()
-	const theme = useTheme()
-	const matches = useMatches()
-	const surface = matches.some(
-		(match) =>
-			(match.handle as { surface?: 'primary' | 'secondary' } | undefined)
-				?.surface === 'secondary',
-	)
-		? 'secondary'
-		: 'primary'
-
 	return (
 		<html className={theme} lang="en">
 			<head>
@@ -169,24 +166,49 @@ function App({
 				/>
 			</head>
 			<body>
-				<LayoutRoot surface={surface}>
-					<TopBlurOverlay />
-					<Outlet />
-					<Footer />
-					<Navigation />
-				</LayoutRoot>
+				{children}
 
 				<ScrollRestoration nonce={nonce} />
 				<Scripts nonce={nonce} />
-				<script
-					nonce={nonce}
-					suppressHydrationWarning
-					dangerouslySetInnerHTML={{
-						__html: `window.ENV = ${JSON.stringify(data.ENV)};`,
-					}}
-				/>
+				{env ? (
+					<script
+						nonce={nonce}
+						suppressHydrationWarning
+						dangerouslySetInnerHTML={{
+							__html: `window.ENV = ${JSON.stringify(env)};`,
+						}}
+					/>
+				) : null}
 			</body>
 		</html>
+	)
+}
+
+function App({
+	loaderData: data,
+}: {
+	loaderData: Route.ComponentProps['loaderData']
+}) {
+	const nonce = useNonce()
+	const theme = useTheme()
+	const matches = useMatches()
+	const surface = matches.some(
+		(match) =>
+			(match.handle as { surface?: 'primary' | 'secondary' } | undefined)
+				?.surface === 'secondary',
+	)
+		? 'secondary'
+		: 'primary'
+
+	return (
+		<Document nonce={nonce} theme={theme} env={data.ENV}>
+			<LayoutRoot surface={surface}>
+				<TopBlurOverlay />
+				<Outlet />
+				<Footer />
+				<Navigation />
+			</LayoutRoot>
+		</Document>
 	)
 }
 
@@ -195,28 +217,47 @@ export default function AppWithProviders({ loaderData }: Route.ComponentProps) {
 }
 
 export function ErrorBoundary() {
+	const nonce = useNonce()
 	const error = useRouteError()
 
-	// when true, this is what used to go to `CatchBoundary`
-	if (isRouteErrorResponse(error)) {
-		return (
-			<div>
-				<h1>Oops</h1>
-				<p>Status: {error.status}</p>
-				<p>{error.data.message}</p>
-			</div>
-		)
-	}
+	// Read the theme straight from the root loader data (present whenever a child
+	// route errors) without going through `useTheme`, which would throw if the
+	// root loader itself failed. Falls back to light so the boundary always
+	// renders.
+	const rootData = useRouteLoaderData<typeof loader>('root')
+	const theme =
+		rootData?.requestInfo.userPrefs.theme ??
+		rootData?.requestInfo.hints.theme ??
+		'light'
 
-	// Don't forget to typecheck with your own logic.
-	// Any value can be thrown, not just errors!
-	const errorMessage = toErrorWithMessage(error)
+	const is404 = isRouteErrorResponse(error) && error.status === 404
+	const errorMessage = isRouteErrorResponse(error)
+		? error.data?.message
+		: toErrorWithMessage(error).message
 
 	return (
-		<div>
-			<h1>Uh oh ...</h1>
-			<p>Something went wrong.</p>
-			<pre>{errorMessage.message}</pre>
-		</div>
+		<Document nonce={nonce} theme={theme}>
+			<LayoutRoot surface="primary">
+				{is404 ? (
+					<NotFound />
+				) : (
+					<main className="relative flex grow flex-col items-center justify-center px-6 py-24 sm:px-8">
+						<div className="flex w-full max-w-(--container-site) flex-col items-start gap-4">
+							<h1 className="text-4xl font-black text-(--text-title-primary) md:text-5xl">
+								Something went wrong
+							</h1>
+							<p className="text-(--text-overline)">
+								Sorry about that. Please try again later.
+							</p>
+							{errorMessage ? (
+								<pre className="max-w-full overflow-auto text-sm text-(--text-caption)">
+									{errorMessage}
+								</pre>
+							) : null}
+						</div>
+					</main>
+				)}
+			</LayoutRoot>
+		</Document>
 	)
 }
