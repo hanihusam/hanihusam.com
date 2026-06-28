@@ -22,7 +22,7 @@ export function TopBlurOverlay() {
 		<div
 			aria-hidden
 			className={clsxm(
-				'top-blur pointer-events-none fixed inset-x-0 top-0 z-30 h-24 transition-opacity duration-300',
+				'top-blur pointer-events-none fixed inset-x-0 top-0 z-30 h-16 transition-opacity duration-300 sm:h-24',
 				scrolled ? 'opacity-100' : 'opacity-0',
 			)}
 		>
