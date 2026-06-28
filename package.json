@@ -53,6 +53,7 @@
     "@epic-web/invariant": "^1.0.0",
     "@epic-web/remember": "^1.1.0",
     "@headlessui/react": "^2.2.10",
+    "@icons-pack/react-simple-icons": "^13.13.0",
     "@octokit/plugin-throttling": "^10.0.0",
     "@octokit/rest": "^21.1.0",
     "@phosphor-icons/react": "^2.1.10",
