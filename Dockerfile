@@ -1,5 +1,5 @@
 # Base node image
-FROM node:20-bookworm-slim AS base
+FROM node:22.22.0-bookworm-slim AS base
 
 # Install openssl for Prisma and other dependencies
 RUN apt-get update && apt-get install -y openssl sqlite3 ca-certificates

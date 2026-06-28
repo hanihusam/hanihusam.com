@@ -1,124 +1,124 @@
-import { type GitHubFile } from "@/types";
+import { type GitHubFile } from '@/types'
 
-import { throttling } from "@octokit/plugin-throttling";
-import { Octokit as createOctokit } from "@octokit/rest";
-import { promises as fs } from "node:fs";
-import nodePath from "path";
+import { throttling } from '@octokit/plugin-throttling'
+import { Octokit as createOctokit } from '@octokit/rest'
+import { promises as fs } from 'node:fs'
+import nodePath from 'path'
 
 // In development we read content straight from the working tree so new or
 // edited content shows up without having to push it to GitHub first.
-const useLocalContent = process.env.NODE_ENV === "development";
+const useLocalContent = process.env.NODE_ENV === 'development'
 
-const Octokit = createOctokit.plugin(throttling);
+const Octokit = createOctokit.plugin(throttling)
 
 const octokit = new Octokit({
-  auth: process.env.BOT_GITHUB_TOKEN,
-  throttle: {
-    onRateLimit: (retryAfter, options) => {
-      console.warn(
-        `Request quota exhausted for request ${options.method} ${options.url}. Retrying after ${retryAfter} seconds.`,
-      );
+	auth: process.env.BOT_GITHUB_TOKEN,
+	throttle: {
+		onRateLimit: (retryAfter, options) => {
+			console.warn(
+				`Request quota exhausted for request ${options.method} ${options.url}. Retrying after ${retryAfter} seconds.`,
+			)
 
-      return true;
-    },
-    onSecondaryRateLimit: (_, options) => {
-      octokit.log.warn(
-        `Abuse detected for request ${options.method} ${options.url}`,
-      );
-    },
-  },
-});
+			return true
+		},
+		onSecondaryRateLimit: (_, options) => {
+			octokit.log.warn(
+				`Abuse detected for request ${options.method} ${options.url}`,
+			)
+		},
+	},
+})
 
 type DirListItem = {
-  name: string;
-  type: string;
-  path: string;
-  sha: string;
-};
+	name: string
+	type: string
+	path: string
+	sha: string
+}
 
 //#region //*=========== Local (development) content reading ===========
 async function readLocalDirList(dirPath: string): Promise<Array<DirListItem>> {
-  const fullPath = nodePath.join(process.cwd(), dirPath);
-  const entries = await fs.readdir(fullPath, { withFileTypes: true });
-  return entries
-    .filter((entry) => !entry.name.startsWith("."))
-    .map((entry) => ({
-      name: entry.name,
-      path: nodePath.join(dirPath, entry.name),
-      type: entry.isDirectory() ? "dir" : "file",
-      sha: "",
-    }));
+	const fullPath = nodePath.join(process.cwd(), dirPath)
+	const entries = await fs.readdir(fullPath, { withFileTypes: true })
+	return entries
+		.filter((entry) => !entry.name.startsWith('.'))
+		.map((entry) => ({
+			name: entry.name,
+			path: nodePath.join(dirPath, entry.name),
+			type: entry.isDirectory() ? 'dir' : 'file',
+			sha: '',
+		}))
 }
 
 async function readLocalDirectory(dir: string): Promise<Array<GitHubFile>> {
-  const entries = await readLocalDirList(dir);
-  const result = await Promise.all(
-    entries.map(async (entry) => {
-      if (entry.type === "dir") return readLocalDirectory(entry.path);
-      const content = await fs.readFile(
-        nodePath.join(process.cwd(), entry.path),
-        "utf8",
-      );
-      return [{ path: entry.path, content }];
-    }),
-  );
-  return result.flat();
+	const entries = await readLocalDirList(dir)
+	const result = await Promise.all(
+		entries.map(async (entry) => {
+			if (entry.type === 'dir') return readLocalDirectory(entry.path)
+			const content = await fs.readFile(
+				nodePath.join(process.cwd(), entry.path),
+				'utf8',
+			)
+			return [{ path: entry.path, content }]
+		}),
+	)
+	return result.flat()
 }
 
 async function downloadLocalMdxFileOrDirectory(
-  relativeMdxFileOrDirectory: string,
+	relativeMdxFileOrDirectory: string,
 ): Promise<{ entry: string; files: Array<GitHubFile> }> {
-  const mdxFileOrDirectory = `contents/${relativeMdxFileOrDirectory}`;
-  const parentDir = nodePath.dirname(mdxFileOrDirectory);
+	const mdxFileOrDirectory = `contents/${relativeMdxFileOrDirectory}`
+	const parentDir = nodePath.dirname(mdxFileOrDirectory)
 
-  let dirList: Array<DirListItem>;
-  try {
-    dirList = await readLocalDirList(parentDir);
-  } catch {
-    return { entry: mdxFileOrDirectory, files: [] };
-  }
+	let dirList: Array<DirListItem>
+	try {
+		dirList = await readLocalDirList(parentDir)
+	} catch {
+		return { entry: mdxFileOrDirectory, files: [] }
+	}
 
-  const basename = nodePath.basename(mdxFileOrDirectory);
-  const mdxFileWithoutExt = nodePath.parse(mdxFileOrDirectory).name;
-  const potentials = dirList.filter(({ name }) => name.startsWith(basename));
-  const exactMatch = potentials.find(
-    ({ name }) => nodePath.parse(name).name === mdxFileWithoutExt,
-  );
-  const fileMatch = (exactMatch ? [exactMatch] : potentials).find(
-    ({ type, name }) =>
-      type === "file" && (name.endsWith(".mdx") || name.endsWith(".md")),
-  );
-  const dirPotential = potentials.find(({ type }) => type === "dir");
+	const basename = nodePath.basename(mdxFileOrDirectory)
+	const mdxFileWithoutExt = nodePath.parse(mdxFileOrDirectory).name
+	const potentials = dirList.filter(({ name }) => name.startsWith(basename))
+	const exactMatch = potentials.find(
+		({ name }) => nodePath.parse(name).name === mdxFileWithoutExt,
+	)
+	const fileMatch = (exactMatch ? [exactMatch] : potentials).find(
+		({ type, name }) =>
+			type === 'file' && (name.endsWith('.mdx') || name.endsWith('.md')),
+	)
+	const dirPotential = potentials.find(({ type }) => type === 'dir')
 
-  let files: Array<GitHubFile> = [];
-  let entry = mdxFileOrDirectory;
-  if (fileMatch) {
-    const content = await fs.readFile(
-      nodePath.join(process.cwd(), fileMatch.path),
-      "utf8",
-    );
-    entry = mdxFileOrDirectory.endsWith(".mdx")
-      ? mdxFileOrDirectory
-      : `${mdxFileOrDirectory}.mdx`;
-    files = [{ path: nodePath.join(mdxFileOrDirectory, "index.mdx"), content }];
-  } else if (dirPotential) {
-    entry = dirPotential.path;
-    files = await readLocalDirectory(mdxFileOrDirectory);
-  }
+	let files: Array<GitHubFile> = []
+	let entry = mdxFileOrDirectory
+	if (fileMatch) {
+		const content = await fs.readFile(
+			nodePath.join(process.cwd(), fileMatch.path),
+			'utf8',
+		)
+		entry = mdxFileOrDirectory.endsWith('.mdx')
+			? mdxFileOrDirectory
+			: `${mdxFileOrDirectory}.mdx`
+		files = [{ path: nodePath.join(mdxFileOrDirectory, 'index.mdx'), content }]
+	} else if (dirPotential) {
+		entry = dirPotential.path
+		files = await readLocalDirectory(mdxFileOrDirectory)
+	}
 
-  return { entry, files };
+	return { entry, files }
 }
 //#endregion //*=========== Local (development) content reading ===========
 
 async function downloadFirstMdxFile(
-  list: Array<{ name: string; type: string; path: string; sha: string }>,
+	list: Array<{ name: string; type: string; path: string; sha: string }>,
 ) {
-  const filesOnly = list.filter(({ type }) => type === "file");
-  for (const extension of [".mdx", ".md"]) {
-    const file = filesOnly.find(({ name }) => name.endsWith(extension));
-    if (file) return downloadFileBySha(file.sha);
-  }
-  return null;
+	const filesOnly = list.filter(({ type }) => type === 'file')
+	for (const extension of ['.mdx', '.md']) {
+		const file = filesOnly.find(({ name }) => name.endsWith(extension))
+		if (file) return downloadFileBySha(file.sha)
+	}
+	return null
 }
 
 /**
@@ -129,46 +129,46 @@ async function downloadFirstMdxFile(
  * @returns A promise that resolves to an Array of GitHubFiles for the necessary files
  */
 async function downloadMdxFileOrDirectory(
-  relativeMdxFileOrDirectory: string,
+	relativeMdxFileOrDirectory: string,
 ): Promise<{ entry: string; files: Array<GitHubFile> }> {
-  if (useLocalContent) {
-    return downloadLocalMdxFileOrDirectory(relativeMdxFileOrDirectory);
-  }
+	if (useLocalContent) {
+		return downloadLocalMdxFileOrDirectory(relativeMdxFileOrDirectory)
+	}
 
-  const mdxFileOrDirectory = `contents/${relativeMdxFileOrDirectory}`;
+	const mdxFileOrDirectory = `contents/${relativeMdxFileOrDirectory}`
 
-  const parentDir = nodePath.dirname(mdxFileOrDirectory);
-  const dirList = await downloadDirList(parentDir);
+	const parentDir = nodePath.dirname(mdxFileOrDirectory)
+	const dirList = await downloadDirList(parentDir)
 
-  const basename = nodePath.basename(mdxFileOrDirectory);
-  const mdxFileWithoutExt = nodePath.parse(mdxFileOrDirectory).name;
-  const potentials = dirList.filter(({ name }) => name.startsWith(basename));
-  const exactMatch = potentials.find(
-    ({ name }) => nodePath.parse(name).name === mdxFileWithoutExt,
-  );
-  const dirPotential = potentials.find(({ type }) => type === "dir");
+	const basename = nodePath.basename(mdxFileOrDirectory)
+	const mdxFileWithoutExt = nodePath.parse(mdxFileOrDirectory).name
+	const potentials = dirList.filter(({ name }) => name.startsWith(basename))
+	const exactMatch = potentials.find(
+		({ name }) => nodePath.parse(name).name === mdxFileWithoutExt,
+	)
+	const dirPotential = potentials.find(({ type }) => type === 'dir')
 
-  const content = await downloadFirstMdxFile(
-    exactMatch ? [exactMatch] : potentials,
-  );
-  let files: Array<GitHubFile> = [];
-  let entry = mdxFileOrDirectory;
-  if (content) {
-    // technically you can get the blog post by adding .mdx at the end... Weird
-    // but may as well handle it since that's easy...
-    entry = mdxFileOrDirectory.endsWith(".mdx")
-      ? mdxFileOrDirectory
-      : `${mdxFileOrDirectory}.mdx`;
-    // /contents/about.mdx => entry is about.mdx, but compileMdx needs
-    // the entry to be called "/contents/index.mdx" so we'll set it to that
-    // because this is the entry for this path
-    files = [{ path: nodePath.join(mdxFileOrDirectory, "index.mdx"), content }];
-  } else if (dirPotential) {
-    entry = dirPotential.path;
-    files = await downloadDirectory(mdxFileOrDirectory);
-  }
+	const content = await downloadFirstMdxFile(
+		exactMatch ? [exactMatch] : potentials,
+	)
+	let files: Array<GitHubFile> = []
+	let entry = mdxFileOrDirectory
+	if (content) {
+		// technically you can get the blog post by adding .mdx at the end... Weird
+		// but may as well handle it since that's easy...
+		entry = mdxFileOrDirectory.endsWith('.mdx')
+			? mdxFileOrDirectory
+			: `${mdxFileOrDirectory}.mdx`
+		// /contents/about.mdx => entry is about.mdx, but compileMdx needs
+		// the entry to be called "/contents/index.mdx" so we'll set it to that
+		// because this is the entry for this path
+		files = [{ path: nodePath.join(mdxFileOrDirectory, 'index.mdx'), content }]
+	} else if (dirPotential) {
+		entry = dirPotential.path
+		files = await downloadDirectory(mdxFileOrDirectory)
+	}
 
-  return { entry, files };
+	return { entry, files }
 }
 
 /**
@@ -178,26 +178,26 @@ async function downloadMdxFileOrDirectory(
  * @returns An array of file paths with their content
  */
 async function downloadDirectory(dir: string): Promise<Array<GitHubFile>> {
-  const dirList = await downloadDirList(dir);
+	const dirList = await downloadDirList(dir)
 
-  const result = await Promise.all(
-    dirList.map(async ({ path: fileDir, type, sha }) => {
-      switch (type) {
-        case "file": {
-          const content = await downloadFileBySha(sha);
-          return { path: fileDir, content };
-        }
-        case "dir": {
-          return downloadDirectory(fileDir);
-        }
-        default: {
-          throw new Error(`Unexpected repo file type: ${type}`);
-        }
-      }
-    }),
-  );
+	const result = await Promise.all(
+		dirList.map(async ({ path: fileDir, type, sha }) => {
+			switch (type) {
+				case 'file': {
+					const content = await downloadFileBySha(sha)
+					return { path: fileDir, content }
+				}
+				case 'dir': {
+					return downloadDirectory(fileDir)
+				}
+				default: {
+					throw new Error(`Unexpected repo file type: ${type}`)
+				}
+			}
+		}),
+	)
 
-  return result.flat();
+	return result.flat()
 }
 
 /**
@@ -206,34 +206,34 @@ async function downloadDirectory(dir: string): Promise<Array<GitHubFile>> {
  * @returns a promise that resolves to a string of the contents of the file
  */
 async function downloadFileBySha(sha: string) {
-  const { data } = await octokit.git.getBlob({
-    owner: "hanihusam",
-    repo: "hanihusam.com",
-    file_sha: sha,
-  });
-  //                                lol
-  const encoding = data.encoding as BufferEncoding;
-  return Buffer.from(data.content, encoding).toString();
+	const { data } = await octokit.git.getBlob({
+		owner: 'hanihusam',
+		repo: 'hanihusam.com',
+		file_sha: sha,
+	})
+	//                                lol
+	const encoding = data.encoding as BufferEncoding
+	return Buffer.from(data.content, encoding).toString()
 }
 
 // IDEA: possibly change this to a regular fetch since all my content is public anyway:
 // https://raw.githubusercontent.com/{owner}/{repo}/{ref}/{path}
 // nice thing is it's not rate limited
 async function downloadFile(path: string) {
-  const { data } = await octokit.repos.getContent({
-    owner: "hanihusam",
-    repo: "hanihusam.com",
-    path,
-  });
+	const { data } = await octokit.repos.getContent({
+		owner: 'hanihusam',
+		repo: 'hanihusam.com',
+		path,
+	})
 
-  if ("content" in data && "encoding" in data) {
-    const encoding = data.encoding as BufferEncoding;
-    return Buffer.from(data.content, encoding).toString();
-  }
+	if ('content' in data && 'encoding' in data) {
+		const encoding = data.encoding as BufferEncoding
+		return Buffer.from(data.content, encoding).toString()
+	}
 
-  throw new Error(
-    `Tried to get ${path} but got back something that was unexpected. It doesn't have a content or encoding property`,
-  );
+	throw new Error(
+		`Tried to get ${path} but got back something that was unexpected. It doesn't have a content or encoding property`,
+	)
 }
 
 /**
@@ -242,23 +242,23 @@ async function downloadFile(path: string) {
  * @returns a promise that resolves to a file ListItem of the files/directories in the given directory (not recursive)
  */
 async function downloadDirList(path: string) {
-  if (useLocalContent) {
-    return readLocalDirList(path);
-  }
+	if (useLocalContent) {
+		return readLocalDirList(path)
+	}
 
-  const { data } = await octokit.repos.getContent({
-    owner: "hanihusam",
-    repo: "hanihusam.com",
-    path,
-  });
+	const { data } = await octokit.repos.getContent({
+		owner: 'hanihusam',
+		repo: 'hanihusam.com',
+		path,
+	})
 
-  if (!Array.isArray(data)) {
-    throw new Error(
-      `Tried to download content from ${path}. GitHub did not return an array of files. This should never happen...`,
-    );
-  }
+	if (!Array.isArray(data)) {
+		throw new Error(
+			`Tried to download content from ${path}. GitHub did not return an array of files. This should never happen...`,
+		)
+	}
 
-  return data;
+	return data
 }
 
-export { downloadDirList, downloadFile, downloadMdxFileOrDirectory };
+export { downloadDirList, downloadFile, downloadMdxFileOrDirectory }

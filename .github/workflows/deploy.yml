@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   lint:
-    name: ⬣ ESLint
+    name: ⬣ Oxlint
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
@@ -21,13 +21,16 @@ jobs:
       - name: ⎔ Setup node
         uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22.22.0
 
       - name: 📥 Install deps
         run: npm install
 
       - name: 🔬 Lint
         run: npm run lint
+
+      - name: 💅 Format check
+        run: npm run format:check
 
   deploy:
     name: 🚀 Deploy
@@ -47,8 +50,8 @@ jobs:
         uses: SebRollen/toml-action@v1.0.2
         id: app_name
         with:
-          file: "fly.toml"
-          field: "app"
+          file: 'fly.toml'
+          field: 'app'
 
       - name: ✈️ Setup flyctl
         uses: superfly/flyctl-actions/setup-flyctl@master

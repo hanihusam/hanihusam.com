@@ -126,8 +126,8 @@ So "Back to overview" resolves. Minimal but functional:
 - **component:** `HeaderSection` + grid of existing `ProjectCard` (already takes
   `ProjectFrontmatter`). No filter/pagination yet — that's a later phase.
 
-> Note: `work._index.tsx` and `work.$slug.tsx` already `301`-redirect
-> `/work` → `/works`, so legacy URLs are covered.
+> Note: `work._index.tsx` and `work.$slug.tsx` already `301`-redirect `/work` →
+> `/works`, so legacy URLs are covered.
 
 ### 8. Sample content — `contents/projects/dimension-ai.mdx`
 
@@ -141,7 +141,8 @@ scrollspy, views, and pills all visible before real content is written.
 ## Out of scope (later phases)
 
 - Wiring the homepage `ProjectSection` to the loader + deleting the two
-  hardcoded project arrays (`project-section.tsx`, `contents/projects/index.ts`).
+  hardcoded project arrays (`project-section.tsx`,
+  `contents/projects/index.ts`).
 - Filtering/pagination/tags on the `/works` list.
 - Converting `techs` to `string[]` (kept as comma-string for now).
 
@@ -161,8 +162,10 @@ scrollspy, views, and pills all visible before real content is written.
 
 ## Verification
 
-- `npm run dev`, visit `/works` → list renders; click through → `/works/dimension-ai`.
-- TOC tracks scroll; view counter increments after read; like button works (max 5).
+- `npm run dev`, visit `/works` → list renders; click through →
+  `/works/dimension-ai`.
+- TOC tracks scroll; view counter increments after read; like button works (max
+  5).
 - `/work/dimension-ai` redirects to `/works/dimension-ai`.
 - Tag pills render correctly in light + dark mode.
 - `npm run validate` (lint + typecheck + build) passes.

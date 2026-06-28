@@ -3,13 +3,14 @@
 This file provides guidance to Claude Code (claude.ai/code) when working with
 code in this repository.
 
-> **Writing UI code?** Read [`docs/code-style-guidelines.md`](docs/code-style-guidelines.md)
-> first — it captures the project's component, styling, typography, and
-> data-loading conventions so new code matches the existing codebase.
+> **Writing UI code?** Read
+> [`docs/code-style-guidelines.md`](docs/code-style-guidelines.md) first — it
+> captures the project's component, styling, typography, and data-loading
+> conventions so new code matches the existing codebase.
 
 ## Quick Start
 
-**Node version:** 20 (required)
+**Node version:** >=22.22.0 (required)
 
 **Build:** `npm run build` (builds React Router app + server + build info)
 
@@ -161,7 +162,7 @@ The branch point is the `useLocalContent` flag at the top of
 `app/utils/github.server.ts`:
 
 ```ts
-const useLocalContent = process.env.NODE_ENV === "development";
+const useLocalContent = process.env.NODE_ENV === 'development'
 ```
 
 Both `downloadMdxFileOrDirectory` and `downloadDirList` check this flag.
