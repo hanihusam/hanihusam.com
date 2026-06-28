@@ -130,16 +130,23 @@
   color: var(--color-neutral-100);
 }
 
-/* Inline code pill (Figma 235-69) — always-dark to match the code-block chrome. */
+/* Inline code pill (Figma 235-69) — matches the code-block body background per theme. */
 .prose.prose-light :not(pre) > code,
 .dark .dark\:prose-dark :not(pre) > code {
-  background-color: var(--color-neutral-950);
   color: var(--color-neutral-100);
   font-family: var(--font-mono);
   font-size: 0.8125rem;
   padding: 0.125rem 0.375rem;
   border-radius: 4px;
   white-space: nowrap;
+}
+
+.prose.prose-light :not(pre) > code {
+  background-color: var(--color-neutral-950);
+}
+
+.dark .dark\:prose-dark :not(pre) > code {
+  background-color: var(--color-sky-900);
 }
 
 .prose.prose-light h1,
