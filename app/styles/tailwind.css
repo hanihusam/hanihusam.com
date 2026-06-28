@@ -1,8 +1,7 @@
 @import 'tailwindcss';
 @import './theme.css';
-@plugin "@tailwindcss/typography";
+@plugin '@tailwindcss/typography';
 @custom-variant dark (&:where(.dark, .dark *));
-
 
 @layer components {
 	.TooltipContent {

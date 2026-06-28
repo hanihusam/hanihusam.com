@@ -1,6 +1,6 @@
-import * as React from "react";
+import * as React from 'react'
 
-import { clsxm } from "@/utils/clsxm";
+import { clsxm } from '@/utils/clsxm'
 
 /**
  * Fixed progressive-blur overlay pinned to the top of the viewport.
@@ -8,27 +8,27 @@ import { clsxm } from "@/utils/clsxm";
  * edge. The overlay fades in once the page is scrolled away from the top.
  */
 export function TopBlurOverlay() {
-  const [scrolled, setScrolled] = React.useState(false);
+	const [scrolled, setScrolled] = React.useState(false)
 
-  React.useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 16);
+	React.useEffect(() => {
+		const onScroll = () => setScrolled(window.scrollY > 16)
 
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+		onScroll()
+		window.addEventListener('scroll', onScroll, { passive: true })
+		return () => window.removeEventListener('scroll', onScroll)
+	}, [])
 
-  return (
-    <div
-      aria-hidden
-      className={clsxm(
-        "top-blur pointer-events-none fixed inset-x-0 top-0 z-30 h-24 transition-opacity duration-300",
-        scrolled ? "opacity-100" : "opacity-0",
-      )}
-    >
-      <div />
-      <div />
-      <div />
-    </div>
-  );
+	return (
+		<div
+			aria-hidden
+			className={clsxm(
+				'top-blur pointer-events-none fixed inset-x-0 top-0 z-30 h-24 transition-opacity duration-300',
+				scrolled ? 'opacity-100' : 'opacity-0',
+			)}
+		>
+			<div />
+			<div />
+			<div />
+		</div>
+	)
 }

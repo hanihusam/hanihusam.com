@@ -40,8 +40,8 @@ changing UI so new code reads like the surrounding code.
 Use the typography components from `@/components/typography` instead of raw
 heading/paragraph tags:
 
-- `Display`, `H1`–`H4` — titles. `variant="primary"` (sky/blue) or
-  `"secondary"` (sunset). Pass `as` to change the rendered tag.
+- `Display`, `H1`–`H4` — titles. `variant="primary"` (sky/blue) or `"secondary"`
+  (sunset). Pass `as` to change the rendered tag.
 - `Paragraph` — body copy (prose styles by default).
 - `Text` — small text with `variant`: `lead`, `label`, `caption`, `overline`.
 
@@ -51,9 +51,10 @@ From `@/components/ui/button`:
 
 - `Button` — `<button>`; `ButtonLink` — looks like a button, renders an anchor /
   router `Link`; `LinkButton` — looks like a text link, renders a `<button>`.
-- Variants: `primary` | `secondary` | `ghost`. Sizes: `sm` | `md` | `lg`.
-  Icons via `iconLeft` / `iconRight` (wrapped to `size-4`).
-- Internal navigation uses `to=`; external uses `href=` (both via `AnchorOrLink`).
+- Variants: `primary` | `secondary` | `ghost`. Sizes: `sm` | `md` | `lg`. Icons
+  via `iconLeft` / `iconRight` (wrapped to `size-4`).
+- Internal navigation uses `to=`; external uses `href=` (both via
+  `AnchorOrLink`).
 
 ## Layout
 

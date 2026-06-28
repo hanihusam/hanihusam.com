@@ -2,53 +2,53 @@ app = "hanihusam-com"
 primary_region = "sin"
 
 [vm]
-  memory = "512mb"
-  cpu_kind = "shared"
-  cpus = 1
+memory = "512mb"
+cpu_kind = "shared"
+cpus = 1
 
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [experimental]
-  allowed_public_ports = []
-  auto_rollback = true
+allowed_public_ports = []
+auto_rollback = true
 
 [mounts]
-  source = "data"
-  destination = "/data"
+source = "data"
+destination = "/data"
 
 [[services]]
-  internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
+internal_port = 8080
+processes = ["app"]
+protocol = "tcp"
+script_checks = []
 
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+[services.concurrency]
+hard_limit = 25
+soft_limit = 20
+type = "connections"
 
-  [[services.ports]]
-    handlers = ["http"]
-    port = 80
-    force_https = true
+[[services.ports]]
+handlers = ["http"]
+port = 80
+force_https = true
 
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
+[[services.ports]]
+handlers = ["tls", "http"]
+port = 443
 
-  [[services.tcp_checks]]
-    grace_period = "10s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+[[services.tcp_checks]]
+grace_period = "10s"
+interval = "15s"
+restart_limit = 0
+timeout = "2s"
 
-  [[services.http_checks]]
-    interval = "10s"
-    timeout = "5s"
-    grace_period = "1m0s"
-    restart_limit = 0
-    method = "get"
-    path = "/healthcheck"
-    protocol = "http"
+[[services.http_checks]]
+interval = "10s"
+timeout = "5s"
+grace_period = "1m0s"
+restart_limit = 0
+method = "get"
+path = "/healthcheck"
+protocol = "http"
