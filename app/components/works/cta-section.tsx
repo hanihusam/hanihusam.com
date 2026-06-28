@@ -16,7 +16,7 @@ export function CallToAction() {
 				color="sky"
 				rows={5}
 				cols={5}
-				className="absolute bottom-2 left-[14%] hidden lg:block"
+				className="absolute bottom-2 left-[8%] md:left-[14%]"
 			/>
 
 			<div className="col-span-full flex flex-col items-center gap-8 text-center">

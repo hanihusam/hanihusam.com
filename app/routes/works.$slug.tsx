@@ -216,7 +216,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 				color="sunset"
 				rows={8}
 				cols={8}
-				className="pointer-events-none absolute top-12 right-[6%] hidden md:block"
+				className="pointer-events-none absolute top-12 -right-4 md:right-[6%]"
 			/>
 			<ConcentricCircles
 				accent
