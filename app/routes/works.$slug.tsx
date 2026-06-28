@@ -22,11 +22,8 @@ import { getServerTimeHeader } from "@/utils/timing.server";
 
 import { type Route } from "./+types/works.$slug";
 
-import {
-  ArrowLeftIcon,
-  ArrowSquareOutIcon,
-  CodeIcon,
-} from "@phosphor-icons/react";
+import { SiGithub } from "@icons-pack/react-simple-icons";
+import { ArrowLeftIcon, ArrowSquareOutIcon } from "@phosphor-icons/react";
 import { data, useFetcher } from "react-router";
 
 export async function action({ params, request }: Route.ActionArgs) {
@@ -222,12 +219,13 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
         color="sunset"
         rows={8}
         cols={8}
-        className="pointer-events-none absolute top-20 right-[6%] hidden md:block"
+        className="pointer-events-none absolute top-12 right-[6%] hidden md:block"
       />
       <ConcentricCircles
+        accent
         size={263}
         ringGap={34}
-        className="pointer-events-none absolute top-64 -left-32 hidden md:block"
+        className="pointer-events-none absolute top-64 -left-34 hidden md:block"
       />
 
       <div className="relative mx-auto w-full max-w-(--container-site) px-6 sm:px-8">
@@ -285,7 +283,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-base text-(--text-paragraph) transition-colors hover:text-(--text-link)"
                       >
-                        <CodeIcon className="size-5" />
+                        <SiGithub size={20} />
                         Repository
                       </a>
                     ) : null}
@@ -312,7 +310,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
           ref={readMarker}
           className="pb-20 lg:grid lg:grid-cols-[minmax(0,800px)_250px] lg:gap-16"
         >
-          <article className="prose prose-light dark:prose-dark w-full break-words">
+          <article className="prose prose-light dark:prose-dark wrap-break-words w-full">
             <Component />
           </article>
 
