@@ -63,7 +63,7 @@ export const getSessionId = (req: Request) => {
 	// hash it to protect their privacy. By combining it with a salt, we get
 	// get a unique id we can refer to, but we won't know what their ip
 	// address was.
-	const currentUserId = createHash('md5')
+	const currentUserId = createHash('sha256')
 		.update(ipAddress + (process.env.IP_ADDRESS_SALT as string), 'utf8')
 		.digest('hex')
 	return currentUserId

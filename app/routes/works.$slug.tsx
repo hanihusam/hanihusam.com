@@ -107,7 +107,7 @@ function useOnRead({
 			}
 		})
 
-		let startTime = new Date().getTime()
+		let startTime = Date.now()
 		let timeoutTime = time * 0.6
 		let timerId: ReturnType<typeof setTimeout>
 		let timerFinished = false
@@ -123,10 +123,10 @@ function useOnRead({
 		function handleVisibilityChange() {
 			if (document.hidden) {
 				clearTimeout(timerId)
-				const timeElapsedSoFar = new Date().getTime() - startTime
+				const timeElapsedSoFar = Date.now() - startTime
 				timeoutTime = timeoutTime - timeElapsedSoFar
 			} else {
-				startTime = new Date().getTime()
+				startTime = Date.now()
 				startTimer()
 			}
 		}
@@ -185,7 +185,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 
 	const [toc, setToc] = React.useState<HeadingScrollSpy>()
 	const minLevel =
-		toc?.reduce((min, item) => (item.level < min ? item.level : min), 10) ?? 0
+		toc?.reduce((min, item) => Math.min(min, item.level), 10) ?? 0
 
 	React.useEffect(() => {
 		const headings = document.querySelectorAll(

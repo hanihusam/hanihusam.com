@@ -72,5 +72,5 @@ async function enrichWithBlur(posts: SubstackPost[]): Promise<SubstackPost[]> {
 }
 
 function stripHtml(input: string): string {
-	return input.replace(/<[^>]*>/g, '').trim()
+	return input.replace(/<[^<>]*>/g, '').trim()
 }
