@@ -10,7 +10,7 @@ export function SubstackLogo({
       height={height}
       viewBox="0 0 21 24"
       fill="#ff6719"
-      stroke-width="1.8"
+      strokeWidth="1.8"
       stroke="none"
       xmlns="http://www.w3.org/2000/svg"
       {...rest}
