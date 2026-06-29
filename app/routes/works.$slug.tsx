@@ -1,382 +1,335 @@
-import * as React from "react";
+import * as React from 'react'
 
-import { BlurrableImage } from "@/components/blurrable-image";
-import { Grid } from "@/components/grid";
-import { ProjectHeader } from "@/components/projects/project-header";
-import { Spacer } from "@/components/spacer";
-import TableOfContents, {
-  type HeadingScrollSpy,
-} from "@/components/table-of-content";
-import { H4 } from "@/components/typography";
-import { Tag } from "@/components/ui/tag";
-import { incrementMetaFlag } from "@/constants/env";
-import useScrollSpy from "@/hooks/useScrollSpy";
+import { Spacer } from '@/components/spacer'
+import { H1, Text } from '@/components/typography'
+import { ButtonLink } from '@/components/ui/button'
+import { ConcentricCircles } from '@/components/ui/concentric-circles'
+import { DotGrid } from '@/components/ui/dot-grid'
+import { Tag } from '@/components/ui/tag'
+import { WorkTocDrawer } from '@/components/works/toc-drawer'
+import { type HeadingScrollSpy, TocList } from '@/components/works/toc-list'
+import { incrementMetaFlag } from '@/constants/env'
+import useScrollSpy from '@/hooks/useScrollSpy'
 import {
-  getContentViews,
-  incrementLikes,
-  incrementViews,
-} from "@/utils/blog.server";
-import { clsxm } from "@/utils/clsxm";
-import { getImageBuilder, getImgProps } from "@/utils/images";
-import { useMdxComponent } from "@/utils/mdx";
-import { getMdxPage } from "@/utils/mdx.server";
-import { getSessionId } from "@/utils/session.server";
-import { getServerTimeHeader } from "@/utils/timing.server";
+	getContentViews,
+	incrementLikes,
+	incrementViews,
+} from '@/utils/blog.server'
+import { useMdxComponent } from '@/utils/mdx'
+import { getMdxPage } from '@/utils/mdx.server'
+import { getSessionId } from '@/utils/session.server'
+import { getServerTimeHeader } from '@/utils/timing.server'
 
-import { type Route } from "./+types/works.$slug";
+import { type Route } from './+types/works.$slug'
 
-import {
-  ArrowLeftCircleIcon,
-  ArrowTopRightOnSquareIcon,
-  CodeBracketIcon,
-  HandThumbUpIcon,
-} from "@heroicons/react/24/outline";
-import { HandThumbUpIcon as HandThumbUpSolidIcon } from "@heroicons/react/24/solid";
-import { motion } from "framer-motion";
-import { data, Link, useFetcher } from "react-router";
+import { SiGithub } from '@icons-pack/react-simple-icons'
+import { ArrowLeftIcon, ArrowSquareOutIcon } from '@phosphor-icons/react'
+import { data, useFetcher } from 'react-router'
 
 export async function action({ params, request }: Route.ActionArgs) {
-  if (!params.slug) {
-    throw new Error("params.slug is not defined");
-  }
-  const formData = await request.formData();
-  const intent = formData.get("intent");
-  const sessionId = getSessionId(request);
-  const { slug } = params;
+	if (!params.slug) {
+		throw new Error('params.slug is not defined')
+	}
+	const formData = await request.formData()
+	const intent = formData.get('intent')
+	const sessionId = getSessionId(request)
+	const { slug } = params
 
-  switch (intent) {
-    case "mark-as-read": {
-      if (!incrementMetaFlag) {
-        await incrementViews({ slug, sessionId });
-        return { success: true };
-      }
-      return null;
-    }
-    case "like-post": {
-      return await incrementLikes({ slug, sessionId });
-    }
-    default: {
-      throw new Error(`Unknown intent: ${intent}`);
-    }
-  }
+	switch (intent) {
+		case 'mark-as-read': {
+			if (!incrementMetaFlag) {
+				await incrementViews({ slug, sessionId })
+				return { success: true }
+			}
+			return null
+		}
+		// Kept for a future "like" UI — the server side stays wired up.
+		case 'like-post': {
+			return await incrementLikes({ slug, sessionId })
+		}
+		default: {
+			throw new Error(`Unknown intent: ${intent}`)
+		}
+	}
 }
 
 export const loader = async ({ request, params }: Route.LoaderArgs) => {
-  if (!params.slug) {
-    throw new Error("params.slug is not defined");
-  }
-  const timings = {};
-  const sessionId = getSessionId(request);
+	if (!params.slug) {
+		throw new Error('params.slug is not defined')
+	}
+	const timings = {}
+	const sessionId = getSessionId(request)
 
-  const meta = await getContentViews({ slug: params.slug, sessionId });
-  const page = await getMdxPage(
-    { contentDir: "projects", slug: params.slug },
-    { request, timings },
-  );
+	const meta = await getContentViews({ slug: params.slug, sessionId })
+	const page = await getMdxPage(
+		{ contentDir: 'projects', slug: params.slug },
+		{ request, timings },
+	)
 
-  const headers = {
-    "Cache-Control": "private, max-age=3600",
-    Vary: "Cookie",
-    "Server-Timing": getServerTimeHeader(timings),
-  };
+	const headers = {
+		'Cache-Control': 'private, max-age=3600',
+		Vary: 'Cookie',
+		'Server-Timing': getServerTimeHeader(timings),
+	}
 
-  if (!page) {
-    throw data(null, { status: 404, headers });
-  }
+	if (!page) {
+		throw data(null, { status: 404, headers })
+	}
 
-  return data({ page, meta }, { status: 200, headers });
-};
+	return data({ page, meta }, { status: 200, headers })
+}
 
 function useOnRead({
-  parentElRef,
-  time,
-  onRead,
+	parentElRef,
+	time,
+	onRead,
 }: {
-  parentElRef: React.RefObject<HTMLDivElement | null>;
-  time: number | undefined;
-  onRead: () => void;
+	parentElRef: React.RefObject<HTMLDivElement | null>
+	time: number | undefined
+	onRead: () => void
 }) {
-  React.useEffect(() => {
-    const parentEl = parentElRef.current;
-    if (!parentEl || !time) return;
+	React.useEffect(() => {
+		const parentEl = parentElRef.current
+		if (!parentEl || !time) return
 
-    const visibilityEl = document.createElement("div");
+		const visibilityEl = document.createElement('div')
 
-    let scrolledTheMain = false;
-    const observer = new IntersectionObserver((entries) => {
-      const isVisible = entries.some(
-        (entry) => entry.target === visibilityEl && entry.isIntersecting,
-      );
-      if (isVisible) {
-        scrolledTheMain = true;
-        maybeMarkAsRead();
-        observer.disconnect();
-        visibilityEl.remove();
-      }
-    });
+		let scrolledTheMain = false
+		const observer = new IntersectionObserver((entries) => {
+			const isVisible = entries.some(
+				(entry) => entry.target === visibilityEl && entry.isIntersecting,
+			)
+			if (isVisible) {
+				scrolledTheMain = true
+				maybeMarkAsRead()
+				observer.disconnect()
+				visibilityEl.remove()
+			}
+		})
 
-    let startTime = new Date().getTime();
-    let timeoutTime = time * 0.6;
-    let timerId: ReturnType<typeof setTimeout>;
-    let timerFinished = false;
+		let startTime = Date.now()
+		let timeoutTime = time * 0.6
+		let timerId: ReturnType<typeof setTimeout>
+		let timerFinished = false
 
-    function startTimer() {
-      timerId = setTimeout(() => {
-        timerFinished = true;
-        document.removeEventListener(
-          "visibilitychange",
-          handleVisibilityChange,
-        );
-        maybeMarkAsRead();
-      }, timeoutTime);
-    }
+		function startTimer() {
+			timerId = setTimeout(() => {
+				timerFinished = true
+				document.removeEventListener('visibilitychange', handleVisibilityChange)
+				maybeMarkAsRead()
+			}, timeoutTime)
+		}
 
-    function handleVisibilityChange() {
-      if (document.hidden) {
-        clearTimeout(timerId);
-        const timeElapsedSoFar = new Date().getTime() - startTime;
-        timeoutTime = timeoutTime - timeElapsedSoFar;
-      } else {
-        startTime = new Date().getTime();
-        startTimer();
-      }
-    }
+		function handleVisibilityChange() {
+			if (document.hidden) {
+				clearTimeout(timerId)
+				const timeElapsedSoFar = Date.now() - startTime
+				timeoutTime = timeoutTime - timeElapsedSoFar
+			} else {
+				startTime = Date.now()
+				startTimer()
+			}
+		}
 
-    function maybeMarkAsRead() {
-      if (timerFinished && scrolledTheMain) {
-        cleanup();
-        onRead();
-      }
-    }
+		function maybeMarkAsRead() {
+			if (timerFinished && scrolledTheMain) {
+				cleanup()
+				onRead()
+			}
+		}
 
-    parentEl.append(visibilityEl);
-    observer.observe(visibilityEl);
-    startTimer();
-    document.addEventListener("visibilitychange", handleVisibilityChange);
+		parentEl.append(visibilityEl)
+		observer.observe(visibilityEl)
+		startTimer()
+		document.addEventListener('visibilitychange', handleVisibilityChange)
 
-    function cleanup() {
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-      clearTimeout(timerId);
-      observer.disconnect();
-      visibilityEl.remove();
-    }
-    return cleanup;
-  }, [time, onRead, parentElRef]);
+		function cleanup() {
+			document.removeEventListener('visibilitychange', handleVisibilityChange)
+			clearTimeout(timerId)
+			observer.disconnect()
+			visibilityEl.remove()
+		}
+		return cleanup
+	}, [time, onRead, parentElRef])
 }
 
 export default function WorksSlug({ loaderData }: Route.ComponentProps) {
-  const { page, meta } = loaderData;
-  const { frontmatter, code } = page;
-  const Component = useMdxComponent(code);
+	const { page } = loaderData
+	const { frontmatter, code } = page
+	const Component = useMdxComponent(code)
 
-  //#region  //*=========== Like post ===========
-  const likePost = useFetcher();
-  const isUserLiked = meta.likesByUser >= 5;
-  const onLikePost = () => {
-    if (!meta || isUserLiked) return;
-    likePost.submit({ intent: "like-post" }, { method: "POST" });
-  };
-  //#endregion  //*=========== Like post ===========
+	//#region  //*=========== Read/view post ===========
+	const markAsRead = useFetcher()
+	const markAsReadRef = React.useRef(markAsRead)
 
-  //#region  //*=========== Read/view post ===========
-  const markAsRead = useFetcher();
-  const markAsReadRef = React.useRef(markAsRead);
+	React.useEffect(() => {
+		markAsReadRef.current = markAsRead
+	}, [markAsRead])
 
-  React.useEffect(() => {
-    markAsReadRef.current = markAsRead;
-  }, [markAsRead]);
+	const readMarker = React.useRef<HTMLDivElement>(null)
 
-  const readMarker = React.useRef<HTMLDivElement>(null);
+	useOnRead({
+		parentElRef: readMarker,
+		time: frontmatter.readingTime?.time,
+		onRead: React.useCallback(() => {
+			markAsReadRef.current.submit(
+				{ intent: 'mark-as-read' },
+				{ method: 'POST' },
+			)
+		}, []),
+	})
+	//#endregion  //*=========== Read/view post ===========
 
-  useOnRead({
-    parentElRef: readMarker,
-    time: frontmatter.readingTime?.time,
-    onRead: React.useCallback(() => {
-      markAsReadRef.current.submit(
-        { intent: "mark-as-read" },
-        { method: "POST" },
-      );
-    }, []),
-  });
-  //#endregion  //*=========== Read/view post ===========
+	//#region  //*=========== Scrollspy ===========
+	const activeSection = useScrollSpy()
 
-  //#region  //*=========== Scrollspy ===========
-  const activeSection = useScrollSpy();
+	const [toc, setToc] = React.useState<HeadingScrollSpy>()
+	const minLevel =
+		toc?.reduce((min, item) => Math.min(min, item.level), 10) ?? 0
 
-  const [toc, setToc] = React.useState<HeadingScrollSpy>();
-  const minLevel =
-    toc?.reduce((min, item) => (item.level < min ? item.level : min), 10) ?? 0;
+	React.useEffect(() => {
+		const headings = document.querySelectorAll(
+			'.prose h1, .prose h2, .prose h3',
+		)
+		const headingArr: HeadingScrollSpy = []
+		headings.forEach((heading) => {
+			headingArr.push({
+				id: heading.id,
+				level: +heading.tagName.replace('H', ''),
+				text: heading.textContent + '',
+			})
+		})
+		setToc(headingArr)
+	}, [frontmatter.slug])
+	//#endregion  //*======== Scrollspy ===========
 
-  React.useEffect(() => {
-    const headings = document.querySelectorAll(
-      ".prose h1, .prose h2, .prose h3",
-    );
-    const headingArr: HeadingScrollSpy = [];
-    headings.forEach((heading) => {
-      headingArr.push({
-        id: heading.id,
-        level: +heading.tagName.replace("H", ""),
-        text: heading.textContent + "",
-      });
-    });
-    setToc(headingArr);
-  }, [frontmatter.slug]);
-  //#endregion  //*======== Scrollspy ===========
+	const techs = frontmatter.techs
+		? frontmatter.techs
+				.split(',')
+				.map((t) => t.trim())
+				.filter(Boolean)
+		: []
 
-  const techs = frontmatter.techs
-    ? frontmatter.techs
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean)
-    : [];
+	return (
+		<main className="relative grow overflow-hidden">
+			<DotGrid
+				color="sunset"
+				rows={8}
+				cols={8}
+				className="pointer-events-none absolute top-12 -right-4 md:right-[6%]"
+			/>
+			<ConcentricCircles
+				accent
+				size={263}
+				ringGap={34}
+				className="pointer-events-none absolute top-64 -left-34 hidden md:block"
+			/>
 
-  return (
-    <React.Fragment>
-      <Spacer size="sm" />
+			<div className="relative mx-auto w-full max-w-(--container-site) px-6 sm:px-8">
+				{/* ─── Project info ─────────────────────────────────────────── */}
+				<div className="flex flex-col gap-10 py-12 lg:py-20">
+					<div>
+						<ButtonLink
+							to="/works"
+							variant="ghost"
+							size="md"
+							iconLeft={<ArrowLeftIcon />}
+						>
+							Back to the list
+						</ButtonLink>
+					</div>
 
-      <Grid>
-        <Link
-          className="group col-span-full flex items-center space-x-6"
-          to="/works"
-        >
-          <ArrowLeftCircleIcon className="dark:text-light h-8 w-8 text-black duration-500 group-hover:-translate-x-1.5" />
-          <H4 className="dark:text-light text-black">Back to projects</H4>
-        </Link>
-      </Grid>
+					<div className="flex flex-col gap-6">
+						<div className="flex flex-col gap-3">
+							<H1>{frontmatter.title}</H1>
+							<Text as="p" variant="lead" className="max-w-3xl">
+								{frontmatter.description}
+							</Text>
+						</div>
 
-      <Spacer size="sm" />
+						<div className="flex flex-col gap-4">
+							{frontmatter.role ? (
+								<div className="flex items-center gap-2">
+									<Text
+										variant="label"
+										className="tracking-[1.6px] text-(--text-paragraph) uppercase"
+									>
+										Role:
+									</Text>
+									<Text variant="overline" className="normal-case">
+										{frontmatter.role}
+									</Text>
+								</div>
+							) : null}
 
-      <ProjectHeader
-        title={frontmatter.title}
-        description={frontmatter.description}
-        category={frontmatter.category}
-      />
+							<div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+								{techs.length > 0 ? (
+									<div className="flex flex-wrap items-center gap-2">
+										{techs.map((tech) => (
+											<Tag key={tech}>{tech}</Tag>
+										))}
+									</div>
+								) : null}
 
-      <Spacer size="sm" />
+								{frontmatter.github || frontmatter.link ? (
+									<div className="flex flex-wrap items-center gap-6">
+										{frontmatter.github ? (
+											<a
+												href={frontmatter.github}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="flex items-center gap-1.5 text-base text-(--text-paragraph) transition-colors hover:text-(--text-link)"
+											>
+												<SiGithub size={20} />
+												Repository
+											</a>
+										) : null}
+										{frontmatter.link ? (
+											<a
+												href={frontmatter.link}
+												target="_blank"
+												rel="noopener noreferrer"
+												className="flex items-center gap-1.5 text-base text-(--text-paragraph) transition-colors hover:text-(--text-link)"
+											>
+												<ArrowSquareOutIcon className="size-5" />
+												Open Live Site
+											</a>
+										) : null}
+									</div>
+								) : null}
+							</div>
+						</div>
+					</div>
+				</div>
 
-      {techs.length > 0 ? (
-        <Grid>
-          <div className="col-span-full flex flex-wrap gap-2">
-            {techs.map((tech) => (
-              <Tag key={tech} color="secondary">
-                {tech}
-              </Tag>
-            ))}
-          </div>
-        </Grid>
-      ) : null}
+				{/* ─── Content + Table of contents ─────────────────────────── */}
+				<div
+					ref={readMarker}
+					className="pb-20 lg:grid lg:grid-cols-[minmax(0,800px)_250px] lg:gap-16"
+				>
+					<article className="prose prose-light dark:prose-dark wrap-break-words w-full">
+						<Component />
+					</article>
 
-      {frontmatter.link || frontmatter.github ? (
-        <Grid>
-          <div className="col-span-full mt-4 flex flex-wrap gap-4">
-            {frontmatter.link ? (
-              <a
-                href={frontmatter.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-(--text-link) hover:underline"
-              >
-                <ArrowTopRightOnSquareIcon className="size-4" />
-                Live Site
-              </a>
-            ) : null}
-            {frontmatter.github ? (
-              <a
-                href={frontmatter.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1.5 text-sm text-(--text-link) hover:underline"
-              >
-                <CodeBracketIcon className="size-4" />
-                GitHub
-              </a>
-            ) : null}
-          </div>
-        </Grid>
-      ) : null}
+					<aside className="hidden lg:block">
+						<div className="sticky top-24">
+							<TocList
+								toc={toc}
+								activeSection={activeSection}
+								minLevel={minLevel}
+							/>
+						</div>
+					</aside>
+				</div>
+			</div>
 
-      <Spacer size="sm" />
+			<WorkTocDrawer
+				toc={toc}
+				activeSection={activeSection}
+				minLevel={minLevel}
+			/>
 
-      {frontmatter.bannerCloudinaryId ? (
-        <Grid>
-          <div className="col-span-full mt-10 lg:mt-16">
-            <BlurrableImage
-              key={frontmatter.bannerCloudinaryId}
-              blurDataUrl={frontmatter.bannerBlurDataUrl}
-              className="aspect-[3/4] md:aspect-[3/2]"
-              img={
-                <img
-                  key={frontmatter.bannerCloudinaryId}
-                  className="rounded-lg object-cover object-center"
-                  {...getImgProps(
-                    getImageBuilder(
-                      frontmatter.bannerCloudinaryId,
-                      `image-${frontmatter.title}`,
-                    ),
-                    {
-                      widths: [280, 560, 840, 1100, 1650, 2500, 2100, 3100],
-                      sizes: [
-                        "(max-width:1023px) 80vw",
-                        "(min-width:1024px) and (max-width:1620px) 67vw",
-                        "1100px",
-                      ],
-                      transformations: {
-                        background: "rgb:e6e9ee",
-                      },
-                    },
-                  )}
-                />
-              }
-            />
-          </div>
-        </Grid>
-      ) : null}
-
-      <Spacer size="sm" />
-
-      <div className="mx-10vw" ref={readMarker}>
-        <section className="mx-auto max-w-7xl lg:grid lg:grid-cols-[auto,320px] lg:gap-10">
-          <article className="prose prose-light dark:prose-dark mb-24 w-full break-words">
-            <Component />
-          </article>
-
-          <aside className="py-0">
-            <div className="sticky top-24">
-              <TableOfContents
-                toc={toc}
-                minLevel={minLevel}
-                activeSection={activeSection}
-              />
-            </div>
-          </aside>
-        </section>
-
-        <Spacer size="sm" />
-
-        <div className="flex flex-col items-center justify-center space-y-5">
-          <H4 className="dark:text-light text-black">
-            Did you find this useful?
-          </H4>
-          <motion.button
-            whileHover={{ scale: isUserLiked ? undefined : 1.1 }}
-            whileTap={{ scale: isUserLiked ? undefined : 0.9 }}
-            onClick={onLikePost}
-            disabled={isUserLiked}
-            className="border-primary-500 text-primary-500 hover:border-primary-700 hover:text-primary-700 disabled:border-primary-300 disabled:text-primary-300 h-12 w-12 rounded-full border p-2 disabled:cursor-not-allowed"
-          >
-            {meta.likesByUser > 0 ? (
-              <HandThumbUpSolidIcon />
-            ) : (
-              <HandThumbUpIcon />
-            )}
-          </motion.button>
-          <H4 className={clsxm({ "text-primary-300": isUserLiked })}>
-            {meta.contentLikes}
-          </H4>
-        </div>
-
-        <Spacer size="sm" />
-      </div>
-    </React.Fragment>
-  );
+			<Spacer size="sm" />
+		</main>
+	)
 }

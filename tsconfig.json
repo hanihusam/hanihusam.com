@@ -1,36 +1,36 @@
 {
-  "extends": ["@epic-web/config/typescript"],
-  "include": [
-    "@epic-web/config/reset.d.ts",
-    "**/*.mdx",
-    "**/*.ts",
-    "**/*.tsx",
-    ".react-router/types/**/*"
-  ],
-  "compilerOptions": {
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
-    "types": ["@react-router/node", "vitest/globals"],
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "jsx": "react-jsx",
-    "target": "ES2022",
-    "resolveJsonModule": true,
-    "strict": true,
-    "allowJs": true,
-    "forceConsistentCasingInFileNames": true,
-    "paths": {
-      "@/*": ["./app/*"]
-    },
-    "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "allowImportingTsExtensions": true,
+	"extends": ["@epic-web/config/typescript"],
+	"include": [
+		"@epic-web/config/reset.d.ts",
+		"**/*.mdx",
+		"**/*.ts",
+		"**/*.tsx",
+		".react-router/types/**/*"
+	],
+	"compilerOptions": {
+		"lib": ["DOM", "DOM.Iterable", "ES2022"],
+		"types": ["@react-router/node", "vitest/globals"],
+		"isolatedModules": true,
+		"esModuleInterop": true,
+		"jsx": "react-jsx",
+		"target": "ES2022",
+		"resolveJsonModule": true,
+		"strict": true,
+		"allowJs": true,
+		"forceConsistentCasingInFileNames": true,
+		"paths": {
+			"@/*": ["./app/*"]
+		},
+		"skipLibCheck": true,
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"allowImportingTsExtensions": true,
 
-    // Remix takes care of building everything in `remix build`.
-    "noEmit": true,
-    "rootDirs": [".", "./.react-router/types"]
-  },
-  "mdx": {
-    "checkMdx": true
-  }
+		// Remix takes care of building everything in `remix build`.
+		"noEmit": true,
+		"rootDirs": [".", "./.react-router/types"]
+	},
+	"mdx": {
+		"checkMdx": true
+	}
 }

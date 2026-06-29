@@ -119,20 +119,20 @@ when stable v4 typography releases.
 config finalized (CSS-first, PostCSS updated, vite plugin). Button component
 aligned with Figma specs: per-variant focus rings + disabled bg, modern CSS var
 syntax. Typography layer simplified: H5/H6 removed, usages remapped to H3/H4.
-New `app/components/ui/` directory established. Added
-`types/third-party.d.ts` for third-party type augmentations.
+New `app/components/ui/` directory established. Added `types/third-party.d.ts`
+for third-party type augmentations.
 
 2026-05-14 | Button micro-interactions: press animation added |
 `active:scale-[0.97]` for tactile feedback, `transition` updated to animate both
-colors + transform, `ease-out` for interaction easing, `duration-250` → `duration-150`
-for snappy timing.
+colors + transform, `ease-out` for interaction easing, `duration-250` →
+`duration-150` for snappy timing.
 
 2026-05-14 | Blog: Tag → FilterTag refactor + semantic tokens | Renamed
-`tag.tsx` → `filter-tag.tsx` with updated prop API (onChange callback).
-Added `--filter-tag-*` semantic tokens (light + dark) to `theme.css`.
-`typography.tsx` extended TextProps to support inner HTML for rich content.
-`writing._index.tsx` updated: Tag → FilterTag swap, H6 → H4 for topics label
-(aligns with simplified typography layer).
+`tag.tsx` → `filter-tag.tsx` with updated prop API (onChange callback). Added
+`--filter-tag-*` semantic tokens (light + dark) to `theme.css`. `typography.tsx`
+extended TextProps to support inner HTML for rich content. `writing._index.tsx`
+updated: Tag → FilterTag swap, H6 → H4 for topics label (aligns with simplified
+typography layer).
 
 ## 2026-05-15
 
@@ -193,6 +193,5 @@ nav clearance.
 extracted as a reusable React component. Accepts optional `className` prop for
 sizing (e.g. `w-8`). Used in the redesigned footer.
 
-2026-05-20 | `grid.tsx` Tailwind v4 important modifier fix | `!mx-0` →
-`mx-0!` in the `smFull` variant to match Tailwind v4 important-modifier
-syntax.
+2026-05-20 | `grid.tsx` Tailwind v4 important modifier fix | `!mx-0` → `mx-0!`
+in the `smFull` variant to match Tailwind v4 important-modifier syntax.

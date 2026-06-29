@@ -1,0 +1,9 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"env": {
+		"browser": true,
+		"node": true,
+		"es2024": true
+	},
+	"extends": ["./node_modules/@epic-web/config/oxlint-config.json"]
+}

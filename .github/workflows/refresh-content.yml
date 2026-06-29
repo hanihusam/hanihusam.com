@@ -13,12 +13,12 @@ jobs:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
         with:
-          fetch-depth: "50"
+          fetch-depth: '50'
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22.22.0
 
       - name: 🥬 Refresh Content
         run: node ./other/refresh-changed-content.cjs ${{ github.sha }}
