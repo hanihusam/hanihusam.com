@@ -4,7 +4,7 @@ import { DotGrid } from '@/components/ui/dot-grid'
 
 export function AboutHero() {
 	return (
-		<Grid as="section" className="relative pt-40 md:pb-16 lg:pb-20">
+		<Grid as="section" className="relative pt-40 md:pb-16 lg:pb-40">
 			<DotGrid
 				color="sunset"
 				rows={9}
