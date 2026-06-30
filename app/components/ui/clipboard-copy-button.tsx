@@ -70,7 +70,7 @@ export function ClipboardCopyButton({
 						copied ? 'opacity-0 blur-sm' : 'opacity-100 blur-none',
 					)}
 				>
-					<CopyIcon />
+					<CopyIcon className="size-full" />
 				</span>
 				<span
 					className={clsxm(
@@ -78,7 +78,7 @@ export function ClipboardCopyButton({
 						copied ? 'opacity-100 blur-none' : 'opacity-0 blur-sm',
 					)}
 				>
-					<CheckCircleIcon weight="fill" />
+					<CheckCircleIcon weight="fill" className="size-full" />
 				</span>
 			</span>
 		</Button>
