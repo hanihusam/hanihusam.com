@@ -151,7 +151,7 @@ export function FunFactsSection() {
 					area="[grid-area:skate]"
 					className="relative flex flex-col items-center justify-center"
 				>
-					<Fact>
+					<Fact className="md:mt-8">
 						Started skateboarding at 30. Also gym. Also running. All at the same
 						time, all after 30. I rotate between them through the week. Turns
 						out it&apos;s never too late to be a complete beginner at something.
@@ -161,7 +161,7 @@ export function FunFactsSection() {
 						src="/images/hani-drop.png"
 						alt="Han skateboarding"
 						width="100%"
-						className="relative right-0 -mr-29 -mb-14 w-full max-w-61.25 md:-mr-45 md:-mb-20 md:max-w-75 lg:-mr-20"
+						className="-mb-14 w-full max-w-61.25 translate-x-[8%] self-end md:-mb-10 md:max-w-75 md:translate-x-[7%]"
 					/>
 				</Tile>
 
