@@ -19,7 +19,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 			className={clsxm('flex flex-col gap-4 lg:flex-row lg:gap-8', className)}
 		>
 			<div className="relative aspect-video shrink-0 lg:aspect-square lg:h-full">
-				<figure className="pointer-events-none isolate z-1 hidden h-full overflow-hidden rounded-xl lg:block lg:aspect-square">
+				<figure className="pointer-events-none isolate z-1 hidden h-full overflow-hidden rounded-xl bg-(--surface-thumbnail) lg:block lg:aspect-square">
 					<BlurrableImage
 						key={project.bannerSquareCloudinaryId}
 						blurDataUrl={project.bannerSquareBlurDataUrl}
@@ -36,7 +36,6 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 										widths: [284, 568],
 										sizes: ['284px'],
 										transformations: {
-											background: 'rgb:e6e9ee',
 											resize: {
 												type: 'fill',
 												aspectRatio: '1:1',
@@ -50,7 +49,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 						}
 					/>
 				</figure>
-				<figure className="pointer-events-none isolate z-1 aspect-video overflow-hidden rounded-xl lg:hidden">
+				<figure className="pointer-events-none isolate z-1 aspect-video overflow-hidden rounded-xl bg-(--surface-thumbnail) lg:hidden">
 					<BlurrableImage
 						key={project.bannerLandscapeCloudinaryId}
 						blurDataUrl={project.bannerBlurDataUrl}
@@ -67,7 +66,6 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 										widths: [280, 560, 840, 1100],
 										sizes: ['(max-width:639px) 80vw', '(min-width:640px) 40vw'],
 										transformations: {
-											background: 'rgb:e6e9ee',
 											resize: {
 												type: 'fill',
 												aspectRatio: '16:9',

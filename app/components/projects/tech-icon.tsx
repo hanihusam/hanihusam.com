@@ -10,6 +10,7 @@ import {
 	SiRedux,
 	SiTailwindcss,
 	SiTypescript,
+	SiCloudflare,
 } from '@icons-pack/react-simple-icons'
 import {
 	Arrow,
@@ -31,6 +32,7 @@ function TechBadge({ slug }: { slug: string }) {
 }
 
 const techMap: Record<string, TechEntry> = {
+	cloudflare: { label: 'Cloudflare', icon: <SiCloudflare size={20} /> },
 	tailwindcss: { label: 'Tailwind CSS', icon: <SiTailwindcss size={20} /> },
 	'tailwind css': { label: 'Tailwind CSS', icon: <SiTailwindcss size={20} /> },
 	'react-router': { label: 'React Router', icon: <SiReactrouter size={20} /> },

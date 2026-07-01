@@ -1,0 +1,112 @@
+---
+title: Nota
+publishedAt: 2026-07-01
+lastUpdated: 2026-07-01
+description:
+  A fictional landing page built to test a full AI-orchestrated pipeline —
+  design and code, both directed by me, both executed by Claude.
+category: Personal Project
+role: Direction & Design System Architecture
+bannerLandscapeCloudinaryId: bapak2.dev/works/nota-lp/thumbnail-landscape_glfd2u
+bannerSquareCloudinaryId: bapak2.dev/works/nota-lp/thumbnail-square_p16jfw
+techs: React, TailwindCSS, Cloudflare, Figma, Claude, Figma MCP
+github: https://github.com/hanihusam/nota-lp
+link: https://nota-lp.hani-husam.workers.dev
+---
+
+{/* ASSET CHECKLIST — Nota LP post */}
+
+{/* 1. bannerLandscapeCloudinaryId + bannerSquareCloudinaryId — hero banner, landscape + square crop */}
+{/* - live site homepage, desktop view */}
+
+{/* 2. What I Worked With — Figma MCP conversation screenshot, if I have one saved */}
+{/* - if not, skip straight to the design tokens shot below */}
+
+{/* 3. What I Worked With — design system tokens shot */}
+{/* - Figma file, color tokens / typography scale / spacing scale panel */}
+
+{/* 4. The Pipeline — side-by-side Figma vs live site */}
+{/* - this is the fallback hero proof if there's no MCP conversation screenshot */}
+{/* - design frame on the left, deployed page on the right, same section */}
+
+{/* 5. The Pipeline — CLAUDE.md / STYLE.md partial screenshot */}
+{/* - a real excerpt of the brief, not the whole file, just enough to show it's an actual documented spec */}
+
+{/* Reminder: this is a fictional/demo product — say so plainly somewhere near the top so it doesn't read like an actual freelance client (unlike Cincy DOT Physicals). */}
+
+## Short Explanation
+
+Nota is a fictional landing page for a freelance proposal tool. I built it to
+test something specific: can an entire pipeline, design and code, both be
+handled by AI, while I stay in the director's chair the whole time?
+
+The design happened in Figma through Claude and the Figma MCP, prompted and
+reviewed, not clicked into place. The build happened through Claude CLI, working
+off a documented design system. My job was structure, direction, and judgment.
+Not execution.
+
+## What I Worked With
+
+Figma with the Figma MCP connected to Claude. Design decisions went through
+conversation instead of a toolbar, typography, tokens, layout, component
+structure, all of it came out of that loop.
+
+{/* ASSET: Figma MCP conversation screenshot, if available */}
+
+From there the design file fed into implementation with Claude CLI, working from
+a documented brief, a `CLAUDE.md` and a `STYLE.md`. React, Tailwind, deployed on
+Cloudflare Workers.
+
+{/* ASSET: design tokens panel in Figma */}
+
+## The Pipeline
+
+Design phase first. I'd describe a section or a decision to Claude with the
+Figma MCP active, Claude would make the change in the file, and I'd review it.
+Push back when something was off, iterate, move on. The color tokens, the
+typography system, the spacing scale, all of it got built through that loop
+rather than by hand.
+
+{/* ASSET: Figma design next to live site, side by side */}
+
+Implementation came next. Before the first prompt, I generated a `STYLE.md` from
+an existing codebase, coding patterns, naming conventions, component structure,
+and wrote a `CLAUDE.md` specific to Nota covering the token system, the section
+breakdown, spacing expectations. Claude CLI worked from that brief the whole way
+through.
+
+{/* ASSET: CLAUDE.md or STYLE.md excerpt */}
+
+The loop stayed consistent throughout both phases: prompt, review the output
+against the actual documented decision, not "does this look close" but "does
+this match the spec," adjust, move to the next section. Every output got human
+eyes before it went further. The design system was the thing holding it
+together, it's what made the design phase produce inspectable decisions, and
+what made the implementation phase produce precise ones instead of approximate
+ones.
+
+## What This Actually Tests
+
+Most AI-assisted frontend work starts from a screenshot or a loose description,
+and the output quality just reflects the quality of that input. Garbage brief
+in, mediocre result out.
+
+What I wanted to find out: if you build a proper documented foundation first, a
+real token system, real component structure, explicit decisions written down,
+and hand that to the AI as its actual working brief instead of a vague prompt,
+does the output change?
+
+It does. The gap wasn't in the AI's capability. It was in the structure I gave
+it before it started.
+
+## Lessons Learned
+
+A full design-to-code AI pipeline is real, but it asks for more upfront
+structure from the human, not less. Design tokens, `STYLE.md`, `CLAUDE.md`, none
+of that is a shortcut. It's what makes the shortcuts actually work later.
+
+The design-to-dev handoff problem mostly disappears too, once the design system
+is documented from the start instead of retrofitted. The Figma file stays clean
+enough for a designer to read. The codebase stays readable for a developer to
+pick up. That's not a lucky side effect, it's just what happens when the
+foundation gets built first instead of last.
