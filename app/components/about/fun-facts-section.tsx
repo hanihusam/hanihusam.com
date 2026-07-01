@@ -1,3 +1,4 @@
+import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
 import { Grid } from '@/components/grid'
 import { clsxm } from '@/utils/clsxm'
 import { Paragraph } from '@/components/typography'
@@ -12,21 +13,23 @@ function Tile({
 	area,
 	className,
 	children,
+	...motionProps
 }: {
 	area: string
 	className?: string
 	children: React.ReactNode
-}) {
+} & HTMLMotionProps<'div'>) {
 	return (
-		<div
+		<motion.div
 			className={clsxm(
 				'bg-(--surface-secondary) relative rounded-2xl p-5',
 				area,
 				className,
 			)}
+			{...motionProps}
 		>
 			{children}
-		</div>
+		</motion.div>
 	)
 }
 
@@ -45,7 +48,17 @@ function Fact({
 	)
 }
 
-/** Simple line-art figure used by the height tile. */
+const figureSpring = { type: 'spring', duration: 0.6, bounce: 0.25 } as const
+
+/**
+ * Line-art figure that stands up to full height on hover. Instead of scaling
+ * the SVG (which distorts the head), each joint's coordinate is animated
+ * between a crouched `rest` pose and a tall `grown` pose — the feet stay
+ * planted at y=100 and the head radius never changes, so it reads as the
+ * figure literally growing up. The variant is driven by the parent tile's
+ * `whileHover`; the base attributes below are the `grown` pose, so reduced
+ * motion shows the figure standing tall with no animation.
+ */
 function StickFigure({ className }: { className?: string }) {
 	return (
 		<svg
@@ -64,18 +77,73 @@ function StickFigure({ className }: { className?: string }) {
 				strokeLinecap="round"
 				strokeLinejoin="round"
 			>
-				<circle cx="25" cy="18" r="13" />
-				<line x1="25" y1="31" x2="25" y2="62" />
-				<line x1="25" y1="62" x2="13" y2="92" />
-				<line x1="25" y1="62" x2="37" y2="92" />
-				<line x1="25" y1="40" x2="11" y2="55" />
-				<line x1="25" y1="40" x2="39" y2="55" />
+				{/* Head — only its vertical position moves; radius stays fixed. */}
+				<motion.circle
+					cx={25}
+					cy={15}
+					r={15}
+					transition={figureSpring}
+					variants={{ rest: { cy: 35 }, grown: { cy: 15 } }}
+				/>
+				{/* Torso */}
+				<motion.line
+					x1={25}
+					y1={30}
+					x2={25}
+					y2={70}
+					transition={figureSpring}
+					variants={{ rest: { y1: 50, y2: 80 }, grown: { y1: 30, y2: 70 } }}
+				/>
+				{/* Left leg — foot planted at y=100 */}
+				<motion.line
+					x1={25}
+					y1={70}
+					x2={15}
+					y2={100}
+					transition={figureSpring}
+					variants={{ rest: { y1: 80 }, grown: { y1: 70 } }}
+				/>
+				{/* Right leg — foot planted at y=100 */}
+				<motion.line
+					x1={25}
+					y1={70}
+					x2={35}
+					y2={100}
+					transition={figureSpring}
+					variants={{ rest: { y1: 80 }, grown: { y1: 70 } }}
+				/>
+				{/* Left arm — hangs down at rest, sweeps up into a raise when grown. */}
+				<motion.line
+					x1={25}
+					y1={35}
+					x2={7}
+					y2={20}
+					transition={figureSpring}
+					variants={{
+						rest: { y1: 55, x2: 15, y2: 70 },
+						grown: { y1: 35, x2: 7, y2: 20 },
+					}}
+				/>
+				{/* Right arm — hangs down at rest, sweeps up into a raise when grown. */}
+				<motion.line
+					x1={25}
+					y1={35}
+					x2={43}
+					y2={20}
+					transition={figureSpring}
+					variants={{
+						rest: { y1: 55, x2: 35, y2: 70 },
+						grown: { y1: 35, x2: 43, y2: 20 },
+					}}
+				/>
 			</g>
 		</svg>
 	)
 }
 
 export function FunFactsSection() {
+	const shouldReduceMotion = useReducedMotion()
+
 	return (
 		<Grid as="section">
 			<div
@@ -188,7 +256,10 @@ export function FunFactsSection() {
 				{/* Height — figure beside the copy */}
 				<Tile
 					area="[grid-area:height]"
-					className="flex flex-col-reverse items-center justify-center md:max-h-46 md:flex-row"
+					initial={shouldReduceMotion ? undefined : 'rest'}
+					animate={shouldReduceMotion ? undefined : 'rest'}
+					whileHover={shouldReduceMotion ? undefined : 'grown'}
+					className="flex flex-col-reverse items-center justify-center gap-5 md:max-h-46 md:flex-row"
 				>
 					<StickFigure className="translate-y-8 overflow-visible text-(--text-paragraph) md:max-h-25" />
 					<Fact>
