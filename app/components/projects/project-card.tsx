@@ -7,6 +7,7 @@ import { getImageBuilder, getImgProps } from '@/utils/images'
 
 import { TechIcon } from './tech-icon'
 
+import { SiGithub } from '@icons-pack/react-simple-icons'
 import { ArrowCircleRightIcon, LinkIcon } from '@phosphor-icons/react'
 
 type ProjectCardProps = {
@@ -96,15 +97,28 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 						View Project
 					</ButtonLink>
 					<div className="flex items-center gap-4">
-						<a
-							href={project.link}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="flex items-center gap-1.5 text-base leading-(--paragraph-leading) text-(--text-paragraph) transition-colors hover:text-(--text-link)"
-						>
-							<LinkIcon className="size-4" />
-							Open Live Site
-						</a>
+						{project.github ? (
+							<a
+								href={project.github}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center gap-1.5 text-base leading-(--paragraph-leading) text-(--text-paragraph) transition-colors hover:text-(--text-link)"
+							>
+								<SiGithub size={16} />
+								Repository
+							</a>
+						) : null}
+						{project.link ? (
+							<a
+								href={project.link}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="flex items-center gap-1.5 text-base leading-(--paragraph-leading) text-(--text-paragraph) transition-colors hover:text-(--text-link)"
+							>
+								<LinkIcon className="size-4" />
+								Open Live Site
+							</a>
+						) : null}
 					</div>
 				</div>
 			</div>

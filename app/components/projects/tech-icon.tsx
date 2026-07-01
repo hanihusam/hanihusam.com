@@ -1,8 +1,12 @@
 import { Text } from '@/components/typography'
 
 import {
+	SiAnthropic,
 	SiApollographql,
 	SiBootstrap,
+	SiClaude,
+	SiCloudflare,
+	SiFigma,
 	SiGraphql,
 	SiNextdotjs,
 	SiReact,
@@ -10,7 +14,6 @@ import {
 	SiRedux,
 	SiTailwindcss,
 	SiTypescript,
-	SiCloudflare,
 } from '@icons-pack/react-simple-icons'
 import {
 	Arrow,
@@ -32,7 +35,11 @@ function TechBadge({ slug }: { slug: string }) {
 }
 
 const techMap: Record<string, TechEntry> = {
+	anthropic: { label: 'Anthropic', icon: <SiAnthropic size={20} /> },
+	claude: { label: 'Claude', icon: <SiClaude size={20} /> },
 	cloudflare: { label: 'Cloudflare', icon: <SiCloudflare size={20} /> },
+	figma: { label: 'Figma', icon: <SiFigma size={20} /> },
+	'figma mcp': { label: 'Figma MCP', icon: <SiAnthropic size={20} /> },
 	tailwindcss: { label: 'Tailwind CSS', icon: <SiTailwindcss size={20} /> },
 	'tailwind css': { label: 'Tailwind CSS', icon: <SiTailwindcss size={20} /> },
 	'react-router': { label: 'React Router', icon: <SiReactrouter size={20} /> },
