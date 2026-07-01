@@ -21,15 +21,15 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 			<div className="relative aspect-video shrink-0 lg:aspect-square lg:h-full">
 				<figure className="pointer-events-none isolate z-1 hidden h-full overflow-hidden rounded-xl lg:block lg:aspect-square">
 					<BlurrableImage
-						key={project.bannerCloudinaryId}
-						blurDataUrl={project.bannerBlurDataUrl}
+						key={project.bannerSquareCloudinaryId}
+						blurDataUrl={project.bannerSquareBlurDataUrl}
 						className="aspect-square overflow-hidden rounded-xl"
 						img={
 							<img
 								title={project.title}
 								{...getImgProps(
 									getImageBuilder(
-										project.bannerCloudinaryId,
+										project.bannerSquareCloudinaryId,
 										`image-${project.title}`,
 									),
 									{
@@ -52,7 +52,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 				</figure>
 				<figure className="pointer-events-none isolate z-1 aspect-video overflow-hidden rounded-xl lg:hidden">
 					<BlurrableImage
-						key={project.bannerCloudinaryId}
+						key={project.bannerLandscapeCloudinaryId}
 						blurDataUrl={project.bannerBlurDataUrl}
 						className="aspect-video overflow-hidden rounded-xl"
 						img={
@@ -60,7 +60,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 								title={project.title}
 								{...getImgProps(
 									getImageBuilder(
-										project.bannerCloudinaryId,
+										project.bannerLandscapeCloudinaryId,
 										`image-${project.title}`,
 									),
 									{

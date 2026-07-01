@@ -27,10 +27,12 @@ export type ProjectFrontmatter = {
 	category?: string
 	role?: string
 	techs: string
-	bannerCloudinaryId: string
+	bannerLandscapeCloudinaryId: string
+	bannerSquareCloudinaryId: string
 	link?: string
 	github?: string
 	bannerBlurDataUrl?: string
+	bannerSquareBlurDataUrl?: string
 }
 
 export type PageContent = {

@@ -1,0 +1,153 @@
+---
+title: Cincy DOT Physicals
+publishedAt: 2026-07-01
+lastUpdated: 2026-07-01
+description: A mobile-first lead generation website for a DOT physical clinic in
+  Cincinnati, built end-to-end from Figma to DNS cutover.
+category: Freelance Work
+role: Frontend Engineer & UI Designer
+bannerLandscapeCloudinaryId: bapak2.dev/works/cincy-dot-physicals/thumbnail-landscape_s4av1d
+bannerSquareCloudinaryId: bapak2.dev/works/cincy-dot-physicals/thumbnail-square_qjp3iw
+techs:
+  React Router (Remix), TypeScript, Tailwind CSS, Cloudflare Workers, Acuity
+  Scheduling
+github:
+link: https://www.cincydotphysicals.com
+---
+
+{/\* ASSET CHECKLIST — Cincy DOT Physicals post
+
+1. bannerLandscapeCloudinaryId — hero banner image/video for the post header
+   - homepage, mobile + desktop side by side, real device screenshots preferred
+     over DevTools emulation
+
+2. Short Explanation — no asset needed, text only
+
+3. What I Worked With — comparison shot
+   - one of Lawrence's original ChatGPT mockup images, next to the finished live
+     page, side by side
+   - ASK LAWRENCE FIRST before using his mockup image publicly
+
+4. What I Worked With — design system shot
+   - Figma file screenshot showing design tokens panel / color palette /
+     typography scale
+
+5. Working With AI in the Build — process shot
+   - Figma design open alongside the live site, design-to-implementation
+     comparison
+   - could be a Screen Studio recording instead of a static shot, scrolling
+     through both side by side
+
+6. Mobile-First, For Real This Time — device shot
+   - booking page or homepage on an actual mobile device, real device photo or
+     browser mobile view
+
+7. The Result — confirmation shot
+   - thank you / booking confirmation page on mobile, this is the branded
+     HMAC-token page, good to show off
+
+Optional: a Screen Studio walkthrough of the booking flow start to finish
+(search → book → confirmation) would work well as an embedded video under "App
+Demos" if the post format supports it.
+
+Reminder: confirm with Lawrence that the project can be featured publicly before
+this goes live. \*/}
+
+## Short Explanation
+
+Cincy DOT Physicals is a DOT physical clinic in Cincinnati that serves
+commercial truck drivers. The client needed a site that actually converts, since
+his patients are checking their phones between jobs, not browsing on a desktop
+with time to spare.
+
+I took this one from first wireframe to DNS cutover. Design, frontend build,
+booking integration, technical SEO, and handing over the full infrastructure to
+the client at the end. Solo, end-to-end.
+
+## What I Worked With
+
+The client came in with a folder of ChatGPT-generated mockup images. Not
+references, exact specs. Every layout, every section, every flow was already
+decided in his head, and he wanted the live site to match what he'd shown me.
+
+That's a fine brief, but comparing a live site against a static AI-generated
+image gets messy fast. The moment something feels "slightly off," you're
+guessing whether it's the spacing, the font weight, or just a rendering
+difference. Nobody wants to burn a revision cycle on that.
+
+{/* ASSET: mockup vs live page, side by side — confirm with Lawrence first */}
+
+So before writing any code, I built a proper Figma file based on his references,
+structured and inspectable. That turned the comparison into
+design-to-implementation instead of image-to-browser, which is a much easier
+thing to agree on. I also set up an actual design system underneath it,
+typography hierarchy, spacing scale, semantic color palette, so every decision
+after that had something to point back to instead of being re-litigated each
+time.
+
+{/* ASSET: Figma design tokens / palette / typography scale */}
+
+Stack-wise, it's React Router (Remix) and TypeScript on the frontend, Tailwind
+for styling, deployed on Cloudflare Workers for SSR. Booking runs through Acuity
+Scheduling, with a custom redirect flow and an HMAC-signed token for the
+confirmation page, so the confirmation experience stays branded instead of
+dumping the user onto Acuity's default UI.
+
+## Working With AI in the Build
+
+AI was part of the actual workflow here, not a shortcut I bolted on after.
+
+For the design phase, I used Claude to cross-check token consistency and
+generate spec docs. For implementation, Claude CLI handled the mechanical stuff,
+component scaffolding, SEO schema generation, environment config, the repetitive
+boilerplate that shows up across every route.
+
+The parts that needed actual judgment, the Acuity redirect architecture, the
+HMAC token flow, the DNS migration, those I did myself. AI is good at
+repeatable. It's not the one making the call on how a booking confirmation
+should be authenticated.
+
+{/* ASSET: Figma design alongside live site — static shot or Screen Studio scroll-through */}
+
+## Mobile-First, For Real This Time
+
+The client was explicit from day one: this site is for drivers checking their
+phone between jobs, not people sitting at a desk. Desktop was secondary, and it
+showed in his references, almost every mockup he sent was a mobile screenshot.
+Single column, big tap targets, stacked sections. There was no desktop reference
+to work from at all.
+
+That actually made things easier, not harder. Every wider-screen decision became
+"what does this look like as a natural extension of the mobile intent," not "how
+do I fill this extra space." I designed mobile-first in Figma, built fluid
+breakpoints with Tailwind, and treated desktop as an adaptation of the mobile
+design rather than its own thing.
+
+{/* ASSET: booking page or homepage on real mobile device */}
+
+## The Result
+
+An SSR site on Cloudflare Workers, fast by default. A custom booking flow with a
+branded confirmation page instead of a generic redirect. Full technical SEO with
+structured data, GA4 wired up, Search Console verified. Domain migrated over
+with zero downtime.
+
+And by the end, the client owned everything, GitHub, Cloudflare, domain, all
+moved into his own accounts before I called it done.
+
+{/* ASSET: booking confirmation page on mobile */}
+
+## Lessons Learned
+
+Working from someone else's AI-generated mockups is a specific kind of
+constraint I hadn't dealt with before. It's tempting to just eyeball it and
+start building, but the ambiguity compounds fast once you're a few sections in.
+Building the intermediate Figma layer wasn't extra work, it was what made the
+whole project move quickly once we started, because disagreements got resolved
+against a structured file instead of a JPEG.
+
+The other thing that stuck with me: having zero desktop references from the
+client turned out to be a gift. It kept the site honest to what actually
+mattered, drivers booking a physical from their phone, instead of me
+over-designing a desktop experience nobody in the target audience was going to
+use.

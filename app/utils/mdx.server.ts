@@ -49,16 +49,32 @@ async function compileMdxCached({
 			const compiledPage = await compileMdx<ProjectFrontmatter>(slug, files)
 			if (compiledPage) {
 				if (
-					compiledPage.frontmatter.bannerCloudinaryId &&
+					compiledPage.frontmatter.bannerLandscapeCloudinaryId &&
 					!compiledPage.frontmatter.bannerBlurDataUrl
 				) {
 					try {
 						compiledPage.frontmatter.bannerBlurDataUrl = await getBlurDataUrl(
-							compiledPage.frontmatter.bannerCloudinaryId,
+							compiledPage.frontmatter.bannerLandscapeCloudinaryId,
 						)
 					} catch (error: unknown) {
 						console.error(
 							'oh no, there was an error getting the blur image data url',
+							error,
+						)
+					}
+				}
+				if (
+					compiledPage.frontmatter.bannerSquareCloudinaryId &&
+					!compiledPage.frontmatter.bannerSquareBlurDataUrl
+				) {
+					try {
+						compiledPage.frontmatter.bannerSquareBlurDataUrl =
+							await getBlurDataUrl(
+								compiledPage.frontmatter.bannerSquareCloudinaryId,
+							)
+					} catch (error: unknown) {
+						console.error(
+							'oh no, there was an error getting the square blur image data url',
 							error,
 						)
 					}
