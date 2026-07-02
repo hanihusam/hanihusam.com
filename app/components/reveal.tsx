@@ -19,12 +19,15 @@ function Reveal({ delay = 0, children, ...props }: RevealProps) {
 	return (
 		<motion.div
 			initial={shouldReduceMotion ? false : { opacity: 0, y: 24 }}
+			// Reduced motion: force the visible state immediately (no scroll trigger),
+			// otherwise the SSR-rendered opacity:0 would persist and hide content.
+			animate={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
 			whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
 			viewport={{ once: true, amount: 0.2 }}
 			transition={{
 				duration: shouldReduceMotion ? 0 : 0.5,
 				ease: EASE_OUT_QUART,
-				delay,
+				delay: shouldReduceMotion ? 0 : delay,
 			}}
 			{...props}
 		>
