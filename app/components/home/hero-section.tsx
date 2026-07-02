@@ -14,7 +14,7 @@ export function HeroSection() {
 				<Logo className="absolute top-8" />
 
 				<img
-					className="absolute top-0 right-0 hidden h-auto w-87.5 translate-x-[25%] translate-y-[20vh] md:top-auto md:right-auto md:bottom-0 md:left-0 md:block md:w-lg md:translate-x-[-16%] md:translate-y-0 lg:left-1/2 lg:w-3xl lg:-translate-x-1/2"
+					className="absolute top-0 right-0 hidden h-auto w-87.5 max-w-2/3 translate-x-[25%] translate-y-[20vh] md:top-auto md:right-auto md:bottom-0 md:left-0 md:block md:w-lg md:translate-x-[-16%] md:translate-y-0 lg:left-1/2 lg:w-3xl lg:-translate-x-1/2"
 					{...getImgProps(
 						getImageBuilder(
 							'bapak2.dev/images/avatar-front_l3oexq',

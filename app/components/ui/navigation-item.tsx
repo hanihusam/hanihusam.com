@@ -34,7 +34,7 @@ export default function NavigationItem({
 							className,
 						)}
 					>
-						<span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100 group-aria-[current=page]:opacity-100" />
+						<span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-(--duration-fast) group-hover:opacity-100 group-focus:opacity-100 group-aria-[current=page]:opacity-100" />
 						<span className="relative">{children}</span>
 					</NavLink>
 				</Trigger>

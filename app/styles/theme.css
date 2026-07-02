@@ -110,6 +110,20 @@
 	--breakpoint-md: 640px; /* Tailwind default: 48rem (768px) */
 	--breakpoint-lg: 1024px; /* Tailwind default: 64rem (1024px) — same px, kept explicit */
 	--breakpoint-xl: 1440px; /* Tailwind default: 80rem (1280px) */
+
+	/* ─── Motion — single source of truth for durations + easing.
+	   Generates utilities: duration-fast/base/slow/slower, ease-out-quart, ease-in-out-quart.
+	   Durations are re-zeroed under prefers-reduced-motion below, so any utility
+	   built on these tokens is automatically motion-safe. */
+	--duration-fast: 150ms; /* micro-interactions, hover, color */
+	--duration-base: 200ms; /* standard UI: buttons, dropdowns, tooltips */
+	--duration-slow: 300ms; /* larger elements: modals, drawers, image zoom */
+	--duration-slower: 500ms; /* rare / large-travel: icon lift, marketing */
+
+	/* ease-out for enter/exit (the house curve, already used by the theme toggle) */
+	--ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+	/* ease-in-out for on-screen movement / morphing */
+	--ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -317,7 +331,8 @@ html {
 	-moz-osx-font-smoothing: grayscale;
 }
 
-/* View Transitions — native, no library needed */
+/* Cross-document (hard-load) fallback. Client-side route transitions are
+   handled by <PageTransition> (motion/react); the two are mutually exclusive. */
 @view-transition {
 	navigation: auto;
 }

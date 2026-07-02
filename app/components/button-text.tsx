@@ -44,7 +44,7 @@ export const ButtonText = React.forwardRef<HTMLButtonElement, ButtonTextProps>(
 		<button
 			className={clsxm(
 				buttonBlockStyles(block),
-				'focus:ring-secondary-500/20 text-secondary-500 hover:text-secondary-600 focus:text-secondary-600 active:text-secondary-700 disabled:text-secondary-300 dark:text-light items-center justify-center rounded-md border-0 bg-transparent px-5 py-3 text-lg duration-200 focus:ring-2 focus:outline-none active:focus:text-white dark:hover:text-white dark:focus:text-white',
+				'focus:ring-secondary-500/20 text-secondary-500 hover:text-secondary-600 focus:text-secondary-600 active:text-secondary-700 disabled:text-secondary-300 dark:text-light items-center justify-center rounded-md border-0 bg-transparent px-5 py-3 text-lg duration-(--duration-base) focus:ring-2 focus:outline-none active:focus:text-white dark:hover:text-white dark:focus:text-white',
 				disabledStyles,
 				className,
 			)}
