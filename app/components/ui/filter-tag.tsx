@@ -16,7 +16,7 @@ function FilterTag({ tag, selected, onChange, disabled }: FilterTagProps) {
 			className={clsxm(
 				'relative inline-flex cursor-pointer items-center justify-center select-none',
 				'rounded-full px-4 py-3',
-				'transition-colors duration-150',
+				'transition-colors duration-(--duration-fast)',
 				{
 					'border border-(--border-primary) bg-(--filter-tag-surface-default)':
 						!selected && !disabled,

@@ -2,7 +2,7 @@ function IconLink({ ref, ...props }: React.ComponentPropsWithRef<'a'>) {
 	return (
 		<a
 			{...props}
-			className={`${props.className ?? ''} duration-500 hover:-translate-y-1.5`}
+			className={`${props.className ?? ''} ease-out-quart transition-transform duration-(--duration-base) hover:-translate-y-1.5`}
 			ref={ref}
 		>
 			{props.children}

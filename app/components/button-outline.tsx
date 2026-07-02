@@ -61,7 +61,7 @@ export const ButtonOutline = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			className={clsxm(
 				buttonBlockStyles(block),
 				buttonModifierStyle(variant),
-				'group items-center justify-center rounded-md border px-5 py-3 duration-200 focus:outline-none',
+				'group items-center justify-center rounded-md border px-5 py-3 duration-(--duration-base) focus:outline-none',
 				`border-${variant}-500 text-${variant}-500`,
 				disabledStyles,
 				className,

@@ -15,6 +15,7 @@ import { getTheme } from '@/utils/theme.server'
 
 import { type Route } from './+types/root'
 import { Navigation } from './components/navigation'
+import { PageTransition } from './components/page-transition'
 import { TopBlurOverlay } from './components/top-blur-overlay'
 
 import {
@@ -22,7 +23,6 @@ import {
 	Links,
 	type LinksFunction,
 	Meta,
-	Outlet,
 	Scripts,
 	ScrollRestoration,
 	useMatches,
@@ -204,7 +204,7 @@ function App({
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
 			<LayoutRoot surface={surface}>
 				<TopBlurOverlay />
-				<Outlet />
+				<PageTransition />
 				<Footer />
 				<Navigation />
 			</LayoutRoot>

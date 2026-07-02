@@ -259,9 +259,9 @@ export function FunFactsSection() {
 					initial={shouldReduceMotion ? undefined : 'rest'}
 					animate={shouldReduceMotion ? undefined : 'rest'}
 					whileHover={shouldReduceMotion ? undefined : 'grown'}
-					className="flex flex-col-reverse items-center justify-center gap-5 md:max-h-46 md:flex-row"
+					className="flex flex-col-reverse items-center justify-center gap-5 md:max-h-46 md:flex-row md:justify-center"
 				>
-					<StickFigure className="translate-y-8 overflow-visible text-(--text-paragraph) md:max-h-25" />
+					<StickFigure className="self-center overflow-visible text-(--text-paragraph) md:max-h-25 md:self-end" />
 					<Fact>
 						I am 180 cm tall. Above average for an Indonesian. I&apos;m told
 						this is my most notable achievement.

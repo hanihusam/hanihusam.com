@@ -61,7 +61,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 			className={clsxm(
 				buttonBlockStyles(block),
 				buttonModifierStyle(variant),
-				'items-center justify-center rounded-md px-5 py-3 duration-200 focus:outline-none',
+				'items-center justify-center rounded-md px-5 py-3 duration-(--duration-base) focus:outline-none active:scale-[0.97]',
 				disabledStyles,
 				className,
 			)}

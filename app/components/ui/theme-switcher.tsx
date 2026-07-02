@@ -30,7 +30,7 @@ export default function ThemeSwitcher() {
 							aria-live="polite"
 							className="toggle-theme-switcher group relative m-1 grid size-9 cursor-pointer place-items-center overflow-hidden rounded-md p-2 text-(--icon-primary) focus:outline-none"
 						>
-							<span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus:opacity-100" />
+							<span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-(--duration-fast) group-hover:opacity-100 group-focus:opacity-100" />
 							{/* Moon icon */}
 							<svg
 								id="moon-icon"

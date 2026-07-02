@@ -12,7 +12,7 @@ export function AboutHero() {
 				className="absolute top-0 right-0 hidden lg:block"
 			/>
 
-			<div className="relative col-span-full flex h-[82vh] items-end md:h-auto">
+			<div className="relative col-span-full flex items-end">
 				{/* Floating cutout avatar over a tinted square */}
 				<div className="absolute top-0 right-0 flex aspect-square w-100 translate-x-[28%] -translate-y-1/3 items-center justify-center overflow-visible rounded-2xl border-(--border-primary) bg-sky-50 md:translate-x-[40%] md:translate-y-0 lg:translate-x-0 dark:bg-sky-900">
 					<img
@@ -24,7 +24,7 @@ export function AboutHero() {
 					/>
 				</div>
 
-				<div className="relative z-1 flex flex-col gap-6 md:gap-12">
+				<div className="relative z-1 mt-82 flex flex-col gap-6 md:gap-12">
 					<Display>Hi there! I&apos;m Han.</Display>
 
 					<div className="flex flex-col gap-4 md:max-w-[60%]">

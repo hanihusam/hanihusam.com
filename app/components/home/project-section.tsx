@@ -1,5 +1,6 @@
 import { Grid } from '@/components/grid'
 import { Header } from '@/components/header'
+import { Reveal } from '@/components/reveal'
 import { Spacer } from '@/components/spacer'
 import { type InjectedMeta, type ProjectFrontmatter } from '@/types'
 import { clsxm } from '@/utils/clsxm'
@@ -25,18 +26,22 @@ export function ProjectSection({
 
 	return (
 		<>
-			<Header title={title} subTitle={subTitle} cta={cta} ctaUrl="/works" />
+			<Reveal>
+				<Header title={title} subTitle={subTitle} cta={cta} ctaUrl="/works" />
+			</Reveal>
 			<Spacer size="lg" />
 			<Grid className="gap-6">
 				{posts.map((project, idx) => (
-					<ProjectCard
+					<Reveal
 						key={project.slug}
-						className={clsxm('col-span-full', {
-							'lg:flex-row-reverse': idx % 2 === 0,
-							'hidden lg:flex': idx >= 2,
-						})}
-						project={project}
-					/>
+						delay={idx * 0.08}
+						className={clsxm('col-span-full', { 'hidden lg:block': idx >= 2 })}
+					>
+						<ProjectCard
+							className={clsxm({ 'lg:flex-row-reverse': idx % 2 === 0 })}
+							project={project}
+						/>
+					</Reveal>
 				))}
 			</Grid>
 		</>

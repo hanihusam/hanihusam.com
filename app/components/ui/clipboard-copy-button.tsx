@@ -66,7 +66,7 @@ export function ClipboardCopyButton({
 			<span className="relative inline-flex size-6 shrink-0">
 				<span
 					className={clsxm(
-						'absolute inset-0 transition-all duration-200',
+						'absolute inset-0 transition-all duration-(--duration-base)',
 						copied ? 'opacity-0 blur-sm' : 'opacity-100 blur-none',
 					)}
 				>
@@ -74,7 +74,7 @@ export function ClipboardCopyButton({
 				</span>
 				<span
 					className={clsxm(
-						'absolute inset-0 transition-all duration-200',
+						'absolute inset-0 transition-all duration-(--duration-base)',
 						copied ? 'opacity-100 blur-none' : 'opacity-0 blur-sm',
 					)}
 				>
