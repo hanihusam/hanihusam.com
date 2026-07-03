@@ -12,8 +12,10 @@ type TransformerOption = {
 		height?: number
 		aspectRatio?: string
 	}
-	quality?: number | 'auto' | string
-	format?: 'auto' | 'webp' | 'jpg' | 'png' | 'avif' | string
+	// `string & {}` keeps the literals as editor hints without collapsing the
+	// union down to plain `string`.
+	quality?: number | 'auto' | (string & {})
+	format?: 'auto' | 'webp' | 'jpg' | 'png' | 'avif' | (string & {})
 	background?: string
 	effect?: { name: string; value?: string | number }
 }
