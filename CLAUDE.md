@@ -17,14 +17,11 @@ code in this repository.
 **Dev:** `npm run dev` (runs app dev server, content watcher, and server build
 watcher in parallel)
 
-**Start:** `npm run start` (runs production server with mocked data)
+**Start:** `npm run start` (runs production server)
 
-**Tests:**
-
-- Unit/component: `npm run test`
-- Single test file: `npm run test -- app/utils/helpers.test.ts`
-- E2E dev: `npm run test:e2e:dev` (opens Cypress interactive mode)
-- E2E run: `npm run test:e2e:run` (runs Cypress headless)
+**Tests:** There is currently no automated test suite. The previous
+Vitest/Cypress/MSW setup was removed as unused; add tooling back before writing
+tests.
 
 **Linting & formatting:**
 
@@ -47,7 +44,7 @@ concurrently)
 - **Database:** SQLite with Prisma ORM
 - **Content:** MDX files via GitHub API (fetched dynamically)
 - **Deployment:** Fly.io (single machine, SQLite on a mounted volume)
-- **Testing:** Vitest (unit/components) + Cypress (E2E)
+- **Testing:** None currently (see Tests note above)
 
 ### Project Structure
 
@@ -130,18 +127,19 @@ Required server-side variables (enforced in `app/utils/env.server.ts`):
 
 ### Testing Setup
 
-- **Vitest:** Configured with `happy-dom` environment in `vitest.config.ts`
-- **Test setup file:** `tests/setup-test-env.ts` (initializes testing utilities)
-- **Cypress:** E2E tests use Testing Library syntax with MSW mocking for APIs
+No test suite is currently configured. The prior Vitest + Cypress + MSW setup
+was removed as unused. If reintroducing tests, add the tooling and a fresh
+config rather than restoring the old (broken) setup.
 
 ### Build Process
 
-1. `react-router build` - Builds React Router app and generates types into
-   `.react-router/`
-2. `esbuild` - Builds Express server for production
-3. `build-info.js` - Generates build metadata (commit SHA, timestamp)
+1. `react-router build` - Builds the React Router app (client + SSR server
+   bundle) and generates types into `.react-router/`
+2. `build-info.js` - Generates build metadata (commit SHA, timestamp)
 
-For development: Use `npm run dev` which watches all three in parallel.
+The production server is the plain `server.js` (Express) run directly with
+`node` — there is no separate esbuild bundling step. For development,
+`npm run dev` runs the app dev server via Vite middleware.
 
 ### Content Management
 
@@ -238,8 +236,8 @@ it accesses environment or database
 **Modifying the database:** Update `prisma/schema.prisma`, then run
 `npx prisma migrate dev --name description` to create migration
 
-**Testing changes:** Run `npm run test` for unit tests or `npm run test:e2e:dev`
-for E2E testing with Cypress
+**Validating changes:** Run `npm run validate` (lint + typecheck + build). There
+is no automated test suite at present.
 
 **Deploying:** Push to main branch. GitHub Actions CI runs validation, then
 Fly.io auto-deploys on success
