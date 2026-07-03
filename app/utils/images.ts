@@ -1,7 +1,22 @@
 import { toErrorWithMessage } from '@/utils/helpers'
 
-import { type TransformerOption } from '@cld-apis/types'
 import { buildImageUrl, setConfig, Transformer } from 'cloudinary-build-url'
+
+// Local, focused subset of Cloudinary's transformation options — the fields we
+// actually use. Replaces the `TransformerOption` type from `@cld-apis/types`,
+// which is packaged with vulnerable runtime tooling (see types/third-party.d.ts).
+type TransformerOption = {
+	resize?: {
+		type?: string
+		width?: number
+		height?: number
+		aspectRatio?: string
+	}
+	quality?: number | 'auto' | string
+	format?: 'auto' | 'webp' | 'jpg' | 'png' | 'avif' | string
+	background?: string
+	effect?: { name: string; value?: string | number }
+}
 
 type ImageBuilder = {
 	(transformations?: TransformerOption): string
