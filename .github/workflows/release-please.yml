@@ -1,17 +1,18 @@
 name: release-please
 on:
-  # !STARTERCONF Choose your preferred event
-  # !Option 1: Manual Trigger from GitHub
-  workflow_dispatch:
-  # !Option 2: Release on every push on main branch
-  # push:
-  #   branches:
-  #     - main
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   release-please:
     runs-on: ubuntu-latest
     steps:
-      - uses: google-github-actions/release-please-action@v3
+      - uses: googleapis/release-please-action@v4
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           release-type: node
-          package-name: release-please-action
