@@ -1,0 +1,45 @@
+---
+title: Curious Me
+publishedAt: 2026-07-06
+lastUpdated: 2026-07-06
+description: An anonymous, location-based social platform. Three years as the frontend engineer across the app, marketing site, and admin dashboard.
+category: Freelance Work
+role: Sr. Frontend Engineer
+bannerLandscapeCloudinaryId: bapak2.dev/works/nota-lp/thumbnail-landscape_glfd2u
+bannerSquareCloudinaryId: bapak2.dev/works/nota-lp/thumbnail-square_p16jfw
+techs: React, React Router, Tailwind CSS, Firebase, Apollo Client, GraphQL, DraftJS
+github:
+link: https://app.curious.me
+---
+
+_The live product is currently down; links are for reference. I worked on it as a full-time contract for ~3 years._
+
+## What it is
+
+Curious is an anonymous, location-based social platform; share a thought, see what people near you are saying, connect without the follow / follow-back dance. Think Threads or X, minus the follower graph. I hadn't built anything location-first before, so a good chunk of it was figuring out the patterns as I went.
+
+Three React surfaces on one GraphQL backend: the app (React 19 + Vite); feed, posts, comments, messaging, notifications; the marketing site (Next.js); server-rendered content pages and deep-link bridging into the native apps; and the admin dashboard (React Router v7) for managing content and users. I led frontend development: set direction for the team, turned product plans into frontend work, and owned the path to production — code review, merges, deploys.
+
+## Turning a post into a shareable image
+
+The feature users saw was tiny: tap a post, download it as an image, throw it on your WhatsApp or Instagram story. Design handed me one Figma frame. The frame was the easy 5%. The other 95% was everything it didn't say.
+
+Here's the thing nobody tells you about `html2canvas`: it screenshots your _problems_ too. Every element that's the wrong size, every dark-mode bug, every half-loaded avatar — all of it gets baked into the PNG at full resolution. So the naive move, pointing it at the live post card, is a trap. A live card is full of stuff that only makes sense while you're scrolling: NSFW toggles, badges, action rows, divider lines. Freeze that into an image and it looks like a screenshot, not a thing someone made.
+
+So I stopped trying to photograph the live UI. Instead I built a **second render tree that only exists to become an image** — a dedicated canvas version of every content type: post, comment, repost, audio, multiple-image, sensitive content. On download, I mount the export component offscreen with `createPortal` into `document.body`, measure it against the live card's height, hand it to `html2canvas`, then tear it down.
+
+Once the export tree is its own thing, the messy cases just… stop being messy:
+
+- the interactive junk (NSFW buttons, badges, feed lines) isn't hidden — it literally doesn't exist in the export tree
+- a repost gets its own canvas shape instead of a feed card wearing a costume
+- dark mode is correct because the export component owns its own theme
+- `sensitive-content-canvas` gets to decide how flagged content looks in an image that's about to be public — which is a safety question, not a CSS one
+
+[ASSET — 2–3 variants side by side: photo avatar / long text / repost / dark mode. Caption idea: "One export tree, every content shape." This is the visual the whole section is selling. One happy-path card undersells it — get these.]
+
+Then there's the part that sounds boring and absolutely was not: **getting the download to actually work on a phone.** The whole point is posting to a story, so the target is mobile — and the humble `<a download>` fails _silently_ in mobile browsers. No error, no file, nothing. You only find out because a user tells you. The fix is unglamorous: attach the anchor to the DOM before clicking, fire the click inside `requestAnimationFrame`, clean up on a delay. On desktop Chromium I progressively enhance to the File System Access API for a real save dialog — but that path never runs on the device that matters, so the ugly fallback is the one I actually hardened.
+
+Small thing I'm quietly proud of: the "Made with ♥ in Curious" watermark. Every card someone shares to a story is a tiny ad pointing back to the app. Free growth loop, baked into a feature people already wanted.
+
+![PR #453 diff stat](./assets/pr-453-diffstat.png)
+_Shipped as one refactor: +754 / −1,143. I made it more correct and deleted ~1,100 lines of the fragile first version doing it._
