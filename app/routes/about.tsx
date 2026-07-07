@@ -16,7 +16,7 @@ import { data, type HeadersArgs } from 'react-router'
 
 const PAGE_TITLE = 'About | Hani Husamuddin'
 const PAGE_DESCRIPTION =
-	'Get to know Hani Husamuddin — a software engineer and UI designer building thoughtful digital products.'
+	'Get to know Hani Husamuddin — a frontend engineer and UI designer from Yogyakarta, Indonesia. Currently, crafting interfaces by intersecting design and code.'
 
 export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
 	return getSocialMetas({

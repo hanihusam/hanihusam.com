@@ -82,7 +82,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 	const socialImage = getSignedSocialImage({
 		request,
 		title: page.frontmatter.title,
-		featuredImage: page.frontmatter.bannerLandscapeCloudinaryId,
+		featuredImage: page.frontmatter.bannerSquareCloudinaryId,
 	})
 
 	return data({ page, meta, socialImage }, { status: 200, headers })

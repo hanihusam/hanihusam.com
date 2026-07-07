@@ -14,9 +14,9 @@ import { type Route } from './+types/_index'
 
 import { data, type HeadersArgs } from 'react-router'
 
-const PAGE_TITLE = 'Hani Husamuddin — Software Engineer & UI Designer'
+const PAGE_TITLE = 'Frontend & UI Engineer — Hani Husamuddin'
 const PAGE_DESCRIPTION =
-	'Hani Husamuddin is a software engineer and UI designer helping teams build thoughtful, high-quality digital products.'
+	'Personal website and online portfolio of Hani Husamuddin, a frontend engineer and UI designer from Yogyakarta, Indonesia. Currently, crafting interfaces by intersecting design and code.'
 
 export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
 	return getSocialMetas({

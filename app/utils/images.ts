@@ -139,8 +139,9 @@ async function getFetchBlurDataUrl(url: string) {
 
 //#region //*=========== Social share image ===========
 // Dynamic Open Graph / Twitter card images composed as a single Cloudinary
-// URL (adapted from kentcdodds.com). Layout: page title + name/url on the
-// left, a featured image cropped on the right, over a branded background.
+// URL (adapted from kentcdodds.com's getGenericSocialImage). Layout: page
+// title top-left, an author block (avatar + name + url) lower-left, and the
+// featured image fit (uncropped) on the right, over a branded background.
 //
 // These IDs must exist in the `hanihusam` Cloudinary account. Update them to
 // match whatever you uploaded.
@@ -197,23 +198,28 @@ function getSocialImage({
 	// 24-column x 12-row grid over the 2400x1256 canvas ($gw=100, $gh~104.6).
 	const vars = `$th_1256,$tw_2400,$gw_$tw_div_24,$gh_$th_div_12`
 
+	// Title: large, top-aligned so titles of varying length grow downward into
+	// the empty middle without shifting the fixed author block below.
 	const encodedTitle = doubleEncode(emojiStrip(title))
-	const titleSection = `co_white,c_fit,g_north_west,w_$gw_mul_12,h_$gh_mul_6,x_$gw_mul_1.5,y_$gh_mul_1.5,l_text:${fontBold}_110:${encodedTitle}`
+	const titleSection = `co_white,c_fit,g_north_west,w_$gw_mul_12,h_$gh_mul_6,x_$gw_mul_1.3,y_$gh_mul_1.5,l_text:${fontBold}_120:${encodedTitle}`
 
-	const profileSection = `c_fill,g_north_west,r_max,w_$gw_mul_2,h_$gh_mul_2,x_$gw_mul_1.5,y_$gh_mul_8.8,l_${toLayerId(profile)}`
+	// Author block: circular avatar with the name/url set to its right.
+	const profileSection = `c_fit,g_north_west,r_max,w_$gw_mul_2.6,h_$gh_mul_2.6,x_$gw_mul_1.3,y_$gh_mul_8.3,l_${toLayerId(profile)}`
 
 	const encodedName = doubleEncode(emojiStrip(name))
-	const nameSection = `co_white,c_fit,g_north_west,w_$gw_mul_9,x_$gw_mul_4,y_$gh_mul_8.9,l_text:${fontBold}_50:${encodedName}`
+	const nameSection = `co_white,c_fit,g_north_west,w_$gw_mul_7,h_$gh_mul_2,x_$gw_mul_3.8,y_$gh_mul_8.55,l_text:${fontBold}_58:${encodedName}`
 
 	const encodedUrl = doubleEncode(emojiStrip(url))
-	const urlSection = `co_rgb:9ca3af,c_fit,g_north_west,w_$gw_mul_9,x_$gw_mul_4,y_$gh_mul_10,l_text:${fontRegular}_36:${encodedUrl}`
+	const urlSection = `co_rgb:9ca3af,c_fit,g_north_west,w_$gw_mul_7,x_$gw_mul_3.8,y_$gh_mul_9.5,l_text:${fontRegular}_40:${encodedUrl}`
 
+	// Featured image: fit (not cropped) into the right half so the whole
+	// illustration/banner is visible regardless of its aspect ratio.
 	const featuredImageIsRemote = featuredImage.startsWith('http')
 	const featuredImageId = featuredImageIsRemote
 		? toBase64(featuredImage)
 		: toLayerId(featuredImage)
 	const featuredImageLayerType = featuredImageIsRemote ? 'l_fetch:' : 'l_'
-	const featuredImageSection = `c_fill,ar_3:4,r_24,g_east,h_$gh_mul_10,x_$gw,${featuredImageLayerType}${featuredImageId}`
+	const featuredImageSection = `c_fit,g_east,w_$gw_mul_11,h_$gh_mul_11,x_$gw,${featuredImageLayerType}${featuredImageId}`
 
 	const backgroundSection = `c_fill,w_$tw,h_$th/${background}`
 

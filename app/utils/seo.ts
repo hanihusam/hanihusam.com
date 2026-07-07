@@ -2,7 +2,6 @@ import { type RequestInfo } from '@/utils/helpers'
 import { getSocialImage } from '@/utils/images'
 
 const SITE_NAME = 'Hani Husamuddin'
-const TWITTER_HANDLE = '@hanihusam'
 
 export const DEFAULT_TITLE = 'Hani Husamuddin'
 export const DEFAULT_DESCRIPTION =
@@ -49,8 +48,6 @@ export function getSocialMetas({
 		{ property: 'og:type', content: ogType },
 		{ property: 'og:site_name', content: SITE_NAME },
 		{ name: 'twitter:card', content: 'summary_large_image' },
-		{ name: 'twitter:creator', content: TWITTER_HANDLE },
-		{ name: 'twitter:site', content: TWITTER_HANDLE },
 		{ name: 'twitter:title', content: title },
 		{ name: 'twitter:description', content: description },
 		{ name: 'twitter:image', content: socialImage },
