@@ -4,12 +4,28 @@ import { HeroSection } from '@/components/home/hero-section'
 import { ProjectSection } from '@/components/home/project-section'
 import { SubstackSection } from '@/components/home/substack-section'
 import { Spacer } from '@/components/spacer'
+import { getSignedSocialImage } from '@/utils/cloudinary.server'
+import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
+import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getFeaturedSubstackPosts } from '@/utils/substack.server'
 
 import { type Route } from './+types/_index'
 
 import { data, type HeadersArgs } from 'react-router'
+
+const PAGE_TITLE = 'Hani Husamuddin — Software Engineer & UI Designer'
+const PAGE_DESCRIPTION =
+	'Hani Husamuddin is a software engineer and UI designer helping teams build thoughtful, high-quality digital products.'
+
+export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
+	return getSocialMetas({
+		url: getUrl(getRootRequestInfo(matches)),
+		title: PAGE_TITLE,
+		description: PAGE_DESCRIPTION,
+		image: loaderData?.socialImage,
+	})
+}
 
 export const handle = { surface: 'secondary' as const }
 
@@ -27,6 +43,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 		{
 			substackPosts,
 			projects: projects.slice(0, 4),
+			socialImage: getSignedSocialImage({ request, title: PAGE_TITLE }),
 		},
 		{
 			headers: {

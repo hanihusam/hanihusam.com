@@ -17,6 +17,9 @@ import {
 } from '@/utils/blog.server'
 import { useMdxComponent } from '@/utils/mdx'
 import { getMdxPage } from '@/utils/mdx.server'
+import { getSignedSocialImage } from '@/utils/cloudinary.server'
+import { getUrl } from '@/utils/helpers'
+import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getSessionId } from '@/utils/session.server'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
@@ -76,7 +79,35 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 		throw data(null, { status: 404, headers })
 	}
 
-	return data({ page, meta }, { status: 200, headers })
+	const socialImage = getSignedSocialImage({
+		request,
+		title: page.frontmatter.title,
+		featuredImage: page.frontmatter.bannerLandscapeCloudinaryId,
+	})
+
+	return data({ page, meta, socialImage }, { status: 200, headers })
+}
+
+export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
+	const requestInfo = getRootRequestInfo(matches)
+	const url = getUrl(requestInfo)
+
+	if (!loaderData?.page) {
+		return [
+			{ title: 'Work not found | Hani Husamuddin' },
+			{ name: 'description', content: 'This project could not be found.' },
+		]
+	}
+
+	const { frontmatter } = loaderData.page
+
+	return getSocialMetas({
+		url,
+		title: frontmatter.title,
+		description: frontmatter.description,
+		ogType: 'article',
+		image: loaderData.socialImage,
+	})
 }
 
 function useOnRead({

@@ -9,14 +9,30 @@ import { FilterTag } from '@/components/ui/filter-tag'
 import { CallToAction } from '@/components/works/cta-section'
 import { WorksHero } from '@/components/works/hero-section'
 import { clsxm } from '@/utils/clsxm'
+import { getSignedSocialImage } from '@/utils/cloudinary.server'
+import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
 import { useUpdateQueryStringValueWithoutNavigation } from '@/utils/misc'
+import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
 import { type Route } from './+types/works._index'
 
 import { PlusIcon } from '@phosphor-icons/react'
 import { data, type HeadersArgs, useSearchParams } from 'react-router'
+
+const PAGE_TITLE = 'Works | Hani Husamuddin'
+const PAGE_DESCRIPTION =
+	'A selection of projects and case studies by Hani Husamuddin, spanning software engineering and product design.'
+
+export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
+	return getSocialMetas({
+		url: getUrl(getRootRequestInfo(matches)),
+		title: PAGE_TITLE,
+		description: PAGE_DESCRIPTION,
+		image: loaderData?.socialImage,
+	})
+}
 
 export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
 	return actionHeaders ? actionHeaders : loaderHeaders
@@ -44,7 +60,11 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 	}
 
 	return data(
-		{ projects, tags: Array.from(tags) },
+		{
+			projects,
+			tags: Array.from(tags),
+			socialImage: getSignedSocialImage({ request, title: PAGE_TITLE }),
+		},
 		{
 			headers: {
 				'Cache-Control': 'private, max-age=3600',

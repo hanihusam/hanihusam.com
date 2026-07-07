@@ -7,9 +7,15 @@ import noScriptStyles from '@/styles/no-script.css?url'
 import proseStyles from '@/styles/prose.css?url'
 import tailwindStyles from '@/styles/tailwind.css?url'
 import { ClientHintCheck, getHints } from '@/utils/client-hints'
+import { getSignedSocialImage } from '@/utils/cloudinary.server'
 import { getEnv } from '@/utils/env.server'
-import { toErrorWithMessage } from '@/utils/helpers'
+import {
+	getUrl,
+	removeTrailingSlash,
+	toErrorWithMessage,
+} from '@/utils/helpers'
 import { useNonce } from '@/utils/nonce-provider'
+import { getSocialMetas } from '@/utils/seo'
 import { useTheme } from '@/utils/theme'
 import { getTheme } from '@/utils/theme.server'
 
@@ -25,6 +31,7 @@ import {
 	Meta,
 	Scripts,
 	ScrollRestoration,
+	useLocation,
 	useMatches,
 	useRouteError,
 	useRouteLoaderData,
@@ -100,31 +107,51 @@ export const links: LinksFunction = () => {
 	]
 }
 
-export const meta = () => [
-	{ title: 'Hani Husamuddin' },
-	{
-		property: 'og:title',
-		content: 'Han Personal Website',
-	},
-	{
-		name: 'description',
-		content:
-			'A professional freelancer who could help you solve your software engineer and UI design problem',
-	},
-	{
-		name: 'viewport',
-		content: 'width=device-width,initial-scale=1,viewport-fit=cover',
-	},
-]
+const ROOT_TITLE = 'Hani Husamuddin'
+const ROOT_DESCRIPTION =
+	'A professional freelancer who could help you solve your software engineer and UI design problem'
+
+export const meta: Route.MetaFunction = ({ loaderData }) => {
+	// Default social meta, used as a fallback for any route that does not export
+	// its own `meta`. Note: React Router replaces (not merges) parent meta when a
+	// child route exports `meta`, so tags that must appear on every page
+	// (viewport, theme-color, JSON-LD) live in <Document> instead.
+	return getSocialMetas({
+		url: getUrl(loaderData?.requestInfo),
+		title: ROOT_TITLE,
+		description: ROOT_DESCRIPTION,
+		image: loaderData?.socialImage,
+		keywords:
+			'Hani Husamuddin, Software Engineer, Frontend Engineer, UI Design, Freelancer, React, TypeScript',
+	})
+}
+
+// Person schema rendered on every page (see Document). Kept out of the meta
+// export because child-route meta would replace it.
+const personJsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'Person',
+	name: 'Hani Husamuddin',
+	url: 'https://hanihusam.com',
+	jobTitle: 'Software Engineer',
+	sameAs: [
+		'https://github.com/hanihusam',
+		'https://www.linkedin.com/in/hanihusam/',
+		'https://bapak2dev.substack.com/',
+	],
+}
 
 export async function loader({ request }: Route.LoaderArgs) {
-	const requestPath = new URL(request.url).pathname
+	const url = new URL(request.url)
 
 	const data = {
 		ENV: getEnv(),
+		socialImage: getSignedSocialImage({ request, title: ROOT_TITLE }),
 		requestInfo: {
 			hints: getHints(request),
-			path: requestPath,
+			origin: url.origin,
+			path: url.pathname,
+			url: request.url,
 
 			userPrefs: {
 				theme: getTheme(request),
@@ -133,6 +160,17 @@ export async function loader({ request }: Route.LoaderArgs) {
 	}
 
 	return data
+}
+
+function Canonical() {
+	const { pathname } = useLocation()
+	const data = useRouteLoaderData<typeof loader>('root')
+	const origin = data?.requestInfo.origin
+	if (!origin) return null
+
+	return (
+		<link rel="canonical" href={removeTrailingSlash(`${origin}${pathname}`)} />
+	)
 }
 
 function Document({
@@ -150,12 +188,22 @@ function Document({
 		<html className={theme} lang="en">
 			<head>
 				<ClientHintCheck nonce={nonce} />
-				<Meta />
 				<meta
 					name="viewport"
 					content="width=device-width,initial-scale=1,viewport-fit=cover"
 				/>
+				<meta
+					name="theme-color"
+					content={theme === 'dark' ? '#0B0B0F' : '#FFFFFF'}
+				/>
+				<Meta />
+				<Canonical />
 				<Links />
+				<script
+					type="application/ld+json"
+					nonce={nonce}
+					dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+				/>
 				<noscript>
 					<link href={noScriptStyles} rel="stylesheet" />
 				</noscript>
