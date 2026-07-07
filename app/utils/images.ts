@@ -137,6 +137,106 @@ async function getFetchBlurDataUrl(url: string) {
 	return dataUrl
 }
 
+//#region //*=========== Social share image ===========
+// Dynamic Open Graph / Twitter card images composed as a single Cloudinary
+// URL (adapted from kentcdodds.com). Layout: page title + name/url on the
+// left, a featured image cropped on the right, over a branded background.
+//
+// These IDs must exist in the `hanihusam` Cloudinary account. Update them to
+// match whatever you uploaded.
+const socialImageConfig = {
+	// 2400x1256 branded backdrop (no text/photo baked in).
+	background: 'bapak2.dev/images/social-background_babqok',
+	// Square transparent profile/brand mark (rendered as a circle).
+	profile: 'bapak2.dev/images/profile-transparent_x6bhfg',
+	// Right-side image used when a page has no banner of its own.
+	defaultFeaturedImage:
+		'bapak2.dev/images/placeholder-image-transparent_tix6cc',
+	// Site's Satoshi typeface, uploaded as raw + authenticated fonts at the root
+	// (no folder — Cloudinary's text-layer parser can't resolve nested font
+	// paths). Because the fonts are authenticated, the delivery URL must be
+	// signed with the Cloudinary secret; see `signCloudinaryUrl` in
+	// `cloudinary.server.ts`, which is why social image URLs are built in loaders.
+	fontBold: 'Satoshi-Bold.woff2',
+	fontRegular: 'Satoshi-Regular.woff2',
+} as const
+
+// Cloudinary references nested public IDs in layers with `:` instead of `/`.
+function toLayerId(publicId: string): string {
+	return publicId.replace(/\//g, ':')
+}
+
+// Cloudinary text layers need the text double-URI-encoded.
+function doubleEncode(s: string): string {
+	return encodeURIComponent(encodeURIComponent(s))
+}
+
+// Emojis break Cloudinary text layers, so strip them and collapse whitespace.
+function emojiStrip(s: string): string {
+	return s
+		.replace(/\p{Extended_Pictographic}/gu, '')
+		.split(' ')
+		.filter(Boolean)
+		.join(' ')
+		.trim()
+}
+
+function getSocialImage({
+	title,
+	featuredImage = socialImageConfig.defaultFeaturedImage,
+	url,
+	name = 'Hani Husamuddin',
+}: {
+	title: string
+	featuredImage?: string
+	url: string
+	name?: string
+}): string {
+	const { background, profile, fontBold, fontRegular } = socialImageConfig
+
+	// 24-column x 12-row grid over the 2400x1256 canvas ($gw=100, $gh~104.6).
+	const vars = `$th_1256,$tw_2400,$gw_$tw_div_24,$gh_$th_div_12`
+
+	const encodedTitle = doubleEncode(emojiStrip(title))
+	const titleSection = `co_white,c_fit,g_north_west,w_$gw_mul_12,h_$gh_mul_6,x_$gw_mul_1.5,y_$gh_mul_1.5,l_text:${fontBold}_110:${encodedTitle}`
+
+	const profileSection = `c_fill,g_north_west,r_max,w_$gw_mul_2,h_$gh_mul_2,x_$gw_mul_1.5,y_$gh_mul_8.8,l_${toLayerId(profile)}`
+
+	const encodedName = doubleEncode(emojiStrip(name))
+	const nameSection = `co_white,c_fit,g_north_west,w_$gw_mul_9,x_$gw_mul_4,y_$gh_mul_8.9,l_text:${fontBold}_50:${encodedName}`
+
+	const encodedUrl = doubleEncode(emojiStrip(url))
+	const urlSection = `co_rgb:9ca3af,c_fit,g_north_west,w_$gw_mul_9,x_$gw_mul_4,y_$gh_mul_10,l_text:${fontRegular}_36:${encodedUrl}`
+
+	const featuredImageIsRemote = featuredImage.startsWith('http')
+	const featuredImageId = featuredImageIsRemote
+		? toBase64(featuredImage)
+		: toLayerId(featuredImage)
+	const featuredImageLayerType = featuredImageIsRemote ? 'l_fetch:' : 'l_'
+	const featuredImageSection = `c_fill,ar_3:4,r_24,g_east,h_$gh_mul_10,x_$gw,${featuredImageLayerType}${featuredImageId}`
+
+	const backgroundSection = `c_fill,w_$tw,h_$th/${background}`
+
+	return [
+		`https://res.cloudinary.com/${cloudName}/image/upload`,
+		vars,
+		titleSection,
+		profileSection,
+		nameSection,
+		urlSection,
+		featuredImageSection,
+		backgroundSection,
+	].join('/')
+}
+
+function toBase64(s: string): string {
+	if (typeof window === 'undefined') {
+		return Buffer.from(s).toString('base64')
+	}
+	return window.btoa(s)
+}
+//#endregion //*=========== Social share image ===========
+
 async function getDataUrlForImage(imageUrl: string) {
 	try {
 		const res = await fetch(imageUrl)
@@ -157,5 +257,7 @@ export {
 	getFetchImageBuilder,
 	getImageBuilder,
 	getImgProps,
+	getSocialImage,
+	socialImageConfig,
 }
 export type { ImageBuilder }

@@ -5,21 +5,40 @@ import { FunFactsSection } from '@/components/about/fun-facts-section'
 import { AboutHero } from '@/components/about/hero-section'
 import { SubstackSection } from '@/components/home/substack-section'
 import { Spacer } from '@/components/spacer'
+import { getSignedSocialImage } from '@/utils/cloudinary.server'
+import { getUrl } from '@/utils/helpers'
+import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getFeaturedSubstackPosts } from '@/utils/substack.server'
 
 import { type Route } from './+types/about'
 
 import { data, type HeadersArgs } from 'react-router'
 
+const PAGE_TITLE = 'About | Hani Husamuddin'
+const PAGE_DESCRIPTION =
+	'Get to know Hani Husamuddin — a software engineer and UI designer building thoughtful digital products.'
+
+export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
+	return getSocialMetas({
+		url: getUrl(getRootRequestInfo(matches)),
+		title: PAGE_TITLE,
+		description: PAGE_DESCRIPTION,
+		image: loaderData?.socialImage,
+	})
+}
+
 export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
 	return actionHeaders ? actionHeaders : loaderHeaders
 }
 
-export const loader = async () => {
+export const loader = async ({ request }: Route.LoaderArgs) => {
 	const substackPosts = await getFeaturedSubstackPosts(3)
 
 	return data(
-		{ substackPosts },
+		{
+			substackPosts,
+			socialImage: getSignedSocialImage({ request, title: PAGE_TITLE }),
+		},
 		{
 			headers: {
 				'Cache-Control': 'private, max-age=3600',

@@ -1,5 +1,10 @@
 {
-	"name": "App",
+	"name": "Hani Husamuddin",
+	"short_name": "Hani",
+	"start_url": "/",
+	"display": "standalone",
+	"theme_color": "#0B0B0F",
+	"background_color": "#FFFFFF",
 	"icons": [
 		{
 			"src": "/favicons/android-icon-36x36.png",
