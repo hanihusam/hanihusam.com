@@ -147,12 +147,12 @@ async function getFetchBlurDataUrl(url: string) {
 // match whatever you uploaded.
 const socialImageConfig = {
 	// 2400x1256 branded backdrop (no text/photo baked in).
-	background: 'bapak2.dev/images/social-background_babqok',
+	background: 'bapak2.dev/images/social-background_garrsb',
 	// Square transparent profile/brand mark (rendered as a circle).
-	profile: 'bapak2.dev/images/profile-transparent_x6bhfg',
+	profile: 'bapak2.dev/images/avatar-side_kz5o6d',
 	// Right-side image used when a page has no banner of its own.
 	defaultFeaturedImage:
-		'bapak2.dev/images/placeholder-image-transparent_tix6cc',
+		'bapak2.dev/images/placeholder-image-transparent_kzwqef',
 	// Site's Satoshi typeface, uploaded as raw + authenticated fonts at the root
 	// (no folder — Cloudinary's text-layer parser can't resolve nested font
 	// paths). Because the fonts are authenticated, the delivery URL must be
@@ -198,19 +198,25 @@ function getSocialImage({
 	// 24-column x 12-row grid over the 2400x1256 canvas ($gw=100, $gh~104.6).
 	const vars = `$th_1256,$tw_2400,$gw_$tw_div_24,$gh_$th_div_12`
 
-	// Title: large, top-aligned so titles of varying length grow downward into
-	// the empty middle without shifting the fixed author block below.
+	// Title. With c_fit the font-size number is nearly irrelevant — Cloudinary
+	// scales the rasterized text block to fill the w x h box — so the box shape
+	// drives the final size. A narrow+tall box (w_10 x h_7) forces the text to
+	// wrap into a tall block that scales up to dominate the left column (this is
+	// exactly kentcdodds.com's geometry). A wider/shorter box renders it small.
 	const encodedTitle = doubleEncode(emojiStrip(title))
-	const titleSection = `co_white,c_fit,g_north_west,w_$gw_mul_12,h_$gh_mul_6,x_$gw_mul_1.3,y_$gh_mul_1.5,l_text:${fontBold}_120:${encodedTitle}`
+	const titleSection = `co_white,c_fit,g_north_west,w_$gw_mul_10,h_$gh_mul_7,x_$gw_mul_1.3,y_$gh_mul_1.5,l_text:${fontBold}_110:${encodedTitle}`
 
-	// Author block: circular avatar with the name/url set to its right.
-	const profileSection = `c_fit,g_north_west,r_max,w_$gw_mul_2.6,h_$gh_mul_2.6,x_$gw_mul_1.3,y_$gh_mul_8.3,l_${toLayerId(profile)}`
+	// Author block: circular avatar with the name/url set to its right. The name
+	// box is kept wide and short (w_9 x h_1.6) so a longer name than Kent's
+	// ("Hani Husamuddin") stays on one line — c_fit would otherwise scale a
+	// two-line wrap up until it collided with the url below.
+	const profileSection = `c_fit,g_north_west,r_max,w_$gw_mul_4,h_$gh_mul_3,x_$gw_mul_1,y_$gh_mul_8,l_${toLayerId(profile)}`
 
 	const encodedName = doubleEncode(emojiStrip(name))
-	const nameSection = `co_white,c_fit,g_north_west,w_$gw_mul_7,h_$gh_mul_2,x_$gw_mul_3.8,y_$gh_mul_8.55,l_text:${fontBold}_58:${encodedName}`
+	const nameSection = `co_white,c_fit,g_north_west,w_$gw_mul_9,h_$gh_mul_1.6,x_$gw_mul_4.4,y_$gh_mul_8.7,l_text:${fontBold}_64:${encodedName}`
 
 	const encodedUrl = doubleEncode(emojiStrip(url))
-	const urlSection = `co_rgb:9ca3af,c_fit,g_north_west,w_$gw_mul_7,x_$gw_mul_3.8,y_$gh_mul_9.5,l_text:${fontRegular}_40:${encodedUrl}`
+	const urlSection = `co_rgb:9ca3af,c_fit,g_north_west,w_$gw_mul_9,h_$gh_mul_1,x_$gw_mul_4.4,y_$gh_mul_9.7,l_text:${fontRegular}_38:${encodedUrl}`
 
 	// Featured image: fit (not cropped) into the right half so the whole
 	// illustration/banner is visible regardless of its aspect ratio.

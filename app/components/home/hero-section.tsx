@@ -44,7 +44,7 @@ export function HeroSection() {
 					</div>
 					<div className="flex w-full flex-col gap-y-4 md:ml-auto md:w-90 lg:w-100">
 						<H3 className="text-(--text-paragraph)">
-							A Frontend Engineer based in Yogyakarta, Indonesia.
+							A Frontend & UI Engineer based in Yogyakarta, Indonesia.
 						</H3>
 						<Text variant="lead">
 							Engineer who designs. Designer who ships. End to end, with the

@@ -43,7 +43,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 		{
 			substackPosts,
 			projects: projects.slice(0, 4),
-			socialImage: getSignedSocialImage({ request, title: PAGE_TITLE }),
+			socialImage: getSignedSocialImage({
+				request,
+				title: 'Crafting interfaces by intersecting design and code.',
+			}),
 		},
 		{
 			headers: {

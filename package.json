@@ -25,6 +25,7 @@
     "dev": "cross-env NODE_ENV=development node server.js",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production node server.js",
+    "preview:og": "tsx other/preview-og.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix && npm run format",
     "lint:strict": "oxlint --max-warnings=0",

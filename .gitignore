@@ -9,6 +9,9 @@ node_modules
 
 app/**/*.ignore.*
 
+# Local social-card preview output (npm run preview:og)
+/other/og-preview.png
+
 /cypress/screenshots
 /cypress/videos
 /prisma/data.db
