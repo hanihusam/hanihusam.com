@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { CloudinaryImg } from '@/components/blog/cloudinary-img'
+import { CloudinaryVideo } from '@/components/blog/cloudinary-video'
 import { ThemedBlogImage } from '@/components/blog/themed-blog-image'
 import { AnchorOrLink } from '@/components/links/anchor-or-link'
 import { CodeBlock } from '@/components/mdx/code-block'
@@ -16,6 +17,7 @@ const mdxComponents = {
 	Themed,
 	ThemedBlogImage,
 	CloudinaryImg,
+	CloudinaryVideo,
 }
 /**
  * This should be rendered within a useMemo

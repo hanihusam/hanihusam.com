@@ -1,6 +1,11 @@
 import { toErrorWithMessage } from '@/utils/helpers'
 
-import { buildImageUrl, setConfig, Transformer } from 'cloudinary-build-url'
+import {
+	buildImageUrl,
+	buildVideoUrl,
+	setConfig,
+	Transformer,
+} from 'cloudinary-build-url'
 
 // Local, focused subset of Cloudinary's transformation options — the fields we
 // actually use. Replaces the `TransformerOption` type from `@cld-apis/types`,
@@ -66,6 +71,32 @@ function getFetchImageBuilder(url: string, alt: string = ''): ImageBuilder {
 	imageBuilder.alt = alt
 	imageBuilder.id = url
 	return imageBuilder
+}
+
+type VideoBuilder = {
+	(transformations?: TransformerOption): string
+	alt: string
+	id: string
+}
+
+function getVideoBuilder(id: string, alt: string = ''): VideoBuilder {
+	function videoBuilder(transformations?: TransformerOption) {
+		return buildVideoUrl(id, { transformations })
+	}
+	videoBuilder.alt = alt
+	videoBuilder.id = id
+	return videoBuilder
+}
+
+// Cloudinary can derive a poster frame straight from the video's own public
+// id, so there's no need to upload a separate thumbnail asset for the
+// `poster` attribute. This still has to go through the video delivery path
+// (not image/upload) with an explicit jpg format — video thumbnails 404 on
+// the image endpoint even for a matching public id.
+function getVideoPosterUrl(id: string, transformations?: TransformerOption) {
+	return buildVideoUrl(id, {
+		transformations: { ...transformations, format: 'jpg' },
+	})
 }
 
 function getImgProps(
@@ -270,6 +301,8 @@ export {
 	getImageBuilder,
 	getImgProps,
 	getSocialImage,
+	getVideoBuilder,
+	getVideoPosterUrl,
 	socialImageConfig,
 }
-export type { ImageBuilder }
+export type { ImageBuilder, VideoBuilder }

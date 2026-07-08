@@ -35,7 +35,8 @@ image gets messy fast. The moment something feels "slightly off," you're
 guessing whether it's the spacing, the font weight, or just a rendering
 difference. Nobody wants to burn a revision cycle on that.
 
-{/* ASSET: mockup vs live page, side by side — confirm with Lawrence first */}
+![The AI generated mockups reference from the client](https://res.cloudinary.com/hanihusam/image/upload/v1783498092/bapak2.dev/works/cincy-dot-physicals/Screenshot_2026-07-08_at_15.07.28_tjztjr.jpg)
+_The AI-generated mockups reference from the client_
 
 So before writing any code, I built a proper Figma file based on his references,
 structured and inspectable. That turned the comparison into
@@ -45,29 +46,158 @@ typography hierarchy, spacing scale, semantic color palette, so every decision
 after that had something to point back to instead of being re-litigated each
 time.
 
-{/* ASSET: Figma design tokens / palette / typography scale */}
+![The Figma design token and style guide](https://res.cloudinary.com/hanihusam/image/upload/v1783497933/bapak2.dev/works/cincy-dot-physicals/Screenshot_2026-07-08_at_15.03.29_viacip.jpg)
+_The design tokens and style guide_
 
-Stack-wise, it's React Router (Remix) and TypeScript on the frontend, Tailwind
-for styling, deployed on Cloudflare Workers for SSR. Booking runs through Acuity
-Scheduling, with a custom redirect flow and an HMAC-signed token for the
-confirmation page, so the confirmation experience stays branded instead of
-dumping the user onto Acuity's default UI.
+## The Booking Confirmation, Without a Database
 
-## Working With AI in the Build
+Booking runs through Acuity Scheduling, embedded as an iframe. The client's on
+Acuity's Starter plan, $16/mo. That one fact shaped the whole feature.
 
-AI was part of the actual workflow here, not a shortcut I bolted on after.
+The site is conversion-focused — every section pushes toward CALL NOW or BOOK
+ONLINE — so I didn't want someone to book and land on Acuity's generic in-iframe
+confirmation. I wanted a branded `/thank-you` page: real appointment details,
+add-to-calendar buttons, next steps, a referral CTA.
 
-For the design phase, I used Claude to cross-check token consistency and
-generate spec docs. For implementation, Claude CLI handled the mechanical stuff,
-component scaffolding, SEO schema generation, environment config, the repetitive
-boilerplate that shows up across every route.
+Two walls, at the same time:
 
-The parts that needed actual judgment, the Acuity redirect architecture, the
-HMAC token flow, the DNS migration, those I did myself. AI is good at
-repeatable. It's not the one making the call on how a booking confirmation
-should be authenticated.
+- The clean fix — look the appointment up server-side via Acuity's REST API —
+  needs the Powerhouse plan ($25/mo). Starter returns a 403.
+- The obvious hack — have the iframe redirect the parent window — is blocked by
+  modern browsers. Cross-origin iframes can't set `window.top.location`. So the
+  problem became: move booking data across a cross-origin boundary, land it on
+  my own page, and trust it — no paid API, no database.
 
-{/* ASSET: Figma design alongside live site — static shot or Screen Studio scroll-through */}
+**What I built instead:** a stateless handoff, signed instead of stored.
+
+**Step 1 — listen for the postMessage, with an origin check.**
+
+Acuity's "Conversion Tracking" hook (the one thing Starter gives you) broadcasts
+the booking to the parent window on completion. `booking.tsx` listens, but
+verifies the sender before trusting anything:
+
+```ts
+function handleMessage(event: MessageEvent) {
+	let msg: {
+		type?: string
+		email?: string
+		date?: string
+		time?: string
+	} | null = null
+	try {
+		const { hostname } = new URL(event.origin)
+		if (
+			!hostname.endsWith('.acuityscheduling.com') &&
+			!hostname.endsWith('.acuityinnovation.com')
+		)
+			return
+		msg = typeof event.data === 'string' ? JSON.parse(event.data) : event.data
+	} catch {
+		return
+	}
+	if (msg?.type !== 'acuity.booking') return
+	// ...sign and redirect
+}
+```
+
+The `try/catch` wrapping `new URL(event.origin)` is load-bearing — a malformed
+origin would throw without it. The type check on `event.data` handles Acuity
+sending either a raw string or a parsed object depending on context.
+
+**Step 2 — sign the payload on the Worker, redirect with the token.**
+
+The browser POSTs `{ email, date, time }` to `/api/sign-booking`. The Worker
+adds a timestamp and signs the whole thing with HMAC-SHA256 using
+`BOOKING_SIGNING_SECRET`, stored as a Cloudflare secret. It also does a
+same-origin guard before touching anything:
+
+```ts
+const origin = request.headers.get('origin')
+const host = request.headers.get('host')
+if (!origin || !host || new URL(origin).host !== host) {
+	return Response.json({ error: 'forbidden' }, { status: 403 })
+}
+```
+
+The token that comes back is `base64(payload).base64url(signature)` — an opaque
+blob. The browser navigates to `/thank-you?token=<blob>`. No email, no name, no
+appointment time in the URL.
+
+**Step 3 — verify server-side before rendering anything.**
+
+The `thank-you.tsx` loader runs on the Worker. It re-derives the HMAC, verifies
+the signature, and checks the timestamp is under 5 minutes old:
+
+```ts
+async function verifyAndExtract(
+	token: string,
+	secret: string,
+	maxAgeMs = 5 * 60 * 1000,
+) {
+	const dot = token.indexOf('.')
+	if (dot === -1) return null
+	const payloadB64 = token.slice(0, dot)
+	const sigB64url = token.slice(dot + 1)
+	// re-derive and verify with Web Crypto — same API available in both
+	// Cloudflare Workers and the browser
+	const valid = await crypto.subtle.verify(
+		'HMAC',
+		key,
+		sigBytes,
+		new TextEncoder().encode(payload),
+	)
+	if (!valid) return null
+	const data = JSON.parse(payload)
+	if (Date.now() - data.ts > maxAgeMs) return null
+	return { email: data.email, date: data.date, time: data.time }
+}
+```
+
+Tampered or expired tokens return `null`; the loader falls back to
+`{ date: null, time: null, email: null }` and the page renders a generic
+confirmation. The token _is_ the state — no KV, no DB, entirely on the edge.
+
+**The timezone problem is more subtle than it looks.**
+
+Workers run in UTC. Acuity sends locale-formatted strings like `"July 5, 2024"`
+/ `"9:00am"` — not ISO timestamps. I needed calendar links and `.ics` files to
+land at the right wall-clock time regardless of where the page renders or opens.
+
+The fix: parse those strings into plain `{ year, month, day, hour, minute }`
+components and pin every calendar event to `America/New_York` explicitly —
+Google's `ctz` param and iCal `TZID`. No UTC conversion involved. The "TODAY AT
+9:00 AM" label is also intentionally deferred to a client-side `useEffect` to
+avoid an SSR/client hydration mismatch between the Worker (UTC) and the
+visitor's local clock:
+
+```ts
+useEffect(() => {
+	const appt = parseAppointment(dateParam, timeParam)
+	if (appt && timeParam && isToday(appt)) {
+		setAppointmentLabel(`TODAY AT ${normalizeTimeLabel(timeParam)}`)
+	} else {
+		setAppointmentLabel(formatDateLabel(appt, dateParam, timeParam))
+	}
+}, [dateParam, timeParam])
+```
+
+Server renders the date-form label. Client upgrades it to "TODAY" only after
+mount, once it knows the visitor's local timezone. One hydration footgun,
+avoided.
+
+**Where it's honestly weak:**
+
+- It trusts whatever the browser sends to get signed. Someone in devtools could
+  POST fake data and get a valid token — but the blast radius is just a fake
+  thank-you page with their own made-up details. No other user's data is
+  reachable.
+- If the `postMessage` never fires (ad blocker, Acuity changes their script),
+  the user stays on Acuity's in-iframe confirmation. No graceful fallback on our
+  side.
+- It leans on undocumented Acuity template variables that could change. The real
+  fix is Acuity webhooks into Cloudflare KV: server-to-server, nothing to spoof.
+  I scoped it, didn't build it. The constraint was real — Starter plan, no API —
+  and the signed-token approach met the need at zero added cost.
 
 ## Mobile-First, For Real This Time
 
@@ -83,7 +213,8 @@ do I fill this extra space." I designed mobile-first in Figma, built fluid
 breakpoints with Tailwind, and treated desktop as an adaptation of the mobile
 design rather than its own thing.
 
-{/* ASSET: booking page or homepage on real mobile device */}
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/cincy-dot-physicals/ScreenRecording_07-08-2026_15-44-22_1_rauqhr" />
+_The mobile-first website in live action_
 
 ## The Result
 
@@ -94,8 +225,6 @@ with zero downtime.
 
 And by the end, the client owned everything, GitHub, Cloudflare, domain, all
 moved into his own accounts before I called it done.
-
-{/* ASSET: booking confirmation page on mobile */}
 
 ## Lessons Learned
 
