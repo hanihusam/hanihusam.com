@@ -54,23 +54,23 @@ _The design tokens and style guide_
 Booking runs through Acuity Scheduling, embedded as an iframe. The client's on
 Acuity's Starter plan, $16/mo. That one fact shaped the whole feature.
 
-The site is conversion-focused — every section pushes toward CALL NOW or BOOK
-ONLINE — so I didn't want someone to book and land on Acuity's generic in-iframe
+The site is conversion-focused, every section pushes toward CALL NOW or BOOK
+ONLINE. So I didn't want someone to book and land on Acuity's generic in-iframe
 confirmation. I wanted a branded `/thank-you` page: real appointment details,
 add-to-calendar buttons, next steps, a referral CTA.
 
 Two walls, at the same time:
 
-- The clean fix — look the appointment up server-side via Acuity's REST API —
+- The clean fix, look the appointment up server-side via Acuity's REST API,
   needs the Powerhouse plan ($25/mo). Starter returns a 403.
-- The obvious hack — have the iframe redirect the parent window — is blocked by
+- The obvious hack, have the iframe redirect the parent window, is blocked by
   modern browsers. Cross-origin iframes can't set `window.top.location`. So the
   problem became: move booking data across a cross-origin boundary, land it on
-  my own page, and trust it — no paid API, no database.
+  my own page, and trust it. No paid API, no database.
 
 **What I built instead:** a stateless handoff, signed instead of stored.
 
-**Step 1 — listen for the postMessage, with an origin check.**
+### Step 1: listen for the postMessage, with an origin check.
 
 Acuity's "Conversion Tracking" hook (the one thing Starter gives you) broadcasts
 the booking to the parent window on completion. `booking.tsx` listens, but
@@ -100,11 +100,11 @@ function handleMessage(event: MessageEvent) {
 }
 ```
 
-The `try/catch` wrapping `new URL(event.origin)` is load-bearing — a malformed
+The `try/catch` wrapping `new URL(event.origin)` is load-bearing, a malformed
 origin would throw without it. The type check on `event.data` handles Acuity
 sending either a raw string or a parsed object depending on context.
 
-**Step 2 — sign the payload on the Worker, redirect with the token.**
+### Step 2: sign the payload on the Worker, redirect with the token.
 
 The browser POSTs `{ email, date, time }` to `/api/sign-booking`. The Worker
 adds a timestamp and signs the whole thing with HMAC-SHA256 using
@@ -119,11 +119,11 @@ if (!origin || !host || new URL(origin).host !== host) {
 }
 ```
 
-The token that comes back is `base64(payload).base64url(signature)` — an opaque
+The token that comes back is `base64(payload).base64url(signature)`, an opaque
 blob. The browser navigates to `/thank-you?token=<blob>`. No email, no name, no
 appointment time in the URL.
 
-**Step 3 — verify server-side before rendering anything.**
+### Step 3: verify server-side before rendering anything.
 
 The `thank-you.tsx` loader runs on the Worker. It re-derives the HMAC, verifies
 the signature, and checks the timestamp is under 5 minutes old:
@@ -138,7 +138,7 @@ async function verifyAndExtract(
 	if (dot === -1) return null
 	const payloadB64 = token.slice(0, dot)
 	const sigB64url = token.slice(dot + 1)
-	// re-derive and verify with Web Crypto — same API available in both
+	// re-derive and verify with Web Crypto, same API available in both
 	// Cloudflare Workers and the browser
 	const valid = await crypto.subtle.verify(
 		'HMAC',
@@ -155,16 +155,16 @@ async function verifyAndExtract(
 
 Tampered or expired tokens return `null`; the loader falls back to
 `{ date: null, time: null, email: null }` and the page renders a generic
-confirmation. The token _is_ the state — no KV, no DB, entirely on the edge.
+confirmation. The token _is_ the state no KV, no DB, entirely on the edge.
 
 **The timezone problem is more subtle than it looks.**
 
 Workers run in UTC. Acuity sends locale-formatted strings like `"July 5, 2024"`
-/ `"9:00am"` — not ISO timestamps. I needed calendar links and `.ics` files to
+/ `"9:00am"`, not ISO timestamps. I needed calendar links and `.ics` files to
 land at the right wall-clock time regardless of where the page renders or opens.
 
 The fix: parse those strings into plain `{ year, month, day, hour, minute }`
-components and pin every calendar event to `America/New_York` explicitly —
+components and pin every calendar event to `America/New_York` explicitly, using
 Google's `ctz` param and iCal `TZID`. No UTC conversion involved. The "TODAY AT
 9:00 AM" label is also intentionally deferred to a client-side `useEffect` to
 avoid an SSR/client hydration mismatch between the Worker (UTC) and the
@@ -188,7 +188,7 @@ avoided.
 **Where it's honestly weak:**
 
 - It trusts whatever the browser sends to get signed. Someone in devtools could
-  POST fake data and get a valid token — but the blast radius is just a fake
+  POST fake data and get a valid token but the blast radius is just a fake
   thank-you page with their own made-up details. No other user's data is
   reachable.
 - If the `postMessage` never fires (ad blocker, Acuity changes their script),
@@ -196,8 +196,8 @@ avoided.
   side.
 - It leans on undocumented Acuity template variables that could change. The real
   fix is Acuity webhooks into Cloudflare KV: server-to-server, nothing to spoof.
-  I scoped it, didn't build it. The constraint was real — Starter plan, no API —
-  and the signed-token approach met the need at zero added cost.
+  I scoped it, didn't build it. The constraint was real Starter plan, no API and
+  the signed-token approach met the need at zero added cost.
 
 ## Mobile-First, For Real This Time
 
