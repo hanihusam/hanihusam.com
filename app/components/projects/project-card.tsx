@@ -20,66 +20,73 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 			className={clsxm('flex flex-col gap-4 lg:flex-row lg:gap-8', className)}
 		>
 			<div className="relative aspect-video shrink-0 lg:aspect-square lg:h-full">
-				<figure className="pointer-events-none isolate z-1 hidden h-full overflow-hidden rounded-xl bg-(--surface-thumbnail) lg:block lg:aspect-square">
-					<BlurrableImage
-						key={project.bannerSquareCloudinaryId}
-						blurDataUrl={project.bannerSquareBlurDataUrl}
-						className="aspect-square overflow-hidden rounded-xl"
-						img={
-							<img
-								title={project.title}
-								{...getImgProps(
-									getImageBuilder(
-										project.bannerSquareCloudinaryId,
-										`image-${project.title}`,
-									),
-									{
-										widths: [284, 568],
-										sizes: ['284px'],
-										transformations: {
-											resize: {
-												type: 'fill',
-												aspectRatio: '1:1',
+				{project.bannerSquareCloudinaryId ? (
+					<figure className="pointer-events-none isolate z-1 hidden h-full overflow-hidden rounded-xl bg-(--surface-thumbnail) lg:block lg:aspect-square">
+						<BlurrableImage
+							key={project.bannerSquareCloudinaryId}
+							blurDataUrl={project.bannerSquareBlurDataUrl}
+							className="aspect-square overflow-hidden rounded-xl"
+							img={
+								<img
+									title={project.title}
+									{...getImgProps(
+										getImageBuilder(
+											project.bannerSquareCloudinaryId,
+											`image-${project.title}`,
+										),
+										{
+											widths: [284, 568],
+											sizes: ['284px'],
+											transformations: {
+												resize: {
+													type: 'fill',
+													aspectRatio: '1:1',
+												},
 											},
 										},
-									},
-								)}
-								className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-in-out motion-safe:group-hover:scale-105"
-								loading="lazy"
-							/>
-						}
-					/>
-				</figure>
-				<figure className="pointer-events-none isolate z-1 aspect-video overflow-hidden rounded-xl bg-(--surface-thumbnail) lg:hidden">
-					<BlurrableImage
-						key={project.bannerLandscapeCloudinaryId}
-						blurDataUrl={project.bannerBlurDataUrl}
-						className="aspect-video overflow-hidden rounded-xl"
-						img={
-							<img
-								title={project.title}
-								{...getImgProps(
-									getImageBuilder(
-										project.bannerLandscapeCloudinaryId,
-										`image-${project.title}`,
-									),
-									{
-										widths: [280, 560, 840, 1100],
-										sizes: ['(max-width:639px) 80vw', '(min-width:640px) 40vw'],
-										transformations: {
-											resize: {
-												type: 'fill',
-												aspectRatio: '16:9',
+									)}
+									className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-in-out motion-safe:group-hover:scale-105"
+									loading="lazy"
+								/>
+							}
+						/>
+					</figure>
+				) : null}
+				{project.bannerLandscapeCloudinaryId ? (
+					<figure className="pointer-events-none isolate z-1 aspect-video overflow-hidden rounded-xl bg-(--surface-thumbnail) lg:hidden">
+						<BlurrableImage
+							key={project.bannerLandscapeCloudinaryId}
+							blurDataUrl={project.bannerBlurDataUrl}
+							className="aspect-video overflow-hidden rounded-xl"
+							img={
+								<img
+									title={project.title}
+									{...getImgProps(
+										getImageBuilder(
+											project.bannerLandscapeCloudinaryId,
+											`image-${project.title}`,
+										),
+										{
+											widths: [280, 560, 840, 1100],
+											sizes: [
+												'(max-width:639px) 80vw',
+												'(min-width:640px) 40vw',
+											],
+											transformations: {
+												resize: {
+													type: 'fill',
+													aspectRatio: '16:9',
+												},
 											},
 										},
-									},
-								)}
-								className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-in-out motion-safe:group-hover:scale-105"
-								loading="lazy"
-							/>
-						}
-					/>
-				</figure>
+									)}
+									className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-in-out motion-safe:group-hover:scale-105"
+									loading="lazy"
+								/>
+							}
+						/>
+					</figure>
+				) : null}
 			</div>
 			<div className="grow rounded-xl border border-(--border-primary) p-6 lg:p-8">
 				<H3>{project.title}</H3>
