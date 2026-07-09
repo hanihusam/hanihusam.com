@@ -22,6 +22,15 @@ type CachifiedOptions = {
 const defaultTTL = 1000 * 60 * 60 * 24 * 14
 const defaultStaleWhileRevalidate = 1000 * 60 * 60 * 24 * 30
 
+// Cache keys are prefixed with this so a content/schema change can force a
+// full recompile without waiting out the TTL. The refresh-content webhook
+// only busts cache entries for .mdx files that changed in a given push, so
+// it never catches content left untouched while the compile pipeline (e.g.
+// ProjectFrontmatter fields, derived blur URLs) changed underneath it —
+// bump this whenever that pipeline's output shape changes.
+const CACHE_VERSION = 'v2'
+const versionedKey = (key: string) => `${CACHE_VERSION}:${key}`
+
 const checkCompiledValue = (value: unknown) =>
 	typeof value === 'object' &&
 	(value === null || ('code' in value && 'frontmatter' in value))
@@ -37,7 +46,7 @@ async function compileMdxCached({
 	files: Array<GitHubFile>
 	options: CachifiedOptions
 }) {
-	const key = `${contentDir}:${slug}:compiled`
+	const key = versionedKey(`${contentDir}:${slug}:compiled`)
 	const page = await cachified({
 		cache,
 		ttl: defaultTTL,
@@ -99,7 +108,7 @@ export async function downloadMdxFilesCached(
 	options: CachifiedOptions,
 ) {
 	const { forceFresh, ttl = defaultTTL, request, timings } = options
-	const key = `${contentDir}:${slug}:downloaded`
+	const key = versionedKey(`${contentDir}:${slug}:downloaded`)
 	const downloaded = await cachified({
 		cache,
 		request,
@@ -136,7 +145,8 @@ export async function downloadMdxFilesCached(
 	return downloaded
 }
 
-const getDirListKey = (contentDir: string) => `${contentDir}:dir-list`
+const getDirListKey = (contentDir: string) =>
+	versionedKey(`${contentDir}:dir-list`)
 
 async function getMdxPage(
 	{
@@ -149,7 +159,7 @@ async function getMdxPage(
 	options: CachifiedOptions,
 ): Promise<PageContent | null> {
 	const { forceFresh, ttl = defaultTTL, request, timings } = options
-	const key = `mdx-page:${contentDir}:${slug}:compiled`
+	const key = versionedKey(`mdx-page:${contentDir}:${slug}:compiled`)
 	try {
 		const page = await cachified({
 			key,
@@ -272,7 +282,7 @@ async function getContentMdxListItems(
 	options: CachifiedOptions,
 ) {
 	const { request, forceFresh, ttl = defaultTTL, timings } = options
-	const key = `${type}:mdx-list-items`
+	const key = versionedKey(`${type}:mdx-list-items`)
 	return cachified({
 		cache,
 		request,
