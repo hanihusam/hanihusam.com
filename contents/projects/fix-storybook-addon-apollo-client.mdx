@@ -6,14 +6,11 @@ description: >
   Diagnosed two separate breakages in a community Storybook addon after
   upgrading to Apollo Client v4 and Storybook 10. One was a moved import path.
   The other was a subtle cache conflict that nobody had named yet.
-category: OSS Contribution
+category: OSS
 role: Contributor
 bannerLandscapeCloudinaryId: bapak2.dev/works/fix-storybook-addon-apollo-client/thumbnail-md_cthphn
 bannerSquareCloudinaryId: bapak2.dev/works/fix-storybook-addon-apollo-client/thumbnail-sm_sk3hgc
-techs:
-  - Apollo Client
-  - Storybook
-  - TypeScript
+techs: Apollo Client, Storybook, TypeScript
 github: https://github.com/lifeiscontent/storybook-addon-apollo-client
 link:
 ---
@@ -21,8 +18,10 @@ link:
 While working on [Curious](https://hanihusam.com/works/curious-me), we upgraded
 [Storybook](https://storybook.js.org/) to v10 and
 [Apollo Client](https://www.apollographql.com/docs/react/) to v4 at the same
-time. The [`storybook-addon-apollo-client`](https://github.com/lifeiscontent/storybook-addon-apollo-client)
-broke. Components stopped rendering, the console was full of errors. It wasn't obvious why.
+time. The
+[`storybook-addon-apollo-client`](https://github.com/lifeiscontent/storybook-addon-apollo-client)
+broke. Components stopped rendering, the console was full of errors. It wasn't
+obvious why.
 
 Turned out it was two separate bugs layered on top of each other.
 
@@ -31,7 +30,8 @@ Turned out it was two separate bugs layered on top of each other.
 Apollo Client v4 moved its testing utilities from `@apollo/client/testing` to
 `@apollo/client/testing/react`. The addon was still pointing at the old path.
 
-I opened [issue #135](https://github.com/lifeiscontent/storybook-addon-apollo-client/issues/135),
+I opened
+[issue #135](https://github.com/lifeiscontent/storybook-addon-apollo-client/issues/135),
 documented the root cause, and submitted
 [PR #136](https://github.com/lifeiscontent/storybook-addon-apollo-client/pull/136)
 with the fix: update the import, tighten the peer dependency range for v4.
@@ -69,7 +69,9 @@ const meta = {
 ```
 
 Here's the thing about `MockedProvider`: it creates a fresh `InMemoryCache` for
-each story internally. When you hand it a production cache, it uses that instead and the mock interceptor breaks down. Apollo tries to resolve requests against the real cache, finds nothing, and the component silently does nothing.
+each story internally. When you hand it a production cache, it uses that instead
+and the mock interceptor breaks down. Apollo tries to resolve requests against
+the real cache, finds nothing, and the component silently does nothing.
 
 Removing `cache` and switching to `mocks: []` fixes it:
 
@@ -87,7 +89,8 @@ With this in place:
 
 - `MockedProvider` creates a fresh `InMemoryCache` per story
 - No conflict with the app's production cache
-- Apollo Client context is still available for components using `useQuery`, `useMutation`, etc.
+- Apollo Client context is still available for components using `useQuery`,
+  `useMutation`, etc.
 
 I posted the diagnosis with both snippets in
 [this comment](https://github.com/lifeiscontent/storybook-addon-apollo-client/issues/140#issuecomment-3659576664).
@@ -95,8 +98,15 @@ The issue was closed shortly after.
 
 ## Why this matters
 
-`storybook-addon-apollo-client` is one of 794 addons the [Storybook team tracks for Storybook 10 migration](https://github.com/storybookjs/storybook/issues/32836). It gets 135,000 downloads a week. When Storybook 10 shipped, every team using Apollo Client with Storybook hit some version of these problems.
+`storybook-addon-apollo-client` is one of 794 addons the
+[Storybook team tracks for Storybook 10 migration](https://github.com/storybookjs/storybook/issues/32836).
+It gets 135,000 downloads a week. When Storybook 10 shipped, every team using
+Apollo Client with Storybook hit some version of these problems.
 
-The import path fix is easy to find, it's in the changelog. The cache conflict isn't. It fails silently, with no useful error, and nothing in the docs points at `MockedProvider`'s internal cache as the culprit. That's the kind of bug that wastes hours if you don't know what you're looking for.
+The import path fix is easy to find, it's in the changelog. The cache conflict
+isn't. It fails silently, with no useful error, and nothing in the docs points
+at `MockedProvider`'s internal cache as the culprit. That's the kind of bug that
+wastes hours if you don't know what you're looking for.
 
-Posting the root cause publicly means the next person Googling the symptoms finds the answer instead of the silence.
+Posting the root cause publicly means the next person Googling the symptoms
+finds the answer instead of the silence.
