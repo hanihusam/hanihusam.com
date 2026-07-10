@@ -18,8 +18,8 @@ jobs:
     # skipped) — only refresh after a real push-triggered deploy succeeds.
     if: >
       github.event.workflow_run.conclusion == 'success' &&
-      github.event.workflow_run.event == 'push' &&
-      contains(fromJSON('["main", "dev"]'), github.event.workflow_run.head_branch)
+      github.event.workflow_run.event == 'push' && contains(fromJSON('["main",
+      "dev"]'), github.event.workflow_run.head_branch)
     steps:
       - name: ⬇️ Checkout repo
         uses: actions/checkout@v4
