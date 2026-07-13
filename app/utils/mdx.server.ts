@@ -305,5 +305,5 @@ async function getContentMdxListItems(
 	})
 }
 
-export { getContentMdxListItems, getMdxDirList, getMdxPage }
+export { getContentMdxListItems, getMdxDirList, getMdxPage, versionedKey }
 export type { CachifiedOptions }

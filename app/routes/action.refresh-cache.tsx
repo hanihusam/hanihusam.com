@@ -1,6 +1,10 @@
 import { type ContentType } from '@/types'
 import { cache } from '@/utils/cache.server'
-import { getContentMdxListItems, getMdxPage } from '@/utils/mdx.server'
+import {
+	getContentMdxListItems,
+	getMdxPage,
+	versionedKey,
+} from '@/utils/mdx.server'
 import { getRequiredServerEnvVar } from '@/utils/misc'
 
 import { type Route } from './+types/action.refresh-cache'
@@ -92,7 +96,10 @@ export async function action({ request }: Route.ActionArgs) {
 			promises.push(
 				getContentMdxListItems('projects', {
 					request,
-					forceFresh: 'projects:dir-list,projects:mdx-list-items',
+					forceFresh: [
+						versionedKey('projects:dir-list'),
+						versionedKey('projects:mdx-list-items'),
+					].join(','),
 				}),
 			)
 		}

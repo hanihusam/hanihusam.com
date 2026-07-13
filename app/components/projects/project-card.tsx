@@ -92,7 +92,10 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 				<H3>{project.title}</H3>
 				<Paragraph className="mt-6">{project.description}</Paragraph>
 				<ul className="mt-6 flex items-center gap-2">
-					{project.techs.split(',').map((tech) => (
+					{(typeof project.techs === 'string'
+						? project.techs.split(',')
+						: []
+					).map((tech) => (
 						<TechIcon key={tech.trim()} tech={tech} />
 					))}
 				</ul>
