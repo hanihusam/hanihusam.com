@@ -10,15 +10,7 @@
 	font-size: 1.125rem;
 }
 
-.prose a {
-	text-decoration: none;
-}
-
-.prose a:hover,
-.prose a:focus {
-	text-decoration: underline;
-	outline: none;
-}
+/* Content links inherit the underline wipe from `.underlined` in app.css. */
 
 .prose strong {
 	font-weight: 500;
@@ -409,12 +401,19 @@ pre {
 	margin-left: -200px;
 }
 
+/*
+ * Callout links stay permanently underlined for affordance against the tinted
+ * background, so they opt out of the wipe — otherwise hovering would stack a
+ * second, animated bar under the static one.
+ */
 .prose callout-muted a,
 .prose callout-info a,
 .prose callout-warning a,
 .prose callout-danger a,
 .prose callout-success a {
 	text-decoration: underline;
+	background-image: none;
+	transition: none;
 }
 
 .prose callout-muted p,
@@ -546,7 +545,13 @@ pre {
  * The autolinked heading anchor stays for deep-linking but is invisible — no
  * leading `#`. Hovering the heading underlines its text instead.
  */
-.hash-anchor {
+/*
+ * Selector is `.prose a.hash-anchor` (0,2,1) so the wipe opt-out below actually
+ * beats `.prose a` (0,1,1). The anchor is a full-width overlay, so without this
+ * it would paint a bar across the whole heading on hover — on top of the
+ * heading's own text-decoration underline.
+ */
+.prose a.hash-anchor {
 	display: inline-flex;
 	width: 100%;
 	align-items: center;
@@ -557,8 +562,26 @@ pre {
 	transition: none;
 }
 
+/*
+ * Headings get the same left→right wipe as content links. The heading text is a
+ * bare text node with no inline wrapper, so the gradient has to sit on the
+ * heading box itself — `fit-content` shrinks that box to hug the text, so the
+ * bar spans the text rather than the full column. It also tightens the
+ * `.hash-anchor` overlay (width: 100%) to the text, so hovering the empty space
+ * beside a heading no longer triggers it.
+ *
+ * `text-decoration` is not used here because it cannot be animated.
+ */
+.prose :where(h1, h2, h3, h4) {
+	width: fit-content;
+	background-image: linear-gradient(currentColor, currentColor);
+	background-repeat: no-repeat;
+	background-position: 0 100%;
+	background-size: 0% 2px;
+	transition: background-size var(--duration-base) ease;
+}
+
 .prose :where(h1, h2, h3, h4):hover {
-	text-decoration: underline;
-	text-underline-offset: 4px;
+	background-size: 100% 2px;
 }
 /* #endregion  /**======== Hash Anchor =========== */

@@ -42,7 +42,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 	return data(
 		{
 			substackPosts,
-			projects: projects.slice(0, 4),
+			projects: projects.slice(0, 3),
 			socialImage: getSignedSocialImage({
 				request,
 				title: 'Crafting interfaces by intersecting design and code.',

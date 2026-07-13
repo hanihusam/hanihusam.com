@@ -6,14 +6,39 @@ import Logo from '@/components/ui/logo'
 import { getImageBuilder, getImgProps } from '@/utils/images'
 
 import { ArrowCircleRightIcon, ArrowDownIcon } from '@phosphor-icons/react'
+import { motion, useReducedMotion } from 'motion/react'
+
+// Matches the ease-out-quart / duration-slower motion tokens in theme.css.
+const EASE_OUT_QUART = [0.165, 0.84, 0.44, 1] as const
 
 export function HeroSection() {
+	const shouldReduceMotion = useReducedMotion()
+
+	// Staggered fade+rise on first mount. Under prefers-reduced-motion we skip
+	// `initial` so the SSR-visible content is never hidden (same contract as
+	// the Reveal component).
+	const fadeUp = (delay: number) =>
+		shouldReduceMotion
+			? {}
+			: {
+					initial: { opacity: 0, y: 12 },
+					animate: { opacity: 1, y: 0 },
+					transition: { duration: 0.5, ease: EASE_OUT_QUART, delay },
+				}
+
 	return (
 		<div className="bg-(--surface-primary)">
 			<Grid className="min-h-screen place-content-center pt-20">
 				<Logo className="absolute top-8" />
 
-				<img
+				<motion.img
+					{...(shouldReduceMotion
+						? {}
+						: {
+								initial: { opacity: 0 },
+								animate: { opacity: 1 },
+								transition: { duration: 0.3, ease: EASE_OUT_QUART },
+							})}
 					className="absolute top-0 right-0 hidden h-auto w-87.5 max-w-2/3 translate-x-[25%] translate-y-[20vh] md:top-auto md:right-auto md:bottom-0 md:left-0 md:block md:w-lg md:translate-x-[-16%] md:translate-y-0 lg:left-1/2 lg:w-3xl lg:-translate-x-1/2"
 					{...getImgProps(
 						getImageBuilder(
@@ -32,7 +57,10 @@ export function HeroSection() {
 				/>
 
 				<div className="col-span-full flex flex-col items-start gap-y-8 self-stretch md:h-[50vh] lg:flex-row lg:items-center">
-					<div className="flex flex-col justify-end gap-y-8 lg:h-77.5">
+					<motion.div
+						{...fadeUp(0.1)}
+						className="flex flex-col justify-end gap-y-8 lg:h-77.5"
+					>
 						<Display>I'm Han</Display>
 						<ButtonLink
 							to="#projects"
@@ -41,8 +69,11 @@ export function HeroSection() {
 						>
 							View My Works
 						</ButtonLink>
-					</div>
-					<div className="flex w-full flex-col gap-y-4 md:ml-auto md:w-90 lg:w-100">
+					</motion.div>
+					<motion.div
+						{...fadeUp(0.18)}
+						className="flex w-full flex-col gap-y-4 md:ml-auto md:w-90 lg:w-100"
+					>
 						<H3 className="text-(--text-paragraph)">
 							A Frontend & UI Engineer based in Yogyakarta, Indonesia.
 						</H3>
@@ -68,7 +99,7 @@ export function HeroSection() {
 								More about me
 							</ButtonLink>
 						</div>
-					</div>
+					</motion.div>
 				</div>
 			</Grid>
 		</div>
