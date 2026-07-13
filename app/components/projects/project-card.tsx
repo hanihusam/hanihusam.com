@@ -45,7 +45,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 											},
 										},
 									)}
-									className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-in-out motion-safe:group-hover:scale-105"
+									className="focus-ring motion-safe:ease w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-base) motion-safe:group-hover:scale-105"
 									loading="lazy"
 								/>
 							}
@@ -80,7 +80,7 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 											},
 										},
 									)}
-									className="focus-ring w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-slow) motion-safe:ease-in-out motion-safe:group-hover:scale-105"
+									className="focus-ring motion-safe:ease w-full object-cover object-center will-change-transform motion-safe:transition-transform motion-safe:duration-(--duration-base) motion-safe:group-hover:scale-105"
 									loading="lazy"
 								/>
 							}

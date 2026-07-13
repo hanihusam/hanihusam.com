@@ -9,48 +9,36 @@ light-mode {
 	display: none;
 }
 
-.underlined {
-	position: relative;
-	text-decoration: none !important;
-	white-space: nowrap;
+/*
+ * Content underline — the single implementation for the whole site. The bar
+ * wipes in from the left on hover/focus.
+ *
+ * A gradient background is used instead of a ::after bar so the underline
+ * tracks inline text that wraps across lines (prose links do). The duration
+ * token is re-zeroed under prefers-reduced-motion, so it just appears there.
+ *
+ * `.prose a` is included here (rather than in prose.css) so there is one rule
+ * to maintain. Specificity (0,1,1) already beats the typography plugin's
+ * `.prose :where(a)` (0,1,0), so load order doesn't matter. Opt-outs for
+ * headings anchors and callout links live in prose.css.
+ */
+.underlined,
+.prose a {
+	text-decoration: none;
+	background-image: linear-gradient(currentColor, currentColor);
+	background-repeat: no-repeat;
+	background-position: 0 100%;
+	background-size: 0% 2px;
+	transition: background-size var(--duration-base) ease;
 }
 
-.underlined:focus {
+.underlined:hover,
+.underlined:focus,
+.active.underlined,
+.prose a:hover,
+.prose a:focus {
+	background-size: 100% 2px;
 	outline: none;
-	text-decoration: none !important;
-}
-
-.underlined:after {
-	content: '';
-	height: 2px;
-	transform: scaleX(0);
-	transition: transform var(--duration-base) ease;
-	transform-origin: left;
-	left: 0;
-	bottom: -4px;
-	width: 100%;
-	display: block;
-	position: absolute;
-}
-
-.underlined:hover:after,
-.underlined:focus:after,
-.active.underlined:after {
-	background-color: currentColor;
-	transform: scaleX(1);
-}
-
-@media (prefers-reduced-motion) {
-	.underlined:after {
-		opacity: 0;
-		transition: opacity var(--duration-base) ease;
-	}
-
-	.underlined:hover:after,
-	.underlined:focus:after,
-	.active.underlined:after {
-		opacity: 1;
-	}
 }
 
 /* Toggle Switch Theme */

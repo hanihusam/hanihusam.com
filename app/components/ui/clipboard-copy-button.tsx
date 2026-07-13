@@ -34,8 +34,7 @@ export function ClipboardCopyButton({
 		async function transition() {
 			switch (state) {
 				case State.Copy: {
-					const res = await copyToClipboard(value)
-					console.info('copied', res)
+					await copyToClipboard(value)
 					setState(State.Copied)
 					break
 				}
@@ -66,16 +65,20 @@ export function ClipboardCopyButton({
 			<span className="relative inline-flex size-6 shrink-0">
 				<span
 					className={clsxm(
-						'absolute inset-0 transition-all duration-(--duration-base)',
-						copied ? 'opacity-0 blur-sm' : 'opacity-100 blur-none',
+						'ease-out-quart absolute inset-0 transition-all duration-(--duration-slow)',
+						copied
+							? 'scale-50 opacity-0 blur-sm'
+							: 'scale-100 opacity-100 blur-none',
 					)}
 				>
 					<CopyIcon className="size-full" />
 				</span>
 				<span
 					className={clsxm(
-						'absolute inset-0 transition-all duration-(--duration-base)',
-						copied ? 'opacity-100 blur-none' : 'opacity-0 blur-sm',
+						'ease-out-quart absolute inset-0 transition-all duration-(--duration-slow)',
+						copied
+							? 'scale-100 opacity-100 blur-none'
+							: 'scale-50 opacity-0 blur-sm',
 					)}
 				>
 					<CheckCircleIcon weight="fill" className="size-full" />

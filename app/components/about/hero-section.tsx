@@ -2,7 +2,36 @@ import { Grid } from '@/components/grid'
 import { Display, Text } from '@/components/typography'
 import { DotGrid } from '@/components/ui/dot-grid'
 
+import { motion, useReducedMotion } from 'motion/react'
+
+// Matches the ease-out-quart motion token in theme.css.
+const EASE_OUT_QUART = [0.165, 0.84, 0.44, 1] as const
+
 export function AboutHero() {
+	const shouldReduceMotion = useReducedMotion()
+
+	// Staggered entrance on first mount. Skipping `initial` under reduced motion
+	// keeps the SSR-visible content from ever being hidden (same contract as Reveal).
+	const fadeUp = (delay: number) =>
+		shouldReduceMotion
+			? {}
+			: {
+					initial: { opacity: 0, y: 12 },
+					animate: { opacity: 1, y: 0 },
+					transition: { duration: 0.5, ease: EASE_OUT_QUART, delay },
+				}
+
+	// Avatar slides in from the right. The transform lives on this wrapper, not on
+	// the box below — that box uses responsive Tailwind `translate-x-*` utilities
+	// which Motion's inline transform would otherwise clobber.
+	const slideInFromRight = shouldReduceMotion
+		? {}
+		: {
+				initial: { opacity: 0, x: 48 },
+				animate: { opacity: 1, x: 0 },
+				transition: { duration: 0.6, ease: EASE_OUT_QUART },
+			}
+
 	return (
 		<Grid as="section" className="relative pt-40 md:pb-16 lg:pb-40">
 			<DotGrid
@@ -14,20 +43,27 @@ export function AboutHero() {
 
 			<div className="relative col-span-full flex items-end">
 				{/* Floating cutout avatar over a tinted square */}
-				<div className="absolute top-0 right-0 flex aspect-square w-100 translate-x-[28%] -translate-y-1/3 items-center justify-center overflow-visible rounded-2xl border-(--border-primary) bg-sky-50 md:translate-x-[40%] md:translate-y-0 lg:translate-x-0 dark:bg-sky-900">
-					<img
-						src="/images/avatar-side.png"
-						alt="Portrait of Han"
-						width={512}
-						height={512}
-						className="absolute top-1/2 left-1/2 flex max-w-none shrink-0 -translate-x-1/2 -translate-y-1/2"
-					/>
-				</div>
+				<motion.div {...slideInFromRight} className="absolute top-0 right-0">
+					<div className="relative flex aspect-square w-100 translate-x-[28%] -translate-y-1/3 items-center justify-center overflow-visible rounded-2xl border-(--border-primary) bg-sky-50 md:translate-x-[40%] md:translate-y-0 lg:translate-x-0 dark:bg-sky-900">
+						<img
+							src="/images/avatar-side.png"
+							alt="Portrait of Han"
+							width={512}
+							height={512}
+							className="absolute top-1/2 left-1/2 flex max-w-none shrink-0 -translate-x-1/2 -translate-y-1/2"
+						/>
+					</div>
+				</motion.div>
 
 				<div className="relative z-1 mt-82 flex flex-col gap-6 md:gap-12">
-					<Display>Hi there! I&apos;m Han.</Display>
+					<motion.div {...fadeUp(0.1)}>
+						<Display>Hi there! I&apos;m Han.</Display>
+					</motion.div>
 
-					<div className="flex flex-col gap-4 md:max-w-[60%]">
+					<motion.div
+						{...fadeUp(0.18)}
+						className="flex flex-col gap-4 md:max-w-[60%]"
+					>
 						<Text variant="lead" as="p">
 							I started building on the web in 2018 and haven&apos;t stopped
 							since.
@@ -42,14 +78,14 @@ export function AboutHero() {
 							Besides freelancing, I&apos;m building{' '}
 							<a
 								href="https://coverse.id"
-								className="text-sunset-400 font-medium hover:underline"
+								className="underlined text-sunset-400 font-medium"
 							>
 								Coverse
 							</a>
 							, a studio specializing in layout and deck templates, from
 							Yogyakarta, Indonesia.
 						</Text>
-					</div>
+					</motion.div>
 				</div>
 			</div>
 		</Grid>
