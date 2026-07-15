@@ -10,6 +10,7 @@ import { motion, useReducedMotion } from 'motion/react'
 
 // Matches the ease-out-quart / duration-slower motion tokens in theme.css.
 const EASE_OUT_QUART = [0.165, 0.84, 0.44, 1] as const
+const displayText = "I'm Han"
 
 export function HeroSection() {
 	const shouldReduceMotion = useReducedMotion()
@@ -61,11 +62,26 @@ export function HeroSection() {
 						{...fadeUp(0.1)}
 						className="flex flex-col justify-end gap-y-8 lg:h-77.5"
 					>
-						<Display>I'm Han</Display>
+						<Display id="heroDisplay">
+							{displayText.split('').map((char, i) => (
+								<span
+									key={i}
+									className="inline-block whitespace-pre"
+									style={{ '--index': i } as React.CSSProperties}
+								>
+									{char}
+								</span>
+							))}
+						</Display>
 						<ButtonLink
 							to="#projects"
 							className="hidden self-start md:inline-flex"
-							iconRight={<ArrowDownIcon />}
+							iconRight={
+								<>
+									<ArrowDownIcon className="col-start-1 row-start-1 translate-y-[-200%] transition-transform duration-(--duration-base) ease-[cubic-bezier(0.785,0.135,0.15,0.86)] group-hover:translate-y-0" />
+									<ArrowDownIcon className="col-start-1 row-start-1 transition-transform duration-(--duration-fast) ease-[cubic-bezier(0.785,0.135,0.15,0.86)] group-hover:translate-y-[200%]" />
+								</>
+							}
 						>
 							View My Works
 						</ButtonLink>
