@@ -334,6 +334,7 @@
    ───────────────────────────────────────────────────────────────────────── */
 
 html {
+  scroll-behavior: smooth;
   font-family: var(--font-sans);
   background-color: var(--surface-primary);
   color: var(--text-paragraph);
@@ -345,4 +346,10 @@ html {
    handled by <PageTransition> (motion/react); the two are mutually exclusive. */
 @view-transition {
   navigation: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }

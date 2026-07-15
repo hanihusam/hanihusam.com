@@ -4,8 +4,9 @@ import { Display, H3, Paragraph, Text } from '@/components/typography'
 import { ButtonLink, LinkButton } from '@/components/ui/button'
 import Logo from '@/components/ui/logo'
 import { getImageBuilder, getImgProps } from '@/utils/images'
+import ArrowRightIcon from '@/assets/arrow-right-icon'
 
-import { ArrowCircleRightIcon, ArrowDownIcon } from '@phosphor-icons/react'
+import { ArrowDownIcon } from '@phosphor-icons/react'
 import { motion, useReducedMotion } from 'motion/react'
 
 // Matches the ease-out-quart / duration-slower motion tokens in theme.css.
@@ -57,7 +58,7 @@ export function HeroSection() {
 					)}
 				/>
 
-				<div className="col-span-full flex flex-col items-start gap-y-8 self-stretch md:h-[50vh] lg:flex-row lg:items-center">
+				<div className="z-10 col-span-full flex flex-col items-start gap-y-8 self-stretch md:h-[50vh] lg:flex-row lg:items-center">
 					<motion.div
 						{...fadeUp(0.1)}
 						className="flex flex-col justify-end gap-y-8 lg:h-77.5"
@@ -98,9 +99,9 @@ export function HeroSection() {
 							Figma files and commit history to prove it.
 						</Text>
 						<AnchorOrLink className="hidden md:inline-flex" to="about">
-							<LinkButton className="relative inline-flex items-center justify-center gap-1 text-(--text-paragraph)">
-								<Paragraph as="span">More about me</Paragraph>
-								<ArrowCircleRightIcon className="size-5 shrink-0" />
+							<LinkButton className="relative inline-flex items-center justify-center gap-1.5 text-(--text-paragraph)">
+								More about me
+								<ArrowRightIcon />
 							</LinkButton>
 						</AnchorOrLink>
 						<div className="flex w-full gap-x-2 md:hidden">

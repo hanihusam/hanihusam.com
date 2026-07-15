@@ -16,8 +16,8 @@ interface ButtonProps {
 
 function getBaseClassName({ className }: { className?: string }) {
 	return clsxm(
-		'group relative inline-flex w-fit shrink-0 items-center justify-center',
-		'font-medium transition duration-(--duration-fast) ease-out',
+		'group relative inline-flex w-fit shrink-0 items-center justify-center overflow-hidden',
+		'font-medium transition-[background-color] duration-(--duration-base) ease-hover',
 		'active:scale-[0.97]',
 		'focus:outline-none',
 		'disabled:pointer-events-none',
@@ -65,9 +65,17 @@ function ButtonInner({
 }: Pick<ButtonProps, 'children' | 'iconLeft' | 'iconRight'>) {
 	return (
 		<>
-			{iconLeft ? <span className="size-4 shrink-0">{iconLeft}</span> : null}
+			{iconLeft ? (
+				<span className="grid size-4 shrink-0 place-items-center">
+					{iconLeft}
+				</span>
+			) : null}
 			{children}
-			{iconRight ? <span className="size-4 shrink-0">{iconRight}</span> : null}
+			{iconRight ? (
+				<span className="grid size-4 shrink-0 place-items-center">
+					{iconRight}
+				</span>
+			) : null}
 		</>
 	)
 }
@@ -108,7 +116,7 @@ function LinkButton({
 		<button
 			{...buttonProps}
 			className={clsxm(
-				'text-(--text-link) transition-colors duration-(--duration-fast)',
+				'group text-(--text-link) transition-colors duration-(--duration-base)',
 				'hover:opacity-80 focus:outline-none focus-visible:underline',
 				underlined ? 'underline' : 'hover:underline',
 				className,

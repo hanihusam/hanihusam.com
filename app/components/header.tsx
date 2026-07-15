@@ -1,10 +1,9 @@
 import { clsxm } from '@/utils/clsxm'
 
+import ArrowRightIcon from '@/assets/arrow-right-icon'
 import { ButtonLink } from './ui/button'
 import { Grid } from './grid'
 import { H2, Text } from './typography'
-
-import { ArrowCircleRightIcon } from '@phosphor-icons/react'
 
 interface HeaderProps {
 	title: string
@@ -45,7 +44,7 @@ function Header({
 					<ButtonLink
 						variant="ghost"
 						href={ctaUrl}
-						iconRight={<ArrowCircleRightIcon />}
+						iconRight={<ArrowRightIcon />}
 					>
 						{cta}
 					</ButtonLink>
