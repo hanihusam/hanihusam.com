@@ -11,7 +11,7 @@ export default function ArrowRightIcon({
 			height="10"
 			fill="none"
 			stroke="currentColor"
-			stroke-width="2"
+			strokeWidth="2"
 			{...props}
 		>
 			<path
