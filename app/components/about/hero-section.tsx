@@ -1,6 +1,6 @@
 import { Grid } from '@/components/grid'
 import { Display, Text } from '@/components/typography'
-import { DotGrid } from '@/components/ui/dot-grid'
+import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
 
 import { motion, useReducedMotion } from 'motion/react'
 
@@ -34,7 +34,7 @@ export function AboutHero() {
 
 	return (
 		<Grid as="section" className="relative pt-40 md:pb-16 lg:pb-40">
-			<DotGrid
+			<ReactiveDotGrid
 				color="sunset"
 				rows={9}
 				cols={7}

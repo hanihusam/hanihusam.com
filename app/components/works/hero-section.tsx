@@ -1,7 +1,7 @@
 import { Grid } from '@/components/grid'
 import { H1, Text } from '@/components/typography'
 import { ConcentricCircles } from '@/components/ui/concentric-circles'
-import { DotGrid } from '@/components/ui/dot-grid'
+import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
 
 export function WorksHero() {
 	return (
@@ -16,7 +16,7 @@ export function WorksHero() {
 				ringGap={34}
 				className="absolute top-0 -right-32 hidden lg:block"
 			/>
-			<DotGrid
+			<ReactiveDotGrid
 				color="sky"
 				rows={9}
 				cols={7}

@@ -4,7 +4,7 @@ import { Spacer } from '@/components/spacer'
 import { H1, Text } from '@/components/typography'
 import { ButtonLink } from '@/components/ui/button'
 import { ConcentricCircles } from '@/components/ui/concentric-circles'
-import { DotGrid } from '@/components/ui/dot-grid'
+import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
 import { Tag } from '@/components/ui/tag'
 import { WorkTocDrawer } from '@/components/works/toc-drawer'
 import { type HeadingScrollSpy, TocList } from '@/components/works/toc-list'
@@ -243,7 +243,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 
 	return (
 		<main className="relative grow overflow-hidden">
-			<DotGrid
+			<ReactiveDotGrid
 				color="sunset"
 				rows={8}
 				cols={8}

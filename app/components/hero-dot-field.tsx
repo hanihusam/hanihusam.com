@@ -4,31 +4,81 @@ import { useRef } from 'react'
 
 gsap.registerPlugin(useGSAP)
 
-// Visual tokens matched to DotGrid (rounded-square dots) and
-// ConcentricCircles (thin rings). A slightly larger pitch than DotGrid's 18px
-// keeps the full-bleed field airy and the redraw cheap.
-const PITCH = 22
+// Dot styling matched to DotGrid: 4px rounded squares on an 18px pitch.
+const PITCH = 18
 const DOT_SIZE = 4
 const DOT_RADIUS = 1.344
 
 // Magnetic push: dots within INFLUENCE px of the cursor are shoved away, up to
 // MAX_PUSH px at the center, easing to zero at the edge.
-const INFLUENCE = 150
-const MAX_PUSH = 24
+const INFLUENCE = 130
+const MAX_PUSH = 18
 
-// Ripple: a concentric ring pair spawns every RIPPLE_SPAWN_DIST px of travel
-// and expands to RIPPLE_MAX px while fading out.
-const RIPPLE_SPAWN_DIST = 80
-const RIPPLE_MAX = 200
-const RIPPLE_INNER_RATIO = 0.55
-const RIPPLE_DURATION = 0.9
-
-// Keep the render loop alive briefly after the last activity so the grid can
-// relax back to rest, then stop to save CPU.
+// Keep the render loop alive briefly after the last activity so the clusters
+// can relax back to rest, then stop to save CPU.
 const KEEP_ALIVE_MS = 700
 
+type DotColor = 'sky' | 'sunset'
+type Anchor = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 type Dot = { bx: number; by: number }
-type Ripple = { x: number; y: number; r: number; alpha: number }
+
+// A few decorative clusters, reactive to the cursor. Placement is either:
+//  - `anchor` + offsets: pinned to a corner (used for the ambient edge dots), or
+//  - `at: { fx, fy }`: centered at a fraction of the hero (0-1), letting a
+//    cluster sit naturally beside the display text or the avatar.
+// `minWidth` gates a cluster to a breakpoint (matches theme md/lg tokens).
+type Cluster = {
+	color: DotColor
+	rows: number
+	cols: number
+	minWidth: number
+	anchor?: Anchor
+	offsetX?: number
+	offsetY?: number
+	at?: { fx: number; fy: number }
+}
+
+const CLUSTERS: Cluster[] = [
+	{
+		anchor: 'top-right',
+		color: 'sky',
+		rows: 5,
+		cols: 7,
+		offsetX: 40,
+		offsetY: 112,
+		minWidth: 640,
+	},
+	{
+		anchor: 'bottom-left',
+		color: 'sunset',
+		rows: 7,
+		cols: 5,
+		offsetX: 40,
+		offsetY: 96,
+		minWidth: 1024,
+	},
+	// Below the "More about me" link in the right column.
+	{
+		at: { fx: 0.71, fy: 0.78 },
+		color: 'sunset',
+		rows: 6,
+		cols: 8,
+		minWidth: 1024,
+	},
+	// Tucked behind the top of the avatar / hero image.
+	{
+		at: { fx: 0.5, fy: 0.22 },
+		color: 'sky',
+		rows: 5,
+		cols: 8,
+		minWidth: 1024,
+	},
+]
+
+const FALLBACK: Record<DotColor, string> = {
+	sky: '#d9e4f2',
+	sunset: '#f2bb97',
+}
 
 function readVar(name: string, fallback: string) {
 	const value = getComputedStyle(document.documentElement)
@@ -46,24 +96,23 @@ export function HeroDotField({ className }: { className?: string }) {
 			const containerEl = canvasEl?.parentElement
 			const ctxMaybe = canvasEl?.getContext('2d')
 			if (!canvasEl || !containerEl || !ctxMaybe || !contextSafe) return
-			// Alias to non-null-typed locals so the nested render/handlers narrow.
+			// Alias to non-null-typed locals so the nested closures narrow.
 			const canvas = canvasEl
 			const container = containerEl
 			const ctx = ctxMaybe
 
-			const colors = { dot: '#b3c9e5', ripple: '#ec9e6a' }
+			const colors: Record<DotColor, string> = { ...FALLBACK }
 			const resolveColors = () => {
-				colors.dot = readVar('--color-sky-200', '#b3c9e5')
-				colors.ripple = readVar('--color-sunset-300', '#ec9e6a')
+				colors.sky = readVar('--color-sky-100', FALLBACK.sky)
+				colors.sunset = readVar('--color-sunset-200', FALLBACK.sunset)
 			}
 			resolveColors()
 
 			let width = 0
 			let height = 0
-			let dots: Dot[] = []
+			// Dots grouped by color so each group draws in a single batched fill.
+			const dotsByColor: Record<DotColor, Dot[]> = { sky: [], sunset: [] }
 			const pointer = { x: -9999, y: -9999 }
-			const ripples: Ripple[] = []
-			let lastRipple = { x: 0, y: 0 }
 
 			const canHover = window.matchMedia('(hover: hover) and (pointer: fine)')
 			const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -80,76 +129,72 @@ export function HeroDotField({ className }: { className?: string }) {
 				canvas.style.height = `${height}px`
 				ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
 
-				dots = []
-				// Inset by half a pitch so the field is centered with even margins.
-				const cols = Math.floor(width / PITCH)
-				const rows = Math.floor(height / PITCH)
-				const offsetX = (width - (cols - 1) * PITCH) / 2
-				const offsetY = (height - (rows - 1) * PITCH) / 2
-				for (let r = 0; r < rows; r++) {
-					for (let c = 0; c < cols; c++) {
-						dots.push({ bx: offsetX + c * PITCH, by: offsetY + r * PITCH })
+				dotsByColor.sky = []
+				dotsByColor.sunset = []
+				for (const cluster of CLUSTERS) {
+					if (window.innerWidth < cluster.minWidth) continue
+					const clusterW = (cluster.cols - 1) * PITCH + DOT_SIZE
+					const clusterH = (cluster.rows - 1) * PITCH + DOT_SIZE
+					let ox: number
+					let oy: number
+					if (cluster.at) {
+						ox = cluster.at.fx * width - clusterW / 2
+						oy = cluster.at.fy * height - clusterH / 2
+					} else {
+						const offsetX = cluster.offsetX ?? 0
+						const offsetY = cluster.offsetY ?? 0
+						ox = cluster.anchor?.endsWith('right')
+							? width - offsetX - clusterW
+							: offsetX
+						oy = cluster.anchor?.startsWith('bottom')
+							? height - offsetY - clusterH
+							: offsetY
+					}
+					const bucket = dotsByColor[cluster.color]
+					for (let r = 0; r < cluster.rows; r++) {
+						for (let c = 0; c < cluster.cols; c++) {
+							bucket.push({ bx: ox + c * PITCH, by: oy + r * PITCH })
+						}
 					}
 				}
 			}
 
 			function drawDot(x: number, y: number) {
-				const half = DOT_SIZE / 2
 				if (ctx.roundRect) {
-					ctx.roundRect(x - half, y - half, DOT_SIZE, DOT_SIZE, DOT_RADIUS)
+					ctx.roundRect(x, y, DOT_SIZE, DOT_SIZE, DOT_RADIUS)
 				} else {
-					ctx.rect(x - half, y - half, DOT_SIZE, DOT_SIZE)
+					ctx.rect(x, y, DOT_SIZE, DOT_SIZE)
 				}
 			}
 
 			function render() {
 				ctx.clearRect(0, 0, width, height)
-
-				// All dots share one color, so batch them into a single fill.
-				ctx.fillStyle = colors.dot
-				ctx.beginPath()
 				const infl2 = INFLUENCE * INFLUENCE
-				for (const dot of dots) {
-					let { bx: x, by: y } = dot
-					const dx = dot.bx - pointer.x
-					const dy = dot.by - pointer.y
-					const dist2 = dx * dx + dy * dy
-					if (dist2 < infl2) {
-						const dist = Math.sqrt(dist2) || 1
-						const force = 1 - dist / INFLUENCE
-						const push = force * force * MAX_PUSH
-						x = dot.bx + (dx / dist) * push
-						y = dot.by + (dy / dist) * push
-					}
-					drawDot(x, y)
-				}
-				ctx.fill()
 
-				// Concentric ripple rings.
-				if (ripples.length) {
-					ctx.strokeStyle = colors.ripple
-					ctx.lineWidth = 1
-					for (const ripple of ripples) {
-						ctx.globalAlpha = ripple.alpha
-						ctx.beginPath()
-						ctx.arc(ripple.x, ripple.y, ripple.r, 0, Math.PI * 2)
-						ctx.stroke()
-						ctx.beginPath()
-						ctx.arc(
-							ripple.x,
-							ripple.y,
-							ripple.r * RIPPLE_INNER_RATIO,
-							0,
-							Math.PI * 2,
-						)
-						ctx.stroke()
+				for (const color of ['sky', 'sunset'] as DotColor[]) {
+					const bucket = dotsByColor[color]
+					if (!bucket.length) continue
+					ctx.fillStyle = colors[color]
+					ctx.beginPath()
+					for (const dot of bucket) {
+						let x = dot.bx
+						let y = dot.by
+						const dx = dot.bx - pointer.x
+						const dy = dot.by - pointer.y
+						const dist2 = dx * dx + dy * dy
+						if (dist2 < infl2) {
+							const dist = Math.sqrt(dist2) || 1
+							const force = 1 - dist / INFLUENCE
+							const push = force * force * MAX_PUSH
+							x = dot.bx + (dx / dist) * push
+							y = dot.by + (dy / dist) * push
+						}
+						drawDot(x, y)
 					}
-					ctx.globalAlpha = 1
+					ctx.fill()
 				}
 
-				if (performance.now() > keepAliveUntil && ripples.length === 0) {
-					stopLoop()
-				}
+				if (performance.now() > keepAliveUntil) stopLoop()
 			}
 
 			let running = false
@@ -172,41 +217,11 @@ export function HeroDotField({ className }: { className?: string }) {
 			const xTo = gsap.quickTo(pointer, 'x', { duration: 0.35, ease: 'power3' })
 			const yTo = gsap.quickTo(pointer, 'y', { duration: 0.35, ease: 'power3' })
 
-			const spawnRipple = contextSafe((x: number, y: number) => {
-				const ripple: Ripple = { x, y, r: 6, alpha: 0.5 }
-				ripples.push(ripple)
-				gsap.to(ripple, {
-					r: RIPPLE_MAX,
-					alpha: 0,
-					duration: RIPPLE_DURATION,
-					ease: 'power2.out',
-					onComplete: () => {
-						const i = ripples.indexOf(ripple)
-						if (i !== -1) ripples.splice(i, 1)
-					},
-				})
-			})
-
 			const handlePointerMove = contextSafe((event: Event) => {
 				const rect = container.getBoundingClientRect()
 				const { clientX, clientY } = event as PointerEvent
-				const px = clientX - rect.left
-				const py = clientY - rect.top
-				xTo(px)
-				yTo(py)
-				const rdx = px - lastRipple.x
-				const rdy = py - lastRipple.y
-				if (rdx * rdx + rdy * rdy > RIPPLE_SPAWN_DIST * RIPPLE_SPAWN_DIST) {
-					lastRipple = { x: px, y: py }
-					spawnRipple(px, py)
-				}
-				poke()
-			})
-
-			const handlePointerEnter = contextSafe((event: Event) => {
-				const rect = container.getBoundingClientRect()
-				const { clientX, clientY } = event as PointerEvent
-				lastRipple = { x: clientX - rect.left, y: clientY - rect.top }
+				xTo(clientX - rect.left)
+				yTo(clientY - rect.top)
 				poke()
 			})
 
@@ -231,7 +246,6 @@ export function HeroDotField({ className }: { className?: string }) {
 
 			if (interactive) {
 				container.addEventListener('pointermove', handlePointerMove)
-				container.addEventListener('pointerenter', handlePointerEnter)
 				container.addEventListener('pointerleave', handlePointerLeave)
 			}
 			resizeObserver.observe(container)
@@ -243,7 +257,6 @@ export function HeroDotField({ className }: { className?: string }) {
 			return () => {
 				stopLoop()
 				container.removeEventListener('pointermove', handlePointerMove)
-				container.removeEventListener('pointerenter', handlePointerEnter)
 				container.removeEventListener('pointerleave', handlePointerLeave)
 				resizeObserver.disconnect()
 				themeObserver.disconnect()
