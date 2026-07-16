@@ -1,6 +1,6 @@
 import { Grid } from '@/components/grid'
+import { HeroDotField } from '@/components/hero-dot-field'
 import { AnchorOrLink } from '@/components/links/anchor-or-link'
-import { MouseGlow } from '@/components/mouse-glow'
 import { Display, H3, Paragraph, Text } from '@/components/typography'
 import { ButtonLink, LinkButton } from '@/components/ui/button'
 import Logo from '@/components/ui/logo'
@@ -31,7 +31,7 @@ export function HeroSection() {
 
 	return (
 		<div className="relative bg-(--surface-primary)">
-			<MouseGlow />
+			<HeroDotField className="pointer-events-none absolute inset-0" />
 			<Grid className="min-h-screen place-content-center pt-20">
 				<Logo className="absolute top-8" />
 
