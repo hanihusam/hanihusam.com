@@ -18,7 +18,10 @@ type ProjectCardProps = {
 export function ProjectCard({ project, className }: ProjectCardProps) {
 	return (
 		<div
-			className={clsxm('flex flex-col gap-4 lg:flex-row lg:gap-8', className)}
+			className={clsxm(
+				'flex h-full flex-col gap-4 lg:flex-row lg:gap-8',
+				className,
+			)}
 		>
 			<div className="relative aspect-video shrink-0 lg:aspect-square lg:h-full">
 				{project.bannerSquareCloudinaryId ? (
