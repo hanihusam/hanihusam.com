@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { Spacer } from '@/components/spacer'
 import { H1, Text } from '@/components/typography'
+import ArrowLeftIcon from '@/assets/arrow-left-icon'
 import { ButtonLink } from '@/components/ui/button'
 import { ConcentricCircles } from '@/components/ui/concentric-circles'
 import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
@@ -26,7 +27,7 @@ import { getServerTimeHeader } from '@/utils/timing.server'
 import { type Route } from './+types/works.$slug'
 
 import { SiGithub } from '@icons-pack/react-simple-icons'
-import { ArrowLeftIcon, ArrowSquareOutIcon } from '@phosphor-icons/react'
+import { ArrowSquareOutIcon } from '@phosphor-icons/react'
 import { data, useFetcher } from 'react-router'
 
 export async function action({ params, request }: Route.ActionArgs) {
