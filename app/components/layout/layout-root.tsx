@@ -11,7 +11,10 @@ function LayoutRoot({ surface = 'primary', children }: LayoutRootProps) {
 		<div
 			className={clsxm(
 				// `pb-24 md:pb-0` clears the fixed bottom Navigation on mobile.
-				'relative flex min-h-screen flex-col overflow-hidden pb-24 md:pb-0',
+				// `overflow-x-clip` (not `-hidden`) contains decorative bleed without
+				// creating a scroll container, so `position: sticky` still works
+				// (e.g. the project-page table of contents).
+				'relative flex min-h-screen flex-col overflow-x-clip pb-24 md:pb-0',
 				surface === 'secondary'
 					? 'bg-(--surface-secondary)'
 					: 'bg-(--surface-primary)',

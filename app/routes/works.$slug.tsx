@@ -243,7 +243,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 		: []
 
 	return (
-		<main className="relative grow overflow-hidden">
+		<main className="relative grow overflow-x-clip">
 			<ReactiveDotGrid
 				color="sunset"
 				rows={8}
