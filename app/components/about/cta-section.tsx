@@ -1,20 +1,19 @@
 import { Grid } from '@/components/grid'
 import { H2, Text } from '@/components/typography'
 import { ButtonLink } from '@/components/ui/button'
-import { DotGrid } from '@/components/ui/dot-grid'
-
-import { ArrowRightIcon } from '@phosphor-icons/react'
+import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
+import ArrowRightIcon from '@/assets/arrow-right-icon'
 
 export function AboutCta() {
 	return (
 		<Grid as="section" className="py-20">
-			<DotGrid
+			<ReactiveDotGrid
 				color="sunset"
 				rows={6}
 				cols={7}
 				className="absolute top-8 right-[2%] hidden lg:block"
 			/>
-			<DotGrid
+			<ReactiveDotGrid
 				color="sky"
 				rows={5}
 				cols={5}

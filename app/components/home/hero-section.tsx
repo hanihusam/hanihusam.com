@@ -1,4 +1,5 @@
 import { Grid } from '@/components/grid'
+import { HeroDotField } from '@/components/hero-dot-field'
 import { AnchorOrLink } from '@/components/links/anchor-or-link'
 import { Display, H3, Paragraph, Text } from '@/components/typography'
 import { ButtonLink, LinkButton } from '@/components/ui/button'
@@ -29,7 +30,8 @@ export function HeroSection() {
 				}
 
 	return (
-		<div className="bg-(--surface-primary)">
+		<div className="relative bg-(--surface-primary)">
+			<HeroDotField className="pointer-events-none absolute inset-0" />
 			<Grid className="min-h-screen place-content-center pt-20">
 				<Logo className="absolute top-8" />
 
