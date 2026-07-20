@@ -1,39 +1,27 @@
 import { clsxm } from '@/utils/clsxm'
+import {
+	addDotToPath,
+	createRenderLoop,
+	DOT_FALLBACK,
+	DOT_SIZE,
+	DOT_VAR,
+	type DotColor,
+	INFLUENCE,
+	MAX_PUSH,
+	PITCH,
+	pushedDot,
+	readCssVar,
+	setupCanvas,
+} from '@/components/ui/dot-field'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { useRef } from 'react'
 
 gsap.registerPlugin(useGSAP)
 
-type DotColor = 'sky' | 'sunset'
-
-// Dot styling mirrors DotGrid exactly: 4px rounded squares on an 18px pitch.
-const PITCH = 18
-const DOT_SIZE = 4
-const DOT_RADIUS = 1.344
-
-// Magnetic push: dots within INFLUENCE px of the cursor shove away, up to
-// MAX_PUSH px at the center, easing to zero at the edge.
-const INFLUENCE = 130
-const MAX_PUSH = 18
 // The canvas is padded around the grid so dots pushed outward near an edge
 // aren't clipped; the wrapper keeps the grid's original footprint.
 const PAD = MAX_PUSH + DOT_SIZE + 4
-
-const KEEP_ALIVE_MS = 700
-
-const FALLBACK: Record<DotColor, string> = { sky: '#d9e4f2', sunset: '#f2bb97' }
-const VAR: Record<DotColor, string> = {
-	sky: '--color-sky-100',
-	sunset: '--color-sunset-200',
-}
-
-function readVar(name: string, fallback: string) {
-	const value = getComputedStyle(document.documentElement)
-		.getPropertyValue(name)
-		.trim()
-	return value || fallback
-}
 
 interface ReactiveDotGridProps {
 	rows?: number
@@ -53,7 +41,7 @@ export function ReactiveDotGrid({
 	cols = 7,
 	color = 'sky',
 	className,
-}: ReactiveDotGridProps) {
+}: Readonly<ReactiveDotGridProps>) {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
 
 	const gridW = (cols - 1) * PITCH + DOT_SIZE
@@ -69,16 +57,13 @@ export function ReactiveDotGrid({
 			const canvas = canvasEl
 			const ctx = ctxMaybe
 
-			let dotColor = FALLBACK[color]
+			let dotColor = DOT_FALLBACK[color]
 			const resolveColor = () => {
-				dotColor = readVar(VAR[color], FALLBACK[color])
+				dotColor = readCssVar(DOT_VAR[color], DOT_FALLBACK[color])
 			}
 			resolveColor()
 
-			const dpr = Math.min(window.devicePixelRatio || 1, 2)
-			canvas.width = Math.round(canvasW * dpr)
-			canvas.height = Math.round(canvasH * dpr)
-			ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+			setupCanvas(canvas, ctx, canvasW, canvasH)
 
 			const dots: { bx: number; by: number }[] = []
 			for (let r = 0; r < rows; r++) {
@@ -92,55 +77,19 @@ export function ReactiveDotGrid({
 			const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
 			const interactive = canHover.matches && !reduceMotion.matches
 
-			function drawDot(x: number, y: number) {
-				if (ctx.roundRect) {
-					ctx.roundRect(x, y, DOT_SIZE, DOT_SIZE, DOT_RADIUS)
-				} else {
-					ctx.rect(x, y, DOT_SIZE, DOT_SIZE)
-				}
-			}
-
 			function render() {
 				ctx.clearRect(0, 0, canvasW, canvasH)
 				ctx.fillStyle = dotColor
 				ctx.beginPath()
-				const infl2 = INFLUENCE * INFLUENCE
 				for (const dot of dots) {
-					let x = dot.bx
-					let y = dot.by
-					const dx = dot.bx - pointer.x
-					const dy = dot.by - pointer.y
-					const dist2 = dx * dx + dy * dy
-					if (dist2 < infl2) {
-						const dist = Math.sqrt(dist2) || 1
-						const force = 1 - dist / INFLUENCE
-						const push = force * force * MAX_PUSH
-						x = dot.bx + (dx / dist) * push
-						y = dot.by + (dy / dist) * push
-					}
-					drawDot(x, y)
+					const [x, y] = pushedDot(dot.bx, dot.by, pointer.x, pointer.y)
+					addDotToPath(ctx, x, y)
 				}
 				ctx.fill()
-
-				if (performance.now() > keepAliveUntil) stopLoop()
+				if (loop.expired()) loop.stop()
 			}
 
-			let running = false
-			let keepAliveUntil = 0
-			function startLoop() {
-				if (running) return
-				running = true
-				gsap.ticker.add(render)
-			}
-			function stopLoop() {
-				if (!running) return
-				running = false
-				gsap.ticker.remove(render)
-			}
-			function poke() {
-				keepAliveUntil = performance.now() + KEEP_ALIVE_MS
-				startLoop()
-			}
+			const loop = createRenderLoop(render)
 
 			const xTo = gsap.quickTo(pointer, 'x', { duration: 0.35, ease: 'power3' })
 			const yTo = gsap.quickTo(pointer, 'y', { duration: 0.35, ease: 'power3' })
@@ -159,20 +108,20 @@ export function ReactiveDotGrid({
 				if (near) {
 					xTo(lx)
 					yTo(ly)
-					poke()
+					loop.poke()
 					wasNear = true
 				} else if (wasNear) {
 					// Left the neighborhood — ease dots back to rest once.
 					xTo(-9999)
 					yTo(-9999)
-					poke()
+					loop.poke()
 					wasNear = false
 				}
 			})
 
 			const themeObserver = new MutationObserver(() => {
 				resolveColor()
-				if (!running) render()
+				if (!loop.isRunning()) render()
 			})
 
 			render()
@@ -187,7 +136,7 @@ export function ReactiveDotGrid({
 			})
 
 			return () => {
-				stopLoop()
+				loop.stop()
 				window.removeEventListener('pointermove', handlePointerMove)
 				themeObserver.disconnect()
 			}

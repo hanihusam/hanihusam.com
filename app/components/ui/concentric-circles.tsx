@@ -59,7 +59,7 @@ export function ConcentricCircles({
 	const center = size / 2
 	const ringCount = Math.floor(center / ringGap)
 	const radii = Array.from({ length: ringCount }, (_, i) => (i + 1) * ringGap)
-	const maxRadius = radii[radii.length - 1] ?? center
+	const maxRadius = radii.at(-1) ?? center
 
 	useGSAP(
 		(_context, contextSafe) => {
