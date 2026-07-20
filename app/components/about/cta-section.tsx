@@ -2,8 +2,7 @@ import { Grid } from '@/components/grid'
 import { H2, Text } from '@/components/typography'
 import { ButtonLink } from '@/components/ui/button'
 import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
-
-import { ArrowRightIcon } from '@phosphor-icons/react'
+import ArrowRightIcon from '@/assets/arrow-right-icon'
 
 export function AboutCta() {
 	return (
