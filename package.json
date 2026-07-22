@@ -123,7 +123,10 @@
       "oxlint --fix",
       "oxfmt"
     ],
-    "*.{json,md,mdx}": [
+    "*.{md,mdx}": [
+      "oxfmt"
+    ],
+    "!(package-lock).json": [
       "oxfmt"
     ]
   }
