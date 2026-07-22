@@ -2,6 +2,7 @@ import * as React from 'react'
 
 import { Grid } from '@/components/grid'
 import { ProjectCard } from '@/components/projects/project-card'
+import { Reveal } from '@/components/reveal'
 import { Spacer } from '@/components/spacer'
 import { Paragraph } from '@/components/typography'
 import { Button } from '@/components/ui/button'
@@ -19,7 +20,19 @@ import { getServerTimeHeader } from '@/utils/timing.server'
 import { type Route } from './+types/works._index'
 
 import { PlusIcon } from '@phosphor-icons/react'
+import { AnimatePresence, MotionConfig } from 'motion/react'
 import { data, type HeadersArgs, useSearchParams } from 'react-router'
+
+// One spring family for the whole filtered grid, so entrance, exit, and the
+// reflow of surviving cards all move with the same character instead of
+// fighting each other. Exit is quicker so removed cards get out of the way
+// before the reflow finishes.
+const CARD_SPRING = { type: 'spring', duration: 0.5, bounce: 0.2 } as const
+const CARD_EXIT_SPRING = {
+	type: 'spring',
+	duration: 0.35,
+	bounce: 0.15,
+} as const
 
 const PAGE_TITLE = 'Works | Hani Husamuddin'
 const PAGE_DESCRIPTION =
@@ -133,7 +146,7 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 
 				{tags.length > 0 ? (
 					<Grid>
-						<div className="col-span-full flex flex-col gap-6">
+						<Reveal className="col-span-full flex flex-col gap-6">
 							<Paragraph prose={false}>Search projects by tags</Paragraph>
 							<div className="flex flex-wrap gap-3">
 								{tags.map((tag) => {
@@ -150,23 +163,41 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 									)
 								})}
 							</div>
-						</div>
+						</Reveal>
 					</Grid>
 				) : null}
 
 				<Spacer size="lg" />
 
-				<Grid className="gap-6">
-					{visibleProjects.map((project, idx) => (
-						<ProjectCard
-							key={project.slug}
-							className={clsxm('col-span-full', {
-								'lg:flex-row-reverse': idx % 2 !== 0,
-							})}
-							project={project}
-						/>
-					))}
-				</Grid>
+				<MotionConfig reducedMotion="user">
+					<Grid className="gap-6">
+						<AnimatePresence mode="popLayout">
+							{visibleProjects.map((project, idx) => (
+								<Reveal
+									key={project.slug}
+									layout
+									transition={{
+										default: { ...CARD_SPRING, delay: idx * 0.08 },
+										layout: CARD_SPRING,
+									}}
+									exit={{
+										opacity: 0,
+										scale: 0.96,
+										transition: CARD_EXIT_SPRING,
+									}}
+									className="col-span-full"
+								>
+									<ProjectCard
+										className={clsxm({
+											'lg:flex-row-reverse': idx % 2 !== 0,
+										})}
+										project={project}
+									/>
+								</Reveal>
+							))}
+						</AnimatePresence>
+					</Grid>
+				</MotionConfig>
 
 				{hasMoreProjects ? (
 					<>
@@ -188,7 +219,9 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 				<Spacer size="lg" />
 			</div>
 
-			<CallToAction />
+			<Reveal>
+				<CallToAction />
+			</Reveal>
 		</React.Fragment>
 	)
 }
