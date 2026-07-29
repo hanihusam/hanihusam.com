@@ -2,8 +2,9 @@
 
 Status: **Shipped and verified in production.** All 8 phases complete
 ([#153](https://github.com/hanihusam/hanihusam.com/pull/153),
-[#154](https://github.com/hanihusam/hanihusam.com/pull/154)). Owner: Hani
-Reference:
+[#154](https://github.com/hanihusam/hanihusam.com/pull/154)), plus a post-launch
+hardening pass ([#155](https://github.com/hanihusam/hanihusam.com/pull/155), see
+§9). Owner: Hani Reference:
 [`kentcdodds.com/services/site/app/og`](https://github.com/kentcdodds/kentcdodds.com/tree/main/services/site/app/og)
 
 Implementation notes worth keeping (things that only surfaced while building):
@@ -451,3 +452,64 @@ Consider deploying Phases 1–6 and holding Phase 7 for a day.
 
 Three switch points: after Phase 1 (→ Opus/high), after Phase 4 (→
 Sonnet/medium), after Phase 7 (→ Opus/medium).
+
+---
+
+## 9. Post-launch: graceful degradation ([#155](https://github.com/hanihusam/hanihusam.com/pull/155))
+
+Not part of the original 8 phases — added after shipping, once it was clear
+`resolveTemplateAssets` throwing on a Cloudinary blip meant a URL that must
+return a PNG could return a 500 HTML page instead, and that scrapers cache a
+negative result for hours, so an 8-second Cloudinary hiccup could break a shared
+card long after the hiccup passed.
+
+**Two independent failure modes, two independent responses:**
+
+| Failure                                                    | Response                                                    | `X-Og-Cache` |
+| ---------------------------------------------------------- | ----------------------------------------------------------- | ------------ |
+| A Cloudinary asset fetch fails (background/avatar/artwork) | Card renders anyway with real title text; that slot omitted | `DEGRADED`   |
+| satori/resvg itself throws (last resort)                   | Serves the checked-in `public/og-fallback.png`              | `FALLBACK`   |
+
+Both get `Cache-Control: public, max-age=300, must-revalidate` — long enough to
+absorb a burst of scraper requests during an outage, short enough that a healthy
+render replaces it soon after. A healthy render (`HIT`/`MISS`) is completely
+unchanged: same `immutable` header, same behavior.
+
+**Where each piece lives:**
+
+- `app/og/assets.server.ts` — `toOptionalAsset(slot, promise)` catches a
+  rejection, `console.error`s it (never swallowed silently), returns
+  `undefined`. Wraps all three resolvers. The existing timeout, size cap, and
+  SSRF host assertion are untouched; failures still aren't cached — the existing
+  evict-then-rethrow in `resolveStaticAsset` runs before this wrapper ever sees
+  the rejection.
+- `app/og/render.server.ts` — `resolveTemplateAssets` returns
+  `{ assets, degraded }`; `renderOgTemplatePng`'s return grew one field:
+  `degraded: boolean`.
+- `app/og/templates/` — `background`/`avatar`/`artwork` are optional. Missing
+  background falls through to the wrapping div's own `OG_COLORS.background`;
+  missing avatar drops its 30px offset so the name/url text doesn't float with a
+  gap; missing artwork leaves that side empty. Title and author text are
+  unconditional.
+- `app/routes/resources.og-image.ts` — the cache-write skip is
+  `context.metadata.ttl = -1` inside `getFreshValue`, `cachified`'s own
+  documented mechanism (README §"Fine-tuning cache metadata based on fresh
+  values") for opting one value out of the write while still returning it to the
+  current request. Read from the installed `@epic-web/cachified@5.6.3` source
+  before using it — not a guess. The whole `cachified(...)` call is wrapped in a
+  last-resort try/catch for the FALLBACK path.
+- `public/og-fallback.png` + `other/generate-og-fallback.ts` — the fallback PNG
+  is generated from the real `page` template with placeholder copy
+  (`Hani Husamuddin` / `hanihusam.com`), not hand-made, and committed. The
+  generator refuses to write if its own render comes back degraded, so the
+  checked-in fallback can never silently be a degraded one.
+
+**Verified:** simulated a Cloudinary outage (bad `OG_ASSETS.background` id,
+reverted after) and confirmed via direct SQLite inspection that the degraded
+render produced zero new cache rows, and a repeat request re-rendered
+(`DEGRADED` again) rather than returning `HIT` — proving the write-skip actually
+skips, not just that the header looked right once. Separately simulated a
+genuine render failure (temporarily broken font path, reverted after) to
+exercise the FALLBACK path specifically: served bytes SHA-256-match the
+checked-in PNG exactly, zero cache writes. Healthy renders and tampered
+signatures behave exactly as before.
