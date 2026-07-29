@@ -25,14 +25,14 @@
     "dev": "cross-env NODE_ENV=development node server.js",
     "setup": "prisma generate && prisma migrate deploy && prisma db seed",
     "start": "cross-env NODE_ENV=production node server.js",
-    "preview:og": "tsx other/preview-og.ts",
     "lint": "oxlint",
     "lint:fix": "oxlint --fix && npm run format",
     "lint:strict": "oxlint --max-warnings=0",
     "format": "oxfmt",
     "format:check": "oxfmt --check",
     "typecheck": "react-router typegen && tsc",
-    "validate": "./other/validate"
+    "validate": "./other/validate",
+    "check:og": "tsx other/verify-og-signing.ts"
   },
   "dependencies": {
     "@conform-to/zod": "^1.19.3",
@@ -50,6 +50,7 @@
     "@react-router/express": "^8.0.1",
     "@react-router/fs-routes": "^8.0.1",
     "@react-router/node": "^8.0.1",
+    "@resvg/resvg-js": "^2.6.2",
     "better-sqlite3": "^12.11.1",
     "chalk": "^5.0.0",
     "chokidar": "^5.0.0",
@@ -79,6 +80,7 @@
     "rehype-pretty-code": "^0.14.0",
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^4.0.0",
+    "satori": "^0.29.0",
     "shiki": "^4.3.0",
     "tailwind-merge": "^3.0.1",
     "unist-util-visit": "^5.0.0",

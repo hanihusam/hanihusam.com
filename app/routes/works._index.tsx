@@ -10,12 +10,13 @@ import { FilterTag } from '@/components/ui/filter-tag'
 import { CallToAction } from '@/components/works/cta-section'
 import { WorksHero } from '@/components/works/hero-section'
 import { clsxm } from '@/utils/clsxm'
-import { getSignedSocialImage } from '@/utils/cloudinary.server'
 import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
 import { useUpdateQueryStringValueWithoutNavigation } from '@/utils/misc'
 import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getServerTimeHeader } from '@/utils/timing.server'
+
+import { getPageSocialImage } from '@/og/social-images.server'
 
 import { type Route } from './+types/works._index'
 
@@ -76,7 +77,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 		{
 			projects,
 			tags: Array.from(tags),
-			socialImage: getSignedSocialImage({ request, title: PAGE_TITLE }),
+			socialImage: getPageSocialImage({ request, title: PAGE_TITLE }),
 		},
 		{
 			headers: {

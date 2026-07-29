@@ -18,11 +18,12 @@ import {
 } from '@/utils/blog.server'
 import { useMdxComponent } from '@/utils/mdx'
 import { getMdxPage } from '@/utils/mdx.server'
-import { getSignedSocialImage } from '@/utils/cloudinary.server'
 import { getUrl } from '@/utils/helpers'
 import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getSessionId } from '@/utils/session.server'
 import { getServerTimeHeader } from '@/utils/timing.server'
+
+import { getProjectSocialImage } from '@/og/social-images.server'
 
 import { type Route } from './+types/works.$slug'
 
@@ -80,7 +81,7 @@ export const loader = async ({ request, params }: Route.LoaderArgs) => {
 		throw data(null, { status: 404, headers })
 	}
 
-	const socialImage = getSignedSocialImage({
+	const socialImage = getProjectSocialImage({
 		request,
 		title: page.frontmatter.title,
 		featuredImage: page.frontmatter.bannerSquareCloudinaryId,
