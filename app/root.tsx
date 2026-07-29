@@ -7,7 +7,6 @@ import noScriptStyles from '@/styles/no-script.css?url'
 import proseStyles from '@/styles/prose.css?url'
 import tailwindStyles from '@/styles/tailwind.css?url'
 import { ClientHintCheck, getHints } from '@/utils/client-hints'
-import { getSignedSocialImage } from '@/utils/cloudinary.server'
 import { getEnv } from '@/utils/env.server'
 import {
 	getUrl,
@@ -18,6 +17,8 @@ import { useNonce } from '@/utils/nonce-provider'
 import { getSocialMetas } from '@/utils/seo'
 import { useTheme } from '@/utils/theme'
 import { getTheme } from '@/utils/theme.server'
+
+import { getPageSocialImage } from '@/og/social-images.server'
 
 import { type Route } from './+types/root'
 import { Navigation } from './components/navigation'
@@ -146,7 +147,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 	const data = {
 		ENV: getEnv(),
-		socialImage: getSignedSocialImage({ request, title: ROOT_TITLE }),
+		socialImage: getPageSocialImage({ request, title: ROOT_TITLE }),
 		requestInfo: {
 			hints: getHints(request),
 			origin: url.origin,

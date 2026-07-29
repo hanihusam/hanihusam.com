@@ -7,6 +7,7 @@ const requiredServerEnvs = [
 	'SESSION_SECRET',
 	'REFRESH_TOKEN',
 	'CACHE_DATABASE_PATH',
+	'OG_IMAGE_SECRET',
 ] as const
 
 export function init() {

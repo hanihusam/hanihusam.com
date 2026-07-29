@@ -4,11 +4,12 @@ import { HeroSection } from '@/components/home/hero-section'
 import { ProjectSection } from '@/components/home/project-section'
 import { SubstackSection } from '@/components/home/substack-section'
 import { Spacer } from '@/components/spacer'
-import { getSignedSocialImage } from '@/utils/cloudinary.server'
 import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
 import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getFeaturedSubstackPosts } from '@/utils/substack.server'
+
+import { getPageSocialImage } from '@/og/social-images.server'
 
 import { type Route } from './+types/_index'
 
@@ -43,7 +44,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 		{
 			substackPosts,
 			projects: projects.slice(0, 3),
-			socialImage: getSignedSocialImage({
+			socialImage: getPageSocialImage({
 				request,
 				title: 'Crafting interfaces by intersecting design and code.',
 			}),

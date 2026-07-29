@@ -5,10 +5,11 @@ import { FunFactsSection } from '@/components/about/fun-facts-section'
 import { AboutHero } from '@/components/about/hero-section'
 import { SubstackSection } from '@/components/home/substack-section'
 import { Spacer } from '@/components/spacer'
-import { getSignedSocialImage } from '@/utils/cloudinary.server'
 import { getUrl } from '@/utils/helpers'
 import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
 import { getFeaturedSubstackPosts } from '@/utils/substack.server'
+
+import { getPageSocialImage } from '@/og/social-images.server'
 
 import { type Route } from './+types/about'
 
@@ -37,7 +38,7 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 	return data(
 		{
 			substackPosts,
-			socialImage: getSignedSocialImage({ request, title: PAGE_TITLE }),
+			socialImage: getPageSocialImage({ request, title: PAGE_TITLE }),
 		},
 		{
 			headers: {

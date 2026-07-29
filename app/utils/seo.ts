@@ -1,5 +1,6 @@
 import { type RequestInfo } from '@/utils/helpers'
-import { getSocialImage } from '@/utils/images'
+
+import { OG_CANVAS } from '@/og/constants'
 
 const SITE_NAME = 'Hani Husamuddin'
 
@@ -17,8 +18,13 @@ export function getRootRequestInfo(
 	return data?.requestInfo
 }
 
-// Builds the full set of SEO/social meta descriptors for a page. Pass a
-// pre-built `image` (via getSocialImage) or let it generate a generic card.
+// Builds the full set of SEO/social meta descriptors for a page. `image` is
+// built server-only (it needs the OG signing secret) via `getPageSocialImage`
+// / `getProjectSocialImage` in the route's loader and threaded through
+// loaderData — `meta()` itself runs on the client too during navigations, so
+// it must never touch the secret directly. `image` is omitted only when the
+// root loader itself has thrown (ErrorBoundary render) and there is no
+// loaderData to read it from.
 export function getSocialMetas({
 	url,
 	title = DEFAULT_TITLE,
@@ -34,23 +40,29 @@ export function getSocialMetas({
 	keywords?: string
 	ogType?: 'website' | 'article'
 }) {
-	const socialImage = image ?? getSocialImage({ title, url })
-
 	return [
 		{ title },
 		{ name: 'description', content: description },
 		{ name: 'keywords', content: keywords },
-		{ name: 'image', content: socialImage },
 		{ property: 'og:url', content: url },
 		{ property: 'og:title', content: title },
 		{ property: 'og:description', content: description },
-		{ property: 'og:image', content: socialImage },
 		{ property: 'og:type', content: ogType },
 		{ property: 'og:site_name', content: SITE_NAME },
 		{ name: 'twitter:card', content: 'summary_large_image' },
 		{ name: 'twitter:title', content: title },
 		{ name: 'twitter:description', content: description },
-		{ name: 'twitter:image', content: socialImage },
-		{ name: 'twitter:image:alt', content: title },
+		...(image
+			? [
+					{ name: 'image', content: image },
+					{ property: 'og:image', content: image },
+					{ property: 'og:image:width', content: String(OG_CANVAS.width) },
+					{ property: 'og:image:height', content: String(OG_CANVAS.height) },
+					{ property: 'og:image:type', content: 'image/png' },
+					{ property: 'og:image:alt', content: title },
+					{ name: 'twitter:image', content: image },
+					{ name: 'twitter:image:alt', content: title },
+				]
+			: []),
 	]
 }
