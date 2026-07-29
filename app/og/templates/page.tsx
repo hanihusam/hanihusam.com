@@ -11,9 +11,9 @@ export function PageCard({
 }: {
 	title: string
 	url: string
-	background: string
-	avatar: string
-	artwork: string
+	background?: string
+	avatar?: string
+	artwork?: string
 }) {
 	return (
 		<CardLayout

@@ -77,7 +77,7 @@ export function AboutHero() {
 						<Text variant="lead" as="p">
 							Besides freelancing, I&apos;m building{' '}
 							<a
-								href="https://coverse.id"
+								href="https://coverse.gumroad.com/"
 								className="underlined text-sunset-400 font-medium"
 							>
 								Coverse

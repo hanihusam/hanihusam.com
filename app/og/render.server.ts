@@ -18,12 +18,18 @@ async function resolveTemplateAssets(
 	const featuredImage =
 		template === 'project' ? (params as ProjectParams).featuredImage : undefined
 
+	// Each slot resolves to `undefined` on failure rather than rejecting — see
+	// `toOptionalAsset` in assets.server.ts. `degraded` is true whenever any slot
+	// came back empty, so the caller can skip caching and shorten the response's
+	// max-age instead of serving a broken card for the next 30 days.
 	const [background, avatar, artwork] = await Promise.all([
 		resolveBackgroundDataUri(),
 		resolveAvatarDataUri(),
 		resolveArtworkDataUri(featuredImage),
 	])
-	return { background, avatar, artwork }
+	const degraded =
+		background === undefined || avatar === undefined || artwork === undefined
+	return { assets: { background, avatar, artwork }, degraded }
 }
 
 /**
@@ -52,7 +58,7 @@ export async function renderOgTemplatePng(
 	}
 	const params = parsed.data as OgTemplateParams
 
-	const [fonts, assets] = await Promise.all([
+	const [fonts, { assets, degraded }] = await Promise.all([
 		getOgFonts(),
 		resolveTemplateAssets(templateName, params),
 	])
@@ -69,5 +75,5 @@ export async function renderOgTemplatePng(
 	const resvg = new Resvg(svg, { fitTo: { mode: 'width', value: width } })
 	const png = resvg.render().asPng()
 
-	return { png, width, height }
+	return { png, width, height, degraded }
 }

@@ -58,6 +58,10 @@ function getTitleLineClamp(fontSize: number) {
 // Satori constraints that shape this markup: any element with more than one
 // child needs an explicit `display: flex`, there is no CSS grid, and images
 // must already be data URIs.
+//
+// background/avatar/artwork are optional because a Cloudinary fetch can fail
+// (see assets.server.ts's toOptionalAsset) — the title and author name/url are
+// always real text, so the card degrades to that rather than a 500.
 export function CardLayout({
 	title,
 	url,
@@ -68,9 +72,9 @@ export function CardLayout({
 }: {
 	title: string
 	url: string
-	background: string
-	avatar: string
-	artwork: string
+	background?: string
+	avatar?: string
+	artwork?: string
 	name?: string
 }) {
 	return (
@@ -84,18 +88,23 @@ export function CardLayout({
 				fontFamily: 'Satoshi',
 			}}
 		>
-			<img
-				src={background}
-				alt=""
-				style={{
-					position: 'absolute',
-					top: 0,
-					left: 0,
-					width: '100%',
-					height: '100%',
-					objectFit: 'cover',
-				}}
-			/>
+			{/* No fallback image here on purpose: the wrapping div's own
+			    backgroundColor above already is OG_COLORS.background, so a missing
+			    background asset just leaves that flat color showing through. */}
+			{background ? (
+				<img
+					src={background}
+					alt=""
+					style={{
+						position: 'absolute',
+						top: 0,
+						left: 0,
+						width: '100%',
+						height: '100%',
+						objectFit: 'cover',
+					}}
+				/>
+			) : null}
 
 			<div
 				style={{
@@ -131,22 +140,26 @@ export function CardLayout({
 						marginTop: AUTHOR_BLOCK_MARGIN_TOP,
 					}}
 				>
-					<img
-						src={avatar}
-						alt=""
-						style={{
-							width: AUTHOR_BLOCK_HEIGHT,
-							height: AUTHOR_BLOCK_HEIGHT,
-							borderRadius: 999,
-							objectFit: 'cover',
-							flexShrink: 0,
-						}}
-					/>
+					{/* Omitted rather than a placeholder circle on failure — the name/url
+					    text next to it loses its left offset instead of leaving a hole. */}
+					{avatar ? (
+						<img
+							src={avatar}
+							alt=""
+							style={{
+								width: AUTHOR_BLOCK_HEIGHT,
+								height: AUTHOR_BLOCK_HEIGHT,
+								borderRadius: 999,
+								objectFit: 'cover',
+								flexShrink: 0,
+							}}
+						/>
+					) : null}
 					<div
 						style={{
 							display: 'flex',
 							flexDirection: 'column',
-							marginLeft: 30,
+							marginLeft: avatar ? 30 : 0,
 						}}
 					>
 						<div
@@ -175,7 +188,9 @@ export function CardLayout({
 
 			{/* Absolutely positioned rather than a sibling column so the artwork and
 			    the text column never compete for width — the text column keeps its
-			    full 500px regardless of how wide the artwork wants to be. */}
+			    full 500px regardless of how wide the artwork wants to be. Left empty
+			    (not a placeholder box) when the artwork fails to resolve — the title
+			    and author block on the left are still a complete card on their own. */}
 			<div
 				style={{
 					position: 'absolute',
@@ -188,15 +203,17 @@ export function CardLayout({
 					justifyContent: 'flex-end',
 				}}
 			>
-				<img
-					src={artwork}
-					alt=""
-					style={{
-						maxWidth: ARTWORK_WIDTH,
-						maxHeight: ARTWORK_HEIGHT,
-						objectFit: 'contain',
-					}}
-				/>
+				{artwork ? (
+					<img
+						src={artwork}
+						alt=""
+						style={{
+							maxWidth: ARTWORK_WIDTH,
+							maxHeight: ARTWORK_HEIGHT,
+							objectFit: 'contain',
+						}}
+					/>
+				) : null}
 			</div>
 		</div>
 	)
