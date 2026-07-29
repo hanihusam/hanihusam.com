@@ -82,12 +82,35 @@ function resolveStaticAsset(publicId: string, slot: AssetSlot) {
 	return cached
 }
 
+/**
+ * A Cloudinary blip must degrade the card, not the response: the fonts are
+ * local and cannot fail, but every image slot is a remote fetch, and a card
+ * with real title text on a flat background beats a 500. Logged rather than
+ * swallowed so an actual outage is still visible; not cached as a failure —
+ * `resolveStaticAsset` already evicts itself before this ever sees the
+ * rejection, so the next request tries again instead of being stuck on undefined.
+ */
+async function toOptionalAsset(slot: AssetSlot, promise: Promise<string>) {
+	try {
+		return await promise
+	} catch (error: unknown) {
+		console.error(`OG asset failed to resolve (slot: ${slot}):`, error)
+		return undefined
+	}
+}
+
 export function resolveBackgroundDataUri() {
-	return resolveStaticAsset(OG_ASSETS.background, 'background')
+	return toOptionalAsset(
+		'background',
+		resolveStaticAsset(OG_ASSETS.background, 'background'),
+	)
 }
 
 export function resolveAvatarDataUri() {
-	return resolveStaticAsset(OG_ASSETS.avatar, 'avatar')
+	return toOptionalAsset(
+		'avatar',
+		resolveStaticAsset(OG_ASSETS.avatar, 'avatar'),
+	)
 }
 
 /**
@@ -97,7 +120,10 @@ export function resolveAvatarDataUri() {
  */
 export function resolveArtworkDataUri(publicId?: string) {
 	if (!publicId || publicId === OG_ASSETS.defaultArtwork) {
-		return resolveStaticAsset(OG_ASSETS.defaultArtwork, 'artwork')
+		return toOptionalAsset(
+			'artwork',
+			resolveStaticAsset(OG_ASSETS.defaultArtwork, 'artwork'),
+		)
 	}
-	return fetchAssetAsDataUri(publicId, 'artwork')
+	return toOptionalAsset('artwork', fetchAssetAsDataUri(publicId, 'artwork'))
 }

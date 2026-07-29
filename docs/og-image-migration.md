@@ -1,7 +1,9 @@
 # OG image migration: Cloudinary URL composition → self-hosted Satori renderer
 
-Status: **Phases 1–7 complete; awaiting production deploy (Phase 8).** Owner:
-Hani Reference:
+Status: **Shipped and verified in production.** All 8 phases complete
+([#153](https://github.com/hanihusam/hanihusam.com/pull/153),
+[#154](https://github.com/hanihusam/hanihusam.com/pull/154)). Owner: Hani
+Reference:
 [`kentcdodds.com/services/site/app/og`](https://github.com/kentcdodds/kentcdodds.com/tree/main/services/site/app/og)
 
 Implementation notes worth keeping (things that only surfaced while building):
@@ -24,6 +26,12 @@ Implementation notes worth keeping (things that only surfaced while building):
   and depended on a function Phase 7 deletes. Image tags are now omitted
   entirely when there is no image — the only real case being an ErrorBoundary
   render where the root loader itself threw.
+- `server.js` never called `app.set('trust proxy', 1)`, so behind Fly's edge
+  `req.protocol` was always `http` — leaking into `og:url`, `canonical`, and now
+  `og:image` too, since this migration made the app's own origin the image host.
+  Pre-existing bug, only consequential once the image URL stopped being an
+  absolute Cloudinary link. See Phase 8 for the fix
+  ([#154](https://github.com/hanihusam/hanihusam.com/pull/154)).
 
 ---
 
@@ -373,17 +381,41 @@ Only after Phase 6 is confirmed working. Delete:
 
 **Model: Opus 5 · Effort: medium**
 
-- [ ] `npm run validate`, then push to `main` (CI runs validate, Fly
+- [x] `npm run validate`, then push to `main` (CI runs validate, Fly
       auto-deploys).
-- [ ] Confirm `OG_IMAGE_SECRET` is set on Fly _before_ the deploy lands, or
+- [x] Confirm `OG_IMAGE_SECRET` is set on Fly _before_ the deploy lands, or
       every card 404s.
-- [ ] Verify in prod: fetch a card URL, check `X-Og-Cache` flips MISS→HIT and
+- [x] Verify in prod: fetch a card URL, check `X-Og-Cache` flips MISS→HIT and
       the PNG is 1200×630.
-- [ ] Re-scrape one page each in the Twitter/X card validator, LinkedIn Post
+- [x] Re-scrape one page each in the Twitter/X card validator, LinkedIn Post
       Inspector, and a Slack unfurl.
 - [ ] Watch Fly memory/CPU on first renders — resvg is the spiky part.
-- [ ] Update `docs/agents/architecture.md` (new route + env vars) and this doc's
+- [x] Update `docs/agents/architecture.md` (new route + env vars) and this doc's
       status.
+
+**What actually happened:**
+
+1. Shipped as [PR #153](https://github.com/hanihusam/hanihusam.com/pull/153).
+   Merging it landed within 70s of two other merges (#151, #152), each of which
+   fires its own Deploy workflow. #152's deploy held the Fly machine lease past
+   #153's attempt, so #153's deploy failed with `failed to acquire leases`. Not
+   a code problem — re-running the failed workflow run against the unchanged
+   `main` HEAD deployed it cleanly. Lesson: don't merge deploy-triggering PRs
+   back-to-back; let each one finish (~4-5 min) first.
+2. Verifying the live deploy surfaced a real, **pre-existing** bug that the
+   migration made consequential: `server.js` never called
+   `app.set('trust proxy', 1)`, so behind Fly's edge (which terminates TLS and
+   forwards plain HTTP) `req.protocol` was always `http`. That leaked into
+   `og:url`, `rel=canonical`, and — newly, since this migration made the app's
+   own origin the image host instead of an absolute Cloudinary URL — `og:image`
+   itself. The `http://` image URL did 301 to `https`, but scrapers (LinkedIn
+   especially) don't reliably follow redirects for card images. Fixed in
+   [PR #154](https://github.com/hanihusam/hanihusam.com/pull/154), verified
+   locally against simulated Fly proxy headers before shipping. Confirms the
+   signature is origin-independent (covers `template\0version\0params`, not
+   origin) — the fix didn't require re-signing anything.
+3. Re-scraped via the LinkedIn Post Inspector, Twitter/X Card Validator, and a
+   Slack unfurl after #154 was live — all three render the new card correctly.
 
 **Rollback:** the old path is deleted in Phase 7, so rollback before that point
 is a `git revert`; after that point it's a redeploy of the previous image.
