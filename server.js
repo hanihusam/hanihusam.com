@@ -10,6 +10,13 @@ const primaryHost = 'hanihusam.com'
 
 const app = express()
 
+// Fly terminates TLS at its edge and forwards plain HTTP to this process, so
+// without this Express reports req.protocol as 'http'. That protocol ends up in
+// every request.url the React Router handler sees, and from there in og:url,
+// rel=canonical, and the signed og:image URL — all of which must be absolute
+// https for scrapers and search engines. One hop: Fly's proxy.
+app.set('trust proxy', 1)
+
 app.use(compression())
 app.disable('x-powered-by')
 
