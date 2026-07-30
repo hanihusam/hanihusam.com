@@ -216,12 +216,63 @@ design rather than its own thing.
 <CloudinaryVideo cloudinaryId="bapak2.dev/works/cincy-dot-physicals/ScreenRecording_07-08-2026_15-44-22_1_rauqhr" />
 _The mobile-first website in live action_
 
+## Migrating a Ranking Site Without Losing the Ranking
+
+None of the above mattered if the migration itself tanked his SEO. The client
+was already ranking well for his core search terms before this project, and a
+full platform switch, new hosting, and a domain change (from a shared-DNS
+WordPress setup on SiteGround to Cloudflare Workers) is exactly the kind of move
+that quietly kills years of accumulated ranking. That risk was the client's main
+hesitation going in, more than the design, more than the build.
+
+So the migration got treated as its own workstream, not an afterthought bolted
+on at the end:
+
+- 301 redirects from every old URL pattern, including leftover WordPress query
+  strings (`?page_id=`, `?wpr_templates=`, `?feed=comments-rss2`) that were
+  still indexed, to their equivalent on the new site
+- Canonical tags on every route, explicitly pointing to the non-www version,
+  independent of the redirect (belt and suspenders, redirects alone don't
+  guarantee Google treats a URL as canonical)
+- Structured data (Organization, LocalBusiness, FAQPage schema), title tags, and
+  meta descriptions rebuilt per route
+- A fresh sitemap, resubmitted, plus a new Google Search Console property
+  verified via DNS after the domain move
+  One wrinkle worth naming: a few weeks post-launch, the client's SEO consultant
+  flagged a scare, Search Console showing impressions and clicks dropping to
+  near-zero right after the redesign. Turned out they were looking at the old,
+  pre-migration property, still tracking the www version that no longer received
+  direct traffic since everything now redirects away from it. The real numbers
+  were sitting in the new property the whole time.
+
+Once we were both looking at the right data, a month-over-month comparison told
+the actual story:
+
+| Metric           | Month before migration | Month after migration |
+| ---------------- | ---------------------- | --------------------- |
+| Average position | 15.7                   | 11.3                  |
+| Impressions      | 5.39K                  | 4.99K                 |
+| Clicks           | 103                    | 77                    |
+
+Average position improved. Core terms, the clinic's brand name, "dot physical
+cincinnati," "cdl physical", held or improved into the top 3. Click and
+impression totals dipped slightly in that window, which I'm not going to spin
+as a win; a single month of SERP fluctuation isn't proof of anything either way.
+What matters is that nothing broke. No de-indexing, no lost pages, no ranking
+collapse, on a migration that's a fairly common way for a business to quietly
+lose its search visibility.
+
+![The performance before migration](https://res.cloudinary.com/hanihusam/image/upload/v1785401857/bapak2.dev/works/cincy-dot-physicals/Before_ohyzus.jpg)
+_The performance before migration_
+
+![The performance after migration](https://res.cloudinary.com/hanihusam/image/upload/v1785401857/bapak2.dev/works/cincy-dot-physicals/After_t5x03q.jpg)
+_The performance after migration_
+
 ## The Result
 
 An SSR site on Cloudflare Workers, fast by default. A custom booking flow with a
-branded confirmation page instead of a generic redirect. Full technical SEO with
-structured data, GA4 wired up, Search Console verified. Domain migrated over
-with zero downtime.
+branded confirmation page instead of a generic redirect. Full technical SEO,
+migrated with the ranking intact. GA4 wired up, Search Console verified.
 
 And by the end, the client owned everything, GitHub, Cloudflare, domain, all
 moved into his own accounts before I called it done.
@@ -240,3 +291,7 @@ client turned out to be a gift. It kept the site honest to what actually
 mattered, drivers booking a physical from their phone, instead of me
 over-designing a desktop experience nobody in the target audience was going to
 use.
+
+And the SEO scare taught me to keep raw exports, not just screenshots, of
+anything I'd want to point back to later. "Trust me, the numbers are fine"
+isn't a deliverable. A CSV export from Search Console is.
