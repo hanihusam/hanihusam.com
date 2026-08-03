@@ -2,11 +2,9 @@ import { Grid } from '@/components/grid'
 import { H1, Text } from '@/components/typography'
 import { ConcentricCircles } from '@/components/ui/concentric-circles'
 import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
+import { DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
 
 import { motion, useReducedMotion } from 'motion/react'
-
-// Matches the ease-out-quart motion token in theme.css.
-const EASE_OUT_QUART = [0.165, 0.84, 0.44, 1] as const
 
 export function WorksHero() {
 	const shouldReduceMotion = useReducedMotion()
@@ -20,7 +18,11 @@ export function WorksHero() {
 			: {
 					initial: { opacity: 0, y: 12 },
 					animate: { opacity: 1, y: 0 },
-					transition: { duration: 0.5, ease: EASE_OUT_QUART, delay },
+					transition: {
+						duration: DURATION_SLOWER,
+						ease: EASE_OUT_QUART,
+						delay,
+					},
 				}
 
 	return (

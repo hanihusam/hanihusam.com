@@ -5,13 +5,12 @@ import { Display, H3, Paragraph, Text } from '@/components/typography'
 import { ButtonLink, LinkButton } from '@/components/ui/button'
 import Logo from '@/components/ui/logo'
 import { getImageBuilder, getImgProps } from '@/utils/images'
+import { DURATION_SLOW, DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
 import ArrowRightIcon from '@/assets/arrow-right-icon'
 
 import { ArrowDownIcon } from '@phosphor-icons/react'
 import { motion, useReducedMotion } from 'motion/react'
 
-// Matches the ease-out-quart / duration-slower motion tokens in theme.css.
-const EASE_OUT_QUART = [0.165, 0.84, 0.44, 1] as const
 const displayText = "I'm Han"
 
 export function HeroSection() {
@@ -26,7 +25,11 @@ export function HeroSection() {
 			: {
 					initial: { opacity: 0, y: 12 },
 					animate: { opacity: 1, y: 0 },
-					transition: { duration: 0.5, ease: EASE_OUT_QUART, delay },
+					transition: {
+						duration: DURATION_SLOWER,
+						ease: EASE_OUT_QUART,
+						delay,
+					},
 				}
 
 	return (
@@ -41,7 +44,7 @@ export function HeroSection() {
 						: {
 								initial: { opacity: 0 },
 								animate: { opacity: 1 },
-								transition: { duration: 0.3, ease: EASE_OUT_QUART },
+								transition: { duration: DURATION_SLOW, ease: EASE_OUT_QUART },
 							})}
 					className="absolute top-0 right-0 hidden h-auto w-87.5 max-w-2/3 translate-x-[25%] translate-y-[20vh] md:top-auto md:right-auto md:bottom-0 md:left-0 md:block md:w-lg md:translate-x-[-16%] md:translate-y-0 lg:left-1/2 lg:w-3xl lg:-translate-x-1/2"
 					{...getImgProps(
