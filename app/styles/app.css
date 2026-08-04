@@ -121,3 +121,20 @@ light-mode {
 	animation: revealText 1.3s cubic-bezier(0.19, 1, 0.22, 1) backwards;
 	animation-delay: calc(0.25s + 0.03s * var(--index));
 }
+
+/* Table of contents entrance. Both the desktop aside and the mobile drawer
+   trigger are built client-side from the rendered headings, so this plays once
+   they mount rather than on first paint. Entrance only, no exit. */
+.toc-enter {
+	animation: revealFromRight var(--duration-slower) var(--ease-out-quart)
+		backwards;
+	animation-delay: 200ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	/* Render the visible state outright — the delay would otherwise hold the
+	   TOC at opacity 0 even with the duration tokens zeroed. */
+	.toc-enter {
+		animation: none;
+	}
+}

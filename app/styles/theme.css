@@ -136,6 +136,19 @@
 	}
 }
 
+/* Entrance for the table of contents, which arrives from the right rail once
+   the headings have been read. */
+@keyframes revealFromRight {
+	from {
+		opacity: 0;
+		transform: translateX(1.5rem);
+	}
+	to {
+		opacity: 1;
+		transform: translateX(0);
+	}
+}
+
 /* ─────────────────────────────────────────────────────────────────────────
    SEMANTIC TOKENS — LIGHT
    Figma collection: Tokens → Light mode (60:0)

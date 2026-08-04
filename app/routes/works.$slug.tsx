@@ -5,7 +5,7 @@ import { H1, Text } from '@/components/typography'
 import ArrowLeftIcon from '@/assets/arrow-left-icon'
 import { ButtonLink } from '@/components/ui/button'
 import { ConcentricCircles } from '@/components/ui/concentric-circles'
-import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
+import { DotGrid } from '@/components/ui/dot-grid'
 import { Tag } from '@/components/ui/tag'
 import { WorkTocDrawer } from '@/components/works/toc-drawer'
 import { type HeadingScrollSpy, TocList } from '@/components/works/toc-list'
@@ -245,7 +245,7 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 
 	return (
 		<main className="relative grow overflow-x-clip">
-			<ReactiveDotGrid
+			<DotGrid
 				color="sunset"
 				rows={8}
 				cols={8}
@@ -344,15 +344,20 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 						<Component />
 					</article>
 
-					<aside className="hidden lg:block">
-						<div className="sticky top-24">
-							<TocList
-								toc={toc}
-								activeSection={activeSection}
-								minLevel={minLevel}
-							/>
-						</div>
-					</aside>
+					{/* Rendered only once the headings have been read, so the empty
+					    "Table of Contents" label never paints before the scene can
+					    hide it. The grid column is fixed either way, so nothing moves. */}
+					{toc?.length ? (
+						<aside className="toc-enter hidden lg:block">
+							<div className="sticky top-24">
+								<TocList
+									toc={toc}
+									activeSection={activeSection}
+									minLevel={minLevel}
+								/>
+							</div>
+						</aside>
+					) : null}
 				</div>
 			</div>
 
