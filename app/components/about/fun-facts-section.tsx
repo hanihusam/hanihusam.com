@@ -1,4 +1,5 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
+import { CatPeekBody, CatPeekPaws } from '@/components/about/cat-peek'
 import { SkateTrace } from '@/components/about/skate-trace'
 import { Grid } from '@/components/grid'
 import { clsxm } from '@/utils/clsxm'
@@ -265,7 +266,11 @@ export function FunFactsSection() {
 					</Fact>
 				</Tile>
 
-				{/* Cat — copy with a cat peeking past the bottom-right corner */}
+				{/* Cat — leans out from behind this card's bottom-right corner.
+				    Three paint layers in DOM order: body (occluded by the card),
+				    the card itself, then the paws in front of it. */}
+				<CatPeekBody />
+
 				<Tile
 					area="[grid-area:cat]"
 					className="flex flex-col items-center justify-center lg:flex-row"
@@ -282,14 +287,9 @@ export function FunFactsSection() {
 						out love is stronger than histamines, until it isn&apos;t. These
 						days I just admire from a safe distance whenever one walks by.
 					</Fact>
-					<img
-						src="/images/cat-peek.png"
-						alt=""
-						width={139}
-						height={139}
-						className="pointer-events-none -right-26 bottom-2 hidden lg:absolute lg:block"
-					/>
 				</Tile>
+
+				<CatPeekPaws />
 			</div>
 		</Grid>
 	)
