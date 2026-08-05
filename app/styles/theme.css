@@ -212,6 +212,10 @@
 
 	/* Border */
 	--border-primary: var(--color-neutral-200); /* #e0e3e2 */
+	/* Skate-tile swoosh. The source SVG authored this as #FEFEFE, which is
+	   invisible on the light tile surface (#f2f3f2), so light mode uses a
+	   pencil grey and dark mode keeps the intended white. */
+	--skate-trace-stroke: var(--color-neutral-300);
 	--border-default: var(--color-neutral-300); /* #cbd1d1 */
 	--border-focus: var(--color-sunset-500); /* brand focus ring */
 
@@ -290,6 +294,7 @@
 
 	/* Border */
 	--border-primary: var(--color-neutral-700); /* fixed — was wrong in Figma */
+	--skate-trace-stroke: #fefefe;
 	--border-default: var(--color-neutral-700); /* fixed — was wrong in Figma */
 	--border-focus: var(--color-sunset-400);
 

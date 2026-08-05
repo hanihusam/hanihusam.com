@@ -1,4 +1,5 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
+import { SkateTrace } from '@/components/about/skate-trace'
 import { Grid } from '@/components/grid'
 import { clsxm } from '@/utils/clsxm'
 import { Paragraph } from '@/components/typography'
@@ -147,6 +148,7 @@ export function FunFactsSection() {
 	return (
 		<Grid as="section">
 			<div
+				data-bento-grid
 				className={clsxm(
 					'grid col-span-full gap-4 lg:gap-5',
 					// Mobile
@@ -225,12 +227,7 @@ export function FunFactsSection() {
 						out it&apos;s never too late to be a complete beginner at something.
 						I&apos;m still very much a beginner.
 					</Fact>
-					<img
-						src="/images/hani-drop.png"
-						alt="Han skateboarding"
-						width="100%"
-						className="-mb-14 w-full max-w-61.25 translate-x-[8%] self-end md:-mb-10 md:max-w-75 md:translate-x-[7%]"
-					/>
+					<SkateTrace />
 				</Tile>
 
 				{/* Desk — photo banner up top, copy beneath */}
