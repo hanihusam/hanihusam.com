@@ -1,7 +1,19 @@
-import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
+import {
+	motion,
+	useReducedMotion,
+	useInView,
+	type HTMLMotionProps,
+} from 'motion/react'
+import { useRef } from 'react'
+
 import { CatPeekBody, CatPeekPaws } from '@/components/about/cat-peek'
 import { SkateTrace } from '@/components/about/skate-trace'
+import {
+	HOVER_INTENT_DELAY,
+	StickFigure,
+} from '@/components/about/stick-figure'
 import { Grid } from '@/components/grid'
+import { useHoverIntent } from '@/hooks/useHoverIntent'
 import { clsxm } from '@/utils/clsxm'
 import { Paragraph } from '@/components/typography'
 
@@ -50,101 +62,13 @@ function Fact({
 	)
 }
 
-const figureSpring = { type: 'spring', duration: 0.6, bounce: 0.25 } as const
-
-/**
- * Line-art figure that stands up to full height on hover. Instead of scaling
- * the SVG (which distorts the head), each joint's coordinate is animated
- * between a crouched `rest` pose and a tall `grown` pose — the feet stay
- * planted at y=100 and the head radius never changes, so it reads as the
- * figure literally growing up. The variant is driven by the parent tile's
- * `whileHover`; the base attributes below are the `grown` pose, so reduced
- * motion shows the figure standing tall with no animation.
- */
-function StickFigure({ className }: { className?: string }) {
-	return (
-		<svg
-			aria-hidden
-			viewBox="0 0 50 100"
-			fill="none"
-			width={80}
-			height={160}
-			xmlns="http://www.w3.org/2000/svg"
-			className={className}
-			preserveAspectRatio="xMidYMid meet"
-		>
-			<g
-				stroke="currentColor"
-				strokeWidth={3}
-				strokeLinecap="round"
-				strokeLinejoin="round"
-			>
-				{/* Head — only its vertical position moves; radius stays fixed. */}
-				<motion.circle
-					cx={25}
-					cy={15}
-					r={15}
-					transition={figureSpring}
-					variants={{ rest: { cy: 35 }, grown: { cy: 15 } }}
-				/>
-				{/* Torso */}
-				<motion.line
-					x1={25}
-					y1={30}
-					x2={25}
-					y2={70}
-					transition={figureSpring}
-					variants={{ rest: { y1: 50, y2: 80 }, grown: { y1: 30, y2: 70 } }}
-				/>
-				{/* Left leg — foot planted at y=100 */}
-				<motion.line
-					x1={25}
-					y1={70}
-					x2={15}
-					y2={100}
-					transition={figureSpring}
-					variants={{ rest: { y1: 80 }, grown: { y1: 70 } }}
-				/>
-				{/* Right leg — foot planted at y=100 */}
-				<motion.line
-					x1={25}
-					y1={70}
-					x2={35}
-					y2={100}
-					transition={figureSpring}
-					variants={{ rest: { y1: 80 }, grown: { y1: 70 } }}
-				/>
-				{/* Left arm — hangs down at rest, sweeps up into a raise when grown. */}
-				<motion.line
-					x1={25}
-					y1={35}
-					x2={7}
-					y2={20}
-					transition={figureSpring}
-					variants={{
-						rest: { y1: 55, x2: 15, y2: 70 },
-						grown: { y1: 35, x2: 7, y2: 20 },
-					}}
-				/>
-				{/* Right arm — hangs down at rest, sweeps up into a raise when grown. */}
-				<motion.line
-					x1={25}
-					y1={35}
-					x2={43}
-					y2={20}
-					transition={figureSpring}
-					variants={{
-						rest: { y1: 55, x2: 35, y2: 70 },
-						grown: { y1: 35, x2: 43, y2: 20 },
-					}}
-				/>
-			</g>
-		</svg>
-	)
-}
-
 export function FunFactsSection() {
 	const shouldReduceMotion = useReducedMotion()
+	const heightHover = useHoverIntent(HOVER_INTENT_DELAY)
+	const heightTileRef = useRef<HTMLDivElement>(null)
+	// Idle sway only runs while the tile is actually on screen — no reason to
+	// keep an infinite loop ticking somewhere the reader has scrolled past.
+	const heightTileInView = useInView(heightTileRef)
 
 	return (
 		<Grid as="section">
@@ -253,13 +177,28 @@ export function FunFactsSection() {
 
 				{/* Height — figure beside the copy */}
 				<Tile
+					ref={heightTileRef}
 					area="[grid-area:height]"
 					initial={shouldReduceMotion ? undefined : 'rest'}
-					animate={shouldReduceMotion ? undefined : 'rest'}
-					whileHover={shouldReduceMotion ? undefined : 'grown'}
+					animate={
+						shouldReduceMotion
+							? undefined
+							: heightHover.active
+								? 'grown'
+								: 'rest'
+					}
+					onHoverStart={
+						shouldReduceMotion ? undefined : heightHover.onHoverStart
+					}
+					onHoverEnd={shouldReduceMotion ? undefined : heightHover.onHoverEnd}
 					className="flex flex-col-reverse items-center justify-center gap-5 md:max-h-46 md:flex-row md:justify-center"
 				>
-					<StickFigure className="self-center overflow-visible text-(--text-paragraph) md:max-h-25 md:self-end" />
+					<StickFigure
+						className="self-center overflow-visible text-(--text-paragraph) md:max-h-25 md:self-end"
+						idle={
+							!shouldReduceMotion && !heightHover.active && heightTileInView
+						}
+					/>
 					<Fact>
 						I am 180 cm tall. Above average for an Indonesian. I&apos;m told
 						this is my most notable achievement.
