@@ -26,7 +26,7 @@ export function ProjectSection({
 
 	return (
 		<>
-			<Reveal>
+			<Reveal variant="settle">
 				<Header title={title} subTitle={subTitle} cta={cta} ctaUrl="/works" />
 			</Reveal>
 			<Spacer size="lg" />
@@ -34,7 +34,8 @@ export function ProjectSection({
 				{posts.map((project, idx) => (
 					<Reveal
 						key={project.slug}
-						delay={idx * 0.08}
+						variant="stagger"
+						index={idx}
 						className={clsxm('col-span-full', { 'hidden lg:block': idx >= 2 })}
 					>
 						<ProjectCard

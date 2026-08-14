@@ -147,7 +147,10 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 
 				{tags.length > 0 ? (
 					<Grid>
-						<Reveal className="col-span-full flex flex-col gap-6">
+						{/* Not wrapped in Reveal: this is a filter control the user acts
+						    on repeatedly, not narrative content — it should be ready to
+						    use immediately, not fade in first. */}
+						<div className="col-span-full flex flex-col gap-6">
 							<Paragraph prose={false}>Search projects by tags</Paragraph>
 							<div className="flex flex-wrap gap-3">
 								{tags.map((tag) => {
@@ -164,7 +167,7 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 									)
 								})}
 							</div>
-						</Reveal>
+						</div>
 					</Grid>
 				) : null}
 
@@ -220,7 +223,7 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 				<Spacer size="lg" />
 			</div>
 
-			<Reveal>
+			<Reveal variant="settle">
 				<CallToAction />
 			</Reveal>
 		</React.Fragment>

@@ -2,9 +2,7 @@ import { motion, useReducedMotion } from 'motion/react'
 import { useEffect, useRef } from 'react'
 import { Outlet, useLocation } from 'react-router'
 
-// Timing mirrors the motion tokens in app/styles/theme.css:
-//   duration-base 200ms / ease-out-quart.
-const EASE_OUT_QUART = [0.165, 0.84, 0.44, 1] as const
+import { DURATION_BASE, EASE_OUT_QUART } from '@/utils/motion'
 
 /**
  * Entrance-only route transition. Re-keying on pathname remounts the incoming
@@ -31,7 +29,10 @@ function PageTransition() {
 			className="flex grow flex-col"
 			initial={animateIn ? { opacity: 0, y: 8 } : false}
 			animate={{ opacity: 1, y: 0 }}
-			transition={{ duration: animateIn ? 0.2 : 0, ease: EASE_OUT_QUART }}
+			transition={{
+				duration: animateIn ? DURATION_BASE : 0,
+				ease: EASE_OUT_QUART,
+			}}
 		>
 			<Outlet />
 		</motion.div>

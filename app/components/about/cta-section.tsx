@@ -1,19 +1,19 @@
 import { Grid } from '@/components/grid'
 import { H2, Text } from '@/components/typography'
 import { ButtonLink } from '@/components/ui/button'
-import { ReactiveDotGrid } from '@/components/ui/reactive-dot-grid'
+import { DotGrid } from '@/components/ui/dot-grid'
 import ArrowRightIcon from '@/assets/arrow-right-icon'
 
 export function AboutCta() {
 	return (
 		<Grid as="section" className="py-20">
-			<ReactiveDotGrid
+			<DotGrid
 				color="sunset"
 				rows={6}
 				cols={7}
 				className="absolute top-8 right-[2%] hidden lg:block"
 			/>
-			<ReactiveDotGrid
+			<DotGrid
 				color="sky"
 				rows={5}
 				cols={5}

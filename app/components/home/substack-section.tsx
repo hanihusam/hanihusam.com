@@ -23,7 +23,7 @@ export function SubstackSection({
 
 	return (
 		<>
-			<Reveal>
+			<Reveal variant="settle">
 				<Header
 					title={title}
 					subTitle={subTitle}
@@ -36,7 +36,8 @@ export function SubstackSection({
 				{posts.map((post, idx) => (
 					<Reveal
 						key={post.url}
-						delay={idx * 0.08}
+						variant="stagger"
+						index={idx}
 						className={clsxm('col-span-4', {
 							'hidden lg:block': idx >= 2,
 						})}

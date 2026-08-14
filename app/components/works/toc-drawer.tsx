@@ -29,7 +29,7 @@ export function WorkTocDrawer({
 		<Drawer.Root open={open} onOpenChange={setOpen}>
 			<Drawer.Trigger
 				aria-label="Open table of contents"
-				className="fixed right-8 bottom-8 z-20 grid size-11 place-items-center rounded-md border border-(--border-primary) bg-(--surface-primary) text-(--icon-primary) shadow-lg transition-colors hover:bg-(--nav-item-surface-active) focus:outline-none lg:hidden"
+				className="toc-enter fixed right-8 bottom-8 z-20 grid size-11 place-items-center rounded-md border border-(--border-primary) bg-(--surface-primary) text-(--icon-primary) shadow-lg transition-colors hover:bg-(--nav-item-surface-active) focus:outline-none lg:hidden"
 			>
 				<ListBulletsIcon className="h-5 w-5" />
 			</Drawer.Trigger>
