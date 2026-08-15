@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Reference — Navigation motion brief</title>
+		<link rel="stylesheet" href="../assets/lesson.css" />
+	</head>
+	<body>
+		<a class="skip" href="#reference-main">Skip to reference content</a>
+		<main id="reference-main">
+			<p class="eyebrow">Reference</p>
+			<h1>Navigation motion brief</h1>
+			<p class="sub">
+				The fixed decisions behind the two-layer navigation indicator. Return
+				here during implementation instead of redesigning the interaction
+				mid-code.
+			</p>
+
+			<h2>State model</h2>
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">State</th>
+						<th scope="col">Active layer</th>
+						<th scope="col">Preview layer</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Rest</th>
+						<td>Current internal route, 100% opacity</td>
+						<td>Hidden</td>
+					</tr>
+					<tr>
+						<th scope="row">Preview another item</th>
+						<td>Unchanged</td>
+						<td>Target item, 55% opacity</td>
+					</tr>
+					<tr>
+						<th scope="row">Preview active item</th>
+						<td>Unchanged</td>
+						<td>Hidden to prevent stacking</td>
+					</tr>
+					<tr>
+						<th scope="row">Internal navigation</th>
+						<td>Translate old route → new route</td>
+						<td>Hide</td>
+					</tr>
+					<tr>
+						<th scope="row">External Substack action</th>
+						<td>Unchanged</td>
+						<td>Preview only</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h2>Motion values</h2>
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Layer</th>
+						<th scope="col">Properties</th>
+						<th scope="col">Curve</th>
+						<th scope="col">Duration</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Preview</th>
+						<td>Transform and opacity</td>
+						<td><code>--ease-hover</code></td>
+						<td><code>--duration-fast</code> · 150ms</td>
+					</tr>
+					<tr>
+						<th scope="row">Active</th>
+						<td>Transform and opacity</td>
+						<td><code>--ease-in-out-quart</code></td>
+						<td><code>--duration-base</code> · 200ms</td>
+					</tr>
+				</tbody>
+			</table>
+			<p>
+				Both layers move horizontally in 40px steps, use a centered transform
+				origin, and retarget from their current rendered position. There is no
+				bounce, spring, keyframe, or animation queue.
+			</p>
+
+			<h2>Input and accessibility rules</h2>
+			<ul>
+				<li>
+					Pointer entry sets a temporary preview; leaving the links clears it.
+				</li>
+				<li>Only keyboard-visible focus sets a focus preview.</li>
+				<li>
+					<code>NavLink</code> remains responsible for semantic
+					<code>aria-current="page"</code>.
+				</li>
+				<li>
+					Reduced motion keeps both state layers but changes duration tokens to
+					zero.
+				</li>
+				<li>
+					The theme switcher is an action, not a destination; it never receives
+					a persistent indicator.
+				</li>
+				<li>
+					Theme-switcher focus feedback uses <code>:focus-visible</code>,
+					preventing sticky styling after pointer clicks.
+				</li>
+			</ul>
+
+			<div class="defense">
+				<strong>Cold-recall defense:</strong><br />
+				Route truth and interaction preview have different lifetimes, so they
+				need different layers. React chooses each target; CSS interpolates only
+				<code>transform</code> and <code>opacity</code>.
+			</div>
+
+			<h2>Read next</h2>
+			<ul>
+				<li>
+					<a href="../lessons/0001-build-the-two-layer-indicator.html"
+						>Build the two-layer indicator</a
+					>
+				</li>
+			</ul>
+
+			<p class="ask">
+				Ask follow-up questions whenever a state or edge case feels ambiguous.
+			</p>
+			<p class="foot">
+				Reference · workspace navigation-indicator-animation · confirmed
+				2026-08-15
+			</p>
+		</main>
+	</body>
+</html>

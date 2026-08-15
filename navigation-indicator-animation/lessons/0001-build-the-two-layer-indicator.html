@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Lesson 1 — Build the two-layer navigation indicator</title>
+		<link rel="stylesheet" href="../assets/lesson.css" />
+		<script src="../assets/indicator-lab.js" defer></script>
+	</head>
+	<body>
+		<a class="skip" href="#lesson-main">Skip to lesson content</a>
+		<main id="lesson-main">
+			<p class="eyebrow">Learning by doing · Lesson 1</p>
+			<h1>Build the two-layer navigation indicator</h1>
+			<p class="sub">
+				Keep route truth visible while hover and keyboard focus preview another
+				destination—then let CSS carry the pixels between states.
+			</p>
+
+			<section class="lesson-map" aria-labelledby="lesson-map-heading">
+				<h2 id="lesson-map-heading">Your one win</h2>
+				<p>
+					By the end, you can implement this animation manually and explain why
+					it uses two layers rather than one clever selector.
+				</p>
+				<ol>
+					<li>Break the one-layer model in the simulator.</li>
+					<li>Name the two independent pieces of state.</li>
+					<li>Lift indicator ownership into <code>Navigation</code>.</li>
+					<li>Wire pointer, keyboard, route, and reduced-motion behavior.</li>
+					<li>
+						Prove the implementation with edge-case checks and retrieval
+						practice.
+					</li>
+				</ol>
+			</section>
+
+			<h2>Start by reproducing the ambiguity</h2>
+			<p>
+				The current navigation gives each item its own fading background. Hover
+				and active route use the same visual treatment, so the interface cannot
+				show “where I am” and “where I may go” simultaneously.
+			</p>
+
+			<figure>
+				<figcaption>
+					The current item-local background combines three states.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> one span becomes opaque for group
+					hover, group focus, or the current page. Because all three conditions
+					control the same element, they cannot be styled or moved
+					independently.
+				</p>
+				<pre
+					aria-hidden="true"
+				><code>&lt;span className="absolute inset-0 ... opacity-0
+  group-hover:opacity-100
+  group-focus:opacity-100
+  group-aria-[current=page]:opacity-100" /&gt;</code></pre>
+			</figure>
+			<p class="src-line">
+				Source:
+				<a
+					class="source-chip vsc"
+					href="vscode://file/Users/hanihusam/Dev/hanihusam.com/app/components/ui/navigation-item.tsx:37"
+					aria-label="Open local navigation-item.tsx line 37 in VS Code"
+					>navigation-item.tsx:37</a
+				>
+				<a
+					class="source-chip gh"
+					href="https://github.com/hanihusam/hanihusam.com/blob/c0e2f721bd7dce7360f7ce751a16efb1200f6a59/app/components/ui/navigation-item.tsx#L37"
+					aria-label="Open pinned GitHub source for navigation-item.tsx line 37"
+					>GitHub↗</a
+				>
+			</p>
+
+			<section class="lab" data-indicator-lab aria-labelledby="lab-heading">
+				<div class="lab-toolbar">
+					<div>
+						<p class="eyebrow">Micro-world</p>
+						<h3 id="lab-heading">Route truth versus interaction preview</h3>
+					</div>
+					<div class="segmented" aria-label="Indicator model">
+						<button type="button" data-model="one" aria-pressed="true">
+							One layer
+						</button>
+						<button type="button" data-model="two" aria-pressed="false">
+							Two layers
+						</button>
+					</div>
+				</div>
+
+				<div class="route-controls" aria-label="Lab controls">
+					<button
+						type="button"
+						class="lab-action"
+						data-motion-toggle
+						aria-pressed="false"
+					>
+						Reduced motion: off
+					</button>
+					<button type="button" class="lab-action" data-scrub>
+						Simulate fast scrub
+					</button>
+				</div>
+
+				<div class="lab-stage">
+					<div
+						class="lab-nav-shell"
+						aria-label="Navigation animation simulator"
+					>
+						<div class="lab-links" data-lab-links>
+							<span
+								class="lab-indicator lab-active-indicator"
+								data-active-indicator
+								aria-hidden="true"
+								>&nbsp;</span
+							>
+							<span
+								class="lab-indicator lab-preview-indicator"
+								data-preview-indicator
+								aria-hidden="true"
+								>&nbsp;</span
+							>
+							<button type="button" class="lab-nav-item" data-nav-index="0">
+								H<span class="skip">ome</span>
+							</button>
+							<button type="button" class="lab-nav-item" data-nav-index="1">
+								P<span class="skip">rojects</span>
+							</button>
+							<button type="button" class="lab-nav-item" data-nav-index="2">
+								S<span class="skip">ubstack</span>
+							</button>
+						</div>
+						<div class="lab-separator" aria-hidden="true"></div>
+						<button type="button" class="lab-theme" aria-label="Theme switcher">
+							T
+						</button>
+					</div>
+				</div>
+
+				<div class="lab-state" aria-label="Simulator internal state">
+					<div>
+						<span class="state-label">activeIndex</span>
+						<span class="state-value" data-active-output>0 · Home</span>
+					</div>
+					<div>
+						<span class="state-label">previewIndex</span>
+						<span class="state-value" data-preview-output
+							>null · no preview</span
+						>
+					</div>
+					<div>
+						<span class="state-label">active transform x</span>
+						<span class="state-value" data-active-position-output>0px</span>
+					</div>
+					<div>
+						<span class="state-label">preview transform x</span>
+						<span class="state-value" data-preview-position-output>hidden</span>
+					</div>
+				</div>
+				<p class="lab-narration" data-lab-narration aria-live="polite"></p>
+
+				<div class="try">
+					<strong>Things to try</strong>
+					<ol>
+						<li>In one-layer mode, hover Projects while Home is active.</li>
+						<li>
+							Switch to two layers and repeat. Notice what no longer disappears.
+						</li>
+						<li>Click Projects, then hover Home and Substack.</li>
+						<li>
+							Run the fast scrub. Watch targets change without a queue forming.
+						</li>
+						<li>
+							Turn on reduced motion. Confirm state survives without travel.
+						</li>
+						<li>Tab to the theme button, then click it and move away.</li>
+					</ol>
+				</div>
+			</section>
+
+			<div class="defense">
+				<strong>Cold-recall defense:</strong><br />
+				<code>activeIndex</code> is persistent route truth.
+				<code>previewIndex</code> is temporary interaction intent. Different
+				lifetimes require different visual layers.
+			</div>
+
+			<h2>Step 1 — Lift visual ownership into Navigation</h2>
+			<p>
+				A shared element cannot move between siblings if every sibling owns its
+				own background. Start by making the parent own both indicators. Keep
+				<code>NavigationItem</code> responsible for links, tooltips, and icons.
+			</p>
+			<p>
+				Before revealing the structure below, sketch the DOM layers on paper.
+				Your drawing should contain one relative links wrapper, two absolute
+				indicators, and three links above them.
+			</p>
+
+			<details>
+				<summary>Reveal the target layer order</summary>
+				<figure>
+					<figcaption>
+						The parent owns both visual layers; links stay interactive above
+						them.
+					</figcaption>
+					<p class="listen">
+						<strong>Listen first:</strong> inside a relative flex wrapper,
+						render the active and preview spans before mapping the links. Both
+						spans ignore pointer events. Every link receives a higher stacking
+						order.
+					</p>
+					<pre
+						aria-hidden="true"
+					><code>&lt;div className="relative flex" onPointerLeave={clearPointerPreview}&gt;
+  &lt;span aria-hidden className={activeIndicatorClasses} /&gt;
+  &lt;span aria-hidden className={previewIndicatorClasses} /&gt;
+
+  {links.map((link, index) =&gt; (
+    &lt;NavigationItem
+      key={link.href}
+      className={clsxm('relative z-10', { 'ml-1': index === 0 })}
+      {...interactionProps}
+    /&gt;
+  ))}
+&lt;/div&gt;</code></pre>
+				</figure>
+			</details>
+
+			<div class="checkpoint">
+				<strong>Checkpoint</strong>
+				Remove the item-local background span only after both parent-owned spans
+				render behind the icons. At this moment the indicators may still be
+				static.
+			</div>
+
+			<h2>Step 2 — Derive route truth instead of copying it</h2>
+			<p>
+				The active indicator is not click state. It must also be correct after a
+				direct page load, browser Back, or a nested project URL. Derive it from
+				the current pathname.
+			</p>
+
+			<figure>
+				<figcaption>
+					Derive one active index from React Router's current location.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> get the pathname from use Location.
+					Search the links for an internal destination that matches. Home
+					matches only the root path; Works matches itself and nested paths; the
+					external destination is excluded. A result of minus one means no
+					active indicator.
+				</p>
+				<pre aria-hidden="true"><code>const { pathname } = useLocation()
+
+const activeIndex = links.findIndex((link) =&gt; {
+  if (link.href.startsWith('http')) return false
+  if (link.href === '/') return pathname === '/'
+
+  return pathname === link.href || pathname.startsWith(`${link.href}/`)
+})</code></pre>
+			</figure>
+			<p class="src-line">
+				Route destinations:
+				<a
+					class="source-chip vsc"
+					href="vscode://file/Users/hanihusam/Dev/hanihusam.com/app/components/navigation.tsx:8"
+					aria-label="Open local navigation.tsx line 8 in VS Code"
+					>navigation.tsx:8</a
+				>
+				<a
+					class="source-chip gh"
+					href="https://github.com/hanihusam/hanihusam.com/blob/c0e2f721bd7dce7360f7ce751a16efb1200f6a59/app/components/navigation.tsx#L8"
+					aria-label="Open pinned GitHub source for navigation.tsx line 8"
+					>GitHub↗</a
+				>
+			</p>
+
+			<div class="callout">
+				<strong>Do not replace <code>NavLink</code>.</strong> The indicator
+				needs a parent-level index, but <code>NavLink</code> should still
+				provide semantic active state and <code>aria-current="page"</code> on
+				the destination itself.
+			</div>
+
+			<h2>Step 3 — Convert indices into geometry</h2>
+			<p>
+				Each item is 36px wide and followed by 4px of spacing. Therefore, item
+				origins are 40px apart. Keep all classes as literal strings so Tailwind
+				can discover them during its source scan.
+			</p>
+
+			<figure>
+				<figcaption>
+					A finite position table is clearer than runtime class construction.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> index zero maps to no horizontal
+					movement, index one maps to Tailwind spacing ten, and index two maps
+					to spacing twenty. Those are zero, forty, and eighty pixels.
+				</p>
+				<pre aria-hidden="true"><code>const indicatorPositions = [
+  'translate-x-0',
+  'translate-x-10',
+  'translate-x-20',
+] as const</code></pre>
+			</figure>
+
+			<p>
+				Give both indicators
+				<code>pointer-events-none absolute top-1 left-1 size-9 rounded-md</code
+				>. The active layer uses the active index. The preview layer uses its
+				last preview position and changes opacity separately.
+			</p>
+
+			<details>
+				<summary>Reveal the transition classes</summary>
+				<figure>
+					<figcaption>
+						Each layer gets only the properties and timing specified in the
+						brief.
+					</figcaption>
+					<p class="listen">
+						<strong>Listen first:</strong> the active layer transitions
+						transform and opacity over the base duration with the in-out quart
+						curve. The preview uses the fast duration and hover curve. It is
+						either fully hidden or fifty-five percent opaque.
+					</p>
+					<pre aria-hidden="true"><code>const activeIndicatorClasses = clsxm(
+  'pointer-events-none absolute top-1 left-1 size-9 rounded-md',
+  'bg-(--nav-item-surface-active) transition-[transform,opacity]',
+  'duration-(--duration-base) ease-in-out-quart',
+  activeIndex === -1 ? 'opacity-0' : 'opacity-100',
+  activeIndex !== -1 &amp;&amp; indicatorPositions[activeIndex],
+)
+
+const previewIndicatorClasses = clsxm(
+  'pointer-events-none absolute top-1 left-1 size-9 rounded-md',
+  'bg-(--nav-item-surface-active) duration-(--duration-fast) ease-hover',
+  previewVisible
+    ? 'opacity-[0.55] transition-[transform,opacity]'
+    : 'opacity-0 transition-opacity',
+  indicatorPositions[previewPosition],
+)</code></pre>
+				</figure>
+			</details>
+
+			<div class="checkpoint">
+				<strong>Checkpoint</strong>
+				Temporarily hard-code <code>activeIndex</code> and
+				<code>previewPosition</code> to 0, 1, and 2. Confirm exact alignment
+				before adding interaction state. Fix geometry first; state cannot repair
+				a 4px offset.
+			</div>
+
+			<h2>Step 4 — Model pointer and keyboard intent separately</h2>
+			<p>
+				Pointer hover and keyboard-visible focus can overlap, so preserve both
+				sources. The effective preview prefers the pointer while it is inside
+				the links and otherwise falls back to keyboard focus.
+			</p>
+
+			<figure>
+				<figcaption>
+					Two temporary inputs resolve to one preview target.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> pointer index and focus index both
+					begin as null. The preview target takes the pointer index when
+					present, otherwise the focus index. The preview is eligible only when
+					the target exists and is not already active.
+				</p>
+				<pre
+					aria-hidden="true"
+				><code>const [pointerIndex, setPointerIndex] = useState&lt;number | null&gt;(null)
+const [focusIndex, setFocusIndex] = useState&lt;number | null&gt;(null)
+
+const previewTarget = pointerIndex ?? focusIndex
+const shouldShowPreview =
+  previewTarget !== null &amp;&amp; previewTarget !== activeIndex</code></pre>
+			</figure>
+
+			<p>
+				Pass an item's index-specific callbacks into
+				<code>NavigationItem</code>. On pointer entry, set
+				<code>pointerIndex</code>. Clear it from the links wrapper's
+				<code>onPointerLeave</code>, not from every link, so moving between
+				siblings does not create a hidden gap.
+			</p>
+
+			<p>
+				For focus, inspect
+				<code>event.currentTarget.matches(':focus-visible')</code> before
+				setting <code>focusIndex</code>. Clear it on blur. This prevents a
+				pointer click—which also focuses a link—from becoming a sticky keyboard
+				preview.
+			</p>
+
+			<figure>
+				<figcaption>
+					NavigationItem reports intent without owning indicator state.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> pointer entry calls its callback
+					directly. Focus calls the keyboard callback only when the browser says
+					focus should be visible. Blur clears keyboard focus. The Nav Link
+					remains the trigger for all three events.
+				</p>
+				<pre aria-hidden="true"><code>&lt;NavLink
+  to={href}
+  onPointerEnter={onPointerEnter}
+  onFocus={(event) =&gt; {
+    if (event.currentTarget.matches(':focus-visible')) {
+      onFocusVisible?.()
+    }
+  }}
+  onBlur={onFocusLeave}
+  className={clsxm(
+    'group relative z-10 my-1 mr-1 grid size-9 place-items-center rounded-md',
+    'focus:outline-none',
+    className,
+  )}
+&gt;</code></pre>
+			</figure>
+
+			<h2>Step 5 — Make the first preview appear in place</h2>
+			<p>
+				A preview moving between already-hovered items should translate. The
+				first preview should not fly out of its last hidden position. Separate
+				<em>where the layer is</em> from <em>whether it is visible</em>.
+			</p>
+
+			<figure>
+				<figcaption>
+					Position invisibly first, then reveal on the next frame.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> when there is no valid preview, hide
+					the layer. When a hidden preview receives a target, update its
+					position while transform transitions are disabled, then reveal it on
+					the next animation frame. Once visible, later target changes
+					transition normally. Cancel the frame during cleanup.
+				</p>
+				<pre
+					aria-hidden="true"
+				><code>const [previewPosition, setPreviewPosition] = useState(0)
+const [previewVisible, setPreviewVisible] = useState(false)
+
+useEffect(() =&gt; {
+  if (!shouldShowPreview || previewTarget === null) {
+    setPreviewVisible(false)
+    return
+  }
+
+  if (previewVisible) {
+    setPreviewPosition(previewTarget)
+    return
+  }
+
+  setPreviewPosition(previewTarget)
+  const frame = requestAnimationFrame(() =&gt; setPreviewVisible(true))
+
+  return () =&gt; cancelAnimationFrame(frame)
+}, [previewTarget, previewVisible, shouldShowPreview])</code></pre>
+			</figure>
+
+			<div class="callout">
+				When <code>previewVisible</code> is false, transition only opacity. When
+				it is true, transition transform and opacity. That makes the hidden
+				position update instantaneous while keeping visible retargeting
+				interruptible.
+			</div>
+
+			<h2>Step 6 — Let CSS own interruption</h2>
+			<p>
+				Do not queue movements or calculate in-between frames in React. Each new
+				index changes the transform target. A CSS transition begins from the
+				currently rendered value, so rapid hover changes naturally retarget
+				mid-flight.
+			</p>
+
+			<div class="checkpoint">
+				<strong>Checkpoint</strong>
+				Scrub Home → Projects → Substack faster than 150ms. The preview should
+				change direction smoothly. If it restarts, snaps back, or finishes old
+				movements first, search for keyframes, remounting keys, or queued state.
+			</div>
+
+			<p>
+				The project already defines the exact values. Reuse them rather than
+				adding one-off milliseconds or curves.
+			</p>
+
+			<figure>
+				<figcaption>
+					The existing motion tokens already encode the confirmed timing.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> fast interactions take one hundred
+					fifty milliseconds; standard UI takes two hundred. Hover uses a quick
+					settling curve, and on-screen movement uses the in-out quart curve.
+				</p>
+				<pre aria-hidden="true"><code>--duration-fast: 150ms;
+--duration-base: 200ms;
+--ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
+--ease-hover: cubic-bezier(0.25, 1, 0.5, 1);</code></pre>
+			</figure>
+			<p class="src-line">
+				Motion tokens:
+				<a
+					class="source-chip vsc"
+					href="vscode://file/Users/hanihusam/Dev/hanihusam.com/app/styles/theme.css:114"
+					aria-label="Open local theme.css line 114 in VS Code"
+					>theme.css:114</a
+				>
+				<a
+					class="source-chip gh"
+					href="https://github.com/hanihusam/hanihusam.com/blob/c0e2f721bd7dce7360f7ce751a16efb1200f6a59/app/styles/theme.css#L114"
+					aria-label="Open pinned GitHub source for theme.css line 114"
+					>GitHub↗</a
+				>
+			</p>
+
+			<h2>Step 7 — Fix the theme switcher's sticky click state</h2>
+			<p>
+				The theme switcher is an action, not a destination. Keep its local hover
+				layer, but show focus styling only when focus should be visibly
+				indicated.
+			</p>
+
+			<figure>
+				<figcaption>
+					Change the focus selector, not the browser's focus behavior.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> replace group focus with group focus
+					visible. Hover behavior stays unchanged. Keyboard users keep a visible
+					target, while a pointer click no longer leaves the theme button
+					looking selected.
+				</p>
+				<pre
+					aria-hidden="true"
+				><code>- group-hover:opacity-100 group-focus:opacity-100
++ group-hover:opacity-100 group-focus-visible:opacity-100</code></pre>
+			</figure>
+			<p class="src-line">
+				Theme switcher:
+				<a
+					class="source-chip vsc"
+					href="vscode://file/Users/hanihusam/Dev/hanihusam.com/app/components/ui/theme-switcher.tsx:33"
+					aria-label="Open local theme-switcher.tsx line 33 in VS Code"
+					>theme-switcher.tsx:33</a
+				>
+				<a
+					class="source-chip gh"
+					href="https://github.com/hanihusam/hanihusam.com/blob/c0e2f721bd7dce7360f7ce751a16efb1200f6a59/app/components/ui/theme-switcher.tsx#L33"
+					aria-label="Open pinned GitHub source for theme-switcher.tsx line 33"
+					>GitHub↗</a
+				>
+			</p>
+
+			<div class="callout">
+				Do not call <code>blur()</code> after clicks. Removing focus disrupts
+				keyboard and assistive-technology workflows;
+				<code>:focus-visible</code> solves the visual problem without falsifying
+				interaction state.
+			</div>
+
+			<h2>Step 8 — Verify the state contract</h2>
+			<p>
+				Run <code>npm run dev</code>, then verify behavior—not merely that the
+				code compiles.
+			</p>
+			<ol class="checklist">
+				<li>Load <code>/</code> directly: Home owns the active indicator.</li>
+				<li>Load <code>/works</code> directly: Projects owns it.</li>
+				<li>
+					Load a nested <code>/works/...</code> route: Projects remains active.
+				</li>
+				<li>Hover another item: active stays; preview appears at 55%.</li>
+				<li>Hover the active item: a second layer does not darken it.</li>
+				<li>Scrub rapidly: the preview retargets without queuing.</li>
+				<li>Leave the links: the preview fades where it is; active remains.</li>
+				<li>Tab and Shift+Tab: keyboard-visible previews follow focus.</li>
+				<li>Click the theme switcher and move away: no style remains stuck.</li>
+				<li>
+					Hover Substack: preview appears, but it never becomes route-active.
+				</li>
+				<li>
+					Use browser Back and Forward: route truth remains derived correctly.
+				</li>
+				<li>
+					Enable reduced motion: state changes instantly and remains legible.
+				</li>
+			</ol>
+
+			<p>
+				After manual behavior checks, run <code>npm run lint</code> and
+				<code>npm run typecheck</code>. This repository has no automated UI test
+				suite, so do not invent one inside this change.
+			</p>
+
+			<section class="quiz" data-quiz aria-labelledby="quiz-heading">
+				<h2 id="quiz-heading">Check your model</h2>
+				<p>Answer from the mechanism, not from remembered wording.</p>
+				<form>
+					<fieldset>
+						<legend>
+							1. Why does the active indicator remain during hover?
+						</legend>
+						<label
+							><input type="radio" name="q1" value="a" /> It prevents tooltip
+							delay.</label
+						>
+						<label
+							><input type="radio" name="q1" value="b" /> It preserves
+							current-route truth.</label
+						>
+						<label
+							><input type="radio" name="q1" value="c" /> It reduces component
+							renders.</label
+						>
+						<label
+							><input type="radio" name="q1" value="d" /> It improves external
+							navigation.</label
+						>
+					</fieldset>
+
+					<fieldset>
+						<legend>2. What makes rapid scrubbing interrupt cleanly?</legend>
+						<label
+							><input type="radio" name="q2" value="a" /> Queued animation frame
+							callbacks.</label
+						>
+						<label
+							><input type="radio" name="q2" value="b" /> Replayed keyframe
+							animation sequences.</label
+						>
+						<label
+							><input type="radio" name="q2" value="c" /> Remounted indicator
+							component instances.</label
+						>
+						<label
+							><input type="radio" name="q2" value="d" /> Retargeted CSS
+							transition values.</label
+						>
+					</fieldset>
+
+					<fieldset>
+						<legend>3. What survives under reduced motion?</legend>
+						<label
+							><input type="radio" name="q3" value="a" /> Both indicators change
+							instantly.</label
+						>
+						<label
+							><input type="radio" name="q3" value="b" /> Only the active icon
+							remains.</label
+						>
+						<label
+							><input type="radio" name="q3" value="c" /> The navigation becomes
+							static.</label
+						>
+						<label
+							><input type="radio" name="q3" value="d" /> Preview state becomes
+							unavailable.</label
+						>
+					</fieldset>
+
+					<button type="submit">Check answers</button>
+					<p class="quiz-feedback" data-quiz-feedback aria-live="polite"></p>
+				</form>
+			</section>
+
+			<h2>Read next</h2>
+			<ul>
+				<li>
+					<a href="../reference/navigation-motion-brief.html"
+						>Navigation motion brief — compact implementation reference</a
+					>
+				</li>
+			</ul>
+
+			<h2>Primary source</h2>
+			<p>
+				Read the official
+				<a href="https://reactrouter.com/api/components/NavLink"
+					>React Router <code>NavLink</code> reference</a
+				>
+				(~5 minutes), especially active state, <code>aria-current</code>, and
+				nested matching. For CSS behavior, use the curated links in
+				<a href="../RESOURCES.md">RESOURCES.md</a>.
+			</p>
+
+			<p class="ask">
+				I'm your teacher for this—ask follow-up questions whenever a state,
+				selector, or transition feels magical rather than mechanical.
+			</p>
+			<p class="foot">
+				Lesson 1 · workspace navigation-indicator-animation · mission: implement
+				and explain the two-layer navigation indicator
+			</p>
+		</main>
+	</body>
+</html>
