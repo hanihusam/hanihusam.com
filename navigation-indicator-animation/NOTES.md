@@ -21,3 +21,6 @@
 - Sync check: `origin/main` fetched on 2026-08-15; no existing lesson workspace
   was present.
 - Revision sync check: `origin` fetched on 2026-08-18 before authoring Lesson 2.
+- Lesson 2 fresh chat quiz on 2026-08-18: 3/3 correct. The learner correctly
+  predicted the delayed active icon phase, icon-only external hover, and
+  immediate reduced-motion settlement.
