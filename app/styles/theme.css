@@ -244,6 +244,9 @@
 
 	/* Component — Nav item */
 	--nav-item-surface-active: var(--color-sunset-50);
+	--nav-item-icon-active: var(--color-neutral-950);
+	--nav-item-icon-hover: var(--color-neutral-950);
+	--nav-item-icon-default: var(--color-neutral-600);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -323,6 +326,9 @@
 
 	/* Component — Nav item */
 	--nav-item-surface-active: var(--color-sunset-950);
+	--nav-item-icon-active: var(--color-neutral-50);
+	--nav-item-icon-hover: var(--color-neutral-50);
+	--nav-item-icon-default: var(--color-neutral-200);
 
 	/* Shadows — increased opacity on dark */
 	--shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);

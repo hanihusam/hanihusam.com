@@ -30,12 +30,23 @@ export default function NavigationItem({
 					<NavLink
 						to={href}
 						className={clsxm(
-							'group relative my-1 mr-1 grid size-9 place-items-center rounded-md focus:outline-none',
+							'group relative z-10 my-1 mr-1 grid size-9 place-items-center',
+							'rounded-md focus:outline-none',
 							className,
 						)}
 					>
-						<span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-(--duration-fast) group-hover:opacity-100 group-focus:opacity-100 group-aria-[current=page]:opacity-100" />
-						<span className="relative">{children}</span>
+						<span
+							className={clsxm(
+								'relative text-(--nav-item-icon-default)',
+								'transition-colors duration-(--duration-fast) ease-hover',
+								'group-hover:text-(--nav-item-icon-hover)',
+								'group-focus-visible:text-(--nav-item-icon-active)',
+								'group-aria-[current=page]:text-(--nav-item-icon-active)',
+								'[.group[aria-current=page]:not(:hover):not(:focus-visible)_&]:delay-(--duration-base)',
+							)}
+						>
+							{children}
+						</span>
 					</NavLink>
 				</Trigger>
 				<Content className="TooltipContent" sideOffset={5}>
