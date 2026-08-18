@@ -9,6 +9,9 @@
 - [MDN: `transition`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/transition)
   Authoritative CSS reference for transitioning specific properties. Use when
   reasoning about interruption and retargeting.
+- [MDN: `transition-delay`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/transition-delay)
+  Authoritative reference for deferring the icon-color phase until the active
+  background reaches its destination.
 - [MDN: `translate3d()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/transform-function/translate3d)
   Authoritative reference for moving an indicator without changing document
   flow. Use for the horizontal position model.
@@ -28,9 +31,12 @@
 - [Animations on the Web](https://animations.dev/) Practitioner-oriented motion
   design guidance. Use when judging whether an interaction is purposeful, fast
   enough, and worth animating.
+- [Stripe Blog](https://stripe.com/blog) Visual reference for the active-tab
+  sequence. Use for frame-by-frame feel comparison, not as a claim about
+  Stripe's private implementation.
 
 ## Gaps
 
-- Stripe Blog is the visual reference, but this course does not claim knowledge
-  of Stripe's private source implementation. Compare the finished feel by
-  recording both interfaces rather than copying inferred internals.
+- This course does not claim knowledge of Stripe's private source
+  implementation. Compare the finished feel by recording both interfaces rather
+  than copying inferred internals.

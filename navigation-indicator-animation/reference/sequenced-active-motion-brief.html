@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Reference — Sequenced active navigation motion</title>
+		<link rel="stylesheet" href="../assets/lesson.css" />
+	</head>
+	<body>
+		<a class="skip" href="#reference-main">Skip to reference content</a>
+		<main id="reference-main">
+			<p class="eyebrow">Reference · Revision 2</p>
+			<h1>Sequenced active navigation motion</h1>
+			<p class="sub">
+				The confirmed state, timing, and precedence rules for the revised
+				navigation. This supersedes the earlier two-background motion brief.
+			</p>
+
+			<h2>Visual states</h2>
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">State</th>
+						<th scope="col">Icon</th>
+						<th scope="col">Background</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Inactive</th>
+						<td><code>--icon-secondary</code></td>
+						<td>None</td>
+					</tr>
+					<tr>
+						<th scope="row">Hover or focus-visible</th>
+						<td><code>--icon-primary</code></td>
+						<td>Unchanged</td>
+					</tr>
+					<tr>
+						<th scope="row">Active and settled</th>
+						<td><code>--icon-primary</code></td>
+						<td><code>--nav-item-surface-active</code></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h2>Route-change sequence</h2>
+			<ol>
+				<li>
+					The old active icon begins returning to
+					<code>--icon-secondary</code> unless interaction still brightens it.
+				</li>
+				<li>
+					The shared active background translates to the new route over 200ms.
+				</li>
+				<li>
+					After a 200ms delay, the new active icon transitions to
+					<code>--icon-primary</code> over 150ms.
+				</li>
+			</ol>
+
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Property</th>
+						<th scope="col">Curve</th>
+						<th scope="col">Duration</th>
+						<th scope="col">Delay</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Background transform</th>
+						<td><code>--ease-in-out-quart</code></td>
+						<td><code>--duration-base</code> · 200ms</td>
+						<td>0ms</td>
+					</tr>
+					<tr>
+						<th scope="row">Icon color</th>
+						<td><code>--ease-hover</code></td>
+						<td><code>--duration-fast</code> · 150ms</td>
+						<td><code>--duration-base</code> · 200ms when active only</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<h2>Precedence rules</h2>
+			<ul>
+				<li>
+					Hover and keyboard-visible focus have no delay and affect icon color
+					only.
+				</li>
+				<li>
+					Hover wins over the active delay. A bright hovered icon never dims
+					merely to replay the active sequence.
+				</li>
+				<li>
+					The active delay is visible during Back, Forward, or other route
+					changes when the destination icon is not already interactive.
+				</li>
+				<li>Substack is external and never receives the active background.</li>
+				<li>
+					The theme switcher remains an action with its own hover and
+					<code>:focus-visible</code> feedback.
+				</li>
+			</ul>
+
+			<h2>Reduced motion</h2>
+			<p>
+				The existing reduced-motion rule changes both duration tokens to 0ms.
+				The background jumps to its route, the active icon changes immediately,
+				and all state distinctions remain.
+			</p>
+
+			<div class="defense">
+				<strong>Cold-recall defense:</strong><br />
+				Hover answers “where might I go?” using icon color only. Active route
+				answers “where am I?” using a persistent background followed by icon
+				color. Hover has precedence so the sequence never introduces a flash.
+			</div>
+
+			<h2>Read next</h2>
+			<ul>
+				<li>
+					<a href="../lessons/0002-sequence-the-active-navigation-state.html"
+						>Lesson 2 — Sequence the active navigation state</a
+					>
+				</li>
+				<li>
+					<a href="navigation-motion-brief.html"
+						>Revision 1 — two-layer preview brief</a
+					>
+				</li>
+			</ul>
+
+			<p class="ask">
+				Ask follow-up questions whenever the precedence or timing stops feeling
+				mechanical.
+			</p>
+			<p class="foot">
+				Reference · workspace navigation-indicator-animation · confirmed
+				2026-08-18
+			</p>
+		</main>
+	</body>
+</html>

@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Lesson 2 — Sequence the active navigation state</title>
+		<link rel="stylesheet" href="../assets/lesson.css" />
+		<script src="../assets/sequenced-indicator-lab.js" defer></script>
+	</head>
+	<body>
+		<a class="skip" href="#lesson-main">Skip to lesson content</a>
+		<main id="lesson-main">
+			<p class="eyebrow">Learning by doing · Lesson 2 · Current</p>
+			<h1>Sequence the active navigation state</h1>
+			<p class="sub">
+				Make inactive icons quiet, keep hover immediate, and let route
+				activation unfold in two readable phases: background first, icon second.
+			</p>
+
+			<section class="lesson-map" aria-labelledby="lesson-map-heading">
+				<h2 id="lesson-map-heading">Your one win</h2>
+				<p>
+					By the end, you can implement and explain the revised Stripe-inspired
+					sequence without timers, springs, or a second hover background.
+				</p>
+				<ol>
+					<li>Separate inactive, interactive, and active icon meanings.</li>
+					<li>Move one persistent background from route state.</li>
+					<li>Delay active icon color until the background arrives.</li>
+					<li>Give hover precedence so clicking never causes a dim flash.</li>
+					<li>Collapse the whole sequence correctly under reduced motion.</li>
+				</ol>
+			</section>
+
+			<div class="callout">
+				<strong>This lesson supersedes Lesson 1.</strong> The first model kept a
+				second background for hover preview. The revised model uses icon color
+				for temporary intent and reserves the button background for persistent
+				route state.
+			</div>
+
+			<h2>See why sequencing matters</h2>
+			<p>
+				A simultaneous state change makes the background and icon compete for
+				the same instant. The revised interaction gives each change a job:
+				movement first establishes the destination, then color confirms
+				settlement.
+			</p>
+
+			<section
+				class="lab sequence-lab"
+				data-sequence-lab
+				aria-labelledby="sequence-lab-heading"
+			>
+				<div class="lab-toolbar">
+					<div>
+						<p class="eyebrow">Micro-world</p>
+						<h3 id="sequence-lab-heading">Simultaneous versus sequenced</h3>
+					</div>
+					<div class="segmented" aria-label="Active transition model">
+						<button
+							type="button"
+							data-sequence-model="simultaneous"
+							aria-pressed="true"
+						>
+							Simultaneous
+						</button>
+						<button
+							type="button"
+							data-sequence-model="sequenced"
+							aria-pressed="false"
+						>
+							Sequenced
+						</button>
+					</div>
+				</div>
+
+				<div class="route-controls" aria-label="Lab controls">
+					<button type="button" class="lab-action" data-programmatic-route>
+						Simulate Back / Forward
+					</button>
+					<button
+						type="button"
+						class="lab-action"
+						data-sequence-motion
+						aria-pressed="false"
+					>
+						Reduced motion: off
+					</button>
+				</div>
+
+				<div class="lab-stage">
+					<div
+						class="lab-nav-shell"
+						aria-label="Sequenced navigation simulator"
+					>
+						<div class="lab-links" data-sequence-links>
+							<span
+								class="lab-indicator sequence-active-indicator"
+								data-sequence-active-indicator
+								aria-hidden="true"
+								>&nbsp;</span
+							>
+							<button
+								type="button"
+								class="lab-nav-item sequence-nav-item"
+								data-sequence-index="0"
+							>
+								H<span class="skip">ome</span>
+							</button>
+							<button
+								type="button"
+								class="lab-nav-item sequence-nav-item"
+								data-sequence-index="1"
+							>
+								P<span class="skip">rojects</span>
+							</button>
+							<button
+								type="button"
+								class="lab-nav-item sequence-nav-item"
+								data-sequence-index="2"
+							>
+								S<span class="skip">ubstack</span>
+							</button>
+						</div>
+						<div class="lab-separator" aria-hidden="true"></div>
+						<button
+							type="button"
+							class="lab-theme sequence-theme"
+							aria-label="Theme switcher"
+						>
+							T
+						</button>
+					</div>
+				</div>
+
+				<div class="lab-state" aria-label="Simulator internal state">
+					<div>
+						<span class="state-label">active route index</span>
+						<span class="state-value" data-route-output>0 · Home</span>
+					</div>
+					<div>
+						<span class="state-label">settled icon index</span>
+						<span class="state-value" data-settled-output>0 · Home</span>
+					</div>
+					<div>
+						<span class="state-label">interaction index</span>
+						<span class="state-value" data-hover-output
+							>null · no interaction</span
+						>
+					</div>
+					<div>
+						<span class="state-label">sequence phase</span>
+						<span class="state-value" data-phase-output>settled</span>
+					</div>
+				</div>
+				<p class="lab-narration" data-sequence-narration aria-live="polite"></p>
+
+				<div class="try">
+					<strong>Things to try</strong>
+					<ol>
+						<li>
+							In simultaneous mode, use “Simulate Back / Forward.” Watch both
+							changes compete.
+						</li>
+						<li>
+							Switch to sequenced mode and repeat. Read the phase output while
+							the background moves.
+						</li>
+						<li>
+							Hover an inactive item without clicking. Confirm the background
+							stays at the active route.
+						</li>
+						<li>
+							Click a hovered internal item. Its icon stays bright while the
+							background catches up.
+						</li>
+						<li>
+							Turn on reduced motion and repeat. Meaning should survive without
+							travel or delay.
+						</li>
+					</ol>
+				</div>
+			</section>
+
+			<div class="defense">
+				<strong>Cold-recall defense:</strong><br />
+				Hover is immediate icon feedback. Active route is a sequenced background
+				and icon state. Hover wins because replaying the active delay would make
+				a clicked icon flash dim.
+			</div>
+
+			<h2>Step 1 — Give icon colors distinct meanings</h2>
+			<p>
+				Start in <code>NavigationItem</code>. Remove the item-owned background
+				span. The shared active background will move into the parent later.
+			</p>
+			<p>
+				Wrap the icon in a span whose default color is
+				<code>--icon-secondary</code>. Hover, keyboard-visible focus, and active
+				route all target <code>--icon-primary</code>, but only active route
+				receives a delay.
+			</p>
+
+			<figure>
+				<figcaption>
+					The icon owns color feedback; the item no longer owns a background.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> the icon begins with the secondary
+					token and transitions only color over the fast duration. Group hover,
+					group focus visible, and group current-page state all choose the
+					primary token.
+				</p>
+				<pre aria-hidden="true"><code>&lt;NavLink
+  to={href}
+  className={clsxm(
+    'group relative z-10 my-1 mr-1 grid size-9 place-items-center',
+    'rounded-md focus:outline-none',
+    className,
+  )}
+&gt;
+  &lt;span
+    className={clsxm(
+      'relative text-(--icon-secondary)',
+      'transition-colors duration-(--duration-fast) ease-hover',
+      'group-hover:text-(--icon-primary)',
+      'group-focus-visible:text-(--icon-primary)',
+      'group-aria-[current=page]:text-(--icon-primary)',
+    )}
+  &gt;
+    {children}
+  &lt;/span&gt;
+&lt;/NavLink&gt;</code></pre>
+			</figure>
+			<p class="src-line">
+				Current item background:
+				<a
+					class="source-chip vsc"
+					href="vscode://file/Users/hanihusam/Dev/hanihusam.com/app/components/ui/navigation-item.tsx:30"
+					aria-label="Open local navigation-item.tsx line 30 in VS Code"
+					>navigation-item.tsx:30</a
+				>
+				<a
+					class="source-chip gh"
+					href="https://github.com/hanihusam/hanihusam.com/blob/c0e2f721bd7dce7360f7ce751a16efb1200f6a59/app/components/ui/navigation-item.tsx#L30"
+					aria-label="Open pinned GitHub source for navigation-item.tsx line 30"
+					>GitHub↗</a
+				>
+			</p>
+
+			<div class="checkpoint">
+				<strong>Checkpoint</strong>
+				Before adding active motion, verify that every icon is dim at rest and
+				that hover changes only icon color over 150ms. If any background
+				appears, the old item-local layer is still present.
+			</div>
+
+			<h2>Step 2 — Derive the active route in Navigation</h2>
+			<p>
+				A click is not the source of truth. Direct loads and browser history
+				must place the background correctly, so derive the active index from
+				React Router's pathname.
+			</p>
+
+			<figure>
+				<figcaption>
+					Home matches exactly; Works also matches its nested pages.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> get pathname from use Location. Exclude
+					the external URL, match Home only at the root, and match Works at its
+					own path or beneath it. Minus one means no internal destination is
+					active.
+				</p>
+				<pre aria-hidden="true"><code>const { pathname } = useLocation()
+
+const activeIndex = links.findIndex((link) =&gt; {
+  if (link.href.startsWith('http')) return false
+  if (link.href === '/') return pathname === '/'
+
+  return pathname === link.href || pathname.startsWith(`${link.href}/`)
+})</code></pre>
+			</figure>
+
+			<div class="callout">
+				Keep <code>NavLink</code>. The parent needs an index for geometry, while
+				each link still needs semantic <code>aria-current="page"</code> for
+				assistive technology and its active icon selector.
+			</div>
+
+			<h2>Step 3 — Add one shared active background</h2>
+			<p>
+				Wrap only the three destinations in a relative flex container. Render
+				the background before the links so their icons remain above it. The
+				theme switcher stays outside this route-owned layer.
+			</p>
+
+			<figure>
+				<figcaption>
+					Finite classes map the three 40px-spaced item origins.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> index zero maps to zero movement, index
+					one to forty pixels, and index two to eighty pixels. Literal class
+					names remain visible to Tailwind's source scanner.
+				</p>
+				<pre aria-hidden="true"><code>const indicatorPositions = [
+  'translate-x-0',
+  'translate-x-10',
+  'translate-x-20',
+] as const</code></pre>
+			</figure>
+
+			<figure>
+				<figcaption>
+					The active background moves; it never responds to hover.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> inside the relative links wrapper,
+					render an absolute thirty-six-pixel background at four pixels from the
+					top and left. It ignores pointer events and transitions transform over
+					the base duration with the in-out quart curve.
+				</p>
+				<pre aria-hidden="true"><code>&lt;div className="relative flex"&gt;
+  &lt;span
+    aria-hidden
+    className={clsxm(
+      'pointer-events-none absolute top-1 left-1 size-9 rounded-md',
+      'bg-(--nav-item-surface-active) transition-transform',
+      'duration-(--duration-base) ease-in-out-quart',
+      activeIndex === -1 &amp;&amp; 'opacity-0',
+      activeIndex !== -1 &amp;&amp; indicatorPositions[activeIndex],
+    )}
+  /&gt;
+
+  {links.map(/* NavigationItem stays above this layer */)}
+&lt;/div&gt;</code></pre>
+			</figure>
+			<p class="src-line">
+				Navigation composition:
+				<a
+					class="source-chip vsc"
+					href="vscode://file/Users/hanihusam/Dev/hanihusam.com/app/components/navigation.tsx:27"
+					aria-label="Open local navigation.tsx line 27 in VS Code"
+					>navigation.tsx:27</a
+				>
+				<a
+					class="source-chip gh"
+					href="https://github.com/hanihusam/hanihusam.com/blob/c0e2f721bd7dce7360f7ce751a16efb1200f6a59/app/components/navigation.tsx#L27"
+					aria-label="Open pinned GitHub source for navigation.tsx line 27"
+					>GitHub↗</a
+				>
+			</p>
+
+			<h2>Step 4 — Delay only unhovered active color</h2>
+			<p>
+				The background uses <code>--duration-base</code>, or 200ms. Give the new
+				active icon the same transition delay, then let its existing 150ms color
+				transition begin.
+			</p>
+			<p>
+				The delay must apply only when the active link is neither hovered nor
+				keyboard-focus-visible. That condition encodes “hover wins” directly and
+				avoids JavaScript timers.
+			</p>
+
+			<figure>
+				<figcaption>
+					An arbitrary ancestor variant expresses the precedence rule.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> delay begins at zero. When the ancestor
+					group is the current page and is neither hovered nor focus visible,
+					the delay becomes the base duration. Hovered and keyboard-focused
+					active icons remain bright immediately.
+				</p>
+				<pre aria-hidden="true"><code>&lt;span
+  className={clsxm(
+    'relative text-(--icon-secondary)',
+    'transition-colors duration-(--duration-fast) ease-hover delay-0',
+    'group-hover:text-(--icon-primary)',
+    'group-focus-visible:text-(--icon-primary)',
+    'group-aria-[current=page]:text-(--icon-primary)',
+    "[.group[aria-current=page]:not(:hover):not(:focus-visible)_&amp;]:delay-(--duration-base)",
+  )}
+&gt;
+  {children}
+&lt;/span&gt;</code></pre>
+			</figure>
+
+			<div class="defense">
+				<strong>Why no timer?</strong><br />
+				The sequence is a relationship between CSS transitions. Using the same
+				<code>--duration-base</code> token for background duration and icon
+				delay keeps them synchronized, and reduced motion can zero both
+				automatically.
+			</div>
+
+			<h2>Step 5 — Reason through hover precedence</h2>
+			<p>Trace these cases before opening the browser:</p>
+			<table>
+				<thead>
+					<tr>
+						<th scope="col">Event</th>
+						<th scope="col">Background</th>
+						<th scope="col">Icon</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<th scope="row">Hover inactive item</th>
+						<td>Stays at active route</td>
+						<td>Brightens immediately</td>
+					</tr>
+					<tr>
+						<th scope="row">Click hovered item</th>
+						<td>Moves over 200ms</td>
+						<td>Remains bright from hover</td>
+					</tr>
+					<tr>
+						<th scope="row">Back / Forward</th>
+						<td>Moves over 200ms</td>
+						<td>Brightens after 200ms</td>
+					</tr>
+					<tr>
+						<th scope="row">Pointer leaves clicked item</th>
+						<td>Continues or stays active</td>
+						<td>Remains bright from active state</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="checkpoint">
+				<strong>Checkpoint</strong>
+				Click Projects while hovering it, then move the pointer away before
+				200ms. The icon must never flash dim. Next use Back without hovering
+				Home; that is where the delayed icon phase should be visible.
+			</div>
+
+			<h2>Step 6 — Keep the theme action separate</h2>
+			<p>
+				The theme switcher is not a route and never receives the shared active
+				background. Its local hover treatment may remain, but pointer-created
+				focus must not leave that background looking selected.
+			</p>
+
+			<figure>
+				<figcaption>
+					Use visible focus instead of forcibly removing focus.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> replace group focus with group focus
+					visible. Pointer hover remains unchanged, keyboard users keep
+					feedback, and a mouse click no longer leaves the action looking
+					active.
+				</p>
+				<pre
+					aria-hidden="true"
+				><code>- group-hover:opacity-100 group-focus:opacity-100
++ group-hover:opacity-100 group-focus-visible:opacity-100</code></pre>
+			</figure>
+
+			<h2>Step 7 — Let reduced motion collapse the sequence</h2>
+			<p>
+				The project already sets <code>--duration-fast</code> and
+				<code>--duration-base</code> to zero under
+				<code>prefers-reduced-motion: reduce</code>. Because both background
+				duration and icon delay use those tokens, route state becomes immediate
+				without losing any colors or backgrounds.
+			</p>
+
+			<figure>
+				<figcaption>
+					The existing token override removes travel and waiting together.
+				</figcaption>
+				<p class="listen">
+					<strong>Listen first:</strong> under reduced motion, every project
+					duration token becomes zero milliseconds. The background and icon
+					reach their final states immediately while preserving the distinction
+					between inactive, interactive, and active items.
+				</p>
+				<pre aria-hidden="true"><code>@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
+}</code></pre>
+			</figure>
+			<p class="src-line">
+				Reduced-motion tokens:
+				<a
+					class="source-chip vsc"
+					href="vscode://file/Users/hanihusam/Dev/hanihusam.com/app/styles/theme.css:341"
+					aria-label="Open local theme.css line 341 in VS Code"
+					>theme.css:341</a
+				>
+				<a
+					class="source-chip gh"
+					href="https://github.com/hanihusam/hanihusam.com/blob/c0e2f721bd7dce7360f7ce751a16efb1200f6a59/app/styles/theme.css#L341"
+					aria-label="Open pinned GitHub source for theme.css line 341"
+					>GitHub↗</a
+				>
+			</p>
+
+			<h2>Step 8 — Verify behavior, not just appearance</h2>
+			<ol class="checklist">
+				<li>
+					Load <code>/</code>: Home background and icon are active immediately.
+				</li>
+				<li>
+					Load <code>/works</code> or <code>/works/...</code>: Projects is
+					active without an entrance animation.
+				</li>
+				<li>Hover an inactive item: only its icon changes color.</li>
+				<li>Leave it: the icon returns to the dim token over 150ms.</li>
+				<li>Click it while hovered: the icon never flashes dim.</li>
+				<li>
+					Use Back and Forward without hovering: background moves first, then
+					icon color begins.
+				</li>
+				<li>
+					Hover Substack: its icon brightens, but no active background moves.
+				</li>
+				<li>
+					Tab through links: focus-visible produces the same icon-only feedback.
+				</li>
+				<li>
+					Click the theme switcher and leave: no focused background remains
+					stuck.
+				</li>
+				<li>
+					Enable reduced motion: route state changes immediately with no delay.
+				</li>
+				<li>Check both themes for sufficient inactive-icon contrast.</li>
+			</ol>
+
+			<p>
+				Run <code>npm run lint</code> and <code>npm run typecheck</code> after
+				the manual interaction pass. The repository has no automated UI test
+				suite, so do not add one as part of this animation.
+			</p>
+
+			<section
+				class="quiz"
+				data-sequence-quiz
+				aria-labelledby="sequence-quiz-heading"
+			>
+				<h2 id="sequence-quiz-heading">Check your model</h2>
+				<p>Answer from the state rules, not from remembered class names.</p>
+				<form>
+					<fieldset>
+						<legend>
+							1. What changes when an inactive item is merely hovered?
+						</legend>
+						<label
+							><input type="radio" name="q1" value="a" /> Its route becomes
+							pending.</label
+						>
+						<label
+							><input type="radio" name="q1" value="b" /> Its background fades
+							inward.</label
+						>
+						<label
+							><input type="radio" name="q1" value="c" /> Its icon color
+							brightens.</label
+						>
+						<label
+							><input type="radio" name="q1" value="d" /> Its active delay
+							begins.</label
+						>
+					</fieldset>
+
+					<fieldset>
+						<legend>2. Why does a clicked hovered icon stay bright?</legend>
+						<label
+							><input type="radio" name="q2" value="a" /> Hover overrides the
+							active delay.</label
+						>
+						<label
+							><input type="radio" name="q2" value="b" /> Navigation cancels its
+							transition.</label
+						>
+						<label
+							><input type="radio" name="q2" value="c" /> The background owns
+							icon color.</label
+						>
+						<label
+							><input type="radio" name="q2" value="d" /> Pointer focus removes
+							active state.</label
+						>
+					</fieldset>
+
+					<fieldset>
+						<legend>3. What should reduced motion preserve?</legend>
+						<label
+							><input type="radio" name="q3" value="a" /> Only the active
+							background.</label
+						>
+						<label
+							><input type="radio" name="q3" value="b" /> Only keyboard focus
+							feedback.</label
+						>
+						<label
+							><input type="radio" name="q3" value="c" /> The full timing
+							sequence.</label
+						>
+						<label
+							><input type="radio" name="q3" value="d" /> Every final state
+							distinction.</label
+						>
+					</fieldset>
+
+					<button type="submit">Check answers</button>
+					<p
+						class="quiz-feedback"
+						data-sequence-quiz-feedback
+						aria-live="polite"
+					></p>
+				</form>
+			</section>
+
+			<h2>Read next</h2>
+			<ul>
+				<li>
+					<a href="../reference/sequenced-active-motion-brief.html"
+						>Sequenced active motion brief — compact reference</a
+					>
+				</li>
+				<li>
+					<a href="0001-build-the-two-layer-indicator.html"
+						>Lesson 1 — superseded two-background exploration</a
+					>
+				</li>
+			</ul>
+
+			<h2>Primary source</h2>
+			<p>
+				Read MDN's
+				<a
+					href="https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/transition-delay"
+					><code>transition-delay</code> reference</a
+				>
+				(~4 minutes), then review the official
+				<a href="https://reactrouter.com/api/components/NavLink"
+					>React Router <code>NavLink</code> reference</a
+				>
+				for active-route semantics.
+			</p>
+
+			<p class="ask">
+				I'm your teacher for this—ask whenever a selector or state transition
+				feels like magic rather than a rule you can predict.
+			</p>
+			<p class="foot">
+				Lesson 2 · workspace navigation-indicator-animation · mission: implement
+				and explain the sequenced active navigation state
+			</p>
+		</main>
+	</body>
+</html>

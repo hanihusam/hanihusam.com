@@ -411,6 +411,40 @@ button:focus-visible,
 	opacity: 0.55;
 }
 
+.sequence-active-indicator {
+	z-index: 0;
+	background: var(--active-indicator);
+	transform: translate3d(var(--sequence-indicator-x), 0, 0);
+	transition: transform var(--duration-base) var(--ease-move);
+}
+
+.sequence-nav-item {
+	color: #7e929c;
+	transition: color var(--duration-fast) var(--ease-hover);
+}
+
+.sequence-nav-item.is-icon-bright,
+.sequence-nav-item:hover,
+.sequence-nav-item:focus-visible {
+	color: var(--nav-ink);
+}
+
+.sequence-theme {
+	color: #7e929c;
+	transition: color var(--duration-fast) var(--ease-hover);
+}
+
+.sequence-theme:hover,
+.sequence-theme:focus-visible {
+	color: var(--nav-ink);
+}
+
+.sequence-lab.reduce-motion .sequence-active-indicator,
+.sequence-lab.reduce-motion .sequence-nav-item,
+.sequence-lab.reduce-motion .sequence-theme {
+	transition-duration: 0ms;
+}
+
 .lab-state {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
