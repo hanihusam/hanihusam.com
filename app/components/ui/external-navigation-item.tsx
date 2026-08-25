@@ -1,3 +1,4 @@
+import { AnchorOrLink } from '@/components/links/anchor-or-link'
 import { Text } from '@/components/typography'
 import { clsxm } from '@/utils/clsxm'
 
@@ -8,28 +9,28 @@ import {
 	Root,
 	Trigger,
 } from '@radix-ui/react-tooltip'
-import { NavLink } from 'react-router'
+import { type ReactNode } from 'react'
 
-type NavigationItemProps = {
+type ExternalNavigationItemProps = {
 	label: string
 	href: string
-	children: React.ReactNode
+	children: ReactNode
 	className?: string
 }
 
-export default function NavigationItem({
+function ExternalNavigationItem({
 	label,
 	href,
-	className,
 	children,
-}: NavigationItemProps) {
+	className,
+}: ExternalNavigationItemProps) {
 	return (
 		<Provider delayDuration={100}>
 			<Root>
 				<Trigger asChild>
-					<NavLink
+					<AnchorOrLink
 						aria-label={label}
-						to={href}
+						href={href}
 						className={clsxm(
 							'group relative z-10 grid size-10 place-items-center',
 							'rounded-md focus:outline-none',
@@ -43,13 +44,11 @@ export default function NavigationItem({
 								'group-hover:text-(--nav-item-icon-hover)',
 								'group-focus-visible:text-(--nav-item-icon-active)',
 								'group-active:scale-[0.97] motion-reduce:transform-none',
-								'group-aria-[current=page]:text-(--nav-item-icon-active)',
-								'[.group[aria-current=page]:not(:hover):not(:focus-visible)_&]:delay-(--duration-base)',
 							)}
 						>
 							{children}
 						</span>
-					</NavLink>
+					</AnchorOrLink>
 				</Trigger>
 				<Content className="TooltipContent" sideOffset={5}>
 					<Text
@@ -64,3 +63,5 @@ export default function NavigationItem({
 		</Provider>
 	)
 }
+
+export { ExternalNavigationItem }
