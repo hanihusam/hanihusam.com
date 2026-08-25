@@ -1,8 +1,18 @@
 import * as React from 'react'
 
 import { type HeadingScrollSpy, TocList } from '@/components/works/toc-list'
+import { useFloatingNavigationMotion } from '@/hooks/useFloatingNavigationMotion'
+import { useIsomorphicLayoutEffect } from '@/utils/helpers'
+import { DURATION_BASE, EASE_IN_OUT_QUART } from '@/utils/motion'
 
 import { ListBulletsIcon } from '@phosphor-icons/react'
+import {
+	animate,
+	motion,
+	useMotionTemplate,
+	useMotionValue,
+	useReducedMotion,
+} from 'motion/react'
 import { Drawer } from 'vaul'
 
 type WorkTocDrawerProps = {
@@ -22,17 +32,47 @@ export function WorkTocDrawer({
 	minLevel,
 }: WorkTocDrawerProps) {
 	const [open, setOpen] = React.useState(false)
+	const shouldReduceMotion = useReducedMotion()
+	const { minimized, reason } = useFloatingNavigationMotion()
+	const triggerScale = useMotionValue(1)
+	const triggerTransform = useMotionTemplate`scale(${triggerScale})`
+
+	useIsomorphicLayoutEffect(() => {
+		triggerScale.stop()
+		const target = shouldReduceMotion || !minimized ? 1 : 0.88
+
+		if (shouldReduceMotion || reason === 'route') {
+			triggerScale.set(target)
+			return
+		}
+
+		const controls = animate(triggerScale, target, {
+			duration: DURATION_BASE,
+			ease: EASE_IN_OUT_QUART,
+		})
+		return () => controls.stop()
+	}, [minimized, reason, shouldReduceMotion, triggerScale])
 
 	if (!toc?.length) return null
 
 	return (
 		<Drawer.Root open={open} onOpenChange={setOpen}>
-			<Drawer.Trigger
-				aria-label="Open table of contents"
-				className="toc-enter fixed right-8 bottom-8 z-20 grid size-11 place-items-center rounded-md border border-(--border-primary) bg-(--surface-primary) text-(--icon-primary) shadow-lg transition-colors hover:bg-(--nav-item-surface-active) focus:outline-none lg:hidden"
-			>
-				<ListBulletsIcon className="h-5 w-5" />
-			</Drawer.Trigger>
+			<div className="toc-enter fixed right-8 bottom-8 z-20 lg:hidden">
+				<Drawer.Trigger asChild>
+					<motion.button
+						type="button"
+						aria-label="Open table of contents"
+						initial={false}
+						style={{
+							transform: triggerTransform,
+							transformOrigin: '100% 100%',
+						}}
+						className="grid size-[50px] place-items-center rounded-md border border-(--border-primary) bg-(--surface-primary) text-(--icon-primary) shadow-lg transition-colors hover:bg-(--nav-item-surface-active) focus:outline-none"
+					>
+						<ListBulletsIcon className="size-5" />
+					</motion.button>
+				</Drawer.Trigger>
+			</div>
 
 			<Drawer.Portal>
 				<Drawer.Overlay className="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm" />

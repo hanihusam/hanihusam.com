@@ -370,9 +370,3 @@ html {
 @view-transition {
 	navigation: auto;
 }
-
-@media (prefers-reduced-motion: no-preference) {
-	html {
-		scroll-behavior: smooth;
-	}
-}

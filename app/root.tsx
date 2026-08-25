@@ -1,4 +1,5 @@
 import { Footer } from '@/components/footer'
+import { FloatingNavigationMotionProvider } from '@/hooks/useFloatingNavigationMotion'
 import { LayoutRoot } from '@/components/layout'
 import { NotFound } from '@/components/not-found'
 import appStyles from '@/styles/app.css?url'
@@ -252,10 +253,12 @@ function App({
 	return (
 		<Document nonce={nonce} theme={theme} env={data.ENV}>
 			<LayoutRoot surface={surface}>
-				<TopBlurOverlay />
-				<PageTransition />
-				<Footer />
-				<Navigation />
+				<FloatingNavigationMotionProvider>
+					<TopBlurOverlay />
+					<PageTransition />
+					<Footer />
+					<Navigation />
+				</FloatingNavigationMotionProvider>
 			</LayoutRoot>
 		</Document>
 	)
