@@ -1,0 +1,429 @@
+---
+title: Translating Instagram’s Navigation Motion to the Web
+publishedAt: 2026-08-26
+lastUpdated: 2026-08-26
+description: Studying the motion grammar behind Instagram’s floating navigation
+  and translating it into a web interface with different semantics, gesture
+  boundaries, routing, and accessibility constraints.
+category: Design Engineering
+role: Design Engineer
+bannerLandscapeCloudinaryId: bapak2.dev/works/translating-instagrams-navigation-motion-to-the-web/thumbnail-md_vhoaol
+bannerSquareCloudinaryId: bapak2.dev/works/translating-instagrams-navigation-motion-to-the-web/thumbnail-sm_feepwh
+techs: React, Tailwind CSS, TypeScript, Motion
+github: https://github.com/hanihusam/hanihusam.com
+link: https://hanihusam.com
+---
+
+I had been paying attention to Instagram’s floating mobile navigation for a while. Not really the Liquid Glass look, but what happens when you actually use it.
+
+Scroll down and the navigation gets smaller. Start interacting with it and it gets your attention again. Hold the active item and the background starts to feel like an object under your finger. Drag it, reverse direction, push against the edge, then let go. There is quite a lot happening in a very small area, but none of it feels particularly loud.
+
+I wanted to bring some of that behavior into my portfolio. Not by recreating Instagram’s navbar, but by figuring out which interaction principles still made sense on a website with a completely different structure.
+
+That distinction ended up mattering more than I expected.
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/translating-instagrams-navigation-motion-to-the-web/ScreenRecording_08-26-2026_13-53-46_1_2026-08-26_at_14.26.41_z96rhy" />
+
+_The final navigation: compact on scroll, expanded on engagement, then directly draggable._
+
+## What I Was Actually Studying
+
+The useful part of the reference was its motion grammar. The navigation has clear compact and expanded states instead of continuously reacting to every pixel of scroll. The active surface feels connected from press through drag and release. While dragging, it follows the finger directly rather than lagging behind through a spring. At the boundaries, the interface acknowledges that the finger is still applying force without pretending another destination exists outside the navigation.
+
+Those were the ideas I wanted to understand.
+
+The visual material was different. I wasn't trying to add Liquid Glass, blur, refraction, glow, decorative bounce, or make a web navbar behave like a native Instagram tab bar.
+
+Instagram was useful as evidence that certain interaction principles worked. It wasn't a specification for my implementation.
+
+{/_ TODO: Replace with short Instagram reference recording.
+Only show the relevant compact, engagement, drag, and endpoint behavior. _/}
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/translating-instagrams-navigation-motion-to-the-web/ScreenRecording_08-26-2026_14-02-46_1_kkd0vs" />
+
+_The Instagram behavior I used as a reference, not as a visual target._
+
+That difference became obvious as soon as I made the active indicator draggable.
+
+## Motion Exposed the Structure First
+
+The original navbar looked like this:
+
+```text
+Home · Projects · About · Substack | Theme
+```
+
+Visually, the first four items read as one navigation group. Technically they weren't. Home, Projects, and About are internal routes. Substack is an external link. Theme is an action.
+
+That distinction wasn't a big problem while everything was static. Once the active indicator could physically move between the routes, the ambiguity became much harder to ignore. Dragging right from About made Substack look like another possible destination, even though drag release should never navigate there.
+
+So I changed the structure to:
+
+```text
+Home · Projects · About | Substack · Theme
+```
+
+The divider now marks the real interaction boundary. Home, Projects, and About form the primary route track. Substack and Theme form a utility group outside it.
+
+Substack stays a normal external anchor. It never participates in active-route state, indicator geometry, drag calculations, or release targeting.
+
+```text
+Primary routes                      Utilities
+
+Home · Projects · About     |     Substack · Theme
+                         boundary
+```
+
+It was a small visual change, but it changed how I thought about the rest of the work. Motion wasn't something I was adding after the navigation structure was done. Motion was testing whether that structure actually made sense.
+
+## The First Interaction Model
+
+I kept the first version deliberately restrained. On phone-sized screens, the navbar had two stable sizes:
+
+```text
+Expanded: scale(1)
+Compact:  scale(0.88)
+```
+
+Scrolling down makes it compact. Scrolling upward expands it again. There is no continuous mapping between scroll progress and scale; the control is either giving the content more room or returning to its normal size.
+
+The active route also became directly manipulable. Touching the selected item arms the indicator immediately. Its background grows slightly and lifts by one pixel while the icon keeps its existing inward press feedback.
+
+Dragging then moves the indicator directly with the finger. There is no spring between the pointer and the indicator while the gesture is active; the spring only handles settlement after release.
+
+I kept the gesture narrow on purpose:
+
+- Touch and pen can drag.
+- Mouse cannot.
+- Dragging only starts from the currently active route.
+- Inactive routes remain normal links.
+- Substack and Theme never become draggable.
+- Reduced-motion users get the same navigation structure without the scale, lift, deformation, or spring movement.
+
+At this point the behavior looked good in the browser.
+
+Then I used it properly on my phone.
+
+## The Decision That Didn't Survive the Phone
+
+One decision in the first implementation had a pretty reasonable engineering explanation.
+
+If the navbar was already compact when the drag started, I kept it compact for the entire gesture. Changing the scale of a parent while the finger is moving changes the coordinate system underneath the pointer. The same physical movement at `scale(0.88)` does not map to the same logical distance at `scale(1)`.
+
+Keeping the navbar at one scale for the duration of the gesture meant the drag math stayed stable. It was easier to reason about and avoided introducing a jump while the indicator was under the finger.
+
+The initial interaction model was basically:
+
+```text
+Compact
+   ↓
+Engage active route
+   ↓
+Stay compact
+   ↓
+Drag
+   ↓
+Release
+```
+
+On the actual phone, that turned out to be the wrong tradeoff.
+
+The route targets were smaller exactly when I was trying to manipulate them. More importantly, the navbar stayed in a passive “get out of the way” state even after I had clearly stopped scrolling and started using navigation.
+
+I went back to the Instagram recording and looked at the interaction again. One detail I had initially treated as part of the visual polish made more sense after testing my own version: when the active navigation surface is engaged, the compact bar visibly returns toward full size as the interaction begins.
+
+I don't know how Instagram implements that internally. I can only describe what is visible in the recording. But the behavioral rule was useful:
+
+```text
+Scrolling
+→ navigation can stay compact
+
+Direct navigation intent
+→ navigation gets its space back
+```
+
+The compact state represents passive scroll context. Once someone intentionally engages navigation, that context has changed.
+
+So I reversed the original decision.
+
+The final interaction model became:
+
+```text
+Compact
+   ↓
+Engage active route
+   ↓
+Expand + arm
+   ↓
+Drag
+   ↓
+Remain expanded
+```
+
+Now, touching the active route while the navbar is compact expands the shared floating-navigation state back toward full size. The indicator arms at the same time, and the navbar remains expanded after the gesture. Only the next intentional downward scroll can make it compact again.
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/translating-instagrams-navigation-motion-to-the-web/ScreenRecording_08-26-2026_14-05-05_1_x9k5jl" />
+
+_Engaging the compact navigation expands it before and during direct manipulation._
+
+The interaction felt better immediately.
+
+It also brought back the exact engineering problem I had avoided.
+
+## The Better Interaction Made the Geometry Harder
+
+The old drag model could assume that the parent scale stayed constant throughout the gesture. That assumption was gone.
+
+A gesture could now begin while the navbar was at `0.88`, continue while it was halfway through its expansion, and finish at `1`. Simply taking cumulative pointer movement and dividing it by the current scale would cause the indicator to jump as that scale changed.
+
+I didn't want to solve that by delaying the expansion until after release. That would preserve the easier implementation by compromising the interaction again.
+
+So I changed how pointer coordinates were mapped.
+
+Instead of treating accumulated pointer movement as the source of truth, every pointer event is translated through the route track as it is actually rendered at that moment:
+
+```text
+Viewport pointer
+      ↓
+Live rendered route-track bounds
+      ↓
+Logical 120px route space
+      ↓
+Original grab offset removed
+      ↓
+Motion indicator x
+```
+
+When the gesture begins, I record where inside the active route slot the finger landed. During the drag, I read the track's current `getBoundingClientRect()`, which gives me its actual position and width on screen even while its parent is changing scale.
+
+The pointer's `clientX` can then be converted back into the logical three-slot navigation space and adjusted by the original grab offset.
+
+The parent can resize without making the indicator disconnect from the finger.
+
+There are probably other ways to solve the same geometry problem. The important part for me was why the problem existed in the first place.
+
+I had a technically safer interaction that felt worse. Once real-device testing changed the design decision, I made the implementation support the better interaction instead of keeping the interaction inside the constraints of the easier implementation.
+
+That was the point where this stopped feeling like a small navbar animation experiment.
+
+## Position Stops. Pressure Continues.
+
+The route track contains three `40px` destinations:
+
+```text
+Home | Projects | About
+```
+
+I didn't want the indicator to hit a completely rigid invisible wall when the finger continued beyond Home or About. Some resistance helps communicate that the interface is still receiving the gesture even though there is nowhere else to go.
+
+My first approach allowed a small amount of resisted positional overshoot. Internally that behaved correctly, but visually it created another problem. At About, the indicator could paint beyond the primary track and start entering the Substack area.
+
+The motion was now contradicting the divider I had added specifically to communicate that Substack was not part of the drag system.
+
+I first fixed it by clipping the indicator background to the primary route track. That stopped the leakage, but the result could read more like a rounded rectangle being cropped than an object pushing against a boundary.
+
+The final version separates position from pressure.
+
+The indicator position stops at Home or About. Continued pointer movement is still measured with resistance, but instead of moving farther, it produces a small local deformation of the active surface.
+
+**Position stops. Pressure continues.**
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/translating-instagrams-navigation-motion-to-the-web/ScreenRecording_08-26-2026_15-55-51_1_eoqtt7" />
+
+_Pulling past Home and About creates local pressure without suggesting another destination._
+
+The deformation is intentionally restrained. The indicator is already slightly inflated while armed, and at maximum edge pressure its horizontal scale only grows a little more. Enough to show that force is still being applied, but not enough to turn the navbar into rubber.
+
+Reversing direction removes the pressure immediately.
+
+The interesting part is what doesn't move.
+
+The divider stays still. Substack stays still. Theme stays still. The outer navbar shell stays still. Only the selected route surface responds.
+
+I considered making the divider participate because it would make the elastic effect more obvious. But that would also make the divider look like part of the gesture. It isn't. Its job is to communicate that the draggable navigation ends there.
+
+Instagram has a different geometry. Its draggable endpoints can coincide with the outer edge of its tab system. About is not the outer edge of my navbar; the shell continues because Substack and Theme still live beside it.
+
+Copying the literal geometry would have made the interaction less accurate to my own product.
+
+The useful principle was not “stretch the navbar at the edge.”
+
+It was to acknowledge continued force without implying another destination exists.
+
+## Release Shouldn't Invent Intent
+
+Another bug showed up with quicker flicks.
+
+The early release logic first resolved a destination from the indicator position, then looked at velocity. If that velocity passed a threshold, it could advance another route in the same direction.
+
+The problem was that position and velocity were both describing the same gesture. They could effectively count the user's movement twice.
+
+A short, fast drag from Home toward Projects could occasionally resolve all the way to About. The visible position suggested one destination while navigation chose another.
+
+I changed the priority.
+
+**Position decides first.**
+
+Velocity only gets involved if the dragged position still resolves to the route where the gesture started, and even then it can only advance one adjacent destination.
+
+That keeps both kinds of intent possible. An intentional drag across two slots can still move Home to About because the indicator actually traveled there. A short flick toward Projects can still help finish the move to Projects. But velocity cannot turn a one-slot gesture into an accidental two-slot jump.
+
+The release spring comes after that decision.
+
+It settles the indicator. It doesn't decide what the user meant.
+
+## The Strange Animation That Wasn't an Animation Problem
+
+Gesture geometry wasn't the only thing motion exposed.
+
+The navbar is mounted globally across routes. That created a strange state flow:
+
+```text
+Home
+  ↓
+Scroll down
+  ↓
+Navbar becomes compact
+  ↓
+Navigate to Projects
+  ↓
+Compact state survives
+  ↓
+Router restores scroll position
+  ↓
+Navbar visibly corrects itself
+```
+
+The result looked like an intentional transition, but it wasn't. It was stale state correcting itself.
+
+Changing the easing wouldn't solve that because the animation wasn't the actual problem. The problem was state ownership.
+
+The compact state belonged to a globally persistent control, while the scroll context that produced it belonged to the page that had just disappeared.
+
+I moved minimization into one shared floating-navigation state owner.
+
+The route-change flow now looks like this:
+
+```text
+Pathname changes
+      ↓
+Expand floating controls immediately
+      ↓
+Reset scroll direction and accumulated distance
+      ↓
+Settle active interaction state
+      ↓
+Paint destination
+      ↓
+Next intentional scroll owns the next state
+```
+
+A route change is state correction, not user motion.
+
+That means there is no animated fix after the destination appears. The control starts from a known state before the new route is painted.
+
+Some motion bugs aren't really animation bugs. They're state bugs that motion happens to make visible.
+
+## One Floating-Control System
+
+The same shared state ended up solving another consistency problem.
+
+Work detail pages have a floating table-of-contents trigger positioned on the same bottom plane as the navbar. It would have been easy to let both controls respond to scroll independently, but that also means they could disagree. One could be compact while the other was expanded, or they could use slightly different timing and start to feel like unrelated overlays floating above the same page.
+
+They now consume the same minimized signal.
+
+Both controls are `50px` at full size and become roughly `44px` at `scale(0.88)`. They don't have the same internal design and they don't need to. Their shared alignment, size endpoints, timing, and scroll state are enough to make them behave like part of one floating-control layer.
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/translating-instagrams-navigation-motion-to-the-web/ScreenRecording_08-26-2026_14-03-54_1_bqpplx" />
+
+_The navbar and work-page TOC respond to the same floating-navigation state._
+
+The TOC's entrance animation and its scroll-scale animation also live on separate nested elements.
+
+Two motion concerns, two transform owners.
+
+That prevents unrelated animations from competing for the same CSS transform.
+
+## Smooth Scrolling Wasn't Global After All
+
+There was one more global behavior that became harder to justify once route motion was being treated deliberately.
+
+The site had global smooth scrolling. That meant two very different things were receiving the same behavior: the router restoring scroll position between pages and someone intentionally jumping to a section from the table of contents.
+
+They aren't the same interaction.
+
+I removed the global rule.
+
+Cross-route restoration is immediate. Same-page TOC navigation explicitly opts into smooth `scrollIntoView()` when motion is allowed, and becomes immediate under `prefers-reduced-motion`.
+
+Less magic globally, more intent locally.
+
+## Where the System Landed
+
+By the end, the navbar wasn't really a collection of isolated animation tricks anymore. Each state had a reason to exist.
+
+| Context             | Floating navigation         | Indicator                               |
+| ------------------- | --------------------------- | --------------------------------------- |
+| Rest                | Expanded                    | Resting on active route                 |
+| Scroll down         | Compact                     | Resting                                 |
+| Engage active route | Expands                     | Arms immediately                        |
+| Drag                | Expanded                    | Tracks pointer directly                 |
+| Edge pressure       | Expanded                    | Position clamps, surface yields locally |
+| Release             | Remains expanded            | Settles to resolved route               |
+| Route change        | Resets expanded immediately | Aligns to destination                   |
+| Reduced motion      | Remains full size           | No lift, deformation, or spring         |
+
+The values themselves are fairly restrained. Compact is `0.88`, the scroll transition is `200ms`, and the armed indicator grows to `1.06` with a `1px` lift over `150ms`. Maximum edge pressure only stretches the horizontal scale slightly farther, to around `1.075`.
+
+Release settles with:
+
+```text
+stiffness: 520
+damping: 42
+mass: 0.7
+```
+
+I don't think those numbers are universal motion recommendations. They're simply the values that worked for this navigation after testing them in this particular geometry.
+
+The reduced-motion branch matters just as much as the animated one. With reduced motion enabled, the floating controls stay at full size and the indicator does not lift, inflate, deform, or spring.
+
+The navigation model remains the same. Motion is additional feedback, not the only way to understand what the interface is doing.
+
+## What I Didn't Take From the Reference
+
+By the end, quite a lot of Instagram's literal shape had no place here.
+
+I didn't add:
+
+- Liquid Glass styling
+- blur, refraction, glow, or decorative color effects
+- jelly-like whole-shell deformation
+- continuous scroll-progress scaling
+- a collapsed single-item navbar
+- mouse dragging
+- dragging from inactive routes
+- dragging into Substack or Theme
+- animated divider feedback
+- interactive page swiping
+- a delayed long-press menu
+- compact state surviving across route changes
+
+Most of those things would probably make the reference more obvious.
+
+They would also make the result less coherent with the site I was actually building.
+
+## What Changed for Me
+
+I started this because I liked how another product's navigation moved. The useful part ended up being everything that happened after that observation.
+
+Making the indicator draggable exposed that my route grouping was visually unclear. Testing on the actual phone overturned a technically reasonable decision. Accepting the better interaction created a harder pointer-coordinate problem. The endpoints forced me to define exactly where interaction ownership stopped. A strange route transition turned out to be shared-state architecture instead of easing.
+
+Some of the most important motion decisions were decisions to keep the divider, utilities, and outer shell completely still.
+
+The reference still mattered at the end, but less as something to reproduce and more as evidence of a principle worth investigating.
+
+The final navigation became closer to Instagram in principle while becoming more different from it in implementation.
+
+I think that's what adapting a reference should produce.
+
+The original motion work is in [PR #160](https://github.com/hanihusam/hanihusam.com/pull/160). The later real-device refinements, compact engagement, live coordinate mapping, and endpoint behavior are in [PR #161](https://github.com/hanihusam/hanihusam.com/pull/161).
