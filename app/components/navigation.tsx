@@ -55,22 +55,37 @@ const VELOCITY_THRESHOLD = 450
 const EDGE_RESISTANCE = 0.15
 const MAX_EDGE_OVERSHOOT = 6
 const MINIMIZED_SCALE = 0.88
+const ARMED_INDICATOR_SCALE = 1.06
+const EDGE_INDICATOR_SCALE_X = 1.075
 
 function clamp(value: number, min: number, max: number) {
 	return Math.min(Math.max(value, min), max)
 }
 
-function resistIndicatorEdge(value: number) {
+function getIndicatorDragState(value: number) {
 	if (value < 0) {
-		return -Math.min(Math.abs(value) * EDGE_RESISTANCE, MAX_EDGE_OVERSHOOT)
+		const overshoot = Math.min(
+			Math.abs(value) * EDGE_RESISTANCE,
+			MAX_EDGE_OVERSHOOT,
+		)
+		return {
+			x: 0,
+			edgeProgress: overshoot / MAX_EDGE_OVERSHOOT,
+			originX: 100,
+		}
 	}
 	if (value > MAX_INDICATOR_X) {
-		return (
-			MAX_INDICATOR_X +
-			Math.min((value - MAX_INDICATOR_X) * EDGE_RESISTANCE, MAX_EDGE_OVERSHOOT)
+		const overshoot = Math.min(
+			(value - MAX_INDICATOR_X) * EDGE_RESISTANCE,
+			MAX_EDGE_OVERSHOOT,
 		)
+		return {
+			x: MAX_INDICATOR_X,
+			edgeProgress: overshoot / MAX_EDGE_OVERSHOOT,
+			originX: 0,
+		}
 	}
-	return value
+	return { x: value, edgeProgress: 0, originX: 50 }
 }
 
 export function Navigation() {
@@ -83,12 +98,16 @@ export function Navigation() {
 		matchPath({ path: href, end: href === '/' }, pathname),
 	)
 	const indicatorX = useMotionValue(Math.max(activeIndex, 0) * ITEM_SIZE)
-	const indicatorScale = useMotionValue(1)
+	const indicatorScaleX = useMotionValue(1)
+	const indicatorScaleY = useMotionValue(1)
 	const indicatorY = useMotionValue(0)
-	const indicatorTransform = useMotionTemplate`translate3d(${indicatorX}px, ${indicatorY}px, 0) scale(${indicatorScale})`
+	const indicatorOriginX = useMotionValue(50)
+	const indicatorTransform = useMotionTemplate`translate3d(${indicatorX}px, ${indicatorY}px, 0) scaleX(${indicatorScaleX}) scaleY(${indicatorScaleY})`
+	const indicatorTransformOrigin = useMotionTemplate`${indicatorOriginX}% 50%`
 	const navigationScale = useMotionValue(1)
 	const navigationTransform = useMotionTemplate`scale(${navigationScale})`
-	const dragStartX = React.useRef(0)
+	const primaryTrackRef = React.useRef<HTMLDivElement>(null)
+	const pointerGrabOffset = React.useRef(ITEM_SIZE / 2)
 	const dragging = React.useRef(false)
 	const dragPointerType = React.useRef('')
 	const armed = React.useRef(false)
@@ -116,16 +135,24 @@ export function Navigation() {
 		armed.current = false
 		pointerDownIndex.current = undefined
 		dragPointerType.current = ''
-		indicatorScale.stop()
+		indicatorScaleX.stop()
+		indicatorScaleY.stop()
 		indicatorY.stop()
+		indicatorOriginX.stop()
 
 		if (shouldReduceMotion) {
-			indicatorScale.set(1)
+			indicatorScaleX.set(1)
+			indicatorScaleY.set(1)
 			indicatorY.set(0)
+			indicatorOriginX.set(50)
 			return
 		}
 
-		animate(indicatorScale, 1, {
+		animate(indicatorScaleX, 1, {
+			duration: DURATION_FAST,
+			ease: EASE_HOVER,
+		})
+		animate(indicatorScaleY, 1, {
 			duration: DURATION_FAST,
 			ease: EASE_HOVER,
 		})
@@ -133,7 +160,17 @@ export function Navigation() {
 			duration: DURATION_FAST,
 			ease: EASE_HOVER,
 		})
-	}, [indicatorScale, indicatorY, shouldReduceMotion])
+		animate(indicatorOriginX, 50, {
+			duration: DURATION_FAST,
+			ease: EASE_HOVER,
+		})
+	}, [
+		indicatorOriginX,
+		indicatorScaleX,
+		indicatorScaleY,
+		indicatorY,
+		shouldReduceMotion,
+	])
 
 	React.useEffect(() => {
 		settleIndicatorPresence()
@@ -202,16 +239,33 @@ export function Navigation() {
 		}
 
 		armed.current = true
-		indicatorScale.stop()
+		pointerGrabOffset.current = clamp(
+			((event.clientX - (trackBounds.left + activeIndex * slotWidth)) /
+				slotWidth) *
+				ITEM_SIZE,
+			0,
+			ITEM_SIZE,
+		)
+		indicatorScaleX.stop()
+		indicatorScaleY.stop()
 		indicatorY.stop()
+		indicatorOriginX.stop()
+		indicatorOriginX.set(50)
+
+		if (minimized) expand('interaction')
 
 		if (shouldReduceMotion) {
-			indicatorScale.set(1)
+			indicatorScaleX.set(1)
+			indicatorScaleY.set(1)
 			indicatorY.set(0)
 			return
 		}
 
-		animate(indicatorScale, 1.06, {
+		animate(indicatorScaleX, ARMED_INDICATOR_SCALE, {
+			duration: DURATION_FAST,
+			ease: EASE_HOVER,
+		})
+		animate(indicatorScaleY, ARMED_INDICATOR_SCALE, {
 			duration: DURATION_FAST,
 			ease: EASE_HOVER,
 		})
@@ -248,17 +302,39 @@ export function Navigation() {
 		}
 
 		indicatorX.stop()
-		dragStartX.current = indicatorX.get()
 		dragging.current = true
 		suppressClick.current = true
 	}
 
-	function handlePan(_: PointerEvent, info: PanInfo) {
+	function handlePan(event: PointerEvent) {
 		if (!dragging.current) return
-		const scale = minimized ? MINIMIZED_SCALE : 1
-		indicatorX.set(
-			resistIndicatorEdge(dragStartX.current + info.offset.x / scale),
+
+		const trackBounds = primaryTrackRef.current?.getBoundingClientRect()
+		if (!trackBounds?.width) return
+
+		const pointerX =
+			((event.clientX - trackBounds.left) / trackBounds.width) *
+			ITEM_SIZE *
+			routeLinks.length
+		const dragState = getIndicatorDragState(
+			pointerX - pointerGrabOffset.current,
 		)
+		indicatorX.set(dragState.x)
+
+		if (shouldReduceMotion) {
+			indicatorScaleX.set(1)
+			indicatorScaleY.set(1)
+			indicatorOriginX.set(50)
+			return
+		}
+
+		indicatorScaleX.set(
+			ARMED_INDICATOR_SCALE +
+				dragState.edgeProgress *
+					(EDGE_INDICATOR_SCALE_X - ARMED_INDICATOR_SCALE),
+		)
+		indicatorScaleY.set(ARMED_INDICATOR_SCALE)
+		indicatorOriginX.set(50 + dragState.edgeProgress * (dragState.originX - 50))
 	}
 
 	function handlePanEnd(_: PointerEvent, info: PanInfo) {
@@ -325,6 +401,7 @@ export function Navigation() {
 			<div className="flex items-center p-1">
 				<nav aria-label="Primary">
 					<motion.div
+						ref={primaryTrackRef}
 						onPointerDown={handlePointerDown}
 						onPointerUp={handlePointerUp}
 						onPointerCancel={handlePointerCancel}
@@ -336,16 +413,17 @@ export function Navigation() {
 					>
 						<span
 							aria-hidden
-							className="pointer-events-none absolute inset-0 overflow-hidden rounded-md"
+							className="pointer-events-none absolute inset-y-0 -right-[3px] -left-[3px] overflow-hidden rounded-md"
 						>
 							<motion.span
 								data-navigation-indicator
 								style={{
 									transform: indicatorTransform,
+									transformOrigin: indicatorTransformOrigin,
 									borderRadius: 6,
 								}}
 								className={clsxm(
-									'absolute inset-y-0 left-0 size-10',
+									'absolute inset-y-0 left-[3px] size-10',
 									'bg-(--nav-item-surface-active)',
 									activeIndex === -1 && 'opacity-0',
 								)}
