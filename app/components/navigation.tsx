@@ -109,6 +109,7 @@ export function Navigation() {
 	const primaryTrackRef = React.useRef<HTMLDivElement>(null)
 	const pointerGrabOffset = React.useRef(ITEM_SIZE / 2)
 	const dragging = React.useRef(false)
+	const draggingAtEdge = React.useRef(false)
 	const dragPointerType = React.useRef('')
 	const armed = React.useRef(false)
 	const pointerDownIndex = React.useRef<number | undefined>(undefined)
@@ -124,17 +125,15 @@ export function Navigation() {
 			return
 		}
 
+		const isInteraction = reason === 'interaction'
 		const controls = animate(navigationScale, target, {
-			duration: DURATION_BASE,
-			ease: EASE_IN_OUT_QUART,
+			duration: isInteraction ? DURATION_FAST : DURATION_BASE,
+			ease: isInteraction ? EASE_HOVER : EASE_IN_OUT_QUART,
 		})
 		return () => controls.stop()
 	}, [minimized, navigationScale, reason, shouldReduceMotion])
 
-	const settleIndicatorPresence = React.useCallback(() => {
-		armed.current = false
-		pointerDownIndex.current = undefined
-		dragPointerType.current = ''
+	const settleIndicatorShape = React.useCallback(() => {
 		indicatorScaleX.stop()
 		indicatorScaleY.stop()
 		indicatorY.stop()
@@ -171,6 +170,14 @@ export function Navigation() {
 		indicatorY,
 		shouldReduceMotion,
 	])
+
+	const settleIndicatorPresence = React.useCallback(() => {
+		armed.current = false
+		draggingAtEdge.current = false
+		pointerDownIndex.current = undefined
+		dragPointerType.current = ''
+		settleIndicatorShape()
+	}, [settleIndicatorShape])
 
 	React.useEffect(() => {
 		settleIndicatorPresence()
@@ -303,7 +310,9 @@ export function Navigation() {
 
 		indicatorX.stop()
 		dragging.current = true
+		draggingAtEdge.current = false
 		suppressClick.current = true
+		settleIndicatorShape()
 	}
 
 	function handlePan(event: PointerEvent) {
@@ -328,12 +337,20 @@ export function Navigation() {
 			return
 		}
 
+		if (dragState.edgeProgress === 0) {
+			if (draggingAtEdge.current) {
+				draggingAtEdge.current = false
+				settleIndicatorShape()
+			}
+			return
+		}
+
+		draggingAtEdge.current = true
+		indicatorScaleX.stop()
+		indicatorOriginX.stop()
 		indicatorScaleX.set(
-			ARMED_INDICATOR_SCALE +
-				dragState.edgeProgress *
-					(EDGE_INDICATOR_SCALE_X - ARMED_INDICATOR_SCALE),
+			1 + dragState.edgeProgress * (EDGE_INDICATOR_SCALE_X - 1),
 		)
-		indicatorScaleY.set(ARMED_INDICATOR_SCALE)
 		indicatorOriginX.set(50 + dragState.edgeProgress * (dragState.originX - 50))
 	}
 
@@ -413,7 +430,7 @@ export function Navigation() {
 					>
 						<span
 							aria-hidden
-							className="pointer-events-none absolute inset-y-0 -right-[3px] -left-[3px] overflow-hidden rounded-md"
+							className="pointer-events-none absolute -inset-y-1 -right-[3px] -left-[3px] overflow-hidden rounded-md"
 						>
 							<motion.span
 								data-navigation-indicator
@@ -423,7 +440,7 @@ export function Navigation() {
 									borderRadius: 6,
 								}}
 								className={clsxm(
-									'absolute inset-y-0 left-[3px] size-10',
+									'absolute top-1 left-[3px] size-10',
 									'bg-(--nav-item-surface-active)',
 									activeIndex === -1 && 'opacity-0',
 								)}
