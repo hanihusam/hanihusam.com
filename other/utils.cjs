@@ -112,7 +112,19 @@ async function postRefreshCache({
 
 					res.on('end', () => {
 						if (res.statusCode && res.statusCode >= 400) {
-							reject(new Error(`Refresh failed with status ${res.statusCode}`))
+							let detail = data
+							try {
+								const parsed = JSON.parse(data)
+								if (typeof parsed?.message === 'string') detail = parsed.message
+							} catch {
+								// Keep the response text as the diagnostic detail.
+							}
+							const suffix = detail ? `: ${detail.slice(0, 500)}` : ''
+							reject(
+								new Error(
+									`Refresh failed with status ${res.statusCode}${suffix}`,
+								),
+							)
 							return
 						}
 						try {
