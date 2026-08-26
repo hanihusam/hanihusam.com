@@ -10,7 +10,11 @@ const MINIMIZE_SCROLL_Y = 96
 const MINIMIZE_DISTANCE = 32
 const EXPAND_DISTANCE = 16
 
-type FloatingNavigationMotionReason = 'scroll' | 'focus' | 'route'
+type FloatingNavigationMotionReason =
+	| 'scroll'
+	| 'focus'
+	| 'interaction'
+	| 'route'
 
 type FloatingNavigationMotion = {
 	minimized: boolean
@@ -55,7 +59,7 @@ function FloatingNavigationMotionProvider({
 	}, [])
 
 	const expand = React.useCallback(
-		(reason: 'focus' | 'route' = 'focus') => {
+		(reason: 'focus' | 'interaction' | 'route' = 'focus') => {
 			if (reason === 'route') {
 				reset('route')
 				return
