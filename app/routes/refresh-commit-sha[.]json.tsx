@@ -3,7 +3,6 @@ import { cache } from '@/utils/cache.server'
 import {
 	commitShaKey as refreshCacheCommitShaKey,
 	isRefreshShaInfo,
-	type RefreshShaInfo,
 } from './action.refresh-cache'
 
 export async function loader() {
@@ -12,11 +11,10 @@ export async function loader() {
 		return null
 	}
 
-	let value: RefreshShaInfo
+	const value = result.value
 	try {
-		value = JSON.parse(result.value as any)
 		if (!isRefreshShaInfo(value)) {
-			throw new Error(`Invalid value: ${result.value}`)
+			throw new Error(`Invalid value: ${JSON.stringify(value)}`)
 		}
 	} catch (error: unknown) {
 		console.error(`Error parsing commit sha from cache: ${error}`)
