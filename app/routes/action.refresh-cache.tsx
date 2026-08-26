@@ -71,7 +71,7 @@ export async function action({ request }: Route.ActionArgs) {
 	}
 	if ('contentPaths' in body && Array.isArray(body.contentPaths)) {
 		const refreshingContentPaths = []
-		const promises = []
+		const pageRefreshes = []
 		for (const contentPath of body.contentPaths) {
 			if (typeof contentPath !== 'string') {
 				continue
@@ -86,7 +86,7 @@ export async function action({ request }: Route.ActionArgs) {
 				const slug = path.parse(dirOrFilename).name
 
 				refreshingContentPaths.push(contentPath)
-				promises.push(
+				pageRefreshes.push(
 					getMdxPage({ contentDir, slug }, { forceFresh: true }).then(
 						(page) => {
 							if (!page) {
@@ -99,22 +99,25 @@ export async function action({ request }: Route.ActionArgs) {
 			}
 		}
 
-		// if any projects contentPaths were changed then let's update the dir list
-		// so it will appear on the works page.
-		if (refreshingContentPaths.some((p) => p.startsWith('projects'))) {
-			promises.push(
-				getContentMdxListItems('projects', {
-					request,
-					forceFresh: [
-						versionedKey('projects:dir-list'),
-						versionedKey('projects:mdx-list-items'),
-					].join(','),
-				}),
-			)
+		try {
+			await Promise.all(pageRefreshes)
+		} catch (error: unknown) {
+			const message =
+				error instanceof Error ? error.message : 'Unknown content refresh error'
+			console.error(message, error)
+			return data({ message }, { status: 500 })
 		}
 
-		if (promises.length) {
-			await Promise.all(promises)
+		// if any projects contentPaths were changed then let's update the dir list
+		// after their page caches are fresh so the list cannot reuse stale downloads.
+		if (refreshingContentPaths.some((p) => p.startsWith('projects'))) {
+			await getContentMdxListItems('projects', {
+				request,
+				forceFresh: [
+					versionedKey('projects:dir-list'),
+					versionedKey('projects:mdx-list-items'),
+				].join(','),
+			})
 		}
 
 		setShaInCache()
