@@ -1,7 +1,7 @@
 import { Grid } from '@/components/grid'
 import { HeroDotField } from '@/components/hero-dot-field'
 import { AnchorOrLink } from '@/components/links/anchor-or-link'
-import { Display, H3, Paragraph, Text } from '@/components/typography'
+import { Display, H3, Text } from '@/components/typography'
 import { ButtonLink, LinkButton } from '@/components/ui/button'
 import Logo from '@/components/ui/logo'
 import { getImageBuilder, getImgProps } from '@/utils/images'
