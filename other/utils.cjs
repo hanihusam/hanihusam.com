@@ -47,7 +47,7 @@ const changeTypes = {
 
 async function getChangedFiles(currentCommitSha, compareCommitSha) {
 	const lineParser = /^(?<change>\w).*?\s+(?<filename>.+$)/
-	const gitOutput = execFileSync('git', [
+	const gitOutput = execFileSync('/usr/bin/git', [
 		'diff',
 		'--name-status',
 		'--no-renames',
@@ -71,7 +71,7 @@ async function getChangedFiles(currentCommitSha, compareCommitSha) {
 }
 
 function getTrackedContentFiles() {
-	return execFileSync('git', ['ls-files', 'contents'])
+	return execFileSync('/usr/bin/git', ['ls-files', 'contents'])
 		.toString()
 		.split('\n')
 		.filter(Boolean)
