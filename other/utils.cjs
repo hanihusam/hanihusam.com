@@ -1,6 +1,11 @@
 // try to keep this dep-free so we don't have to install deps
-const { execSync } = require('child_process')
+const { execFileSync } = require('child_process')
 const https = require('https')
+
+const hostname =
+	process.env.GITHUB_REF_NAME === 'dev'
+		? 'hanihusam-com-staging.fly.dev'
+		: 'hanihusam.com'
 
 function fetchJson(url, { timeoutTime } = {}) {
 	return new Promise((resolve, reject) => {
@@ -12,6 +17,10 @@ function fetchJson(url, { timeoutTime } = {}) {
 				})
 
 				res.on('end', () => {
+					if (res.statusCode && res.statusCode >= 400) {
+						reject(new Error(`Request failed with status ${res.statusCode}`))
+						return
+					}
 					try {
 						resolve(JSON.parse(data))
 					} catch (error) {
@@ -23,9 +32,9 @@ function fetchJson(url, { timeoutTime } = {}) {
 				reject(e)
 			})
 		if (timeoutTime) {
-			setTimeout(() => {
+			request.setTimeout(timeoutTime, () => {
 				request.destroy(new Error('Request timed out'))
-			}, timeoutTime)
+			})
 		}
 	})
 }
@@ -34,39 +43,39 @@ const changeTypes = {
 	M: 'modified',
 	A: 'added',
 	D: 'deleted',
-	R: 'moved',
 }
 
 async function getChangedFiles(currentCommitSha, compareCommitSha) {
-	try {
-		const lineParser = /^(?<change>\w).*?\s+(?<filename>.+$)/
-		const gitOutput = execSync(
-			`git diff --name-status ${currentCommitSha} ${compareCommitSha}`,
-		).toString()
-		const changedFiles = gitOutput
-			.split('\n')
-			.map((line) => line.match(lineParser)?.groups)
-			.filter(Boolean)
-		const changes = []
-		for (const { change, filename } of changedFiles) {
-			const changeType = changeTypes[change]
-			if (changeType) {
-				changes.push({ changeType: changeTypes[change], filename })
-			} else {
-				console.error(`Unknown change type: ${change} ${filename}`)
-			}
+	const lineParser = /^(?<change>\w).*?\s+(?<filename>.+$)/
+	const gitOutput = execFileSync('/usr/bin/git', [
+		'diff',
+		'--name-status',
+		'--no-renames',
+		currentCommitSha,
+		compareCommitSha,
+	]).toString()
+	const changedFiles = gitOutput
+		.split('\n')
+		.map((line) => line.match(lineParser)?.groups)
+		.filter(Boolean)
+	const changes = []
+	for (const { change, filename } of changedFiles) {
+		const changeType = changeTypes[change]
+		if (changeType) {
+			changes.push({ changeType, filename })
+		} else {
+			throw new Error(`Unknown change type: ${change} ${filename}`)
 		}
-		return changes
-	} catch (error) {
-		console.error(`Something went wrong trying to get changed files.`, error)
-		return null
 	}
+	return changes
 }
 
-const hostname =
-	process.env.GITHUB_REF_NAME === 'dev'
-		? 'hanihusam-com.fly.dev'
-		: 'hanihusam.com'
+function getTrackedContentFiles() {
+	return execFileSync('/usr/bin/git', ['ls-files', 'contents'])
+		.toString()
+		.split('\n')
+		.filter(Boolean)
+}
 
 // try to keep this dep-free so we don't have to install deps
 async function postRefreshCache({
@@ -102,6 +111,10 @@ async function postRefreshCache({
 					})
 
 					res.on('end', () => {
+						if (res.statusCode && res.statusCode >= 400) {
+							reject(new Error(`Refresh failed with status ${res.statusCode}`))
+							return
+						}
 						try {
 							resolve(JSON.parse(data))
 						} catch {
@@ -110,6 +123,9 @@ async function postRefreshCache({
 					})
 				})
 				.on('error', reject)
+			req.setTimeout(30_000, () => {
+				req.destroy(new Error('Refresh request timed out'))
+			})
 			req.write(postDataString)
 			req.end()
 		} catch (error) {
@@ -119,4 +135,10 @@ async function postRefreshCache({
 	})
 }
 
-module.exports = { fetchJson, getChangedFiles, postRefreshCache }
+module.exports = {
+	fetchJson,
+	getChangedFiles,
+	getTrackedContentFiles,
+	hostname,
+	postRefreshCache,
+}
