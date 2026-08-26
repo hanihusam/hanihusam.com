@@ -86,7 +86,16 @@ export async function action({ request }: Route.ActionArgs) {
 				const slug = path.parse(dirOrFilename).name
 
 				refreshingContentPaths.push(contentPath)
-				promises.push(getMdxPage({ contentDir, slug }, { forceFresh: true }))
+				promises.push(
+					getMdxPage({ contentDir, slug }, { forceFresh: true }).then(
+						(page) => {
+							if (!page) {
+								throw new Error(`Failed to refresh content: ${contentPath}`)
+							}
+							return page
+						},
+					),
+				)
 			}
 		}
 
