@@ -430,7 +430,7 @@ export function Navigation() {
 					>
 						<span
 							aria-hidden
-							className="pointer-events-none absolute -inset-y-1 -right-[3px] -left-[3px] overflow-hidden rounded-md"
+							className="pointer-events-none absolute -inset-y-1 -right-0.75 -left-0.75 overflow-hidden rounded-md"
 						>
 							<motion.span
 								data-navigation-indicator
@@ -440,7 +440,7 @@ export function Navigation() {
 									borderRadius: 6,
 								}}
 								className={clsxm(
-									'absolute top-1 left-[3px] size-10',
+									'absolute top-1 left-0.75 size-10',
 									'bg-(--nav-item-surface-active)',
 									activeIndex === -1 && 'opacity-0',
 								)}
