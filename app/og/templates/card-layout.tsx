@@ -160,6 +160,9 @@ export function CardLayout({
 							display: 'flex',
 							flexDirection: 'column',
 							marginLeft: avatar ? 30 : 0,
+							maxWidth: avatar
+								? TEXT_COLUMN_WIDTH - AUTHOR_BLOCK_HEIGHT - 30
+								: TEXT_COLUMN_WIDTH,
 						}}
 					>
 						<div
