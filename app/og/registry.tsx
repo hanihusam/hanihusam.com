@@ -27,7 +27,7 @@ type OgTemplateDefinition = {
 export const ogTemplateRegistry = {
 	page: {
 		schema: pageParamsSchema,
-		version: 1,
+		version: 2,
 		size: OG_CANVAS,
 		component: (params) => (
 			<PageCard {...(params as Parameters<typeof PageCard>[0])} />
@@ -35,7 +35,7 @@ export const ogTemplateRegistry = {
 	},
 	project: {
 		schema: projectParamsSchema,
-		version: 1,
+		version: 2,
 		size: OG_CANVAS,
 		component: (params) => (
 			<ProjectCard {...(params as Parameters<typeof ProjectCard>[0])} />
