@@ -5,6 +5,7 @@ const CURRENT = 'current-secret-aaaa'
 const PREVIOUS = 'previous-secret-bbbb'
 const UNKNOWN = 'unknown-secret-cccc'
 const ORIGIN = 'https://hanihusam.com'
+const PAGE_VERSION = ogTemplateRegistry.page.version
 
 let pass = 0
 let fail = 0
@@ -63,7 +64,9 @@ check(
 )
 check(
 	'tampered v rejected',
-	verifyOgImageRequest(tamper(pageUrl, 'v', '2'), [CURRENT]) === null,
+	verifyOgImageRequest(tamper(pageUrl, 'v', String(PAGE_VERSION + 1)), [
+		CURRENT,
+	]) === null,
 )
 check(
 	'tampered sig rejected',
@@ -163,7 +166,7 @@ const beforeBump = buildOgImageUrl(
 const cacheKeyBefore = verifyOgImageRequest(paramsOf(beforeBump), [
 	CURRENT,
 ])?.cacheKey
-ogTemplateRegistry.page.version = 2
+ogTemplateRegistry.page.version = PAGE_VERSION + 1
 check(
 	'previously valid URL fails after registry version bump',
 	verifyOgImageRequest(paramsOf(beforeBump), [CURRENT]) === null,
@@ -179,7 +182,7 @@ const cacheKeyAfter = verifyOgImageRequest(paramsOf(afterBump), [
 ])?.cacheKey
 check('re-signed URL verifies at new version', cacheKeyAfter !== undefined)
 check('version bump changes cache key', cacheKeyBefore !== cacheKeyAfter)
-ogTemplateRegistry.page.version = 1
+ogTemplateRegistry.page.version = PAGE_VERSION
 
 console.log('\n— cache key stability —')
 const a = verifyOgImageRequest(
