@@ -1,12 +1,12 @@
 ---
 title: Curious Me
 publishedAt: 2026-07-06
-lastUpdated: 2026-07-06
+lastUpdated: 2026-09-08
 description:
-  An anonymous, location-based social platform. Three years as the frontend
-  engineer across the app, marketing site, and admin dashboard.
+  Three years building the conversations, search, and media interactions of
+  an anonymous, location-based social product.
 category: Freelance Work
-role: Sr. Frontend Engineer
+role: Senior Frontend Engineer / Team Lead
 bannerLandscapeCloudinaryId: bapak2.dev/works/curious-me/thumbnail-md_yrfvef
 bannerSquareCloudinaryId: bapak2.dev/works/curious-me/thumbnail-sm_kedtvy
 techs: React, React Router, Tailwind CSS, Firebase, Apollo Client, GraphQL, DraftJS
@@ -17,263 +17,90 @@ link: https://app.curious.me
 _The live product is currently down; links are for reference. I worked on it as
 a full-time contract for ~3 years._
 
-## What it is
+Curious Me was an anonymous social network built around location instead of followers. Share a thought, see what people nearby are saying, and join a conversation without building a public identity.
 
-Curious is an anonymous, location-based social platform; share a thought, see
-what people near you are saying, connect without the follow / follow-back dance.
-Think Threads or X, minus the follower graph. I hadn't built anything
-location-first before, so a good chunk of it was figuring out the patterns as I
-went.
+I spent three years leading frontend development across the app, public web experience, and admin tools. Working with design, I built components and interaction behavior, guided the frontend team, and owned reviews and releases. Here are a few details I particularly enjoyed working through.
 
-Three React surfaces on one GraphQL backend: the app (React 19 + Vite); feed,
-posts, comments, messaging, notifications; the marketing site (Next.js);
-server-rendered content pages and deep-link bridging into the native apps; and
-the admin dashboard (React Router v7) for managing content and users. I led
-frontend development: set direction for the team, turned product plans into
-frontend work, and owned the path to production; code review, merges, deploys.
+## Joining an anonymous conversation
 
-## Turning a post into a shareable image
+Anonymity made something as familiar as mentioning another person a little different.
 
-One of the uniques features was the ability to turn a post into a shareable
-image. Developing this feature was a fun challenge: the live post card is a
-complex, interactive component, but the image needs to be a clean, static
-representation of the content. I used `html2canvas` to render the post card into
-a PNG, which turned out to be the hard part.
+The original poster appeared as **Author** in their own comment thread. Other participants received random two-word aliases. Mention suggestions only included people already in the conversation; the author didn’t need to appear because a comment already notified them.
 
-![A downloaded Curious post card](https://res.cloudinary.com/hanihusam/image/upload/v1783321806/bapak2.dev/works/curious-me/curious-post-1_npimpw.png)
-_What comes out the other end, a post as a clean PNG. No feed chrome,
-watermarked, story-ready._
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Comment_Bar_apxawe" />
 
-Here's the thing about `html2canvas`: it works by reading the DOM and styles of
-a live component, then rendering that into a canvas. It does a good job of this,
-but it has a few quirks that make it a poor fit for a complex, interactive
-component like a Curious post card. The live card has a lot of interactive
-elements, like buttons and badges, that don't make sense in a static image. It
-also has a lot of conditional styling based on the app's state, which can lead
-to inconsistencies in the final image.
+_Type @, choose someone in the conversation, finish the reply, and post._
 
-So I didn't point it at the live UI at all. I built a **second render tree that
-only exists to become an image**, a dedicated canvas version of every content
-type: post, comment, repost, audio, multiple-image, sensitive content. That
-hands the re-renderer exactly what it's good at: a clean, simple DOM with
-predictable styles it can't misread. On download, I mount the export component
-offscreen with `React.createPortal` and let `html2canvas` do its thing. The
-result is a PNG that looks like the post card, but without any of the live UI
-chrome or watermarks. It's a clean, story-ready image that can be shared on
-social media without any of the interactive elements or conditional styling that
-could cause inconsistencies in the final image. This approach also allowed me to
-handle edge cases, like sensitive content, in a way that was safe for public
-sharing. The export tree could decide how flagged content should be represented
-in the image, rather than relying on CSS to hide it. This made the final image
-more accurate and visually consistent, and ensured that the content was safe for
-public sharing.
+_The recordings use the application’s UI in Storybook with mocked data. I revisited these flows for this case study; the later refinements are described below._
 
-On the technical side, this approach has a few advantages:
+Those identity rules carried through posts, replies, reposts, and pinned comments. Shared components handled the common structure, while each context needed its own presentation. Connecting lines helped people follow replies. Removed comments kept their place so the surrounding conversation still made sense.
 
-- It allows me to create a clean, static representation of the content without
-  any of the interactive elements or conditional styling that could cause
-  inconsistencies in the final image.
-- It allows me to handle edge cases, like sensitive content, in a way that is
-  safe for public sharing.
-- It allows me to create a consistent visual style for the exported images,
-  regardless of the state of the live component.
+Revisiting the composer, I refined the moment between typing `@` and receiving suggestions. The loading treatment follows the suggestion list’s spacing, so the picker feels like one surface as its contents change. I also refined the feedback around publishing and revealing the new comment.
+
+Underneath it, mentions remained part of the Draft.js content format shared by web, mobile, and backend. Improving the editor meant preserving that contract as well as making the interaction feel right.
+
+## Keeping search steady
+
+Search could return posts, hashtags, and rooms. Grouping them by type let people scan for the destination they wanted before reading every result.
+
+The original implementation already handled debounced requests, grouped suggestions, full results, and empty states. But when I revisited the flow, an awkward sequence stood out: the panel briefly offered to search for the query, switched to “Please wait,” then showed the results.
+
+Three understandable states. One unsettled interaction.
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Search_m43oa8" />
+
+_Searching for “Jakarta,” moving through grouped results with the keyboard, and closing the panel._
+
+I replaced that sequence with one loading treatment aligned to the result list. The query stayed visible, and the panel held its structure while the results arrived.
+
+Keyboard behavior needed the same attention. Arrow Up and Arrow Down now move through results with a visible active item. Enter selects once. Escape closes the panel. Clear removes the query while keeping the search interaction available.
+
+I liked working on this because the improvement came from deciding what should stay still. Once the panel stopped repeatedly changing its presentation, the whole sequence became easier to follow.
+
+## Opening media and finding your way back
+
+A post card was a large navigation target. It also contained links, buttons, selectable text, and media.
+
+That created some surprisingly easy mistakes. Opening a gallery could also open the post. Selecting text to copy could take you to another page. I fixed those boundaries across the content controls so each action kept its own intent.
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Lightbox_Desktop_dl6myb" />
+
+_Opening a gallery from a post, moving between images, and returning._
+
+The media system supported images, galleries, GIFs, video, and audio. Images used aspect-ratio handling and blurred placeholders; playback responded to viewport visibility, with position preserved between related surfaces.
+
+For this retrospective, I refined the lightbox’s framing, controls, and transitions across desktop, tablet, and mobile.
+
+<CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Lightbox_Mobile_lufpau" />
+
+_The same gallery in its mobile presentation._
+
+On desktop, there was room to retain more surrounding context. On mobile, the media needed more of the screen, and the controls needed to remain comfortable to reach. Checking both views exposed details that were easy to miss when working at one window size.
+
+I tuned opening and dismissal together, including reduced-motion handling for the new transitions. Returning to the post deserved the same attention as entering the gallery.
+
+## A post made for sharing
+
+Curious Me also let people export a post as an image.
+
+Pointing `html2canvas` at the existing card seemed like the obvious approach. But that card carried interactive controls, responsive styles, and application state. Each variation gave the export another way to break.
+
+I built a second render tree whose only job was to become an image. It handled posts, comments, reposts, audio, galleries, and sensitive-content states with predictable markup. React mounted it offscreen through a portal before `html2canvas` rendered the PNG.
 
 ![Examples of Curious post cards exported as images](https://res.cloudinary.com/hanihusam/image/upload/v1783379625/bapak2.dev/works/curious-me/Screenshot_2026-07-07_at_06.12.48_rcguhv.jpg)
-_One export tree, every content shape._
 
-Then there's the part that sounds boring and absolutely was not: **getting the
-download to actually work on a phone.** The whole point is posting to a story,
-so the target is mobile and the humble `<a download>` fails _silently_ in mobile
-browsers. No error, no file, nothing. You only find out because a user tells
-you. The fix is unglamorous: attach the anchor to the DOM before clicking, fire
-the click inside `requestAnimationFrame`, clean up on a delay. On desktop
-Chromium I progressively enhance to the File System Access API for a real save
-dialog, but that path never runs on the device that matters, so the ugly
-fallback is the one I actually hardened.
+_One export system, several content shapes._
 
-![PR #453 diff stat](https://res.cloudinary.com/hanihusam/image/upload/v1783322172/bapak2.dev/works/curious-me/Screenshot_2026-07-06_at_14.15.39_d4szn8.jpg)
-_Shipped as one refactor: +754 / −1,143. I made it more correct and deleted
-~1,100 lines of the fragile first version doing it._
+Then came the part that looked boring until it failed: downloading the image on a phone.
 
-## The dead library I chose to keep
+The download attribute could fail silently in mobile browsers. No file, no error. Since sharing from a phone was the point, I hardened that path by attaching the download element to the DOM, triggering it on the next animation frame, and delaying cleanup.
 
-Rich text in Curious; create/read posts, comments and messages, with @mentions,
-#hashtags, links, lived as Draft.js raw JSON in the backend, rendered by both
-the mobile app and the web app.
+Giving the export its own representation made both sides easier to maintain. The live card could keep evolving without dragging every interaction detail into the image.
 
-DraftJS was a popular rich text library in that time. We didn't expect that it
-would be archived, but it was. The Curious team had already built a lot of
-features on top of it, and the backend stored the content in its raw JSON
-format. The mobile app and web app both rendered this format, so changing it
-would have been a big lift.
+## What stayed with me
 
-Here's the mental model that made this hard. A _library_ you can swap, that's a
-frontend afternoon. But a _format that three teams already speak_? That's a
-language. The backend stored it, mobile rendered it, web rendered it. You don't
-change a language on a Tuesday because one dependency went quiet.
+I would bring keyboard behavior, focus, loading continuity, and reduced motion into the conversation earlier today. Revisiting these flows showed how much they contribute to the experience.
 
-**Build note, why I didn't migrate.** Moving to Lexical or TipTap wasn't a call
-I could make alone; it was a three-team migration with a coordination cost way
-bigger than the payoff. So I made the cheap call on purpose: don't migrate, keep
-the dead thing alive. And it held the format ran without a single incident right
-up until the product went down.
+Curious Me gave me practice moving between product rules and implementation details: deciding who belongs in a mention list, preserving that mention across platforms, or making sure opening an image doesn’t accidentally navigate the feed.
 
-Keeping an archived library correct is its own genre of work, and Draft.js has a
-few quirks that made it a little more work than I expected. The biggest ones:
-
-- **The format is a JSON tree, but the library is a React component.** The
-  library has to convert the JSON into a React tree, and then back again. That
-  conversion is brittle and has a few edge cases that can break it. I had to
-  harden the conversion to handle those edge cases, and I had to do it in a way
-  that didn't break the existing content.
-
-```ts
-// The link conversion is a good example of this. Draft.js stores links as entities in the JSON, but the library doesn't always convert them correctly. I had to write a custom conversion function that would handle the edge cases and ensure that the links were rendered correctly.
-		if (entity.type === 'LINK' && entity.data && entity.data.link) {
-				const httpRegex =
-					/^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/
-
-				const pathOrLink = httpRegex.test(
-					String(entity.data.link).toLowerCase(),
-				)
-					? entity.data.link
-					: `https://${entity.data.link.replace(/^(https?:\/\/)/i, '')}`
-
-				return (
-					<a
-						href={pathOrLink}
-						className={clsxm(
-							`${baseLinkClass} cursor-pointer`,
-							style?.link?.className,
-						)}
-					>
-						{originalText}
-					</a>
-				)
-			}
-```
-
-- Handling the conversion from the user input to expected Draft.js raw JSON is
-  also tricky. The library has to parse the input and create the correct
-  entities and ranges, which can be error-prone. I had to write custom functions
-  to handle this conversion and ensure that the output was valid Draft.js JSON.
-
-```ts
-const handleConvert = (edtState: EditorState) => {
-	// Convert the current content of the editor state to raw Draft.js JSON
-	const raw = convertToRaw(edtState.getCurrentContent())
-
-	const block = raw.blocks
-
-	// Extract hashtags and their indices from the text
-	const hashtag = convertToRaw(edtState.getCurrentContent()).blocks.map(
-		(datas) => {
-			const entityMap = extractHashtagsWithIndices(datas.text).map((data) => {
-				return {
-					text: data.hashtag,
-					type: 'HASHTAG',
-					offset: data.indices[0],
-				}
-			})
-			return {
-				entityRanges: extractHashtagsWithIndices(datas.text).map((r) => {
-					return {
-						offset: r.indices[0],
-						length: r.indices[1] - r.indices[0],
-					}
-				}),
-				entityMap,
-			}
-		},
-	)
-	// Extract links and their indices from the text
-	const link = convertToRaw(edtState.getCurrentContent()).blocks.map(
-		(datas) => {
-			const entityMap = extractLinks(datas.text)?.map((data) => {
-				return { text: data.text, type: 'LINK', offset: data.index }
-			})
-			return {
-				entityRanges: extractLinks(datas.text)?.map((r) => {
-					return {
-						offset: r.index,
-						length: r.lastIndex - r.index,
-					}
-				}),
-				entityMap,
-			}
-		},
-	)
-	const rangesMention = raw.blocks.map((lineBlock) => {
-		return {
-			entityRanges: lineBlock.entityRanges.map((obj) => {
-				return { offset: obj.offset, length: obj.length }
-			}),
-		}
-	})
-	// Merge the extracted hashtags, links, and mentions into a single entity map
-	const mapped = handleMergeEntityMapDjsContent(
-		block,
-		hashtag,
-		mapingMapDjsContent(raw),
-		link,
-	)
-
-	const flattenedArr = mapped.reduce((acc, val) => acc.concat(val), [])
-	const filterflatarr = flattenedArr.filter((entity) => entity.text !== 'proto')
-	const entityMap = filterflatarr.reduce<Record<string, RawDraftEntity>>(
-		(acc, val, i) => {
-			acc[i] = {
-				type: val.type,
-				mutability: 'IMMUTABLE',
-				data:
-					val.owner && val.colorCode && val.avatar
-						? {
-								[val.type.toLowerCase()]: val.text,
-								owner: val.owner,
-								avatar: val.avatar,
-								colorCode: val.colorCode,
-							}
-						: { [val.type.toLowerCase()]: val.text },
-			}
-			return acc
-		},
-		{},
-	)
-
-	// ... rest of the function
-}
-```
-
-## Also worked on
-
-The invisible layer between "the design is pixel-perfect" and "the app feels
-right." None of this was in a Figma file.
-
-- **Navigation vs. interaction in the feed.** A feed card is one big tap target,
-  tap it, go to the post. Except the buttons _inside_ it shouldn't do that.
-  Before I fixed the propagation, tapping _report_ would navigate to the post
-  instead of opening the modal, and even selecting text to copy would yank you
-  to a new page. Fixed across report / share / repost / comment / options
-  controls.
-- **Scroll restoration** on back-navigation across feed / explore / hashtag /
-  profile, so going back doesn't fling you to the top.
-- **Optimistic updates** on likes and deletes via the Apollo cache so the UI
-  answers instantly instead of waiting on the round-trip.
-- **Motion consistency**, one pass standardizing transition easing across ~20
-  components, plus a `prefers-reduced-motion` handler so the animated background
-  behaves for people who ask it to.
-- **Performance on the content site**, granular Suspense boundaries for
-  progressive rendering, a web-vitals reporter, React Compiler.
-- **Dependency housekeeping** for example swapped
-  [react-toastify](https://fkhadra.github.io/react-toastify/introduction/) for
-  the lighter [Sonner](https://sonner.emilkowal.ski), migrated Apollo Client v3
-  → v4.
-- **Storybook** for documenting components and testing.
-
-## What I'd do differently
-
-**Keeping Draft.js alive solved the problem for a while, not forever.** The
-cheap call bought time, but the format is still load-bearing across three teams
-with no maintainer behind it, that risk didn't go away, I just deferred it. I'd
-raise the migration conversation earlier next time, even knowing it's a
-three-team lift I can't drive alone.
+That is the work I enjoy most: following an interaction far enough to catch the details people encounter after the first click.
