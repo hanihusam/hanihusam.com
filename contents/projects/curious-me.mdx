@@ -1,17 +1,17 @@
 ---
 title: Curious Me
 publishedAt: 2026-07-06
-lastUpdated: 2026-09-08
+lastUpdated: 2026-09-11
 description:
-  Three years building the conversations, search, and media interactions of
-  an anonymous, location-based social product.
+  Over three years building the conversations, search, and media interactions
+  of an anonymous, location-based social product.
 category: Freelance Work
 role: Senior Frontend Engineer / Team Lead
 bannerLandscapeCloudinaryId: bapak2.dev/works/curious-me/thumbnail-md_yrfvef
 bannerSquareCloudinaryId: bapak2.dev/works/curious-me/thumbnail-sm_kedtvy
 techs: React, React Router, Tailwind CSS, Firebase, Apollo Client, GraphQL, DraftJS
 github:
-link: https://app.curious.me
+link: https://app.curious.com
 ---
 
 _The live product is currently down; links are for reference. I worked on it as
@@ -19,69 +19,69 @@ a full-time contract for ~3 years._
 
 Curious Me was an anonymous social network built around location instead of followers. Share a thought, see what people nearby are saying, and join a conversation without building a public identity.
 
-I spent three years leading frontend development across the app, public web experience, and admin tools. Working with design, I built components and interaction behavior, guided the frontend team, and owned reviews and releases. Here are a few details I particularly enjoyed working through.
+I spent over three years leading frontend development across the app, public web experience, and admin tools. Working with design, I built components and interaction behavior, guided the frontend team, and owned reviews and releases. Here are a few details I particularly enjoyed working through.
 
 ## Joining an anonymous conversation
 
 Anonymity made something as familiar as mentioning another person a little different.
 
-The original poster appeared as **Author** in their own comment thread. Other participants received random two-word aliases. Mention suggestions only included people already in the conversation; the author didn’t need to appear because a comment already notified them.
+The person who created the post appears as **Author** in their own comment thread. Other participants receive random two-word aliases. Mention suggestions only include people already in the conversation; the author doesn’t need to appear because a comment already notifies them.
 
 <CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Comment_Bar_apxawe" />
 
 _Type @, choose someone in the conversation, finish the reply, and post._
 
-_The recordings use the application’s UI in Storybook with mocked data. I revisited these flows for this case study; the later refinements are described below._
+Those identity rules carry through posts, replies, reposts, and pinned comments. Shared components handle the common structure, while each context needs its own presentation. Connecting lines help people follow replies. Removed comments keep their place so the surrounding conversation still makes sense.
 
-Those identity rules carried through posts, replies, reposts, and pinned comments. Shared components handled the common structure, while each context needed its own presentation. Connecting lines helped people follow replies. Removed comments kept their place so the surrounding conversation still made sense.
+The composer has its own sequence to get right. Typing `@` starts loading the available participants. The loading rows follow the suggestion list’s spacing, keeping the picker steady as its contents change. After publishing, the comment reveal draws attention to the reply joining the thread.
 
-Revisiting the composer, I refined the moment between typing `@` and receiving suggestions. The loading treatment follows the suggestion list’s spacing, so the picker feels like one surface as its contents change. I also refined the feedback around publishing and revealing the new comment.
+I wanted that sequence to be easy to follow from the keyboard or pointer: choose someone, keep writing, post, and see where the reply belongs.
 
-Underneath it, mentions remained part of the Draft.js content format shared by web, mobile, and backend. Improving the editor meant preserving that contract as well as making the interaction feel right.
+Underneath it, mentions use the Draft.js content format shared by web, mobile, and backend. Working on the editor meant preserving that contract while paying attention to what happens on screen.
 
 ## Keeping search steady
 
-Search could return posts, hashtags, and rooms. Grouping them by type let people scan for the destination they wanted before reading every result.
+Search can return posts, hashtags, and rooms. Grouping them by type lets people scan for the destination they want before reading every result.
 
-The original implementation already handled debounced requests, grouped suggestions, full results, and empty states. But when I revisited the flow, an awkward sequence stood out: the panel briefly offered to search for the query, switched to “Please wait,” then showed the results.
+Debouncing requests takes care of unnecessary network calls. There is still a visual question to answer: what should happen between typing a query and seeing its results?
 
-Three understandable states. One unsettled interaction.
+I focused on keeping the query visible and the result panel steady. Loading placeholders follow the result list’s spacing, giving the incoming content a familiar place to appear.
 
 <CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Search_m43oa8" />
 
 _Searching for “Jakarta,” moving through grouped results with the keyboard, and closing the panel._
 
-I replaced that sequence with one loading treatment aligned to the result list. The query stayed visible, and the panel held its structure while the results arrived.
+Keyboard behavior follows the same idea of keeping people oriented. Arrow Up and Arrow Down move through results with a visible active item. Enter selects it. Escape closes the panel. Clear removes the query while keeping the search interaction available.
 
-Keyboard behavior needed the same attention. Arrow Up and Arrow Down now move through results with a visible active item. Enter selects once. Escape closes the panel. Clear removes the query while keeping the search interaction available.
+I liked working on this because so much of the decision came down to what should stay still. Keeping the query and panel in place makes the changing results easier to follow.
 
-I liked working on this because the improvement came from deciding what should stay still. Once the panel stopped repeatedly changing its presentation, the whole sequence became easier to follow.
+That is a useful question whenever I work on loading states now: how much of the interface can remain familiar while the data changes?
 
 ## Opening media and finding your way back
 
-A post card was a large navigation target. It also contained links, buttons, selectable text, and media.
+A post card is a large navigation target. It also contains links, buttons, selectable text, and media.
 
-That created some surprisingly easy mistakes. Opening a gallery could also open the post. Selecting text to copy could take you to another page. I fixed those boundaries across the content controls so each action kept its own intent.
+That creates some surprisingly easy mistakes. Opening a gallery could also open the post. Selecting text to copy could take you to another page. I fixed those boundaries across the content controls so each action kept its own intent.
 
 <CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Lightbox_Desktop_dl6myb" />
 
 _Opening a gallery from a post, moving between images, and returning._
 
-The media system supported images, galleries, GIFs, video, and audio. Images used aspect-ratio handling and blurred placeholders; playback responded to viewport visibility, with position preserved between related surfaces.
+The media system supports images, galleries, GIFs, video, and audio. Images use aspect-ratio handling and blurred placeholders. Playback responds to viewport visibility, with position preserved between related surfaces.
 
-For this retrospective, I refined the lightbox’s framing, controls, and transitions across desktop, tablet, and mobile.
+The lightbox also needs to work across very different amounts of space. On desktop, there is room to retain more surrounding context. On mobile, the media needs more of the screen, and the controls need to remain comfortable to reach.
 
 <CloudinaryVideo cloudinaryId="bapak2.dev/works/curious-me/Curious_Me_-_Lightbox_Mobile_lufpau" />
 
 _The same gallery in its mobile presentation._
 
-On desktop, there was room to retain more surrounding context. On mobile, the media needed more of the screen, and the controls needed to remain comfortable to reach. Checking both views exposed details that were easy to miss when working at one window size.
+I worked through the framing, controls, and transitions across desktop, tablet, and mobile. Checking the same sequence at each size exposed details that were easy to miss at one window size.
 
-I tuned opening and dismissal together, including reduced-motion handling for the new transitions. Returning to the post deserved the same attention as entering the gallery.
+Opening and dismissal belong to that same sequence, including how the transitions respond to reduced-motion preferences. Returning to the post deserves the same attention as entering the gallery.
 
 ## A post made for sharing
 
-Curious Me also let people export a post as an image.
+Curious Me also lets people export a post as an image.
 
 Pointing `html2canvas` at the existing card seemed like the obvious approach. But that card carried interactive controls, responsive styles, and application state. Each variation gave the export another way to break.
 
@@ -99,8 +99,8 @@ Giving the export its own representation made both sides easier to maintain. The
 
 ## What stayed with me
 
-I would bring keyboard behavior, focus, loading continuity, and reduced motion into the conversation earlier today. Revisiting these flows showed how much they contribute to the experience.
+Curious Me sharpened how I think about keyboard behavior, focus, loading continuity, and reduced motion. They influence how an interaction feels from beginning to end, so I now bring them into the discussion alongside its layout and visual design.
 
-Curious Me gave me practice moving between product rules and implementation details: deciding who belongs in a mention list, preserving that mention across platforms, or making sure opening an image doesn’t accidentally navigate the feed.
+The project gave me practice moving between product rules and implementation details: deciding who belongs in a mention list, preserving that mention across platforms, or making sure opening an image doesn’t accidentally navigate the feed.
 
 That is the work I enjoy most: following an interaction far enough to catch the details people encounter after the first click.
