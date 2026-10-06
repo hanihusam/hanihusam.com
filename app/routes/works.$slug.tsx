@@ -16,7 +16,7 @@ import {
 	incrementLikes,
 	incrementViews,
 } from '@/utils/blog.server'
-import { useMdxComponent } from '@/utils/mdx'
+import { useMdxElement } from '@/utils/mdx'
 import { getMdxPage } from '@/utils/mdx.server'
 import { getUrl } from '@/utils/helpers'
 import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
@@ -189,7 +189,7 @@ function useOnRead({
 export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 	const { page } = loaderData
 	const { frontmatter, code } = page
-	const Component = useMdxComponent(code)
+	const mdxElement = useMdxElement(code)
 
 	//#region  //*=========== Read/view post ===========
 	const markAsRead = useFetcher()
@@ -220,20 +220,17 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 	const minLevel =
 		toc?.reduce((min, item) => Math.min(min, item.level), 10) ?? 0
 
-	React.useEffect(() => {
-		const headings = document.querySelectorAll(
-			'.prose h1, .prose h2, .prose h3',
-		)
-		const headingArr: HeadingScrollSpy = []
-		headings.forEach((heading) => {
-			headingArr.push({
-				id: heading.id,
-				level: +heading.tagName.replace('H', ''),
-				text: heading.textContent + '',
-			})
-		})
+	const collectToc = React.useCallback((article: HTMLElement | null) => {
+		if (!article) return
+		const headingArr: HeadingScrollSpy = Array.from(
+			article.querySelectorAll('h1, h2, h3'),
+		).map((heading) => ({
+			id: heading.id,
+			level: +heading.tagName.replace('H', ''),
+			text: heading.textContent + '',
+		}))
 		setToc(headingArr)
-	}, [frontmatter.slug])
+	}, [])
 	//#endregion  //*======== Scrollspy ===========
 
 	const techs = frontmatter.techs
@@ -340,8 +337,12 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 					ref={readMarker}
 					className="pb-20 lg:grid lg:grid-cols-[minmax(0,800px)_250px] lg:gap-16"
 				>
-					<article className="prose prose-light dark:prose-dark wrap-break-words w-full">
-						<Component />
+					<article
+						key={frontmatter.slug}
+						ref={collectToc}
+						className="prose prose-light dark:prose-dark wrap-break-words w-full"
+					>
+						{mdxElement}
 					</article>
 
 					{/* Rendered only once the headings have been read, so the empty

@@ -11,6 +11,10 @@ import rehypeSlug from 'rehype-slug'
 import gfm from 'remark-gfm'
 import { visit } from 'unist-util-visit'
 
+type MdxHastRoot = Omit<H.Root, 'children'> & {
+	children: Array<H.RootContent | MDX.MdxJsxFlowElement>
+}
+
 function arrayToObj<ItemType extends Record<string, unknown>>(
 	array: Array<ItemType>,
 	{
@@ -63,26 +67,21 @@ const cloudinaryUrlRegex =
 
 function optimizeCloudinaryImages() {
 	return async function transformer(tree: H.Root) {
-		// @ts-expect-error ugh
-		visit(
-			tree,
-			'mdxJsxFlowElement',
-			function visitor(node: MDX.MdxJsxFlowElement) {
-				if (node.name !== 'img') return
-				const srcAttr = node.attributes.find(
-					(attr) => attr.type === 'mdxJsxAttribute' && attr.name === 'src',
-				)
-				const urlString = srcAttr?.value ? String(srcAttr.value) : null
-				if (!srcAttr || !urlString) {
-					console.error('image without url?', node)
-					return
-				}
-				const newUrl = handleImageUrl(urlString)
-				if (newUrl) {
-					srcAttr.value = newUrl
-				}
-			},
-		)
+		visit(tree as MdxHastRoot, 'mdxJsxFlowElement', function visitor(node) {
+			if (node.name !== 'img') return
+			const srcAttr = node.attributes.find(
+				(attr) => attr.type === 'mdxJsxAttribute' && attr.name === 'src',
+			)
+			const urlString = srcAttr?.value ? String(srcAttr.value) : null
+			if (!srcAttr || !urlString) {
+				console.error('image without url?', node)
+				return
+			}
+			const newUrl = handleImageUrl(urlString)
+			if (newUrl) {
+				srcAttr.value = newUrl
+			}
+		})
 
 		visit(tree, 'element', function visitor(node: H.Element) {
 			if (node.tagName !== 'img') return

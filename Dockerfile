@@ -27,7 +27,7 @@ WORKDIR /app/
 
 # Generate Prisma client
 ADD prisma /app/prisma
-RUN npx prisma generate
+RUN DATABASE_URL="file:/tmp/prisma-generate.db" npx prisma generate
 
 # Build React Router app
 RUN npm run build
@@ -51,16 +51,15 @@ RUN echo "#!/bin/sh\nset -x\nsqlite3 \$CACHE_DATABASE_PATH" > /usr/local/bin/cac
 
 WORKDIR /app/
 
-# Copy production dependencies and Prisma client
+# Copy production dependencies
 COPY --from=production-dependencies-env /app/node_modules /app/node_modules
-COPY --from=build-env /app/node_modules/.prisma /app/node_modules/.prisma
 
 # Copy built application
 COPY --from=build-env /app/build /app/build
 COPY --from=build-env /app/public /app/public
 
 # Copy package files and server
-COPY ./package.json package-lock.json server.js /app/
+COPY ./package.json package-lock.json prisma.config.ts server.js /app/
 COPY --from=build-env /app/prisma /app/prisma
 COPY ./start.sh /app/start.sh
 RUN chmod +x /app/start.sh

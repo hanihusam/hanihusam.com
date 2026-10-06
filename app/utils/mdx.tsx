@@ -19,11 +19,6 @@ const mdxComponents = {
 	CloudinaryImg,
 	CloudinaryVideo,
 }
-/**
- * This should be rendered within a useMemo
- * @param code the code to get the component from
- * @returns the component
- */
 function getMdxComponent(code: string) {
 	const Component = mdxBundler.getMDXComponent(code)
 
@@ -48,15 +43,15 @@ const mdxComponentCache = new LRUCache<
 	max: 1000,
 })
 
-function useMdxComponent(code: string) {
+function useMdxElement(code: string) {
 	return React.useMemo(() => {
-		if (mdxComponentCache.has(code)) {
-			return mdxComponentCache.get(code)!
+		let Component = mdxComponentCache.get(code)
+		if (!Component) {
+			Component = getMdxComponent(code)
+			mdxComponentCache.set(code, Component)
 		}
-		const component = getMdxComponent(code)
-		mdxComponentCache.set(code, component)
-		return component
+		return React.createElement(Component)
 	}, [code])
 }
 
-export { useMdxComponent }
+export { useMdxElement }

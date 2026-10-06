@@ -2,9 +2,19 @@ import { readdirSync } from 'node:fs'
 import path from 'node:path'
 
 import { faker } from '@faker-js/faker'
-import { PrismaClient } from '@prisma/client'
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+import 'dotenv/config'
 
-const prisma = new PrismaClient()
+import { PrismaClient } from '../app/generated/prisma/client'
+
+const databasePath = process.env.DATABASE_PATH
+if (!databasePath) throw new Error('DATABASE_PATH must be set')
+
+const adapter = new PrismaBetterSqlite3(
+	{ url: databasePath },
+	{ timestampFormat: 'unixepoch-ms' },
+)
+const prisma = new PrismaClient({ adapter })
 
 // Seed view/like counts for the actual project content so local dev mirrors the
 // real site. Production never runs this (start.sh only migrates); ContentMeta
