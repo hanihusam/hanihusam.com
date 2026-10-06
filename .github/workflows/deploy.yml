@@ -27,7 +27,7 @@ jobs:
         run: npm ci --legacy-peer-deps
 
       - name: Generate Prisma client
-        run: npm exec prisma generate
+        run: ./node_modules/.bin/prisma generate
         env:
           DATABASE_URL: file:./prisma/data.db
 
