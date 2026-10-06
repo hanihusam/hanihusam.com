@@ -365,6 +365,12 @@ html {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+	html {
+		scroll-behavior: smooth;
+	}
+}
+
 /* Cross-document (hard-load) fallback. Client-side route transitions are
    handled by <PageTransition> (motion/react); the two are mutually exclusive. */
 @view-transition {

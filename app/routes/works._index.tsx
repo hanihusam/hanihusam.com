@@ -105,11 +105,9 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 	)
 
 	const [indexToShow, setIndexToShow] = React.useState(PAGE_SIZE)
-	React.useEffect(() => {
-		setIndexToShow(PAGE_SIZE)
-	}, [selectedTags])
 
 	function toggleTag(tag: string) {
+		setIndexToShow(PAGE_SIZE)
 		setSelectedTags((prev) => {
 			const next = new Set(prev)
 			if (next.has(tag)) {

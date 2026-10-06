@@ -1,6 +1,18 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3'
+
+import { PrismaClient } from '@/generated/prisma/client'
+
+import { getRequiredServerEnvVar } from './misc'
 
 let prisma: PrismaClient
+
+function createPrismaClient() {
+	const adapter = new PrismaBetterSqlite3(
+		{ url: getRequiredServerEnvVar('DATABASE_PATH') },
+		{ timestampFormat: 'unixepoch-ms' },
+	)
+	return new PrismaClient({ adapter })
+}
 
 declare global {
 	var __db__: PrismaClient
@@ -11,10 +23,10 @@ declare global {
 // create a new connection to the DB with every change either.
 // in production we'll have a single connection to the DB.
 if (process.env.NODE_ENV === 'production') {
-	prisma = new PrismaClient()
+	prisma = createPrismaClient()
 } else {
 	if (!global.__db__) {
-		global.__db__ = new PrismaClient()
+		global.__db__ = createPrismaClient()
 	}
 	prisma = global.__db__
 	prisma.$connect()

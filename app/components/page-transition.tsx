@@ -1,8 +1,12 @@
 import { motion, useReducedMotion } from 'motion/react'
-import { useEffect, useRef } from 'react'
+import { useSyncExternalStore } from 'react'
 import { Outlet, useLocation } from 'react-router'
 
 import { DURATION_BASE, EASE_OUT_QUART } from '@/utils/motion'
+
+const subscribeToHydration = () => () => {}
+const getClientSnapshot = () => true
+const getServerSnapshot = () => false
 
 /**
  * Entrance-only route transition. Re-keying on pathname remounts the incoming
@@ -15,13 +19,12 @@ import { DURATION_BASE, EASE_OUT_QUART } from '@/utils/motion'
 function PageTransition() {
 	const location = useLocation()
 	const shouldReduceMotion = useReducedMotion()
-	const hasMounted = useRef(false)
-
-	useEffect(() => {
-		hasMounted.current = true
-	}, [])
-
-	const animateIn = hasMounted.current && !shouldReduceMotion
+	const isHydrated = useSyncExternalStore(
+		subscribeToHydration,
+		getClientSnapshot,
+		getServerSnapshot,
+	)
+	const animateIn = isHydrated && !shouldReduceMotion
 
 	return (
 		<motion.div

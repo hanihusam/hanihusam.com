@@ -52,8 +52,8 @@ function useWave(active: boolean) {
 
 	useEffect(() => {
 		if (!active) {
-			setRaised(false)
-			return
+			const resetTimer = setTimeout(() => setRaised(false), 0)
+			return () => clearTimeout(resetTimer)
 		}
 		let timer: ReturnType<typeof setTimeout>
 		const scheduleRaise = () => {

@@ -19,6 +19,7 @@ app/**/*.ignore.*
 /cypress/videos
 /prisma/data.db
 /prisma/data.db-journal
+/app/generated/prisma
 /other/cache.db
 
 .react-router/
