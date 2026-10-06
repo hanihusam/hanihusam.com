@@ -4,14 +4,20 @@ FROM node:22.22.0-bookworm-slim AS base
 # Install openssl for Prisma and other dependencies
 RUN apt-get update && apt-get install -y openssl sqlite3 ca-certificates
 
+# Native dependencies need node-gyp even when bundled prebuilds are available.
+FROM base AS dependencies-base
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends python3 make g++ \
+    && rm -rf /var/lib/apt/lists/*
+
 # Install all node_modules, including dev dependencies
-FROM base AS development-dependencies-env
+FROM dependencies-base AS development-dependencies-env
 COPY . /app
 WORKDIR /app
 RUN npm ci --legacy-peer-deps
 
 # Setup production node_modules
-FROM base AS production-dependencies-env
+FROM dependencies-base AS production-dependencies-env
 COPY ./package.json package-lock.json /app/
 WORKDIR /app/
 RUN npm ci --omit=dev --legacy-peer-deps
