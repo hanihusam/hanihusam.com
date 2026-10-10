@@ -30,13 +30,13 @@ export function ProjectSection({
 				<Header title={title} subTitle={subTitle} cta={cta} ctaUrl="/works" />
 			</Reveal>
 			<Spacer size="lg" />
-			<Grid className="gap-6">
+			<Grid className="gap-y-8">
 				{posts.map((project, idx) => (
 					<Reveal
 						key={project.slug}
 						variant="stagger"
 						index={idx}
-						className={clsxm('col-span-full', { 'hidden lg:block': idx >= 2 })}
+						className="col-span-full"
 					>
 						<ProjectCard
 							className={clsxm({ 'lg:flex-row-reverse': idx % 2 === 0 })}

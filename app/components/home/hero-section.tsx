@@ -1,17 +1,16 @@
 import { Grid } from '@/components/grid'
 import { HeroDotField } from '@/components/hero-dot-field'
-import { AnchorOrLink } from '@/components/links/anchor-or-link'
 import { Display, H3, Text } from '@/components/typography'
-import { ButtonLink, LinkButton } from '@/components/ui/button'
+import { ButtonLink } from '@/components/ui/button'
 import Logo from '@/components/ui/logo'
 import { getImageBuilder, getImgProps } from '@/utils/images'
 import { DURATION_SLOW, DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
-import ArrowRightIcon from '@/assets/arrow-right-icon'
 
 import { ArrowDownIcon } from '@phosphor-icons/react'
 import { motion, useReducedMotion } from 'motion/react'
 
-const displayText = "I'm Han"
+const displayText = 'I’m Han'
+const projectInquiryHref = 'mailto:me@hanihusam.com?subject=Project%20inquiry'
 
 export function HeroSection() {
 	const shouldReduceMotion = useReducedMotion()
@@ -68,6 +67,13 @@ export function HeroSection() {
 						{...fadeUp(0.1)}
 						className="flex flex-col justify-end gap-y-8 lg:h-77.5"
 					>
+						<div className="flex w-fit items-center gap-4 rounded-full bg-(--surface-secondary) px-4 py-2">
+							<span
+								aria-hidden="true"
+								className="size-2 shrink-0 rounded-full bg-(--btn-primary-bg)"
+							/>
+							<Text variant="label">Open to freelance & contract work</Text>
+						</div>
 						<Display id="heroDisplay">
 							{displayText.split('').map((char, i) => (
 								<span
@@ -100,25 +106,25 @@ export function HeroSection() {
 							A Frontend & UI Engineer based in Yogyakarta, Indonesia.
 						</H3>
 						<Text variant="lead">
-							Engineer who designs. Designer who ships. End to end, with the
-							Figma files and commit history to prove it.
+							Engineer who designs. Designer who ships. I work on websites and
+							product interfaces, from Figma to production.
 						</Text>
-						<AnchorOrLink className="hidden md:inline-flex" to="about">
-							<LinkButton className="relative inline-flex items-center justify-center gap-1.5 text-(--text-paragraph)">
-								More about me
-								<ArrowRightIcon />
-							</LinkButton>
-						</AnchorOrLink>
-						<div className="flex w-full gap-x-2 md:hidden">
+						<div className="flex w-full flex-col items-start gap-4">
 							<ButtonLink
 								to="#projects"
 								size="sm"
+								className="md:hidden"
 								iconRight={<ArrowDownIcon />}
 							>
 								View My Works
 							</ButtonLink>
-							<ButtonLink to="about" size="sm" variant="ghost">
-								More about me
+							<ButtonLink
+								href={projectInquiryHref}
+								variant="ghost"
+								data-umami-event="hero-inquiry-click"
+								data-umami-event-page="home"
+							>
+								Have a project in mind?
 							</ButtonLink>
 						</div>
 					</motion.div>

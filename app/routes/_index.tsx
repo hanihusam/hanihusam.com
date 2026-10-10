@@ -4,6 +4,7 @@ import { HeroSection } from '@/components/home/hero-section'
 import { ProjectSection } from '@/components/home/project-section'
 import { SubstackSection } from '@/components/home/substack-section'
 import { Spacer } from '@/components/spacer'
+import { CallToAction } from '@/components/works/cta-section'
 import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
 import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
@@ -18,6 +19,11 @@ import { data, type HeadersArgs } from 'react-router'
 const PAGE_TITLE = 'Frontend & UI Engineer — Hani Husamuddin'
 const PAGE_DESCRIPTION =
 	'Personal website and online portfolio of Hani Husamuddin, a frontend engineer and UI designer from Yogyakarta, Indonesia. Currently, crafting interfaces by intersecting design and code.'
+const FEATURED_PROJECT_SLUGS = [
+	'curious-me',
+	'cincy-dot-physicals',
+	'translating-instagrams-motion-to-the-web',
+]
 
 export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
 	return getSocialMetas({
@@ -43,7 +49,10 @@ export const loader = async ({ request }: Route.LoaderArgs) => {
 	return data(
 		{
 			substackPosts,
-			projects: projects.slice(0, 3),
+			projects: FEATURED_PROJECT_SLUGS.flatMap((slug) => {
+				const project = projects.find((project) => project.slug === slug)
+				return project ? [project] : []
+			}),
 			socialImage: getPageSocialImage({
 				request,
 				title: 'Crafting interfaces by intersecting design and code.',
@@ -66,7 +75,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
 			<HeroSection />
 
 			<Spacer id="projects" size="lg" />
-			<Spacer size="lg" />
+			<Spacer size="lg" className="hidden md:block" />
 			<ProjectSection
 				title="Featured Projects"
 				subTitle="A bunch of projects that I worked on."
@@ -74,6 +83,7 @@ export default function IndexRoute({ loaderData }: Route.ComponentProps) {
 				posts={projects}
 			/>
 			<Spacer size="lg" />
+			<CallToAction page="home" />
 			<Spacer size="lg" />
 			<SubstackSection
 				title="Recent Writing"
