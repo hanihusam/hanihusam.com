@@ -95,6 +95,11 @@ export function ProjectCard({ project, className }: ProjectCardProps) {
 			<div className="grow rounded-xl border border-(--border-primary) p-6 lg:p-8">
 				<H3>{project.title}</H3>
 				<Paragraph className="mt-6">{project.description}</Paragraph>
+				{project.role ? (
+					<Paragraph prose={false} className="mt-3">
+						<span className="font-medium">Role:</span> {project.role}
+					</Paragraph>
+				) : null}
 				<ul className="mt-6 flex items-center gap-2">
 					{(typeof project.techs === 'string'
 						? project.techs.split(',')

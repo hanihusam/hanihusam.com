@@ -222,7 +222,7 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 			</div>
 
 			<Reveal variant="settle">
-				<CallToAction />
+				<CallToAction page="works" />
 			</Reveal>
 		</React.Fragment>
 	)
