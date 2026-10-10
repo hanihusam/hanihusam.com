@@ -38,6 +38,7 @@ Create a `.env` with the variables listed in
 
 - [`AGENTS.md`](./AGENTS.md) — guide for AI agents and contributors
 - [`docs/agents/`](./docs/agents) — architecture, content pipeline, code style
+- [`docs/`](./docs/README.md) — documentation index, plans, and changelog
 
 ## License
 
