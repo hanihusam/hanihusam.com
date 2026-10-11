@@ -401,143 +401,284 @@ pre {
 	margin-left: -200px;
 }
 
-/*
- * Callout links stay permanently underlined for affordance against the tinted
- * background, so they opt out of the wipe — otherwise hovering would stack a
- * second, animated bar under the static one.
- */
-.prose callout-muted a,
-.prose callout-info a,
-.prose callout-warning a,
-.prose callout-danger a,
-.prose callout-success a {
-	text-decoration: underline;
-	background-image: none;
-	transition: none;
+/* Case-study typography follows the Writing elements design references. */
+.prose.project-story {
+	font-size: 1.125rem;
+	line-height: 1.75rem;
 }
 
-.prose callout-muted p,
-.prose callout-info p,
-.prose callout-warning p,
-.prose callout-danger p,
-.prose callout-success p {
+.prose.project-story p {
+	line-height: inherit;
+}
+
+.prose.project-story > :last-child {
 	margin-bottom: 0;
 }
 
-.prose callout-muted,
-.prose callout-info,
-.prose callout-warning,
-.prose callout-danger,
-.prose callout-success {
-	margin-top: 0;
-	margin-bottom: 2rem;
+.prose.project-story :is(h1, h2) {
+	font-weight: 700;
+	font-size: 1.5rem;
+	line-height: 2rem;
+	color: var(--text-title-secondary);
+	margin-bottom: 1.25rem;
 }
 
-.prose callout-muted,
-.prose callout-info,
-.prose callout-warning,
-.prose callout-danger,
-.prose callout-success {
-	display: block;
-	border-left: solid 4px;
-	padding: 0.5rem 1rem;
-	position: relative;
-	border-top-right-radius: 0.5rem;
-	border-bottom-right-radius: 0.5rem;
+.prose.project-story h3 {
+	font-weight: 500;
+	font-size: 1.25rem;
+	line-height: 1.75rem;
+	color: var(--text-title-secondary);
 }
 
-.prose callout-muted,
-.prose callout-info,
-.prose callout-warning,
-.prose callout-danger,
-.prose callout-success,
-.prose callout-muted *,
-.prose callout-info *,
-.prose callout-warning *,
-.prose callout-danger *,
-.prose callout-success * {
-	font-size: 1.2rem;
+.prose.project-story :is(h4, h5, h6) {
+	font-weight: 500;
+	font-size: 1.125rem;
+	line-height: 1.75rem;
+	color: var(--text-title-secondary);
 }
 
-.prose callout-muted.aside,
-.prose callout-info.aside,
-.prose callout-warning.aside,
-.prose callout-danger.aside,
-.prose callout-success.aside,
-.prose callout-muted.aside *,
-.prose callout-info.aside *,
-.prose callout-warning.aside *,
-.prose callout-danger.aside *,
-.prose callout-success.aside * {
+.prose.project-story a {
+	color: var(--text-link);
+	text-decoration: underline;
+	background-image: none;
+}
+
+.prose.project-story strong {
+	color: var(--text-paragraph);
+}
+
+.prose.project-story :is(ul, ol) {
+	padding-left: 1.5rem;
+}
+
+.prose.project-story ol {
+	padding-left: 2.25rem;
+}
+
+.prose.project-story li {
+	padding-left: 0;
+	margin-block: 0.5rem;
+}
+
+.prose.project-story li::marker {
+	color: var(--text-title-secondary);
+	font-weight: 400;
+}
+
+.prose.project-story blockquote {
+	color: var(--text-paragraph);
+	background-color: var(--surface-secondary);
+	border-left: 4px solid var(--text-title-secondary);
+	font-style: normal;
+	margin-bottom: 1.25rem;
+}
+
+.prose.project-story blockquote p {
+	font-size: 1.25rem;
+	line-height: 1.875rem;
+}
+
+.prose.project-story blockquote p::before,
+.prose.project-story blockquote p::after {
+	content: none;
+}
+
+.prose.project-story hr {
+	border-color: var(--border-primary);
+}
+
+.prose.project-story table {
+	width: 100%;
+	table-layout: fixed;
+	font-size: 1rem;
+	line-height: 1.5rem;
+	margin-block: 0 1.25rem;
+}
+
+.prose.project-story :is(th, td) {
+	padding: 0.75rem 0.75rem 0.75rem 0;
+	vertical-align: top;
+	overflow-wrap: anywhere;
+}
+
+.prose.project-story thead th {
+	color: var(--text-title-primary);
+	font-weight: 500;
+	letter-spacing: 0.8px;
+}
+
+.prose.project-story table:has(th:nth-child(3):last-child) th:first-child {
+	width: 25%;
+}
+
+.prose.project-story table:has(th:nth-child(3):last-child) th:nth-child(2) {
+	width: 31%;
+}
+
+.prose.project-story :is(thead, tbody tr) {
+	border-bottom: 1px solid var(--border-primary);
+}
+
+.prose.project-story video {
+	margin-block: 0;
+	padding-block: 0.75rem;
+}
+
+.prose.project-story video + p:has(> em:only-child) {
+	color: var(--text-caption);
 	font-size: 0.875rem;
+	line-height: 1.3125rem;
+	font-style: normal;
 }
 
-.prose callout-muted.important,
-.prose callout-info.important,
-.prose callout-warning.important,
-.prose callout-danger.important,
-.prose callout-success.important,
-.prose callout-muted.important *,
-.prose callout-info.important *,
-.prose callout-warning.important *,
-.prose callout-danger.important *,
-.prose callout-success.important * {
-	font-size: 1.4rem;
-	font-weight: bold;
+.prose.project-story video + p > em:only-child {
+	font-style: inherit;
 }
 
-.prose callout-muted:before,
-.prose callout-info:before,
-.prose callout-warning:before,
-.prose callout-danger:before,
-.prose callout-success:before {
-	border-top-right-radius: 0.5rem;
-	border-bottom-right-radius: 0.5rem;
-	content: '';
-	position: absolute;
-	inset: 0;
-	opacity: 0.1;
-	pointer-events: none;
+.prose.project-story
+	:is(
+		callout-muted,
+		callout-info,
+		callout-warning,
+		callout-danger,
+		callout-success
+	) {
+	display: block;
+	margin-block: 0 1.25rem;
+	padding: 1rem 1.25rem;
+	border-left: 4px solid var(--callout-accent);
+	border-radius: 0.5rem;
+	background-color: color-mix(in srgb, var(--callout-accent) 10%, transparent);
+	color: var(--text-paragraph);
 }
 
-.light .prose callout-muted,
-.light .prose callout-muted ol > li:before {
-	color: #4c4b5e;
-}
-.light .prose callout-muted:before {
-	background: #3c3e4d;
-}
-
-.prose callout-muted,
-.prose callout-muted ol > li:before {
-	color: #ffffff;
-}
-.prose callout-muted:before {
-	background: #e0e0e0;
-}
-
-.prose callout-warning,
-.prose callout-warning ol > li:before {
-	color: #e6813e;
-}
-.prose callout-warning:before {
-	background: #ec9e6a;
+.prose.project-story
+	:is(
+		callout-muted,
+		callout-info,
+		callout-warning,
+		callout-danger,
+		callout-success
+	)::before {
+	content: var(--callout-label);
+	display: block;
+	margin-bottom: 0.5rem;
+	font-size: 0.75rem;
+	line-height: 1.125rem;
+	font-weight: 500;
+	letter-spacing: 0.8px;
 }
 
-.prose callout-danger,
-.prose callout-danger ol > li:before {
-	color: #ff4545;
-}
-.prose callout-danger:before {
-	background: #ff4545;
+.prose.project-story callout-muted {
+	--callout-accent: var(--text-caption);
+	--callout-label: 'Muted';
 }
 
-.prose callout-info,
-.prose callout-info ol > li:before {
-	color: #45577b;
+.prose.project-story callout-info {
+	--callout-accent: var(--color-sky-500);
+	--callout-label: 'Info';
 }
-.prose callout-info:before {
-	background: #55749b;
+
+.prose.project-story callout-warning {
+	--callout-accent: var(--color-warning-500);
+	--callout-label: 'Warning';
+}
+
+.prose.project-story callout-danger {
+	--callout-accent: var(--color-danger-500);
+	--callout-label: 'Danger';
+}
+
+.prose.project-story callout-success {
+	--callout-accent: var(--color-success-500);
+	--callout-label: 'Success';
+}
+
+.prose.project-story
+	:is(
+		callout-muted,
+		callout-info,
+		callout-warning,
+		callout-danger,
+		callout-success
+	)
+	> :last-child {
+	margin-bottom: 0;
+}
+
+.prose.project-story
+	:is(
+		callout-muted,
+		callout-info,
+		callout-warning,
+		callout-danger,
+		callout-success
+	).aside {
+	padding: 0.75rem 1.25rem;
+	border: none;
+	border-radius: 0;
+	background-color: var(--surface-secondary);
+	color: var(--text-caption);
+	font-size: 0.875rem;
+	line-height: 1.375rem;
+}
+
+.prose.project-story
+	:is(
+		callout-muted,
+		callout-info,
+		callout-warning,
+		callout-danger,
+		callout-success
+	).important {
+	padding: 1.25rem;
+	border: none;
+	border-radius: 0;
+	background-color: var(--surface-secondary);
+	color: var(--text-title-primary);
+	font-size: 1.375rem;
+	line-height: 1.875rem;
+	font-weight: 500;
+}
+
+.prose.project-story
+	:is(
+		callout-muted,
+		callout-info,
+		callout-warning,
+		callout-danger,
+		callout-success
+	):is(.aside, .important)::before {
+	content: none;
+}
+
+.prose.project-story
+	:is(
+		callout-muted,
+		callout-info,
+		callout-warning,
+		callout-danger,
+		callout-success
+	):is(.aside, .important)
+	p {
+	font-size: inherit;
+	color: inherit;
+}
+
+@media (min-width: 1024px) {
+	.prose.project-story :is(h1, h2) {
+		font-size: 1.875rem;
+		line-height: 2.375rem;
+	}
+
+	.prose.project-story h3 {
+		font-size: 1.5rem;
+		line-height: 2rem;
+	}
+
+	.prose.project-story :is(h4, h5, h6) {
+		font-size: 1.25rem;
+	}
 }
 
 /* #region  /**=========== Hash Anchor =========== */

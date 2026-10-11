@@ -7,6 +7,7 @@ import { ButtonLink } from '@/components/ui/button'
 import { ConcentricCircles } from '@/components/ui/concentric-circles'
 import { DotGrid } from '@/components/ui/dot-grid'
 import { Tag } from '@/components/ui/tag'
+import { ProjectClosing } from '@/components/works/project-closing'
 import { WorkTocDrawer } from '@/components/works/toc-drawer'
 import { type HeadingScrollSpy, TocList } from '@/components/works/toc-list'
 import { incrementMetaFlag } from '@/constants/env'
@@ -337,13 +338,19 @@ export default function WorksSlug({ loaderData }: Route.ComponentProps) {
 					ref={readMarker}
 					className="pb-20 lg:grid lg:grid-cols-[minmax(0,800px)_250px] lg:gap-16"
 				>
-					<article
-						key={frontmatter.slug}
-						ref={collectToc}
-						className="prose prose-light dark:prose-dark wrap-break-words w-full"
-					>
-						{mdxElement}
-					</article>
+					<div className="w-full max-w-[800px] min-w-0">
+						<article
+							key={frontmatter.slug}
+							ref={collectToc}
+							className="prose project-story prose-light dark:prose-dark wrap-break-words w-full"
+						>
+							{mdxElement}
+						</article>
+						<ProjectClosing
+							projectTitle={frontmatter.title}
+							projectSlug={frontmatter.slug}
+						/>
+					</div>
 
 					{/* Rendered only once the headings have been read, so the empty
 					    "Table of Contents" label never paints before the scene can

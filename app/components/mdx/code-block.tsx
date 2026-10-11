@@ -30,15 +30,15 @@ export function CodeBlock({ children, className, ...props }: CodeBlockProps) {
 		language && language !== 'plaintext' ? language.toUpperCase() : 'CODE'
 
 	return (
-		<figure className="mx-0 my-5 overflow-hidden rounded-xl bg-(--color-neutral-950) dark:bg-(--color-sky-900)">
-			<div className="flex items-center justify-between bg-(--color-neutral-800) py-2.5 pr-3 pl-4 dark:bg-(--color-sky-800)">
+		<figure className="mx-0 my-5 overflow-hidden rounded-xl bg-(--color-neutral-950)">
+			<div className="flex items-center justify-between bg-(--color-neutral-800) py-2.5 pr-3 pl-4">
 				<span className="font-mono text-[13px] text-(--color-neutral-400)">
 					{label}
 				</span>
 				<button
 					type="button"
 					onClick={handleCopy}
-					className="flex items-center gap-1.5 rounded px-2 py-1 font-mono text-[13px] text-(--color-neutral-400) transition-colors hover:text-(--color-neutral-100) focus:outline-none"
+					className="flex items-center gap-1.5 rounded px-2 py-1 font-mono text-[13px] text-(--color-neutral-400) transition-colors hover:text-(--color-neutral-100) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--color-neutral-100)"
 				>
 					{copied ? (
 						<CheckIcon className="size-3.5" />
