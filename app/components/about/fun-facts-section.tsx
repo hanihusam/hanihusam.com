@@ -1,19 +1,11 @@
-import {
-	motion,
-	useReducedMotion,
-	useInView,
-	type HTMLMotionProps,
-} from 'motion/react'
+import { motion, type HTMLMotionProps } from 'motion/react'
 import { useRef } from 'react'
 
 import { CatPeekBody, CatPeekPaws } from '@/components/about/cat-peek'
 import { SkateTrace } from '@/components/about/skate-trace'
-import {
-	HOVER_INTENT_DELAY,
-	StickFigure,
-} from '@/components/about/stick-figure'
+import { StickFigure } from '@/components/about/stick-figure'
 import { Grid } from '@/components/grid'
-import { useHoverIntent } from '@/hooks/useHoverIntent'
+import { useHeightTileMotion } from '@/hooks/useHeightTileMotion'
 import { clsxm } from '@/utils/clsxm'
 import { Paragraph } from '@/components/typography'
 
@@ -63,12 +55,9 @@ function Fact({
 }
 
 export function FunFactsSection() {
-	const shouldReduceMotion = useReducedMotion()
-	const heightHover = useHoverIntent(HOVER_INTENT_DELAY)
 	const heightTileRef = useRef<HTMLDivElement>(null)
-	// Idle sway only runs while the tile is actually on screen — no reason to
-	// keep an infinite loop ticking somewhere the reader has scrolled past.
-	const heightTileInView = useInView(heightTileRef)
+	const figureRef = useRef<SVGSVGElement>(null)
+	const height = useHeightTileMotion(heightTileRef, figureRef)
 
 	return (
 		<Grid as="section">
@@ -179,25 +168,20 @@ export function FunFactsSection() {
 				<Tile
 					ref={heightTileRef}
 					area="[grid-area:height]"
-					initial={shouldReduceMotion ? undefined : 'rest'}
-					animate={
-						shouldReduceMotion
-							? undefined
-							: heightHover.active
-								? 'grown'
-								: 'rest'
-					}
-					onHoverStart={
-						shouldReduceMotion ? undefined : heightHover.onHoverStart
-					}
-					onHoverEnd={shouldReduceMotion ? undefined : heightHover.onHoverEnd}
+					// Always `rest` first: it's the pose the server ships, so hydration
+					// matches even when reduced motion jumps straight to `grown`.
+					initial="rest"
+					animate={height.grown ? 'grown' : 'rest'}
+					onHoverStart={height.onHoverStart}
+					onHoverEnd={height.onHoverEnd}
 					className="flex flex-col-reverse items-center justify-center gap-5 md:max-h-46 md:flex-row md:justify-center"
 				>
 					<StickFigure
+						ref={figureRef}
 						className="self-center overflow-visible text-(--text-paragraph) md:max-h-25 md:self-end"
-						idle={
-							!shouldReduceMotion && !heightHover.active && heightTileInView
-						}
+						grown={height.grown}
+						raised={height.raised}
+						instant={height.instant}
 					/>
 					<Fact>
 						I am 180 cm tall. Above average for an Indonesian. I&apos;m told
