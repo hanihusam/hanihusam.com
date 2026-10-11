@@ -2,10 +2,21 @@ import { Grid } from '@/components/grid'
 import { H2, Text } from '@/components/typography'
 import { ButtonLink } from '@/components/ui/button'
 import { DotGrid } from '@/components/ui/dot-grid'
+import { clsxm } from '@/utils/clsxm'
 
-export function CallToAction() {
+interface CallToActionProps {
+	page: 'home' | 'works'
+}
+
+export function CallToAction({ page }: CallToActionProps) {
 	return (
-		<Grid as="section" className="py-20">
+		<Grid
+			as="section"
+			className={clsxm({
+				'py-16 lg:py-20': page === 'home',
+				'py-20': page === 'works',
+			})}
+		>
 			<DotGrid
 				color="sunset"
 				rows={6}
@@ -19,16 +30,39 @@ export function CallToAction() {
 				className="absolute bottom-2 left-[8%] md:left-[14%]"
 			/>
 
-			<div className="col-span-full flex flex-col items-center gap-8 text-center">
-				<div className="flex flex-col gap-4">
+			<div
+				className={clsxm(
+					'col-span-full flex flex-col items-center text-center',
+					{
+						'gap-6': page === 'home',
+						'gap-8': page === 'works',
+					},
+				)}
+			>
+				<div
+					className={clsxm('flex flex-col', {
+						'gap-2': page === 'home',
+						'gap-4': page === 'works',
+					})}
+				>
 					<H2>Have a project in mind?</H2>
 					<Text variant="lead" as="p">
-						I'm available for freelance and contract work.
-						<br />
-						Let's build something together.
+						{page === 'works' ? (
+							<>
+								I'm available for freelance and contract work.
+								<br />
+							</>
+						) : null}
+						Tell me what you're building and where you could use a hand.
 					</Text>
 				</div>
-				<ButtonLink href="mailto:me@hanihusam.com">Let's Talk</ButtonLink>
+				<ButtonLink
+					href="mailto:me@hanihusam.com?subject=Project%20inquiry"
+					data-umami-event="lets-talk-click"
+					data-umami-event-page={page}
+				>
+					Let's Talk
+				</ButtonLink>
 			</div>
 		</Grid>
 	)
