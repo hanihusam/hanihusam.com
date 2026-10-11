@@ -11,6 +11,7 @@ changes matching the surrounding code. Detailed references live in
 | [`architecture.md`](./docs/agents/architecture.md)         | You need the runtime shape, entry points, routes, or env vars.   |
 | [`content-and-data.md`](./docs/agents/content-and-data.md) | Touching MDX content, the GitHub pipeline, caching, or the DB.   |
 | [`code-style.md`](./docs/agents/code-style.md)             | **Writing or changing any UI** — components, styling, data load. |
+| [`motion.md`](./docs/agents/motion.md)                     | **Adding, changing, or removing any animation.**                 |
 
 ## Quick start
 

@@ -75,6 +75,11 @@ From `@/components/ui/button`:
   without navigating via `useUpdateQueryStringValueWithoutNavigation`
   (`@/utils/misc`) so the loader is not re-run.
 
+## Motion
+
+Any animation — entrance, hover, scroll, gesture — follows
+[`motion.md`](./motion.md). Read it before adding or changing one.
+
 ## Images
 
 Use `getImageBuilder` + `getImgProps` (`@/utils/images`) inside `BlurrableImage`
@@ -84,4 +89,4 @@ for Cloudinary-backed responsive images with blur-up placeholders. Provide
 ## Imports
 
 - Use the `@/` alias for everything under `app/`.
-- Import ordering follows the project ESLint config (run `npm run lint:fix`).
+- Import ordering is enforced by oxlint + oxfmt (run `npm run lint:fix`).

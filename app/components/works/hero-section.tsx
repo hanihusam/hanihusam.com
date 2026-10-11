@@ -10,8 +10,9 @@ export function WorksHero() {
 	const shouldReduceMotion = useReducedMotion()
 
 	// Staggered entrance on first mount, matching the Home/About hero pattern.
-	// Skipping `initial` under reduced motion keeps SSR-visible content from
-	// ever being hidden.
+	// Skipping `initial` under reduced motion was meant to keep SSR content
+	// visible, but useReducedMotion() is null on the server, so SSR always
+	// ships opacity:0 — see Known gaps in docs/agents/motion.md.
 	const fadeUp = (delay: number) =>
 		shouldReduceMotion
 			? {}

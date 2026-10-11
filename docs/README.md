@@ -10,6 +10,8 @@ case studies remain in `contents/projects/`.
   hosting
 - [Content and data](agents/content-and-data.md) — MDX, caching, and persistence
 - [Code style](agents/code-style.md) — UI conventions
+- [Motion](agents/motion.md) — motion tokens, library ownership, SSR and
+  reduced-motion rules, where each scene lives
 - [Styles](styles.md) — CSS source files and Tailwind setup
 
 ## Plans and history

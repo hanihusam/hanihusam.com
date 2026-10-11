@@ -112,9 +112,10 @@
 	--breakpoint-xl: 1440px; /* Tailwind default: 80rem (1280px) */
 
 	/* ─── Motion — single source of truth for durations + easing.
-	   Generates utilities: duration-fast/base/slow/slower, ease-out-quart, ease-in-out-quart.
-	   Durations are re-zeroed under prefers-reduced-motion below, so any utility
-	   built on these tokens is automatically motion-safe. */
+	   Generates ease-out-quart, ease-in-out-quart and ease-hover utilities.
+	   --duration-* is not a Tailwind namespace, so reference it as
+	   duration-(--duration-base). These variables are re-zeroed under
+	   prefers-reduced-motion below; the JS mirrors in app/utils/motion.ts are not. */
 	--duration-fast: 150ms; /* micro-interactions, hover, color */
 	--duration-base: 200ms; /* standard UI: buttons, dropdowns, tooltips */
 	--duration-slow: 300ms; /* larger elements: modals, drawers, image zoom */
@@ -214,8 +215,9 @@
 	--border-primary: var(--color-neutral-200); /* #e0e3e2 */
 	/* Skate-tile swoosh. The source SVG authored this as #FEFEFE, which is
 	   invisible on the light tile surface (#f2f3f2), so light mode uses a
-	   pencil grey and dark mode keeps the intended white. */
-	--skate-trace-stroke: var(--color-neutral-300);
+	   pencil grey (~2.2:1 on the tile; neutral-300 was too faint to see the
+	   line draw) and dark mode keeps the intended white. */
+	--skate-trace-stroke: var(--color-neutral-400);
 	--border-default: var(--color-neutral-300); /* #cbd1d1 */
 	--border-focus: var(--color-sunset-500); /* brand focus ring */
 

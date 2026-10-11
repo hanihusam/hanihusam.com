@@ -15,9 +15,10 @@ const projectInquiryHref = 'mailto:me@hanihusam.com?subject=Project%20inquiry'
 export function HeroSection() {
 	const shouldReduceMotion = useReducedMotion()
 
-	// Staggered fade+rise on first mount. Under prefers-reduced-motion we skip
-	// `initial` so the SSR-visible content is never hidden (same contract as
-	// the Reveal component).
+	// Staggered fade+rise on first mount. Skipping `initial` under reduced
+	// motion was meant to keep SSR content visible, but useReducedMotion() is
+	// null on the server, so SSR always ships opacity:0 — see Known gaps in
+	// docs/agents/motion.md.
 	const fadeUp = (delay: number) =>
 		shouldReduceMotion
 			? {}

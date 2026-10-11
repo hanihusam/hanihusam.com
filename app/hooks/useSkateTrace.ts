@@ -3,26 +3,55 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { type RefObject } from 'react'
 
+import { SCROLL_STAGE_INSET } from '@/utils/motion'
+
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
 // A round linecap paints a dot even where the dash has zero length, so each
 // stroke hides a little further into the gap than its own length.
 const HIDE_BUFFER = 3
 
+function pageEdges(element: Element) {
+	const rect = element.getBoundingClientRect()
+	return {
+		top: rect.top + window.scrollY,
+		bottom: rect.bottom + window.scrollY,
+	}
+}
+
 /**
  * Motion brief — skate bento line draw (about)
  *
- * Verdict:    animate. The site's one scroll-narrative scene.
- * Trigger:    scroll position, scrubbed. Not `play` on enter — the reader
- *             holds the clock, forward and backward.
+ * Verdict:    animate. One of the bento's two scrubbed scroll scenes (the
+ *             other is the cat peek, useCatPeekReveal.ts).
+ * Trigger:    scroll position, scrubbed 1:1. The reader holds the clock,
+ *             forward and backward.
+ *               · start: the FIRST stroke's bottom reaches the bottom stage
+ *                 line (SCROLL_STAGE_INSET above the viewport bottom). Keyed
+ *                 to the first pixel that moves, not the photo's edge, so
+ *                 nothing draws below the fold or under the nav.
+ *               · end: the bento grid's bottom reaches that same line — or,
+ *                 if sooner, the landing stroke's top reaches the top stage
+ *                 line. The cap only binds on short viewports — landscape
+ *                 phones, short md windows (under ~650-730px tall), small
+ *                 portrait phones — where waiting for the grid would draw the
+ *                 board strokes under the top blur or past the top edge. It
+ *                 is deliberately conservative: the pen stays 30-50px below
+ *                 the blur, at the cost of a ~15% shorter runway there.
  * Frequency:  once per pass over the tile, each direction.
- * Purpose:    the swoosh is inert decoration today. Drawing it like a route
- *             being traced on a map gives the bento a second layer and is the
- *             one place the site demonstrates reader-controlled timing.
+ * Purpose:    the photo is a bail — he falls back as the board shoots out —
+ *             and the swoosh is its action lines. Drawing them top-down as
+ *             the page rises feeds the photo up under the pen, so the
+ *             reader's own scroll visibly draws the fall, in the direction he
+ *             falls. On the long downward strokes (down his back, down his
+ *             side, the landing curl) the nib nearly holds still on screen;
+ *             the two strokes that run uphill in the art (beside the arm,
+ *             along the board) still ride up at ~1.2-1.5x scroll speed.
  *
- * Enter:      one continuous draw, bottom of the board upward, finishing on
- *             the stroke beside him. Three things make it read as a route
- *             rather than nine separate reveals:
+ * Enter:      one continuous draw: the flick beside his raised arm, a pen
+ *             lift to the helmet, down his back, under the body, along the
+ *             top of the board, and the curl around its end (the landing).
+ *             Three things make it read as one line rather than nine reveals:
  *               · strictly sequential — a segment finishes before the next
  *                 starts, so there is only ever one pen on the page;
  *               · duration proportional to each path's own length, so the pen
@@ -30,30 +59,54 @@ const HIDE_BUFFER = 3
  *                 same time as a 94px sweep;
  *               · direction per segment, hand-set in skate-trace-paths.ts,
  *                 because the artwork's own path directions are inconsistent.
- * Exit:       the same timeline scrubbed backwards. No separate reverse.
+ *             Top-down replaced an earlier bottom-up route, which started on
+ *             the board — the last part of the photo to scroll in — so about
+ *             a third of it drew below the fold, and its pen climbed while the
+ *             page rose, racing away from the reader at ~1.4x scroll speed.
+ * Exit:       the same timeline scrubbed backwards; it un-draws from the nib.
  * Origin:     n/a — a length reveal, not a transform.
  * Easing:     `none`, and it has to be: any curve would break the constant pen
- *             speed that sells the route.
- * Duration:   not time-based. Starts as the tile comes up the screen and is
- *             finished by the time the bento's bottom edge reaches the bottom
- *             of the viewport — so the route always completes while the bento
- *             is still the thing on screen, never trailing into the section
- *             below. That is why the end is anchored to the grid rather than
- *             to this tile.
- * Interrupt:  `scrub: 0.5` retargets from the current value.
+ *             speed and let the nib drift on screen.
+ * Duration:   not time-based. The runway is the page distance from the first
+ *             stroke to the grid's bottom, roughly 340-440px at lg and
+ *             520-570px below it. Where the landing cap binds it's shorter:
+ *             ~215-345px on landscape phones, a smaller trim on short md
+ *             windows (800x620: 534px). It ends while the bento is on screen:
+ *             the spacers below the grid (128-160px) are taller than
+ *             SCROLL_STAGE_INSET, so the next section hasn't arrived (measured
+ *             32-72px below the fold at the end). At lg the cat peek
+ *             (useCatPeekReveal.ts) starts once the draw is ~60% done and
+ *             finishes just after the pen lands: he bails, then the cat leans
+ *             out to see what happened.
+ * Interrupt:  `scrub: true` — progress is the scroll position, with no
+ *             catch-up. Stop mid-stroke and the line stops with the hand. Any
+ *             smoothing shows as the nib sliding along the photo after the
+ *             hand stops; if a wheel mouse ever looks stepped, `scrub: 0.1`
+ *             is the ceiling.
  *
  * Reduced motion: the scene is never constructed, so every segment renders
  *             drawn at once. A render path, not a disabled animation.
  * SSR:        every segment ships fully drawn; JS only ever adds a dash offset
- *             on top of complete decorative art. The tile sits well below the
- *             fold, so the pre-hydration state is never seen.
- * Stack:      GSAP + ScrollTrigger. There is deliberately no hover or click
- *             behaviour here: this is decoration sitting inside a text tile,
- *             and a pointer-driven version read as twitchy against copy the
- *             reader is trying to read.
+ *             on top of complete decorative art, below the fold at common
+ *             sizes. Mounting with the tile in view (restored scroll) jumps
+ *             from fully drawn straight to the correct partial state; the
+ *             explicit refresh after building the timeline removes the empty
+ *             frame ScrollTrigger's deferred first refresh used to paint.
+ * Stack:      GSAP + ScrollTrigger, no other plugins. The trigger is the first
+ *             `[data-trace-segment]` path itself. There is deliberately no
+ *             hover, click or speed-reactive layer: this is decoration inside
+ *             a text tile, and a pointer-driven version read as twitchy
+ *             against copy the reader is trying to read.
  *
  * Open risk:  the route and each stroke's direction are hand-set against this
- *             exact artwork. Redrawing the trace means re-deciding both.
+ *             exact artwork; redrawing the trace means re-deciding both.
+ *             SCROLL_STAGE_INSET is tied to the nav's and the top blur's sizes;
+ *             change either, revisit it. On viewports tall enough to show the
+ *             photo at hydration (~1230px+), the trace visibly hides on mount.
+ *             With OS smooth scrolling off, a wheel notch draws ~24-30% of
+ *             the route in one frame; real browsers smooth notches by default.
+ *             After a client-side navigation the range measures ~6-8px late
+ *             (PageTransition's entrance is still running; plan 002 batch D).
  */
 function useSkateTrace(scopeRef: RefObject<HTMLElement | null>) {
 	useGSAP(
@@ -90,11 +143,23 @@ function useSkateTrace(scopeRef: RefObject<HTMLElement | null>) {
 				const timeline = gsap.timeline({
 					defaults: { ease: 'none' },
 					scrollTrigger: {
-						trigger: scope,
-						start: 'top 90%',
-						endTrigger: grid ?? scope,
-						end: 'bottom bottom',
-						scrub: 0.5,
+						trigger: segments[0],
+						start: `bottom bottom-=${SCROLL_STAGE_INSET}`,
+						end: () => {
+							const gridEnd =
+								pageEdges(grid ?? scope).bottom -
+								(window.innerHeight - SCROLL_STAGE_INSET)
+							// On short viewports the grid's bottom arrives so late that the
+							// board strokes would draw up under the top blur, or past the
+							// top edge. Finish no later than the landing stroke's top
+							// reaching the top stage line, so the whole landing stays clear.
+							const landing = segments[segments.length - 1]
+							const landingEnd = landing
+								? pageEdges(landing).top - SCROLL_STAGE_INSET
+								: gridEnd
+							return Math.min(gridEnd, landingEnd)
+						},
+						scrub: true,
 						invalidateOnRefresh: true,
 					},
 				})
@@ -108,6 +173,11 @@ function useSkateTrace(scopeRef: RefObject<HTMLElement | null>) {
 						duration: (lengths[i] ?? 0) / total,
 					})
 				})
+
+				// ScrollTrigger defers its first refresh a tick, so mounting with the
+				// tile already in view (restored scroll) painted an empty frame
+				// before the correct partial state. Measure now instead.
+				timeline.scrollTrigger?.refresh()
 
 				return () => {
 					gsap.set(segments, {
