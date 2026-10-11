@@ -4,6 +4,7 @@
 | --------------------------------------------------------------------- | ----------------------------------------------------- |
 | [Professional home and freelance pipeline](001-freelance-pipeline.md) | Batches 0–2 implemented locally; verification pending |
 | [OG image migration](og-image-migration.md)                           | Shipped and verified in production                    |
+| [About bento motion](002-about-bento-motion.md)                       | Skate rework implemented; awaiting visual sign-off    |
 
 ## Professional home and freelance pipeline
 

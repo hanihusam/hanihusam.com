@@ -9,7 +9,9 @@ export function AboutHero() {
 	const shouldReduceMotion = useReducedMotion()
 
 	// Staggered entrance on first mount. Skipping `initial` under reduced motion
-	// keeps the SSR-visible content from ever being hidden (same contract as Reveal).
+	// was meant to keep SSR content visible, but useReducedMotion() is null on
+	// the server, so SSR always ships opacity:0 — see Known gaps in
+	// docs/agents/motion.md.
 	const fadeUp = (delay: number) =>
 		shouldReduceMotion
 			? {}

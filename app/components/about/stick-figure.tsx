@@ -33,8 +33,9 @@ const WAVE_RAISED_MS = 550
 
 /**
  * Toggles between resting and raised on a timer while `active`, holding at
- * rest longer than it holds raised so the gesture reads as occasional rather
- * than metronomic.
+ * rest longer than it holds raised so the gesture reads as occasional
+ * rather than constant. The cycle is still a fixed ~3.05s (2500ms rest +
+ * 550ms raised) for as long as the tile is in view.
  *
  * This drives the wave with a plain boolean + spring instead of a Motion
  * keyframes array with `repeat: Infinity`, which was the first approach and
@@ -80,8 +81,14 @@ function useWave(active: boolean) {
  * figure literally growing up. The `rest`/`grown` variant is set by an
  * ancestor's `animate` prop (see the height tile in `fun-facts-section.tsx`,
  * which drives it through `useHoverIntent`); the base attributes below are
- * the `grown` pose, so reduced motion shows the figure standing tall with no
- * animation.
+ * the `grown` pose. Touch pointers never fire Motion's hover gesture, so on
+ * phones the figure stays crouched and only the idle wave plays.
+ *
+ * The base pose is meant to be the reduced-motion render, but today it isn't:
+ * the tile picks `initial` from `useReducedMotion()`, which is null on the
+ * server, so SSR ships the crouched `rest` pose and a reduced-motion hard
+ * load keeps it (React 19 does not patch the attribute mismatch). See
+ * docs/plans/002.
  *
  * `idle` drives a periodic wave on BOTH arms — and only the arms. The head,
  * torso and legs never move outside of the hover-triggered grow, so the
