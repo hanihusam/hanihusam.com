@@ -67,16 +67,17 @@ function StickFigure({
 }) {
 	const toRest = instant ? INSTANT : REST_SPRING
 	const toGrown = instant ? INSTANT : GROW_SPRING
+	const toRaised = instant ? INSTANT : WAVE_SPRING
 	const pose = (rest: Pose, grownPose: Pose) => ({
 		rest: { ...rest, transition: toRest },
 		grown: { ...grownPose, transition: toGrown },
 	})
-	const arm = (rest: Pose, up: Pose) =>
-		grown
-			? undefined
-			: raised
-				? { ...up, transition: instant ? INSTANT : WAVE_SPRING }
-				: { ...rest, transition: toRest }
+	const arm = (rest: Pose, up: Pose) => {
+		if (grown) return undefined
+		return raised
+			? { ...up, transition: toRaised }
+			: { ...rest, transition: toRest }
+	}
 
 	return (
 		<svg
