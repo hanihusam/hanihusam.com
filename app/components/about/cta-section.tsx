@@ -1,9 +1,8 @@
+import ArrowRightIcon from '@/assets/arrow-right-icon'
 import { Grid } from '@/components/grid'
 import { H2, Text } from '@/components/typography'
 import { ButtonLink } from '@/components/ui/button'
 import { DotGrid } from '@/components/ui/dot-grid'
-
-import { ArrowRightIcon } from '@phosphor-icons/react'
 
 export function AboutCta() {
 	return (
@@ -35,10 +34,7 @@ export function AboutCta() {
 					</Text>
 				</div>
 				<div className="flex flex-wrap items-start justify-center gap-4">
-					<ButtonLink
-						to="/works"
-						iconRight={<ArrowRightIcon className="size-4" aria-hidden />}
-					>
+					<ButtonLink to="/works" iconRight={<ArrowRightIcon aria-hidden />}>
 						View my work
 					</ButtonLink>
 					<ButtonLink
