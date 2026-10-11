@@ -84,8 +84,10 @@ exception, not a pattern. Ask before adding a third scroll observer.
      exists under reduce.
    - **Hooks:** gate on `matchMedia` in an effect, as `useCatPeekReveal` does.
    - **Decorative motion:** turn it off entirely, not "gentler".
-3. **Animate `transform` and `opacity`.** The single exception is SVG
-   `stroke-dashoffset`, for line drawing on a small element.
+3. **Animate `transform` and `opacity`.** The exceptions are both small SVG art:
+   - `stroke-dashoffset`, for line drawing (the skate trace);
+   - the stick figure's geometry attributes (`cy`, `y1`, `x2`, `y2`), six
+     primitives. Paint-only and tiny.
 4. **No new animation dependencies.** Plugins that ship inside the installed
    `gsap` package are allowed.
 5. **No exit animations on route change.** The reason is in
@@ -140,12 +142,19 @@ exception, not a pattern. Ask before adding a third scroll observer.
   when a pointer sweeping past would trigger it by accident. Leaving is instant.
 - **Touch has no hover.** Anything hover-only is decoration that touch users
   never see. Either give it a touch equivalent or accept that knowingly. Gate
-  CSS hover effects with `(hover: hover) and (pointer: fine)`.
+  CSS hover effects with `(hover: hover) and (pointer: fine)`. In JS, read it
+  with `useSyncExternalStore` (server snapshot `false`) so hydration matches.
+  The height tile is the worked example (`useHeightTileMotion`): touch devices
+  get the grow once the tile is half on screen.
 - **No always-on background loops.** An idle loop must run only while its
-  element is on screen (`useInView`), stay rare, and be off under reduced
-  motion. Prefer a finite run: a few waves per entry into view, done within 5s
-  (WCAG 2.2.2). The stick figure doesn't meet this yet: it waves on a fixed ~3s
-  cycle for as long as the tile is in view.
+  element is on screen, stay rare, and be off under reduced motion. Make it a
+  finite run, done within 5s (WCAG 2.2.2).
+  - The stick figure waves twice per pass, all within ~4s.
+  - It re-arms only once the tile is fully off screen, and a hover spends it.
+- **Trigger on the moving thing itself being fully on stage**, not on its
+  container, which can be half visible while the art is still below the fold.
+  Reset when the container is fully off screen. Nothing then plays unseen, or
+  resets and replays while the reader can still see it.
 
 ## What stays still
 
@@ -163,16 +172,16 @@ Every candidate for motion should first be checked against this list:
 
 ## Where motion lives
 
-| Scene                     | Files                                                                              |
-| ------------------------- | ---------------------------------------------------------------------------------- |
-| Route transition          | `components/page-transition.tsx`                                                   |
-| Scroll reveals            | `components/reveal.tsx`                                                            |
-| Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`               |
-| Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)               |
-| Bento: skate line draw    | `about/skate-trace.tsx`, `about/skate-trace-paths.ts`, `hooks/useSkateTrace.ts`    |
-| Bento: cat peek (lg+)     | `about/cat-peek.tsx`, `hooks/useCatPeekReveal.ts`                                  |
-| Bento: height grow + idle | `about/stick-figure.tsx`, `hooks/useHoverIntent.ts`, `about/fun-facts-section.tsx` |
-| Works TOC                 | `works/toc-list.tsx`, `works/toc-drawer.tsx`, `.toc-enter` in `app.css`            |
+| Scene                     | Files                                                                                   |
+| ------------------------- | --------------------------------------------------------------------------------------- |
+| Route transition          | `components/page-transition.tsx`                                                        |
+| Scroll reveals            | `components/reveal.tsx`                                                                 |
+| Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`                    |
+| Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)                    |
+| Bento: skate line draw    | `about/skate-trace.tsx`, `about/skate-trace-paths.ts`, `hooks/useSkateTrace.ts`         |
+| Bento: cat peek (lg+)     | `about/cat-peek.tsx`, `hooks/useCatPeekReveal.ts`                                       |
+| Bento: height grow + wave | `hooks/useHeightTileMotion.ts`, `about/stick-figure.tsx`, `about/fun-facts-section.tsx` |
+| Works TOC                 | `works/toc-list.tsx`, `works/toc-drawer.tsx`, `.toc-enter` in `app.css`                 |
 
 ## Known gaps
 
@@ -188,9 +197,6 @@ entry once it's fixed.
     leaves the about hero invisible.
   - `Reveal` recovers because it sets an explicit `animate`, but it still logs a
     hydration mismatch.
-- **The stick figure's reduced-motion pose.** The height tile branches `initial`
-  on `useReducedMotion()`. A reduced-motion hard load therefore keeps the
-  crouched server pose and logs a hydration mismatch.
 - **The home hero headline ignores reduced motion.** `#heroDisplay span`
   (`app.css`) runs `revealText` for a literal `1.3s` and has no reduced-motion
   rule.

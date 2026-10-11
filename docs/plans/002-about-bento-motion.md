@@ -7,8 +7,11 @@
 - Status: review complete, docs corrected. Batch A (skate rework) implemented on
   2026-10-11 with Hani's go-ahead and the neutral-400 light stroke. It is
   waiting on Hani's visual sign-off. The cat window from batch C was retimed the
-  same day to finish with the skate (see below). Batch B runs as a separate
-  task. The rest of C and D are not started.
+  same day to finish with the skate (see below). Batch C (height tile) was
+  implemented on 2026-10-11 and also fixes finding 7. Batch B runs as a separate
+  task. Its height-tile hunk is superseded by batch C, so leave out its
+  `fun-facts-section.tsx` and `stick-figure.tsx` changes. Batch D is partly done
+  (the `useHoverIntent` cleanup).
 - Risk: low. Every change is scoped to the About page bento, except batch B,
   which touches the shared hero pattern.
 
@@ -25,14 +28,16 @@
 
 ## What moves today
 
-As of batch A. Before it, the skate draw ran bottom-up with `scrub: 0.5`.
+As of batches A and C. Before batch A, the skate draw ran bottom-up with
+`scrub: 0.5`. Before batch C, the height tile was hover-only, with an endless
+wave.
 
-| Tile   | Motion                                                    | Library            |
-| ------ | --------------------------------------------------------- | ------------------ |
-| Skate  | Scrubbed line draw, 9 strokes, top-down, `scrub: true`    | GSAP ScrollTrigger |
-| Cat    | Scrubbed peek from behind the card, lg+ only              | Motion `useScroll` |
-| Height | Hover-intent grow (spring) plus idle both-arms wave (~3s) | Motion variants    |
-| Others | Static on purpose (married, top 10, Hani, desk)           | —                  |
+| Tile   | Motion                                                              | Library            |
+| ------ | ------------------------------------------------------------------- | ------------------ |
+| Skate  | Scrubbed line draw, 9 strokes, top-down, `scrub: true`              | GSAP ScrollTrigger |
+| Cat    | Scrubbed peek from behind the card, lg+ only                        | Motion `useScroll` |
+| Height | Hover grow; touch grow on view; 2 waves per pass; tall when reduced | Motion variants    |
+| Others | Static on purpose (married, top 10, Hani, desk)                     | —                  |
 
 Confirmed working:
 
@@ -219,7 +224,7 @@ Two follow-ups landed after this run, from the verifier:
 
 Runs as a separate task.
 
-1. Hero `fadeUp` (home, about, works) and the height tile:
+1. Hero `fadeUp` (home, about, works). The height tile is handled by batch C:
    - keep `initial` unconditional;
    - under reduce, set `animate` to the final state with `duration: 0`;
    - or gate on hydration with `useSyncExternalStore`, as `PageTransition` does.
@@ -232,12 +237,29 @@ Runs as a separate task.
 
 ## Batch C — height and cat polish
 
-- Finite wave: one or two waves per entry into view, re-armed only after the
-  tile leaves the viewport. Use `useInView(…, { amount: 0.5 })`.
-- Split the `posing` and `waving` flags so the arms always lower (fixes 10).
-- Add a non-bouncy rest transition (fixes 11).
-- Touch grow, if Hani wants it: under `(hover: none)`, grow once about 300ms
-  after the tile is half in view.
+- **Height tile (done 2026-10-11).** All of the tile's state now lives in
+  `useHeightTileMotion`; `StickFigure` is presentational. Hani chose touch grow
+  and a tall reduced-motion pose.
+  - **Trigger: the figure, not the tile.** It has to be fully inside the 96px
+    stage (`useInView` on the SVG, `amount: 'all'`, inset margins). The figure
+    sits in the tile's lower part, so "half the tile" could still mean none of
+    the figure: 0% of it at 390×844.
+  - **Finite wave (fixes 9).** On hover devices: 2 waves, the first 1.2s after
+    the figure is on stage, all within ~4s. Re-arms only once the tile is fully
+    off screen; a hover spends it.
+  - **Arms always lower (fixes 10).** Unless grown, the arms hold an explicit
+    target, so leaving mid-wave lowers them.
+  - **Non-bouncy return (fixes 11).** `rest` uses a 0.4s spring with no bounce;
+    `grown` keeps its 0.6s spring with bounce 0.25. Each variant carries its own
+    transition.
+  - **Touch grow (addresses 8).** When the primary pointer isn't a fine,
+    hovering one, he stands up 300ms after the figure is on stage. He resets
+    only once the tile is fully off screen, as a jump cut, so a quick flick back
+    never shows the tail of a crouch. There's no wave on touch: standing already
+    raises the arms.
+  - **Reduced motion (fixes 7).** He stands tall, set instantly after hydration.
+    `initial` is always `rest`, the pose the server ships, so hydration matches.
+  - `canHover` comes from `useSyncExternalStore` (false on the server).
 - **Cat window (done 2026-10-11, Hani's direction):**
   - **Start:** when the box's top clears the bottom stage line, about 60% into
     the skate draw, with the cat's head already on screen.
@@ -269,6 +291,11 @@ Runs as a separate task.
 - Mount the cat's scroll work only when `active`, and skip `setRange` when
   nothing changed.
 - Extract `HeightTile` and make `Tile` a plain `div`.
-- Clear `useHoverIntent`'s timeout on unmount.
+  - `useHeightTileMotion` runs at section level, so each of its changes
+    re-renders the bento: hover, two in-view flags, touch grow and wave.
+  - The wave is finite now, so that's a handful of renders per pass, not a loop.
+  - Extracting the tile and calling the hook inside it would scope those renders
+    to one tile.
+- ~~Clear `useHoverIntent`'s timeout on unmount.~~ Done with batch C.
 - Site-wide, not bento: `html { scroll-behavior: smooth }` also animates React
   Router's scroll restoration on reload (see motion.md Known gaps).
