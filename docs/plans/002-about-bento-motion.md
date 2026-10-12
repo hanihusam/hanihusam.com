@@ -221,7 +221,9 @@ Two follow-ups landed after this run, from the verifier:
 
 - **Shared hook.** `hooks/useEntrance.ts` now builds the hero entrances (home,
   about, works). `initial` is unconditional. Under reduce, `animate` lands the
-  final state with `duration: 0`. `Reveal` follows the same contract.
+  final state with `duration: 0`. `Reveal` follows the same contract, and its
+  zero duration wins over a caller's own `transition` (the works grid passes a
+  spring).
 - **`data-entrance`.** Both mark their elements with it.
   - `no-script.css` forces it visible with JS disabled.
   - `app.css` does the same under `prefers-reduced-motion: reduce`, so reduce
@@ -229,8 +231,14 @@ Two follow-ups landed after this run, from the verifier:
   - Normal motion still plays the hard-load entrance.
 - **Height tile.** `initial` is always `rest`. Hover is the only way to `grown`,
   and it's off under reduce, so reduce holds the server pose.
+  - This fixes finding 7's hydration mismatch. It also changes the
+    reduced-motion pose from the old brief's tall `grown` to the crouched
+    `rest`, so reduce loses the "180 cm" punchline. That's a product call, like
+    finding 8. #186 proposes the tall pose instead.
 - **Works grid.** Under reduce the cards drop their `exit`. The `!important` pin
-  would otherwise freeze an exiting card in place for the 0.35s exit spring.
+  would otherwise freeze an exiting card in place for the 0.35s exit spring. The
+  check reads the setting live (`useReducedMotionQuery`), because the pin
+  follows it even mid-visit.
 - **Rejected: a hydration-gated marker** (dropping `data-entrance` on
   hydration).
   - It showed a frame where the hero sat at opacity 0, after the marker went and

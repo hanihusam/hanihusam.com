@@ -68,10 +68,15 @@ exception, not a pattern. Ask before adding a third scroll observer.
    mount, below the fold at common sizes. On viewports taller than ~1230px, or
    on a mount with restored scroll, the trace can visibly change on mount (see
    the skate brief).
-   - **Exception: mount entrances that must play on a hard load** (the heroes,
-     `Reveal`). These ship Motion's hidden `initial` and carry `data-entrance`.
-     CSS forces `[data-entrance]` visible with JS disabled (`no-script.css`) and
-     under reduced motion (`app.css`), so neither case waits on JS.
+   - **Exception: entrances that must play on a hard load** (the hero entrances
+     and `Reveal`'s scroll reveals). These ship Motion's hidden `initial` and
+     carry `data-entrance`. CSS forces `[data-entrance]` visible with JS
+     disabled (`no-script.css`) and under reduced motion (`app.css`), so neither
+     case waits on JS.
+   - **The accepted cost:** if JS loads but never hydrates (a blocked bundle, an
+     error before `hydrateRoot`), readers without reduced motion keep the hidden
+     `initial`. Even when hydration works, the hero waits for it, and
+     `entry.client.tsx` defers hydration to `requestIdleCallback`.
    - Build new mount entrances with `useEntrance` (`enter()` / `fadeUp()`).
      Don't hand-roll the `initial`/`animate` pair.
 2. **Reduced motion is a render path, not a disabled animation.** Render the
@@ -87,10 +92,13 @@ exception, not a pattern. Ask before adding a third scroll observer.
        React 19 does not patch the mismatch.
 
      Keep `initial` unconditional. Under reduce, set `animate` to the final
-     state with `duration: 0`. `useEntrance` and `Reveal` already do this. Under
+     state with `duration: 0`. `useEntrance` and `Reveal` already do this;
+     `Reveal`'s zero duration wins even over a caller's own `transition`. Under
      reduce, `[data-entrance]` is pinned visible with `!important`, which
      freezes any opacity/transform `exit` on it. Drop the exit under reduce, as
-     the works grid does.
+     the works grid does. Read the setting live for that
+     (`useReducedMotionQuery`): the pin follows it mid-visit, and
+     `useReducedMotion()` doesn't.
 
    - **GSAP:** build the scene inside
      `gsap.matchMedia('(prefers-reduced-motion: no-preference)')` so it never
