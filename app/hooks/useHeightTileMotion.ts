@@ -1,13 +1,8 @@
 import { useInView, useReducedMotion } from 'motion/react'
-import {
-	useEffect,
-	useRef,
-	useState,
-	useSyncExternalStore,
-	type RefObject,
-} from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 
 import { useHoverIntent } from '@/hooks/useHoverIntent'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { SCROLL_STAGE_INSET } from '@/utils/motion'
 
 // How long the pointer has to stay on the tile before it counts as a real
@@ -34,20 +29,6 @@ const WAVE_RAISED_MS = 550
 const WAVE_GAP_MS = 900
 
 const CAN_HOVER = '(hover: hover) and (pointer: fine)'
-
-function subscribeCanHover(onChange: () => void) {
-	const query = window.matchMedia(CAN_HOVER)
-	query.addEventListener('change', onChange)
-	return () => query.removeEventListener('change', onChange)
-}
-
-function getCanHover() {
-	return window.matchMedia(CAN_HOVER).matches
-}
-
-function getServerCanHover() {
-	return false
-}
 
 /**
  * Touch: grows once the figure has been on stage for TOUCH_GROW_DELAY, and
@@ -163,7 +144,7 @@ function useFiniteWave(
  *             tail of a crouch before the regrow.
  * SSR / no-JS: the crouched `rest` pose.
  * Stack:      Motion variants on the tile, propagated to the figure's SVG
- *             attributes. `canHover` comes from useSyncExternalStore (false
+ *             attributes. `canHover` comes from useMediaQuery (false
  *             on the server) so the first client render matches SSR.
  *
  * Open risk:  hybrid devices report `hover: hover` and get the hover path
@@ -178,11 +159,7 @@ function useHeightTileMotion(
 	figureRef: RefObject<SVGSVGElement | null>,
 ) {
 	const instant = useReducedMotion() === true
-	const canHover = useSyncExternalStore(
-		subscribeCanHover,
-		getCanHover,
-		getServerCanHover,
-	)
+	const canHover = useMediaQuery(CAN_HOVER)
 	const hover = useHoverIntent(HOVER_INTENT_DELAY)
 	// The figure on stage starts things; the tile fully off screen re-arms
 	// them, so nothing resets while the reader can still see it.

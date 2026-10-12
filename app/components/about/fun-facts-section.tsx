@@ -1,64 +1,12 @@
-import { motion, type HTMLMotionProps } from 'motion/react'
-import { useRef } from 'react'
-
+import { BentoFact } from '@/components/about/bento-fact'
+import { BentoTile } from '@/components/about/bento-tile'
 import { CatPeekBody, CatPeekPaws } from '@/components/about/cat-peek'
+import { HeightTile } from '@/components/about/height-tile'
 import { SkateTrace } from '@/components/about/skate-trace'
-import { StickFigure } from '@/components/about/stick-figure'
 import { Grid } from '@/components/grid'
-import { useHeightTileMotion } from '@/hooks/useHeightTileMotion'
 import { clsxm } from '@/utils/clsxm'
-import { Paragraph } from '@/components/typography'
-
-/**
- * Bento tile. `area` is the responsive `grid-area` utility for this tile.
- * Tiles are fluid grid cells; illustrations inside are positioned with
- * percentage offsets taken from the Figma frames so they stay exact while
- * scaling with the tile.
- */
-function Tile({
-	area,
-	className,
-	children,
-	...motionProps
-}: {
-	area: string
-	className?: string
-	children: React.ReactNode
-} & HTMLMotionProps<'div'>) {
-	return (
-		<motion.div
-			className={clsxm(
-				'bg-(--surface-secondary) relative rounded-2xl p-5',
-				area,
-				className,
-			)}
-			{...motionProps}
-		>
-			{children}
-		</motion.div>
-	)
-}
-
-/** Centered body copy used inside the tiles. */
-function Fact({
-	className,
-	children,
-}: {
-	className?: string
-	children: React.ReactNode
-}) {
-	return (
-		<Paragraph className={clsxm('text-center', className)}>
-			{children}
-		</Paragraph>
-	)
-}
 
 export function FunFactsSection() {
-	const heightTileRef = useRef<HTMLDivElement>(null)
-	const figureRef = useRef<SVGSVGElement>(null)
-	const height = useHeightTileMotion(heightTileRef, figureRef)
-
 	return (
 		<Grid as="section">
 			<div
@@ -75,7 +23,7 @@ export function FunFactsSection() {
 				)}
 			>
 				{/* Married — ring stacks on mobile, tucks into the corner at md+ */}
-				<Tile
+				<BentoTile
 					area="[grid-area:married]"
 					className="flex flex-col items-center justify-end"
 				>
@@ -83,18 +31,20 @@ export function FunFactsSection() {
 						src="/images/ring-marriage.png"
 						alt=""
 						width={165}
-						height={159}
+						height={165}
+						loading="lazy"
+						decoding="async"
 						className="absolute -top-10 left-0 w-full max-w-41.25"
 					/>
-					<Fact className="-mt-12">
+					<BentoFact className="-mt-12">
 						Married at 23. Dad at 24. People say I went to college and got a
 						family as a bonus. They&apos;re not wrong. I was graduating while
 						holding my wife&apos;s hand.
-					</Fact>
-				</Tile>
+					</BentoFact>
+				</BentoTile>
 
 				{/* Top 10 — shield stacks on mobile, pokes out the top at md+ */}
-				<Tile
+				<BentoTile
 					area="[grid-area:top10]"
 					className="flex flex-col items-center justify-end gap-3 md:gap-0"
 				>
@@ -103,98 +53,83 @@ export function FunFactsSection() {
 						alt=""
 						width={125}
 						height={163}
+						loading="lazy"
+						decoding="async"
 						className="max-w-31.25 md:mb-5"
 					/>
-					<Fact>
+					<BentoFact>
 						Top 10 graduate at my university. Finished in under 4 years with a
 						3.63 GPA. I&apos;m still not entirely sure how.
-					</Fact>
-				</Tile>
+					</BentoFact>
+				</BentoTile>
 
 				{/* Hani — name lettering above the copy */}
-				<Tile
+				<BentoTile
 					area="[grid-area:hani]"
 					className="flex flex-col items-center justify-center gap-4"
 				>
 					<img
 						src="/images/hani-letter.png"
 						alt="Hani"
-						width={170}
+						width={186}
+						height={67}
+						loading="lazy"
+						decoding="async"
 						className="w-full max-w-42.5"
 					/>
-					<Fact>
+					<BentoFact>
 						My first name, Hani, is typically a woman&apos;s name in Indonesia.
 						I&apos;ve been called &quot;mbak&quot; (Miss) on emails, calls, and
 						chat more times than I can count. The confusion usually resolves
 						itself once they see my face.
-					</Fact>
-				</Tile>
+					</BentoFact>
+				</BentoTile>
 
 				{/* Skateboard — copy on top, photo filling the lower area */}
-				<Tile
+				<BentoTile
 					area="[grid-area:skate]"
 					className="relative flex flex-col items-center justify-center"
 				>
-					<Fact className="md:mt-8">
+					<BentoFact className="md:mt-8">
 						Started skateboarding at 30. Also gym. Also running. All at the same
 						time, all after 30. I rotate between them through the week. Turns
 						out it&apos;s never too late to be a complete beginner at something.
 						I&apos;m still very much a beginner.
-					</Fact>
+					</BentoFact>
 					<SkateTrace />
-				</Tile>
+				</BentoTile>
 
 				{/* Desk — photo banner up top, copy beneath */}
-				<Tile
+				<BentoTile
 					area="[grid-area:desk]"
 					className="flex flex-col items-center justify-center gap-4 overflow-hidden px-2 pt-2"
 				>
 					<img
-						src="/images/keyboard-desk.jpg"
+						src="/images/keyboard-desk.webp"
 						alt="Han's desk with a mechanical keyboard and no mouse"
-						width={1200}
-						height={900}
+						width={900}
+						height={1200}
+						loading="lazy"
+						decoding="async"
 						className="aspect-video w-full rounded-xl object-cover"
 					/>
-					<Fact className="w-[90%]">
+					<BentoFact className="w-[90%]">
 						I have never worked in an office. Not once. I started freelancing
 						straight out of university, no onboarding, no desk, no office ID
 						card. It&apos;s made me unusually self-directed, and occasionally,
 						unusually anxious.
-					</Fact>
-				</Tile>
+					</BentoFact>
+				</BentoTile>
 
-				{/* Height — figure beside the copy */}
-				<Tile
-					ref={heightTileRef}
-					area="[grid-area:height]"
-					// Always `rest` first: it's the pose the server ships, so hydration
-					// matches even when reduced motion jumps straight to `grown`.
-					initial="rest"
-					animate={height.grown ? 'grown' : 'rest'}
-					onHoverStart={height.onHoverStart}
-					onHoverEnd={height.onHoverEnd}
-					className="flex flex-col-reverse items-center justify-center gap-5 md:max-h-46 md:flex-row md:justify-center"
-				>
-					<StickFigure
-						ref={figureRef}
-						className="self-center overflow-visible text-(--text-paragraph) md:max-h-25 md:self-end"
-						grown={height.grown}
-						raised={height.raised}
-						instant={height.instant}
-					/>
-					<Fact>
-						I am 180 cm tall. Above average for an Indonesian. I&apos;m told
-						this is my most notable achievement.
-					</Fact>
-				</Tile>
+				{/* Height — figure that stands up beside the copy */}
+				<HeightTile />
 
 				{/* Cat — leans out from behind this card's bottom-right corner.
 				    Three paint layers in DOM order: body (occluded by the card),
 				    the card itself, then the paws in front of it. */}
 				<CatPeekBody />
 
-				<Tile
+				<BentoTile
 					area="[grid-area:cat]"
 					className="flex flex-col items-center justify-center lg:flex-row"
 				>
@@ -203,14 +138,16 @@ export function FunFactsSection() {
 						alt=""
 						width={139}
 						height={139}
+						loading="lazy"
+						decoding="async"
 						className="pointer-events-none -mt-9 lg:hidden"
 					/>
-					<Fact>
+					<BentoFact>
 						A cat person. Allergic to cats. I owned two for years anyway. Turns
 						out love is stronger than histamines, until it isn&apos;t. These
 						days I just admire from a safe distance whenever one walks by.
-					</Fact>
-				</Tile>
+					</BentoFact>
+				</BentoTile>
 
 				<CatPeekPaws />
 			</div>

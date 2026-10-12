@@ -3,7 +3,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { type RefObject } from 'react'
 
-import { SCROLL_STAGE_INSET } from '@/utils/motion'
+import { ROUTE_SETTLED_EVENT, SCROLL_STAGE_INSET } from '@/utils/motion'
 
 gsap.registerPlugin(useGSAP, ScrollTrigger)
 
@@ -105,8 +105,9 @@ function pageEdges(element: Element) {
  *             photo at hydration (~1230px+), the trace visibly hides on mount.
  *             With OS smooth scrolling off, a wheel notch draws ~24-30% of
  *             the route in one frame; real browsers smooth notches by default.
- *             After a client-side navigation the range measures ~6-8px late
- *             (PageTransition's entrance is still running; plan 002 batch D).
+ *             After a client-side navigation the first measure runs while
+ *             PageTransition's entrance still offsets the route, so the range
+ *             is re-measured on ROUTE_SETTLED_EVENT.
  */
 function useSkateTrace(scopeRef: RefObject<HTMLElement | null>) {
 	useGSAP(
@@ -122,6 +123,12 @@ function useSkateTrace(scopeRef: RefObject<HTMLElement | null>) {
 			// The draw is paced against the whole bento, not this tile, so it can
 			// never still be running once the next section arrives.
 			const grid = scope.closest<HTMLElement>('[data-bento-grid]')
+
+			// ScrollTrigger remembers history.scrollRestoration from before
+			// hydration ('auto') and writes it back after every full refresh,
+			// over React Router's 'manual'. It's registered under every motion
+			// preference, so align it before branching on one.
+			ScrollTrigger.clearScrollMemory('manual')
 
 			const mm = gsap.matchMedia()
 
@@ -179,7 +186,36 @@ function useSkateTrace(scopeRef: RefObject<HTMLElement | null>) {
 				// before the correct partial state. Measure now instead.
 				timeline.scrollTrigger?.refresh()
 
+				const remeasure = () => timeline.scrollTrigger?.refresh()
+				window.addEventListener(ROUTE_SETTLED_EVENT, remeasure)
+
+				// A full refresh scrolls the page to 0 to measure, then back. It
+				// only forces `scroll-behavior: auto` for that round trip if html
+				// was smooth when each axis's scroller first registered — but
+				// smooth turns on after hydration (theme.css), so that snapshot can
+				// be stale, and when it does fire it leaves an inline `smooth`
+				// behind. Own it instead, on both axes: no inline writes from
+				// ScrollTrigger, `auto` for the round trip, released once done.
+				for (const horizontal of [false, true]) {
+					const scroller = ScrollTrigger.getScrollFunc(window, horizontal) as {
+						smooth?: boolean
+					}
+					scroller.smooth = false
+				}
+				const root = document.documentElement
+				const holdAuto = () => root.style.setProperty('scroll-behavior', 'auto')
+				const releaseAuto = () => {
+					root.style.removeProperty('scroll-behavior')
+					if (!root.getAttribute('style')) root.removeAttribute('style')
+				}
+				ScrollTrigger.addEventListener('refreshInit', holdAuto)
+				ScrollTrigger.addEventListener('refresh', releaseAuto)
+
 				return () => {
+					window.removeEventListener(ROUTE_SETTLED_EVENT, remeasure)
+					ScrollTrigger.removeEventListener('refreshInit', holdAuto)
+					ScrollTrigger.removeEventListener('refresh', releaseAuto)
+					releaseAuto()
 					gsap.set(segments, {
 						clearProps: 'strokeDasharray,strokeDashoffset',
 					})
