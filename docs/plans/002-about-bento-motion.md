@@ -4,12 +4,34 @@
 
 - Reviewed: 2026-10-10, against commit `fb76262` plus the uncommitted working
   tree. Rules live in [`docs/agents/motion.md`](../agents/motion.md).
-- Status: review complete, docs corrected. Batch A (skate rework) implemented on
-  2026-10-11 with Hani's go-ahead and the neutral-400 light stroke. It is
-  waiting on Hani's visual sign-off. The cat window from batch C was retimed the
-  same day to finish with the skate (see below). Batch C (height tile) and batch
-  D (hygiene) were implemented on 2026-10-11; batch C also fixes finding 7.
-  Batch B is done too (see below); batch C superseded its height-tile hunk.
+- **Status: shipped.** All four batches are merged to `main` and deployed to
+  production. Production was checked on 2026-10-12: new assets live, old
+  images 404.
+
+  | Batch                                 | PR                                                          | Merged (UTC)     | Merge commit |
+  | ------------------------------------- | ----------------------------------------------------------- | ---------------- | ------------ |
+  | A — skate rework, plus the cat retime | [#185](https://github.com/hanihusam/hanihusam.com/pull/185) | 2026-10-11 09:48 | `490fa29`    |
+  | C — height tile                       | [#186](https://github.com/hanihusam/hanihusam.com/pull/186) | 2026-10-12 03:17 | `342ec85`    |
+  | D — hygiene (stacked on #186)         | [#187](https://github.com/hanihusam/hanihusam.com/pull/187) | 2026-10-12 03:17 | `feadff9`    |
+  | B — SSR and reduced motion            | [#188](https://github.com/hanihusam/hanihusam.com/pull/188) | 2026-10-12 03:40 | `6ce8801`    |
+  - **Related follow-ups, also shipped:**
+    - The About hero avatar as WebP with high fetch priority
+      ([#189](https://github.com/hanihusam/hanihusam.com/pull/189), `df4a2db`).
+      The batch D image review flagged it.
+    - The rest of motion.md's timing gaps: Tailwind's default transition on
+      tokens, named curves and press scales
+      ([#190](https://github.com/hanihusam/hanihusam.com/pull/190), `c420fa6`).
+  - **Batch B:** its own height-tile change was superseded by batch C, which
+    fixes finding 7.
+
+- **Still open, not blocking:**
+  - Hani's hands-on check on a real phone and with a wheel mouse with OS smooth
+    scrolling off. The skate step fallback is `scrub: 0.1`.
+  - Back/forward scroll restores still glide. They always did.
+  - The old desk JPG's GPS EXIF remains in git history.
+  - At exactly 1024px wide, the resting cat's ear is clipped by about 5px.
+    That's static layout.
+  - Viewports shorter than about 290–350px never put the stick figure on stage.
 - Risk: low. Every change is scoped to the About page bento, except batch B,
   which touches the shared hero pattern.
 
@@ -26,14 +48,14 @@
 
 ## What moves today
 
-As of batches A and C. Before batch A, the skate draw ran bottom-up with
-`scrub: 0.5`. Before batch C, the height tile was hover-only, with an endless
-wave.
+As shipped. Before batch A, the skate draw ran bottom-up with `scrub: 0.5`, and
+the cat slid in the bottom 147px of the viewport. Before batch C, the height
+tile was hover-only, with an endless wave.
 
 | Tile   | Motion                                                              | Library            |
 | ------ | ------------------------------------------------------------------- | ------------------ |
 | Skate  | Scrubbed line draw, 9 strokes, top-down, `scrub: true`              | GSAP ScrollTrigger |
-| Cat    | Scrubbed peek from behind the card, lg+ only                        | Motion `useScroll` |
+| Cat    | Scrubbed peek, lg+ only; settles 32px after the pen lands           | Motion `useScroll` |
 | Height | Hover grow; touch grow on view; 2 waves per pass; tall when reduced | Motion variants    |
 | Others | Static on purpose (married, top 10, Hani, desk)                     | —                  |
 
@@ -69,6 +91,17 @@ Severity is the verifier's corrected severity.
 | 16  | nit    | **Height tile:** its hover and in-view state live at section level, so every toggle re-renders all 7 tiles.                                                                                                                                                             | D     |
 | 17  | nit    | **`useHoverIntent`:** it never clears its pending timeout on unmount.                                                                                                                                                                                                   | D     |
 
+All 17 are shipped:
+
+| PR   | Findings |
+| ---- | -------- |
+| #185 | 1–5, 12  |
+| #186 | 7–11, 17 |
+| #187 | 13–16    |
+| #188 | 6        |
+
+Finding 7 belongs to batch B, but batch C fixes it.
+
 Static-layout note for Hani, not motion: at 1024px wide the cat box overflows
 the viewport by 22px, so the cat's right side is clipped.
 
@@ -84,7 +117,7 @@ Docs fixed in this pass:
 - `code-style.md`: replaced ESLint with oxlint/oxfmt and added a motion pointer.
 - New: `docs/agents/motion.md`, linked from `AGENTS.md` and `docs/README.md`.
 
-## Batch A — skate rework (implemented, awaiting visual sign-off)
+## Batch A — skate rework (shipped, #185)
 
 **Diagnosis.** The idea is right; the geometry is wrong. The reader can't feel
 their scroll drawing the line, because:
@@ -218,7 +251,7 @@ Two follow-ups landed after this run, from the verifier:
 - Real devices: a wheel mouse at 1024×768, a trackpad, and iPhone momentum
   scrolling.
 
-## Batch B — reduced-motion and SSR correctness (done)
+## Batch B — reduced-motion and SSR correctness (shipped, #188)
 
 **Done 2026-10-11.** Finding 6 is fixed and the no-JS gap is closed. Finding 7
 is fixed by batch C (below).
@@ -266,7 +299,7 @@ Original scope:
    with a hydration-gated `initial`, or with a `<noscript>` rule that forces
    `opacity: 1` and `transform: none` on marked elements.
 
-## Batch C — height and cat polish
+## Batch C — height and cat polish (shipped: cat in #185, height tile in #186)
 
 - **Height tile (done 2026-10-11).** All of the tile's state now lives in
   `useHeightTileMotion`; `StickFigure` is presentational. Hani chose touch grow
@@ -313,7 +346,7 @@ Original scope:
     - Starting when the skate starts: the cat's box would still be 180px below
       the fold.
 
-## Batch D — hygiene
+## Batch D — hygiene (shipped, #187)
 
 Done 2026-10-11 (findings 13–17).
 
