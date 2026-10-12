@@ -257,6 +257,14 @@
 	--btn-ghost-text: var(--color-neutral-800);
 	--btn-ghost-text-hover: var(--color-neutral-900);
 
+	/* Component — Code block (inline + multiline). Light keeps the charcoal
+	   editor; dark switches to the navy palette. */
+	--code-block-surface: var(--color-neutral-950);
+	--code-block-border: var(--color-neutral-600);
+	--code-block-header: var(--color-neutral-800);
+	--code-block-label: var(--color-neutral-300);
+	--code-block-text: var(--color-neutral-100);
+
 	/* Component — Nav item */
 	--nav-item-surface-active: var(--color-sunset-50);
 	--nav-item-icon-active: var(--color-neutral-950);
@@ -338,6 +346,11 @@
 	--btn-ghost-bg-focus: var(--color-sunset-900);
 	--btn-ghost-text: var(--color-neutral-50);
 	--btn-ghost-text-hover: var(--color-neutral-100);
+
+	/* Component — Code block */
+	--code-block-surface: var(--color-sky-900);
+	--code-block-border: var(--color-sky-600);
+	--code-block-header: var(--color-sky-800);
 
 	/* Component — Nav item */
 	--nav-item-surface-active: var(--color-sunset-950);
