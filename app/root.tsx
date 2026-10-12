@@ -38,6 +38,7 @@ import {
 	useRouteError,
 	useRouteLoaderData,
 } from 'react-router'
+import { useEffect } from 'react'
 
 export const links: LinksFunction = () => {
 	return [
@@ -186,6 +187,12 @@ function Document({
 	theme?: string
 	env?: Record<string, unknown>
 }) {
+	// Gates smooth scrolling (theme.css) so the pre-hydration scroll restore
+	// lands in place instead of gliding. In Document, so error pages get it too.
+	useEffect(() => {
+		document.documentElement.dataset.hydrated = ''
+	}, [])
+
 	return (
 		<html className={theme} lang="en">
 			<head>

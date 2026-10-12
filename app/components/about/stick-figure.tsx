@@ -33,7 +33,7 @@ const RIGHT_ARM_RAISED = { y1: 55, x2: 43, y2: 40 }
  * literally growing up. The base attributes below are the `grown` pose.
  *
  * Presentational: the `rest`/`grown` variant comes from the height tile's
- * `animate` (fun-facts-section.tsx), and every decision about when to grow
+ * `animate` (height-tile.tsx), and every decision about when to grow
  * or wave lives in useHeightTileMotion.
  *
  * `raised` drives the wave on BOTH arms — and only the arms. The head,
