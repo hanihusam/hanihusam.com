@@ -1,7 +1,7 @@
 import { useScroll, useTransform, type MotionValue } from 'motion/react'
 import { useEffect, useState, type RefObject } from 'react'
 
-import { SCROLL_STAGE_INSET } from '@/utils/motion'
+import { ROUTE_SETTLED_EVENT, SCROLL_STAGE_INSET } from '@/utils/motion'
 
 // The cat box is offset `right: -104px` from the card, so its left 35px sit
 // behind the card. cat-peek.png's rightmost opaque pixel (the ear) is column
@@ -57,10 +57,10 @@ const SETTLE_AFTER_LANDING = 32
  * Duration:   not time-based. The two thresholds are measured on mount, on
  *             window resize, and when the grid's own box resizes — not
  *             hardcoded, so they track real layout instead of a guessed pixel
- *             range. They are NOT re-measured when the grid moves without
- *             resizing (content above it reflowing, or the PageTransition
- *             entrance still running at mount after a client navigation,
- *             which leaves the range ~5-8px late).
+ *             range — and on ROUTE_SETTLED_EVENT, since after a client
+ *             navigation the first measure runs while PageTransition's
+ *             entrance still offsets the route. Other reflows above the grid
+ *             that don't resize it (a late font swap) still aren't caught.
  * Interrupt:  scroll-linked motion values retarget continuously; there is no
  *             discrete state to restart from.
  *
@@ -72,10 +72,12 @@ const SETTLE_AFTER_LANDING = 32
  *             opaque background does the occluding, including its rounded
  *             corner, rather than a clip-path approximating the card's edge.
  *
- * Reduced motion: never engaged — `active` gates on
- *             `prefers-reduced-motion: no-preference`, so the body renders at
- *             rest with no transform, ever.
- * SSR:        `active` starts false on the server and the first client
+ * Reduced motion: never engaged — CatPeekBody only mounts this hook
+ *             under `(min-width: 1024px) and (prefers-reduced-motion:
+ *             no-preference)`, so the body renders at rest with no transform,
+ *             and nothing measures or listens to scroll, below lg or under
+ *             reduce.
+ * SSR:        that media query reads false on the server and the hydration
  *             render, so the cat ships fully out. JS only ever pulls it back
  *             behind the card after mount, and the section is well below the
  *             fold, so that frame is never seen.
@@ -92,22 +94,10 @@ const SETTLE_AFTER_LANDING = 32
  *             grows there. Earlier versions slid in the bottom ~147px of the
  *             viewport and settled ~96px before the pen landed.
  */
-function useCatPeekReveal(boxRef: RefObject<HTMLElement | null>): {
-	active: boolean
-	bodyX: MotionValue<number>
-} {
-	const [active, setActive] = useState(false)
+function useCatPeekReveal(
+	boxRef: RefObject<HTMLElement | null>,
+): MotionValue<number> {
 	const [range, setRange] = useState<[number, number]>([0, 1])
-
-	useEffect(() => {
-		const query = window.matchMedia(
-			'(min-width: 1024px) and (prefers-reduced-motion: no-preference)',
-		)
-		const update = () => setActive(query.matches)
-		update()
-		query.addEventListener('change', update)
-		return () => query.removeEventListener('change', update)
-	}, [])
 
 	useEffect(() => {
 		const box = boxRef.current
@@ -120,16 +110,24 @@ function useCatPeekReveal(boxRef: RefObject<HTMLElement | null>): {
 			const stageBottom = window.innerHeight - SCROLL_STAGE_INSET
 			const start = boxTop - stageBottom
 			// The skate draw ends when the grid's bottom meets the stage line.
-			const end = gridBottom - stageBottom + SETTLE_AFTER_LANDING
-			setRange([start, Math.max(end, start + 1)])
+			const end = Math.max(
+				gridBottom - stageBottom + SETTLE_AFTER_LANDING,
+				start + 1,
+			)
+			// A new array every time would re-render on every observer tick.
+			setRange((prev) =>
+				prev[0] === start && prev[1] === end ? prev : [start, end],
+			)
 		}
 
 		measure()
 		window.addEventListener('resize', measure)
+		window.addEventListener(ROUTE_SETTLED_EVENT, measure)
 		const ro = new ResizeObserver(measure)
 		ro.observe(grid)
 		return () => {
 			window.removeEventListener('resize', measure)
+			window.removeEventListener(ROUTE_SETTLED_EVENT, measure)
 			ro.disconnect()
 		}
 	}, [boxRef])
@@ -139,7 +137,7 @@ function useCatPeekReveal(boxRef: RefObject<HTMLElement | null>): {
 		clamp: true,
 	})
 
-	return { active, bodyX }
+	return bodyX
 }
 
 export { useCatPeekReveal }

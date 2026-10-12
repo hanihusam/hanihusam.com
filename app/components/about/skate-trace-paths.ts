@@ -2,7 +2,7 @@
  * Decorative swoosh traced over the skate photo. Extracted once from a Figma
  * export (`hani-drop.svg`, since deleted — it also embedded a 1.4MB base64
  * copy of the photo, which was the swoosh-free cutout now saved separately as
- * `/images/hani-drop-clean.png` and rendered by the tile) down to just these
+ * `/images/hani-drop-clean.webp` and rendered by the tile) down to just these
  * 9 stroke segments.
  *
  * Segments are listed in ROUTE order, and each carries the end it is drawn

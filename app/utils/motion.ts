@@ -20,3 +20,8 @@ export const DURATION_SLOWER = 0.5
 // `sm`, so the top inset is conservative there). Pixels, not a percentage: on
 // short landscape phones a % lands inside the nav.
 export const SCROLL_STAGE_INSET = 96
+
+// Fired on window when PageTransition's entrance finishes. Scroll scenes
+// measure their ranges on mount, while the incoming route is still offset by
+// the entrance; re-measuring on this keeps them from running ~5-8px late.
+export const ROUTE_SETTLED_EVENT = 'route-settled'

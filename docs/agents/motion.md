@@ -82,10 +82,14 @@ exception, not a pattern. Ask before adding a third scroll observer.
    - **GSAP:** build the scene inside
      `gsap.matchMedia('(prefers-reduced-motion: no-preference)')` so it never
      exists under reduce.
-   - **Hooks:** gate on `matchMedia` in an effect, as `useCatPeekReveal` does.
+   - **Hooks:** gate with `useMediaQuery` (`false` on the server). Mount the
+     scroll-driven work only when the query matches, as `CatPeekBody` does with
+     its `ScrubbedBody`.
    - **Decorative motion:** turn it off entirely, not "gentler".
-3. **Animate `transform` and `opacity`.** The single exception is SVG
-   `stroke-dashoffset`, for line drawing on a small element.
+3. **Animate `transform` and `opacity`.** The exceptions are both small SVG art:
+   - `stroke-dashoffset`, for line drawing (the skate trace);
+   - the stick figure's geometry attributes (`cy`, `y1`, `x2`, `y2`), six
+     primitives. Paint-only and tiny.
 4. **No new animation dependencies.** Plugins that ship inside the installed
    `gsap` package are allowed.
 5. **No exit animations on route change.** The reason is in
@@ -108,6 +112,21 @@ exception, not a pattern. Ask before adding a third scroll observer.
 - **Start a scrubbed scene on its first visible pixel**, not on its container's
   edge. Draw in the direction the reader scrolls, so content arrives under the
   motion instead of after it.
+- **Smooth scrolling turns on only after hydration**: `html[data-hydrated]` in
+  `theme.css`, set by `Document` in `root.tsx` (so error pages get it too).
+  React Router restores the scroll position on a reload before hydration, so
+  that restore lands in place instead of gliding down from the top. Every other
+  scroll keeps the smooth CSS.
+- **ScrollTrigger and smooth scrolling.** A full ScrollTrigger refresh scrolls
+  the page to 0 and back to measure. `useSkateTrace` handles three things
+  ScrollTrigger gets wrong here; keep them if the skate scene moves:
+  - It forces `scroll-behavior: auto` for that round trip (`refreshInit` →
+    `refresh`).
+  - It turns off ScrollTrigger's own smooth handling on both axes. Otherwise it
+    leaves an inline `smooth` on `<html>`, based on a one-time check made before
+    hydration turned smooth on.
+  - It calls `ScrollTrigger.clearScrollMemory('manual')`, so refreshes stop
+    resetting React Router's `history.scrollRestoration` to `'auto'`.
 - **Draw inside the stage.** The viewport has fixed chrome at both edges:
   - the floating nav covers the bottom ~82px (it overlaps the photo below lg);
   - the top-blur overlay smears the top 96px.
@@ -129,10 +148,12 @@ exception, not a pattern. Ask before adding a third scroll observer.
     at lg).
 - **Measure ranges from real layout** and re-measure on resize
   (`ResizeObserver`, ScrollTrigger refresh). Never guess pixel offsets.
-  - Neither scene re-measures after a client-side navigation. They measure while
-    `PageTransition`'s 8px entrance is still running.
-  - Images without a reserved height shift the grid after the scenes have
-    measured.
+  - After a client-side navigation, the first measure runs while
+    `PageTransition`'s 8px entrance still offsets the route. `PageTransition`
+    fires `ROUTE_SETTLED_EVENT` (`app/utils/motion.ts`) when the entrance ends,
+    and both bento scenes re-measure on it. A new scroll scene should too.
+  - Give every image above a scroll scene its `width` and `height`. One that
+    loads without reserved space shifts the layout after the scene has measured.
 
 ## Hover, touch, idle
 
@@ -140,12 +161,20 @@ exception, not a pattern. Ask before adding a third scroll observer.
   when a pointer sweeping past would trigger it by accident. Leaving is instant.
 - **Touch has no hover.** Anything hover-only is decoration that touch users
   never see. Either give it a touch equivalent or accept that knowingly. Gate
-  CSS hover effects with `(hover: hover) and (pointer: fine)`.
+  CSS hover effects with `(hover: hover) and (pointer: fine)`. In JS, read it
+  with `useMediaQuery` (`useSyncExternalStore`, `false` on the server) so
+  hydration matches. The height tile is the worked example
+  (`useHeightTileMotion`): touch devices get the grow once the figure is fully
+  on stage.
 - **No always-on background loops.** An idle loop must run only while its
-  element is on screen (`useInView`), stay rare, and be off under reduced
-  motion. Prefer a finite run: a few waves per entry into view, done within 5s
-  (WCAG 2.2.2). The stick figure doesn't meet this yet: it waves on a fixed ~3s
-  cycle for as long as the tile is in view.
+  element is on screen, stay rare, and be off under reduced motion. Make it a
+  finite run, done within 5s (WCAG 2.2.2).
+  - The stick figure waves twice per pass, all within ~4s.
+  - It re-arms only once the tile is fully off screen, and a hover spends it.
+- **Trigger on the moving thing itself being fully on stage**, not on its
+  container, which can be half visible while the art is still below the fold.
+  Reset when the container is fully off screen. Nothing then plays unseen, or
+  resets and replays while the reader can still see it.
 
 ## What stays still
 
@@ -163,16 +192,17 @@ Every candidate for motion should first be checked against this list:
 
 ## Where motion lives
 
-| Scene                     | Files                                                                              |
-| ------------------------- | ---------------------------------------------------------------------------------- |
-| Route transition          | `components/page-transition.tsx`                                                   |
-| Scroll reveals            | `components/reveal.tsx`                                                            |
-| Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`               |
-| Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)               |
-| Bento: skate line draw    | `about/skate-trace.tsx`, `about/skate-trace-paths.ts`, `hooks/useSkateTrace.ts`    |
-| Bento: cat peek (lg+)     | `about/cat-peek.tsx`, `hooks/useCatPeekReveal.ts`                                  |
-| Bento: height grow + idle | `about/stick-figure.tsx`, `hooks/useHoverIntent.ts`, `about/fun-facts-section.tsx` |
-| Works TOC                 | `works/toc-list.tsx`, `works/toc-drawer.tsx`, `.toc-enter` in `app.css`            |
+| Scene                     | Files                                                                             |
+| ------------------------- | --------------------------------------------------------------------------------- |
+| Route transition          | `components/page-transition.tsx`                                                  |
+| Scroll reveals            | `components/reveal.tsx`                                                           |
+| Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`              |
+| Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)              |
+| Bento: skate line draw    | `about/skate-trace.tsx`, `about/skate-trace-paths.ts`, `hooks/useSkateTrace.ts`   |
+| Bento: cat peek (lg+)     | `about/cat-peek.tsx`, `hooks/useCatPeekReveal.ts`                                 |
+| Bento: height grow + wave | `about/height-tile.tsx`, `hooks/useHeightTileMotion.ts`, `about/stick-figure.tsx` |
+| Works TOC                 | `works/toc-list.tsx`, `works/toc-drawer.tsx`, `.toc-enter` in `app.css`           |
+| Shared hooks              | `hooks/useMediaQuery.ts`, `hooks/useHoverIntent.ts`                               |
 
 ## Known gaps
 
@@ -188,9 +218,6 @@ entry once it's fixed.
     leaves the about hero invisible.
   - `Reveal` recovers because it sets an explicit `animate`, but it still logs a
     hydration mismatch.
-- **The stick figure's reduced-motion pose.** The height tile branches `initial`
-  on `useReducedMotion()`. A reduced-motion hard load therefore keeps the
-  crouched server pose and logs a hydration mismatch.
 - **The home hero headline ignores reduced motion.** `#heroDisplay span`
   (`app.css`) runs `revealText` for a literal `1.3s` and has no reduced-motion
   rule.
@@ -198,11 +225,6 @@ entry once it's fixed.
   - `.TooltipContent` in `tailwind.css`
   - the hero arrow icon (`home/hero-section.tsx`)
   - `#heroDisplay`
-- **Reloads replay the scroll restore as a smooth scroll.** `html` has
-  `scroll-behavior: smooth`, which also animates React Router's
-  `<ScrollRestoration>`. On short viewports a mid-page reload visibly scrolls
-  down from the top. Scope smooth scrolling to in-page anchors, or restore with
-  `behavior: 'instant'`.
 - **About bento.** The verified review, the skate rework, and the fix batches
   are in [plan 002](../plans/002-about-bento-motion.md).
 
