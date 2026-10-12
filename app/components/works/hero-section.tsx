@@ -2,29 +2,14 @@ import { Grid } from '@/components/grid'
 import { H1, Text } from '@/components/typography'
 import { ConcentricCircles } from '@/components/ui/concentric-circles'
 import { DotGrid } from '@/components/ui/dot-grid'
-import { DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
+import { useEntrance } from '@/hooks/useEntrance'
 
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 
 export function WorksHero() {
-	const shouldReduceMotion = useReducedMotion()
-
-	// Staggered entrance on first mount, matching the Home/About hero pattern.
-	// Skipping `initial` under reduced motion was meant to keep SSR content
-	// visible, but useReducedMotion() is null on the server, so SSR always
-	// ships opacity:0 — see Known gaps in docs/agents/motion.md.
-	const fadeUp = (delay: number) =>
-		shouldReduceMotion
-			? {}
-			: {
-					initial: { opacity: 0, y: 12 },
-					animate: { opacity: 1, y: 0 },
-					transition: {
-						duration: DURATION_SLOWER,
-						ease: EASE_OUT_QUART,
-						delay,
-					},
-				}
+	// Staggered entrance on first mount, matching the Home/About hero pattern;
+	// SSR, no-JS and reduced-motion handling live in useEntrance.
+	const { fadeUp } = useEntrance()
 
 	return (
 		<div className="relative flex min-h-120 items-center justify-center overflow-hidden pt-32 pb-20 lg:py-0">

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button'
 import { FilterTag } from '@/components/ui/filter-tag'
 import { CallToAction } from '@/components/works/cta-section'
 import { WorksHero } from '@/components/works/hero-section'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { clsxm } from '@/utils/clsxm'
 import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
@@ -93,6 +94,7 @@ const PAGE_SIZE = 5
 
 export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 	const { projects, tags } = loaderData
+	const shouldReduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
 
 	const [searchParams] = useSearchParams()
 	const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
@@ -182,11 +184,18 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 										default: { ...CARD_SPRING, delay: idx * 0.08 },
 										layout: CARD_SPRING,
 									}}
-									exit={{
-										opacity: 0,
-										scale: 0.96,
-										transition: CARD_EXIT_SPRING,
-									}}
+									// Reveal is pinned visible under reduced motion, so an exit
+									// would just hold the card in place; remove it outright. Read
+									// live: the pin follows the setting even mid-visit.
+									exit={
+										shouldReduceMotion
+											? undefined
+											: {
+													opacity: 0,
+													scale: 0.96,
+													transition: CARD_EXIT_SPRING,
+												}
+									}
 									className="col-span-full"
 								>
 									<ProjectCard

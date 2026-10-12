@@ -24,12 +24,17 @@ type RevealProps = HTMLMotionProps<'div'> & {
  *   shouldn't feel like they're floating in.
  *
  * Under prefers-reduced-motion it renders statically visible — no transform,
- * no opacity ramp — so nothing is ever hidden from motion-sensitive users.
+ * no opacity ramp, even when a caller passes its own `transition` — so nothing
+ * is ever hidden from motion-sensitive users.
+ * `initial` stays unconditional so server and client markup match, and
+ * `data-entrance` lets CSS show the server HTML under reduced motion and with
+ * JS disabled (see useEntrance).
  */
 function Reveal({
 	variant = 'rise',
 	index = 0,
 	delay,
+	transition,
 	children,
 	...props
 }: RevealProps) {
@@ -42,18 +47,23 @@ function Reveal({
 
 	return (
 		<motion.div
-			initial={shouldReduceMotion ? false : { opacity: 0, y }}
+			data-entrance=""
+			initial={{ opacity: 0, y }}
 			// Reduced motion: force the visible state immediately (no scroll trigger),
 			// otherwise the SSR-rendered opacity:0 would persist and hide content.
 			animate={shouldReduceMotion ? { opacity: 1, y: 0 } : undefined}
 			whileInView={shouldReduceMotion ? undefined : { opacity: 1, y: 0 }}
 			viewport={{ once: true, amount: 0.2 }}
-			transition={{
-				duration: shouldReduceMotion ? 0 : duration,
-				ease: EASE_OUT_QUART,
-				delay: shouldReduceMotion ? 0 : resolvedDelay,
-			}}
 			{...props}
+			transition={
+				shouldReduceMotion
+					? { duration: 0 }
+					: (transition ?? {
+							duration,
+							ease: EASE_OUT_QUART,
+							delay: resolvedDelay,
+						})
+			}
 		>
 			{children}
 		</motion.div>

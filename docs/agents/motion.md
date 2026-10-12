@@ -12,15 +12,16 @@ Durations and easing come from CSS custom properties in `app/styles/theme.css`.
 cubic-beziers, or UI durations as literals. The ones that already exist are
 listed under [Known gaps](#known-gaps).
 
-| CSS token             | JS constant         | Use                                   |
-| --------------------- | ------------------- | ------------------------------------- |
-| `--duration-fast`     | `DURATION_FAST`     | 150ms — hover, color, press           |
-| `--duration-base`     | `DURATION_BASE`     | 200ms — buttons, tooltips, routes     |
-| `--duration-slow`     | `DURATION_SLOW`     | 300ms — drawers, larger elements      |
-| `--duration-slower`   | `DURATION_SLOWER`   | 500ms — rare, large travel, entrances |
-| `--ease-out-quart`    | `EASE_OUT_QUART`    | enter/exit (the house curve)          |
-| `--ease-in-out-quart` | `EASE_IN_OUT_QUART` | movement while on screen              |
-| `--ease-hover`        | `EASE_HOVER`        | hover                                 |
+| CSS token             | JS constant         | Use                                               |
+| --------------------- | ------------------- | ------------------------------------------------- |
+| `--duration-fast`     | `DURATION_FAST`     | 150ms — hover, color, press                       |
+| `--duration-base`     | `DURATION_BASE`     | 200ms — buttons, tooltips, routes                 |
+| `--duration-slow`     | `DURATION_SLOW`     | 300ms — drawers, larger elements                  |
+| `--duration-slower`   | `DURATION_SLOWER`   | 500ms — rare, large travel, entrances             |
+| `--ease-out-quart`    | `EASE_OUT_QUART`    | enter/exit (the house curve)                      |
+| `--ease-out-expo`     | —                   | sharp enter, long settle: hero headline, tooltips |
+| `--ease-in-out-quart` | `EASE_IN_OUT_QUART` | movement while on screen                          |
+| `--ease-hover`        | `EASE_HOVER`        | hover                                             |
 
 The duration tokens drop to `0ms` under `prefers-reduced-motion: reduce`, so CSS
 built on them is reduced-motion-safe for free. JS durations are not. JS has to
@@ -35,7 +36,11 @@ Exempt from the token rule:
 - **Springs** (`{ type: 'spring', duration, bounce }`), which settle on their
   own parameters.
 - **Scrubbed scroll scenes**, where scroll position is the clock.
-- **One literal**: `0.6` on the about hero avatar, which has no matching token.
+- **Two literals**, neither of which matches a token:
+  - `0.6` on the about hero avatar.
+  - `1.3s` per letter, with its `0.25s` lead-in and `0.03s` stagger, on the home
+    headline reveal (`#heroDisplay span`), the one signature entrance allowed
+    past the UI duration scale.
 
 ## Who owns what
 
@@ -62,8 +67,18 @@ exception, not a pattern. Ask before adding a third scroll observer.
    drawn and the cat fully out, and JS adds the hidden starting state only after
    mount, below the fold at common sizes. On viewports taller than ~1230px, or
    on a mount with restored scroll, the trace can visibly change on mount (see
-   the skate brief). `Reveal` and the hero entrances currently break this rule
-   (see [Known gaps](#known-gaps)). Don't copy them.
+   the skate brief).
+   - **Exception: entrances that must play on a hard load** (the hero entrances
+     and `Reveal`'s scroll reveals). These ship Motion's hidden `initial` and
+     carry `data-entrance`. CSS forces `[data-entrance]` visible with JS
+     disabled (`no-script.css`) and under reduced motion (`app.css`), so neither
+     case waits on JS.
+   - **The accepted cost:** if JS loads but never hydrates (a blocked bundle, an
+     error before `hydrateRoot`), readers without reduced motion keep the hidden
+     `initial`. Even when hydration works, the hero waits for it, and
+     `entry.client.tsx` defers hydration to `requestIdleCallback`.
+   - Build new mount entrances with `useEntrance` (`enter()` / `fadeUp()`).
+     Don't hand-roll the `initial`/`animate` pair.
 2. **Reduced motion is a render path, not a disabled animation.** Render the
    finished, visible state:
    - **CSS:** tokens or a `prefers-reduced-motion: reduce` block. Watch for
@@ -77,7 +92,13 @@ exception, not a pattern. Ask before adding a third scroll observer.
        React 19 does not patch the mismatch.
 
      Keep `initial` unconditional. Under reduce, set `animate` to the final
-     state with `duration: 0`.
+     state with `duration: 0`. `useEntrance` and `Reveal` already do this;
+     `Reveal`'s zero duration wins even over a caller's own `transition`. Under
+     reduce, `[data-entrance]` is pinned visible with `!important`, which
+     freezes any opacity/transform `exit` on it. Drop the exit under reduce, as
+     the works grid does. Read the setting live for that
+     (`useMediaQuery('(prefers-reduced-motion: reduce)')`): the pin follows it
+     mid-visit, and `useReducedMotion()` doesn't.
 
    - **GSAP:** build the scene inside
      `gsap.matchMedia('(prefers-reduced-motion: no-preference)')` so it never
@@ -85,6 +106,14 @@ exception, not a pattern. Ask before adding a third scroll observer.
    - **Hooks:** gate with `useMediaQuery` (`false` on the server). Mount the
      scroll-driven work only when the query matches, as `CatPeekBody` does with
      its `ScrubbedBody`.
+   - **Third-party motion:** check that the library honours reduce. Vaul
+     doesn't, so `app.css` zeroes its animation durations and transitions. Zero
+     them rather than removing the animation: Radix waits for `animationend`
+     before it unmounts.
+   - **Media:** never put `autoPlay` in the markup, because it starts before
+     hydration. Start playback in an effect, only while the video is on screen
+     and motion is allowed, as `blog/cloudinary-video.tsx` does. Gating on the
+     viewport replaces what the attribute did for free on mobile.
    - **Decorative motion:** turn it off entirely, not "gentler".
 3. **Animate `transform` and `opacity`.** The exceptions are both small SVG art:
    - `stroke-dashoffset`, for line drawing (the skate trace);
@@ -195,6 +224,7 @@ Every candidate for motion should first be checked against this list:
 | Scene                     | Files                                                                             |
 | ------------------------- | --------------------------------------------------------------------------------- |
 | Route transition          | `components/page-transition.tsx`                                                  |
+| Hero entrances            | `hooks/useEntrance.ts`, `{home,about,works}/hero-section.tsx`                     |
 | Scroll reveals            | `components/reveal.tsx`                                                           |
 | Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`              |
 | Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)              |
@@ -206,25 +236,43 @@ Every candidate for motion should first be checked against this list:
 
 ## Known gaps
 
-Found on 2026-10-10. Fix these before building on top of them, and remove each
-entry once it's fixed.
+Found on 2026-10-10; a full timing sweep on 2026-10-11 added the rest. Fix these
+before building on top of them, and remove each entry once it's fixed.
 
-- **Server HTML hides `Reveal` and the hero entrances.**
-  - The home, about and works hero `fadeUp` entrances render Motion's `initial`
-    into the server HTML as `style="opacity:0;…"`, and so does `Reveal`. There
-    is no `<noscript>` override, so with JS disabled that content never appears.
-  - **Reduced-motion users with JS lose the hero too.** Under reduce the hero
-    passes `{}`, so nothing ever clears the server's `opacity:0`. A hard load
-    leaves the about hero invisible.
-  - `Reveal` recovers because it sets an explicit `animate`, but it still logs a
-    hydration mismatch.
-- **The home hero headline ignores reduced motion.** `#heroDisplay span`
-  (`app.css`) runs `revealText` for a literal `1.3s` and has no reduced-motion
-  rule.
-- **Literal easing curves.** These are not tokens yet:
-  - `.TooltipContent` in `tailwind.css`
-  - the hero arrow icon (`home/hero-section.tsx`)
-  - `#heroDisplay`
+- **Tailwind's default transition timing isn't overridden.** A bare
+  `transition`, `transition-colors` or `transition-opacity` with no `ease-*` or
+  `duration-(--…)` class falls back to Tailwind's `150ms`
+  `cubic-bezier(.4, 0, .2, 1)`, which reduced motion doesn't zero. That covers
+  about ten colour hovers and the image fades in `blurrable-image.tsx`. Point
+  `--default-transition-duration` and `--default-transition-timing-function` in
+  `@theme` at the tokens.
+- **Off-token curves.** These durations are tokens; the curves aren't:
+  - `ease` on the underline wipes (`.underlined` in `app.css`, headings in
+    `prose.css`)
+  - Tailwind's `ease-in-out` on the Substack image hover
+    (`writing/article-card.tsx`)
+  - a bare `ease` class, which generates nothing in Tailwind v4:
+    `projects/project-card.tsx` (both banners), `ui/theme-switcher.tsx` (hover
+    fill)
+  - no ease class: `top-blur-overlay.tsx`, `ui/filter-tag.tsx`
+  - Vaul's own `0.5s` `cubic-bezier(.32, .72, 0, 1)` on the works TOC drawer's
+    slide and overlay fade. Reduced motion is handled; retiming the normal slide
+    is a taste call.
+  - the legacy `button.tsx` (`/links` only): no `transition-*` class, so it gets
+    `transition: all` on the browser's `ease`
+  - `duration: 0.35, ease: 'power3'` on the dot-field pointer follow
+    (`hero-dot-field.tsx`). `power3` is GSAP's ease-out quart, so give it a name
+    in `motion.ts`.
+- **Literal delays.** All are reduce-safe; none are tokens:
+  - `fadeUp(0.1)` / `fadeUp(0.18)` in all three heroes
+  - `STAGGER_STEP = 0.08` (`reveal.tsx`), copied as `idx * 0.08` in
+    `works._index.tsx`. Both stagger stacked full-width cards that each reveal
+    on their own, so lower cards wait after scrolling in.
+  - `.toc-enter`'s `200ms` (`app.css`), which is `--duration-base`
+- **Two keyframes named `fadeOut`.** Vaul injects an unlayered
+  `@keyframes fadeOut`, which beats the tooltip's layered one in `tailwind.css`.
+  After a works page loads, the tooltip exit loses its 2px drift. Rename the
+  tooltip's keyframe.
 - **About bento.** The verified review, the skate rework, and the fix batches
   are in [plan 002](../plans/002-about-bento-motion.md).
 

@@ -118,8 +118,21 @@ light-mode {
 }
 #heroDisplay span {
 	display: inline-block;
-	animation: revealText 1.3s cubic-bezier(0.19, 1, 0.22, 1) backwards;
+	animation: revealText 1.3s var(--ease-out-expo) backwards;
 	animation-delay: calc(0.25s + 0.03s * var(--index));
+}
+
+/* Cross-document (hard-load) fallback. Client-side route transitions are
+   handled by <PageTransition> (motion/react); the two are mutually exclusive.
+   Browsers don't skip view transitions under reduced motion, so opt in only
+   when motion is welcome. It lives here rather than in theme.css because
+   WebKit evaluates every media query in a sheet holding a gated
+   @view-transition statically, and this sheet's only queries are about
+   reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
 }
 
 /* Table of contents entrance. Both the desktop aside and the mobile drawer
@@ -136,5 +149,31 @@ light-mode {
 	   TOC at opacity 0 even with the duration tokens zeroed. */
 	.toc-enter {
 		animation: none;
+	}
+
+	/* The hero headline's 1.3s is a literal, not a token, so it isn't zeroed
+	   here; drop the reveal and render the letters in place. */
+	#heroDisplay span {
+		animation: none;
+	}
+
+	/* Motion entrances (useEntrance, Reveal) ship their hidden `initial` in the
+	   server HTML. Show them before hydration instead of waiting for Motion to
+	   snap them visible. This also pins exits on these elements, so drop any
+	   opacity/transform `exit` under reduced motion. */
+	[data-entrance] {
+		opacity: 1 !important;
+		transform: none !important;
+	}
+
+	/* Vaul (works TOC drawer) has no reduced-motion handling: it injects a 0.5s
+	   slide/fade and sets inline transitions after a drag. Zero them so the sheet
+	   and overlay just appear. Zero the duration, don't remove the animation:
+	   Radix unmounts on `animationend`, which a 0s animation still fires, and
+	   dropping the animation mid-close would strand the sheet on screen. */
+	[data-vaul-drawer],
+	[data-vaul-overlay] {
+		animation-duration: 0s !important;
+		transition: none !important;
 	}
 }

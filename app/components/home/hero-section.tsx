@@ -3,34 +3,20 @@ import { HeroDotField } from '@/components/hero-dot-field'
 import { Display, H3, Text } from '@/components/typography'
 import { ButtonLink } from '@/components/ui/button'
 import Logo from '@/components/ui/logo'
+import { useEntrance } from '@/hooks/useEntrance'
 import { getImageBuilder, getImgProps } from '@/utils/images'
-import { DURATION_SLOW, DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
+import { DURATION_SLOW, EASE_OUT_QUART } from '@/utils/motion'
 
 import { ArrowDownIcon } from '@phosphor-icons/react'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 
 const displayText = 'I’m Han'
 const projectInquiryHref = 'mailto:me@hanihusam.com?subject=Project%20inquiry'
 
 export function HeroSection() {
-	const shouldReduceMotion = useReducedMotion()
-
-	// Staggered fade+rise on first mount. Skipping `initial` under reduced
-	// motion was meant to keep SSR content visible, but useReducedMotion() is
-	// null on the server, so SSR always ships opacity:0 — see Known gaps in
-	// docs/agents/motion.md.
-	const fadeUp = (delay: number) =>
-		shouldReduceMotion
-			? {}
-			: {
-					initial: { opacity: 0, y: 12 },
-					animate: { opacity: 1, y: 0 },
-					transition: {
-						duration: DURATION_SLOWER,
-						ease: EASE_OUT_QUART,
-						delay,
-					},
-				}
+	// Staggered fade+rise on first mount; SSR, no-JS and reduced-motion
+	// handling live in useEntrance.
+	const { enter, fadeUp } = useEntrance()
 
 	return (
 		<div className="relative bg-(--surface-primary)">
@@ -39,13 +25,10 @@ export function HeroSection() {
 				<Logo className="absolute top-8" />
 
 				<motion.img
-					{...(shouldReduceMotion
-						? {}
-						: {
-								initial: { opacity: 0 },
-								animate: { opacity: 1 },
-								transition: { duration: DURATION_SLOW, ease: EASE_OUT_QUART },
-							})}
+					{...enter(
+						{ opacity: 0 },
+						{ duration: DURATION_SLOW, ease: EASE_OUT_QUART },
+					)}
 					className="absolute top-0 right-0 hidden h-auto w-87.5 max-w-2/3 translate-x-[25%] translate-y-[20vh] md:top-auto md:right-auto md:bottom-0 md:left-0 md:block md:w-lg md:translate-x-[-16%] md:translate-y-0 lg:left-1/2 lg:w-3xl lg:-translate-x-1/2"
 					{...getImgProps(
 						getImageBuilder(
@@ -91,8 +74,8 @@ export function HeroSection() {
 							className="hidden self-start md:inline-flex"
 							iconRight={
 								<>
-									<ArrowDownIcon className="col-start-1 row-start-1 translate-y-[-200%] transition-transform duration-(--duration-base) ease-[cubic-bezier(0.785,0.135,0.15,0.86)] group-hover:translate-y-0" />
-									<ArrowDownIcon className="col-start-1 row-start-1 transition-transform duration-(--duration-fast) ease-[cubic-bezier(0.785,0.135,0.15,0.86)] group-hover:translate-y-[200%]" />
+									<ArrowDownIcon className="ease-in-out-quart col-start-1 row-start-1 translate-y-[-200%] transition-transform duration-(--duration-base) group-hover:translate-y-0" />
+									<ArrowDownIcon className="ease-in-out-quart col-start-1 row-start-1 transition-transform duration-(--duration-fast) group-hover:translate-y-[200%]" />
 								</>
 							}
 						>

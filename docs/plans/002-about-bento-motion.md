@@ -7,11 +7,9 @@
 - Status: review complete, docs corrected. Batch A (skate rework) implemented on
   2026-10-11 with Hani's go-ahead and the neutral-400 light stroke. It is
   waiting on Hani's visual sign-off. The cat window from batch C was retimed the
-  same day to finish with the skate (see below). Batch C (height tile) was
-  implemented on 2026-10-11 and also fixes finding 7. Batch B runs as a separate
-  task. Its height-tile hunk is superseded by batch C, so leave out its
-  `fun-facts-section.tsx` and `stick-figure.tsx` changes. Batch D (hygiene) was
-  implemented on 2026-10-11 on a branch stacked on batch C.
+  same day to finish with the skate (see below). Batch C (height tile) and batch
+  D (hygiene) were implemented on 2026-10-11; batch C also fixes finding 7.
+  Batch B is done too (see below); batch C superseded its height-tile hunk.
 - Risk: low. Every change is scoped to the About page bento, except batch B,
   which touches the shared hero pattern.
 
@@ -220,9 +218,42 @@ Two follow-ups landed after this run, from the verifier:
 - Real devices: a wheel mouse at 1024×768, a trackpad, and iPhone momentum
   scrolling.
 
-## Batch B — reduced-motion and SSR correctness
+## Batch B — reduced-motion and SSR correctness (done)
 
-Runs as a separate task.
+**Done 2026-10-11.** Finding 6 is fixed and the no-JS gap is closed. Finding 7
+is fixed by batch C (below).
+
+- **Shared hook.** `hooks/useEntrance.ts` now builds the hero entrances (home,
+  about, works). `initial` is unconditional. Under reduce, `animate` lands the
+  final state with `duration: 0`. `Reveal` follows the same contract, and its
+  zero duration wins over a caller's own `transition` (the works grid passes a
+  spring).
+- **`data-entrance`.** Both mark their elements with it.
+  - `no-script.css` forces it visible with JS disabled.
+  - `app.css` does the same under `prefers-reduced-motion: reduce`, so reduce
+    doesn't wait for the deferred (`requestIdleCallback`) hydration.
+  - Normal motion still plays the hard-load entrance.
+- **Height tile: superseded by batch C.** Batch B kept `initial` at `rest` and
+  held that crouched pose under reduce. Batch C's `HeightTile` keeps the same
+  unconditional `initial="rest"`, then stands him tall instantly after hydration
+  under reduce, so the "180 cm" punchline survives. That is what fixes
+  finding 7.
+- **Works grid.** Under reduce the cards drop their `exit`. The `!important` pin
+  would otherwise freeze an exiting card in place for the 0.35s exit spring. The
+  check reads the setting live (`useMediaQuery`), because the pin follows it
+  even mid-visit.
+- **Rejected: a hydration-gated marker** (dropping `data-entrance` on
+  hydration).
+  - It showed a frame where the hero sat at opacity 0, after the marker went and
+    before Motion wrote its final style.
+  - It let the works cards' own spring fade them in under reduce.
+- **Verified** in Playwright at 1440×900:
+  - Normal motion: hard-load and client-nav entrances animate.
+  - Reduced motion: zero sub-1 opacity frames, no hydration warning, and a
+    static stick figure.
+  - JS disabled: every `[data-entrance]` is at opacity 1 with no transform.
+
+Original scope:
 
 1. Hero `fadeUp` (home, about, works). The height tile is handled by batch C:
    - keep `initial` unconditional;
