@@ -28,7 +28,7 @@
 	overflow-x: auto;
 	border-radius: 0;
 	background-color: transparent;
-	color: var(--color-neutral-100);
+	color: var(--code-block-text);
 	font-family: var(--font-mono);
 	font-size: 14px;
 	line-height: 22.4px;
@@ -119,26 +119,29 @@
 }
 
 .prose.prose-light code {
-	color: var(--color-neutral-100);
+	color: var(--code-block-text);
 }
 
-/* Inline code pill (Figma 235-69) — matches the code-block body background per theme. */
+/* Inline code pill (Figma 235-69 light, 3213-823 dark) — shares the code-block
+   tokens. Figma draws the 1px border inside the box, so the padding gives up
+   1px to keep the pill the same size. */
 .prose.prose-light :not(pre) > code,
 .dark .dark\:prose-dark :not(pre) > code {
-	color: var(--color-neutral-100);
+	color: var(--code-block-text);
+	background-color: var(--code-block-surface);
+	border: 1px solid var(--code-block-border);
 	font-family: var(--font-mono);
 	font-size: 0.8125rem;
-	padding: 0.125rem 0.375rem;
+	font-weight: 400;
+	padding: 0.0625rem 0.3125rem;
 	border-radius: 4px;
 	white-space: nowrap;
 }
 
-.prose.prose-light :not(pre) > code {
-	background-color: var(--color-neutral-950);
-}
-
-.dark .dark\:prose-dark :not(pre) > code {
-	background-color: var(--color-sky-900);
+/* Drop the backticks @tailwindcss/typography wraps around inline code. */
+.prose.prose-light :not(pre) > code::before,
+.prose.prose-light :not(pre) > code::after {
+	content: none;
 }
 
 .prose.prose-light h1,
@@ -178,7 +181,7 @@
 }
 
 .dark .dark\:prose-dark code {
-	color: var(--color-neutral-100);
+	color: var(--code-block-text);
 }
 
 .dark .dark\:prose-dark h1,
