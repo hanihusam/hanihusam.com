@@ -1,92 +1,106 @@
 import * as React from 'react'
 
 import { clsxm } from '@/utils/clsxm'
+import { DURATION_SLOW } from '@/utils/motion'
 
-const isServer = typeof document === 'undefined'
+type LoadState = 'idle' | 'loading' | 'loaded' | 'settled' | 'failed'
 
+/**
+ * An image over its blurred placeholder. The server renders the real image
+ * visible, stacked above the placeholder: until it loads it has no pixels, so
+ * the blur shows through, and once it loads it covers the blur — with JS off,
+ * or before hydration, too.
+ *
+ * Only an image with nothing drawn yet at hydration (the lazy cards further
+ * down) is hidden and then fades in over the blur. One that is already
+ * drawing (progressive decode, a srcset swap) stays put. The fade sits on a
+ * wrapper so it never fights a caller's own transition on the image (the
+ * cards' hover zoom), and only the fade-in animates. The placeholder is
+ * dropped once the image settles, and kept if it fails to load.
+ */
 function BlurrableImage({
 	img,
 	blurDataUrl,
 	...rest
 }: {
-	img: React.ReactElement<React.ComponentProps<'img'>>
+	img: React.ReactElement<Omit<React.ComponentProps<'img'>, 'ref'>>
 	blurDataUrl?: string
 } & React.HTMLAttributes<HTMLDivElement>) {
-	const id = React.useId()
-	const [visible, setVisible] = React.useState(() => {
-		if (isServer) return false
-
-		// on the client, it's possible the images has already finished loading.
-		// we've got the data-evt-onload attribute on the image
-		// (which our entry.server replaces with simply "onload") which will remove
-		// the class "opacity-0" from the image once it's loaded. So we'll check
-		// if the image is already loaded and if so, we know that visible should
-		// initialize to true.
-		const el = document.getElementById(id)
-		return el instanceof HTMLImageElement && !el.classList.contains('opacity-0')
-	})
-	const jsImgElRef = React.useRef<HTMLImageElement>(null)
+	const imgRef = React.useRef<HTMLImageElement>(null)
+	const [state, setState] = React.useState<LoadState>('idle')
 
 	React.useEffect(() => {
-		if (!jsImgElRef.current) return
-		if (jsImgElRef.current.complete) {
-			setVisible(true)
+		const el = imgRef.current
+		if (!el) return
+		if (el.complete) {
+			setState(el.naturalWidth > 0 ? 'settled' : 'failed')
 			return
 		}
 
-		let current = true
-		jsImgElRef.current.addEventListener('load', () => {
-			if (!jsImgElRef.current || !current) return
-			setTimeout(() => {
-				setVisible(true)
-			}, 0)
-		})
+		const painting = el.naturalWidth > 0
+		if (!painting) setState('loading')
+		const fadeIn =
+			!painting &&
+			!window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
-		return () => {
-			current = false
-		}
+		// First outcome only: a later srcset swap fires `load` again.
+		const listeners = new AbortController()
+		const options = { signal: listeners.signal }
+		el.addEventListener(
+			'load',
+			() => {
+				listeners.abort()
+				setState(fadeIn ? 'loaded' : 'settled')
+			},
+			options,
+		)
+		el.addEventListener(
+			'error',
+			() => {
+				listeners.abort()
+				setState('failed')
+			},
+			options,
+		)
+		return () => listeners.abort()
 	}, [])
 
-	const jsImgEl = React.cloneElement(img, {
-		ref: jsImgElRef,
-		id,
-
-		// React doesn't like the extra onload prop the server's going to send,
-		// but it also doesn't like an onload prop and recommends onLoad instead.
-		// but we want to use the onload prop because it's a bit more performant
-		// and as a result it's possible the user will never see the blurred image
-		// at all which would be great. So we suppress the warning here and we use
-		// this funny data-evt-prefixed attribute which our server renderer will
-		// remove for us (check entry.server).
-		suppressHydrationWarning: true,
-		...(isServer
-			? { 'data-evt-onload': "this.classList.remove('opacity-0')" }
-			: {}),
-		className: clsxm(img.props.className, 'transition-opacity', {
-			'opacity-0': !visible,
-		}),
-	})
+	React.useEffect(() => {
+		if (state !== 'loaded') return
+		const timer = setTimeout(() => setState('settled'), DURATION_SLOW * 1000)
+		return () => clearTimeout(timer)
+	}, [state])
 
 	return (
 		<div {...rest} className={clsxm(rest.className, 'relative')}>
-			{jsImgEl}
-			{blurDataUrl ? (
+			{blurDataUrl && state !== 'settled' ? (
 				<div
-					className={clsxm(
-						'pointer-events-none absolute inset-0 transition-opacity',
-						{ 'opacity-0': visible },
-					)}
+					data-blur-placeholder=""
+					aria-hidden
+					className="pointer-events-none absolute inset-0"
 				>
 					<img
 						key={blurDataUrl}
 						src={blurDataUrl}
+						alt=""
 						className="h-full w-full rounded-lg object-cover object-center"
-						alt={img.props.alt}
 					/>
 					<div className="absolute inset-0 rounded-lg backdrop-blur-xl" />
 				</div>
 			) : null}
-			<noscript>{img}</noscript>
+			<div
+				className={clsxm(
+					'relative',
+					(state === 'loading' || state === 'failed') && 'opacity-0',
+					state === 'loaded' &&
+						'transition-opacity duration-(--duration-slow) ease-out-quart',
+				)}
+			>
+				{React.cloneElement(
+					img as React.ReactElement<React.ComponentProps<'img'>>,
+					{ ref: imgRef },
+				)}
+			</div>
 		</div>
 	)
 }

@@ -254,6 +254,7 @@ Every candidate for motion should first be checked against this list:
 | Route transition          | `components/page-transition.tsx`                                                  |
 | Hero entrances            | `hooks/useEntrance.ts`, `{home,about,works}/hero-section.tsx`                     |
 | Scroll reveals            | `components/reveal.tsx`                                                           |
+| Image load fade           | `components/blurrable-image.tsx` (card and article thumbnails)                    |
 | Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`              |
 | Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)              |
 | Bento: skate line draw    | `about/skate-trace.tsx`, `about/skate-trace-paths.ts`, `hooks/useSkateTrace.ts`   |
@@ -279,10 +280,6 @@ before building on top of them, and remove each entry once it's fixed.
   - **Card image zooms use two durations.** Project-card banners run on
     `--duration-base` (200ms) and Substack images on `--duration-slow` (300ms).
     The theme assigns image zoom to the slow token.
-- **The project-card image load fade never runs with motion allowed.**
-  `blurrable-image.tsx` adds `transition-opacity`, but the caller's
-  `motion-safe:transition-transform` comes later and replaces the property list.
-  Give the image one list that covers both (`opacity` and `scale`).
 - **About bento.** The verified review, the skate rework, and the fix batches
   are in [plan 002](../plans/002-about-bento-motion.md).
 
