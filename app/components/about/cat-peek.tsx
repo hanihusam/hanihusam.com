@@ -34,7 +34,6 @@ const PEEK_QUERY =
 
 const BODY_IMG = {
 	src: '/images/cat-peek.png',
-	alt: '',
 	width: 139,
 	height: 139,
 	loading: 'lazy',
@@ -51,7 +50,7 @@ function ScrubbedBody() {
 
 	return (
 		<div ref={boxRef} className={BOX}>
-			<motion.img {...BODY_IMG} style={{ x: bodyX }} />
+			<motion.img {...BODY_IMG} alt="" style={{ x: bodyX }} />
 		</div>
 	)
 }
@@ -68,7 +67,7 @@ export function CatPeekBody() {
 				<ScrubbedBody />
 			) : (
 				<div className={BOX}>
-					<img {...BODY_IMG} />
+					<img {...BODY_IMG} alt="" />
 				</div>
 			)}
 		</div>
