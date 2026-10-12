@@ -122,6 +122,19 @@ light-mode {
 	animation-delay: calc(0.25s + 0.03s * var(--index));
 }
 
+/* Cross-document (hard-load) fallback. Client-side route transitions are
+   handled by <PageTransition> (motion/react); the two are mutually exclusive.
+   Browsers don't skip view transitions under reduced motion, so opt in only
+   when motion is welcome. It lives here rather than in theme.css because
+   WebKit evaluates every media query in a sheet holding a gated
+   @view-transition statically, and this sheet's only queries are about
+   reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+	@view-transition {
+		navigation: auto;
+	}
+}
+
 /* Table of contents entrance. Both the desktop aside and the mobile drawer
    trigger are built client-side from the rendered headings, so this plays once
    they mount rather than on first paint. Entrance only, no exit. */
@@ -151,5 +164,16 @@ light-mode {
 	[data-entrance] {
 		opacity: 1 !important;
 		transform: none !important;
+	}
+
+	/* Vaul (works TOC drawer) has no reduced-motion handling: it injects a 0.5s
+	   slide/fade and sets inline transitions after a drag. Zero them so the sheet
+	   and overlay just appear. Zero the duration, don't remove the animation:
+	   Radix unmounts on `animationend`, which a 0s animation still fires, and
+	   dropping the animation mid-close would strand the sheet on screen. */
+	[data-vaul-drawer],
+	[data-vaul-overlay] {
+		animation-duration: 0s !important;
+		transition: none !important;
 	}
 }

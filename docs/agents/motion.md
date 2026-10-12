@@ -96,6 +96,14 @@ exception, not a pattern. Ask before adding a third scroll observer.
      `gsap.matchMedia('(prefers-reduced-motion: no-preference)')` so it never
      exists under reduce.
    - **Hooks:** gate on `matchMedia` in an effect, as `useCatPeekReveal` does.
+   - **Third-party motion:** check that the library honours reduce. Vaul
+     doesn't, so `app.css` zeroes its animation durations and transitions. Zero
+     them rather than removing the animation: Radix waits for `animationend`
+     before it unmounts.
+   - **Media:** never put `autoPlay` in the markup, because it starts before
+     hydration. Start playback in an effect, only while the video is on screen
+     and motion is allowed, as `blog/cloudinary-video.tsx` does. Gating on the
+     viewport replaces what the attribute did for free on mobile.
    - **Decorative motion:** turn it off entirely, not "gentler".
 3. **Animate `transform` and `opacity`.** The single exception is SVG
    `stroke-dashoffset`, for line drawing on a small element.
@@ -193,19 +201,6 @@ Every candidate for motion should first be checked against this list:
 Found on 2026-10-10; a full timing sweep on 2026-10-11 added the rest. Fix these
 before building on top of them, and remove each entry once it's fixed.
 
-- **Three places ignore reduced motion.**
-  - **Works TOC drawer.** Vaul (`works/toc-drawer.tsx`) injects its own CSS. The
-    sheet slides its full height, and the overlay fades, on a literal `0.5s`
-    `cubic-bezier(.32, .72, 0, 1)`. Vaul 1.1.2 has no reduced-motion handling.
-    Override both with the tokens. Vaul's rules are unlayered and load last, so
-    the override needs higher specificity than `[data-vaul-drawer]` /
-    `[data-vaul-overlay]`.
-  - **Hard-load view transitions.** `@view-transition` (`theme.css`) runs the
-    browser's default `0.25s` crossfade, and browsers don't skip it under
-    reduce. Gate it on `no-preference`.
-  - **Case-study videos.** `blog/cloudinary-video.tsx` sets `autoPlay loop`
-    unconditionally. The controls satisfy WCAG 2.2.2, but rule 2 wants
-    decorative motion off, so drop autoplay under reduce.
 - **Tailwind's default transition timing isn't overridden.** A bare
   `transition`, `transition-colors` or `transition-opacity` with no `ease-*` or
   `duration-(--…)` class falls back to Tailwind's `150ms`
@@ -222,6 +217,9 @@ before building on top of them, and remove each entry once it's fixed.
     `projects/project-card.tsx` (both banners), `ui/theme-switcher.tsx` (hover
     fill)
   - no ease class: `top-blur-overlay.tsx`, `ui/filter-tag.tsx`
+  - Vaul's own `0.5s` `cubic-bezier(.32, .72, 0, 1)` on the works TOC drawer's
+    slide and overlay fade. Reduced motion is handled; retiming the normal slide
+    is a taste call.
   - the legacy `button.tsx` (`/links` only): no `transition-*` class, so it gets
     `transition: all` on the browser's `ease`
   - `duration: 0.35, ease: 'power3'` on the dot-field pointer follow

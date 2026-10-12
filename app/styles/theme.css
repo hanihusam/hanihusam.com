@@ -380,9 +380,3 @@ html {
 		scroll-behavior: smooth;
 	}
 }
-
-/* Cross-document (hard-load) fallback. Client-side route transitions are
-   handled by <PageTransition> (motion/react); the two are mutually exclusive. */
-@view-transition {
-	navigation: auto;
-}
