@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { FilterTag } from '@/components/ui/filter-tag'
 import { CallToAction } from '@/components/works/cta-section'
 import { WorksHero } from '@/components/works/hero-section'
-import { useReducedMotionQuery } from '@/hooks/useReducedMotionQuery'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { clsxm } from '@/utils/clsxm'
 import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
@@ -94,7 +94,7 @@ const PAGE_SIZE = 5
 
 export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 	const { projects, tags } = loaderData
-	const shouldReduceMotion = useReducedMotionQuery()
+	const shouldReduceMotion = useMediaQuery('(prefers-reduced-motion: reduce)')
 
 	const [searchParams] = useSearchParams()
 	const [selectedTags, setSelectedTags] = React.useState<Set<string>>(

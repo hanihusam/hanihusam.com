@@ -375,8 +375,12 @@ html {
 	-moz-osx-font-smoothing: grayscale;
 }
 
+/* Smooth in-page scrolling, but only once the app has hydrated (root.tsx sets
+   `data-hydrated`). React Router restores the scroll position on a (re)load
+   from an inline script before hydration; with smooth on, that restore glided
+   down from the top of the page instead of landing in place. */
 @media (prefers-reduced-motion: no-preference) {
-	html {
+	html[data-hydrated] {
 		scroll-behavior: smooth;
 	}
 }

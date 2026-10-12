@@ -33,10 +33,12 @@ export function AboutHero() {
 				<motion.div {...slideInFromRight} className="absolute top-0 right-0">
 					<div className="relative flex aspect-square w-100 translate-x-[28%] -translate-y-1/3 items-center justify-center overflow-visible rounded-2xl border-(--border-primary) bg-sky-50 md:translate-x-[40%] md:translate-y-0 lg:translate-x-0 dark:bg-sky-900">
 						<img
-							src="/images/avatar-side.png"
+							src="/images/avatar-side-512.webp"
+							srcSet="/images/avatar-side-512.webp 1x, /images/avatar-side-1024.webp 2x"
 							alt="Portrait of Han"
 							width={512}
 							height={512}
+							fetchPriority="high"
 							className="absolute top-1/2 left-1/2 flex max-w-none shrink-0 -translate-x-1/2 -translate-y-1/2"
 						/>
 					</div>

@@ -7,8 +7,9 @@
 - Status: review complete, docs corrected. Batch A (skate rework) implemented on
   2026-10-11 with Hani's go-ahead and the neutral-400 light stroke. It is
   waiting on Hani's visual sign-off. The cat window from batch C was retimed the
-  same day to finish with the skate (see below). Batch B done on 2026-10-11 (see
-  below). The rest of C and D are not started.
+  same day to finish with the skate (see below). Batch C (height tile) and batch
+  D (hygiene) were implemented on 2026-10-11; batch C also fixes finding 7.
+  Batch B is done too (see below); batch C superseded its height-tile hunk.
 - Risk: low. Every change is scoped to the About page bento, except batch B,
   which touches the shared hero pattern.
 
@@ -25,14 +26,16 @@
 
 ## What moves today
 
-As of batch A. Before it, the skate draw ran bottom-up with `scrub: 0.5`.
+As of batches A and C. Before batch A, the skate draw ran bottom-up with
+`scrub: 0.5`. Before batch C, the height tile was hover-only, with an endless
+wave.
 
-| Tile   | Motion                                                    | Library            |
-| ------ | --------------------------------------------------------- | ------------------ |
-| Skate  | Scrubbed line draw, 9 strokes, top-down, `scrub: true`    | GSAP ScrollTrigger |
-| Cat    | Scrubbed peek from behind the card, lg+ only              | Motion `useScroll` |
-| Height | Hover-intent grow (spring) plus idle both-arms wave (~3s) | Motion variants    |
-| Others | Static on purpose (married, top 10, Hani, desk)           | —                  |
+| Tile   | Motion                                                              | Library            |
+| ------ | ------------------------------------------------------------------- | ------------------ |
+| Skate  | Scrubbed line draw, 9 strokes, top-down, `scrub: true`              | GSAP ScrollTrigger |
+| Cat    | Scrubbed peek from behind the card, lg+ only                        | Motion `useScroll` |
+| Height | Hover grow; touch grow on view; 2 waves per pass; tall when reduced | Motion variants    |
+| Others | Static on purpose (married, top 10, Hani, desk)                     | —                  |
 
 Confirmed working:
 
@@ -217,7 +220,8 @@ Two follow-ups landed after this run, from the verifier:
 
 ## Batch B — reduced-motion and SSR correctness (done)
 
-**Done 2026-10-11.** Findings 6 and 7 are fixed, and the no-JS gap is closed.
+**Done 2026-10-11.** Finding 6 is fixed and the no-JS gap is closed. Finding 7
+is fixed by batch C (below).
 
 - **Shared hook.** `hooks/useEntrance.ts` now builds the hero entrances (home,
   about, works). `initial` is unconditional. Under reduce, `animate` lands the
@@ -229,16 +233,15 @@ Two follow-ups landed after this run, from the verifier:
   - `app.css` does the same under `prefers-reduced-motion: reduce`, so reduce
     doesn't wait for the deferred (`requestIdleCallback`) hydration.
   - Normal motion still plays the hard-load entrance.
-- **Height tile.** `initial` is always `rest`. Hover is the only way to `grown`,
-  and it's off under reduce, so reduce holds the server pose.
-  - This fixes finding 7's hydration mismatch. It also changes the
-    reduced-motion pose from the old brief's tall `grown` to the crouched
-    `rest`, so reduce loses the "180 cm" punchline. That's a product call, like
-    finding 8. #186 proposes the tall pose instead.
+- **Height tile: superseded by batch C.** Batch B kept `initial` at `rest` and
+  held that crouched pose under reduce. Batch C's `HeightTile` keeps the same
+  unconditional `initial="rest"`, then stands him tall instantly after hydration
+  under reduce, so the "180 cm" punchline survives. That is what fixes
+  finding 7.
 - **Works grid.** Under reduce the cards drop their `exit`. The `!important` pin
   would otherwise freeze an exiting card in place for the 0.35s exit spring. The
-  check reads the setting live (`useReducedMotionQuery`), because the pin
-  follows it even mid-visit.
+  check reads the setting live (`useMediaQuery`), because the pin follows it
+  even mid-visit.
 - **Rejected: a hydration-gated marker** (dropping `data-entrance` on
   hydration).
   - It showed a frame where the hero sat at opacity 0, after the marker went and
@@ -252,7 +255,7 @@ Two follow-ups landed after this run, from the verifier:
 
 Original scope:
 
-1. Hero `fadeUp` (home, about, works) and the height tile:
+1. Hero `fadeUp` (home, about, works). The height tile is handled by batch C:
    - keep `initial` unconditional;
    - under reduce, set `animate` to the final state with `duration: 0`;
    - or gate on hydration with `useSyncExternalStore`, as `PageTransition` does.
@@ -265,12 +268,30 @@ Original scope:
 
 ## Batch C — height and cat polish
 
-- Finite wave: one or two waves per entry into view, re-armed only after the
-  tile leaves the viewport. Use `useInView(…, { amount: 0.5 })`.
-- Split the `posing` and `waving` flags so the arms always lower (fixes 10).
-- Add a non-bouncy rest transition (fixes 11).
-- Touch grow, if Hani wants it: under `(hover: none)`, grow once about 300ms
-  after the tile is half in view.
+- **Height tile (done 2026-10-11).** All of the tile's state now lives in
+  `useHeightTileMotion`; `StickFigure` is presentational. Hani chose touch grow
+  and a tall reduced-motion pose.
+  - **Trigger: the figure, not the tile.** It has to be fully inside the 96px
+    stage (`useInView` on the SVG, `amount: 'all'`, inset margins). The figure
+    sits in the tile's lower part, so "half the tile" could still mean none of
+    the figure: 0% of it at 390×844.
+  - **Finite wave (fixes 9).** On hover devices: 2 waves, the first 1.2s after
+    the figure is on stage, all within ~4s. Re-arms only once the tile is fully
+    off screen; a hover spends it.
+  - **Arms always lower (fixes 10).** Unless grown, the arms hold an explicit
+    target, so leaving mid-wave lowers them.
+  - **Non-bouncy return (fixes 11).** `rest` uses a 0.4s spring with no bounce;
+    `grown` keeps its 0.6s spring with bounce 0.25. Each variant carries its own
+    transition.
+  - **Touch grow (addresses 8).** When the primary pointer isn't a fine,
+    hovering one, he stands up 300ms after the figure is on stage. He resets
+    only once the tile is fully off screen, as a jump cut, so a quick flick back
+    never shows the tail of a crouch. There's no wave on touch: standing already
+    raises the arms.
+  - **Reduced motion (fixes 7).** He stands tall, set instantly after hydration.
+    `initial` is always `rest`, the pose the server ships, so hydration matches.
+  - `canHover` comes from `useSyncExternalStore` (false on the server); since
+    batch D, from the shared `useMediaQuery`.
 - **Cat window (done 2026-10-11, Hani's direction):**
   - **Start:** when the box's top clears the bottom stage line, about 60% into
     the skate draw, with the cat's head already on screen.
@@ -294,14 +315,72 @@ Original scope:
 
 ## Batch D — hygiene
 
-- Use `width={186} height={67}` on `hani-letter.png`.
-- Refresh both scenes once `PageTransition` settles. One shared signal, e.g. the
-  cat re-measures on ScrollTrigger's `refresh`.
-- Add `loading="lazy" decoding="async"` to the bento images.
-- Re-encode the skate and desk photos as WebP. Check the cutout's alpha edges.
-- Mount the cat's scroll work only when `active`, and skip `setRange` when
-  nothing changed.
-- Extract `HeightTile` and make `Tile` a plain `div`.
-- Clear `useHoverIntent`'s timeout on unmount.
-- Site-wide, not bento: `html { scroll-behavior: smooth }` also animates React
-  Router's scroll restoration on reload (see motion.md Known gaps).
+Done 2026-10-11 (findings 13–17).
+
+- **Reserved image size (13).** `hani-letter.png` has `width={186} height={67}`,
+  so the mobile grid no longer shifts after the scenes measure.
+- **Route-settled re-measure (13).** `PageTransition` fires
+  `ROUTE_SETTLED_EVENT` when its entrance ends. The skate refreshes its
+  ScrollTrigger on it, and the cat re-measures. One shared signal, and neither
+  hook knows about the other's library.
+- **Lazy images (14).** `loading="lazy" decoding="async"` on every bento image.
+  Each declares its intrinsic `width`/`height`, and `ring-marriage.png` was
+  corrected from 165×159 to 165×165. Lazy loading therefore can't shift a
+  measured range.
+- **WebP (14).**
+  - `hani-drop-clean`: 289KB PNG → 40KB WebP. `-q 85`, lossless alpha, and
+    `-exact` so the cutout's edges don't fringe.
+  - `keyboard-desk`: 263KB JPG → 93KB WebP. `-q 80`.
+    - The JPG was stored sideways with an EXIF orientation tag and a Display P3
+      profile. `cwebp` drops both, which first shipped the photo rotated 90° and
+      desaturated.
+    - It's now rotated upright and converted to sRGB before encoding
+      (`sips -m "sRGB Profile.icc" -r 90`, then `cwebp`). The `img` is
+      `900×1200`.
+    - The WebP carries no metadata. The JPG had GPS EXIF, which is still in git
+      history.
+  - The old files are removed.
+- **Cat only works where it animates (15).**
+  - `CatPeekBody` reads
+    `(min-width: 1024px) and (prefers-reduced-motion: no-preference)` with the
+    new `useMediaQuery`. It mounts the scroll-driven body only when that
+    matches.
+  - Below lg and under reduced motion, nothing measures or subscribes to scroll.
+  - `measure()` skips `setRange` when nothing changed.
+- **`HeightTile` extracted (16).** `about/height-tile.tsx` calls
+  `useHeightTileMotion` itself, so hover, in-view and wave changes re-render
+  that tile only. `BentoTile` (now a plain `div`) and `BentoFact` moved to their
+  own files.
+- **`useMediaQuery`.** `hooks/useMediaQuery.ts` is shared by the height tile
+  (hover capability) and the cat.
+- ~~Clear `useHoverIntent`'s timeout on unmount (17).~~ Done with batch C.
+- **Site-wide: smooth scrolling only after hydration.**
+  - `html[data-hydrated]` in `theme.css`, set by a root `useEffect`. A reload's
+    scroll restore runs before hydration, so it lands in place instead of
+    gliding down from the top. Every other scroll behaves as before.
+  - Back/forward restores still glide, as they always did.
+  - `useSkateTrace` now owns ScrollTrigger's smooth-scroll handling during full
+    refreshes. That means `auto` for the measure round trip, and smooth turned
+    off on both scroll axes so no inline `smooth` is left behind.
+    ScrollTrigger's own check of `scroll-behavior` runs once, before hydration,
+    so it would be wrong.
+  - It also calls `ScrollTrigger.clearScrollMemory('manual')`. ScrollTrigger had
+    been writing `history.scrollRestoration = 'auto'` back over React Router's
+    `'manual'` after every refresh, which was also true on `main`.
+  - `data-hydrated` is set in `Document`, so 404 and 500 pages get it too.
+    Trade-off: with JS disabled, hash links jump instead of gliding.
+  - Rejected: `html:focus-within`. Native hash links to non-focusable headings
+    and most route changes started jumping, Safari jumped on every link, and the
+    ScrollTrigger flag became focus-dependent.
+- **Verified** (Playwright, production build, 1440×900 unless noted):
+  - Client-nav ranges match a hard load: skate 529/952 → 521/944, cat 803/983 →
+    797/977.
+  - `route-settled` fires once per animated client navigation, never on hard
+    load.
+  - 0 layout shifts at 390 and 1440, fast and throttled. The old `hani-letter`
+    markup shifted 0.027 when the image arrived.
+  - The skate WebP's alpha is bit-identical, with no edge halo.
+  - The cat never measures or transforms below lg or under reduced motion.
+  - Height tile unchanged.
+  - A reload restores in one step (it glided over 97 frames before).
+  - 0 console errors.

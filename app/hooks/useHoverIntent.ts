@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 /**
  * Debounced hover state for one element. `whileHover` alone fires on the
@@ -17,6 +17,8 @@ import { useRef, useState } from 'react'
 function useHoverIntent(delay: number) {
 	const [active, setActive] = useState(false)
 	const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined)
+
+	useEffect(() => () => clearTimeout(timeoutRef.current), [])
 
 	const onHoverStart = () => {
 		clearTimeout(timeoutRef.current)

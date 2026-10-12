@@ -2,11 +2,17 @@ import { motion, useReducedMotion } from 'motion/react'
 import { useSyncExternalStore } from 'react'
 import { Outlet, useLocation } from 'react-router'
 
-import { DURATION_BASE, EASE_OUT_QUART } from '@/utils/motion'
+import {
+	DURATION_BASE,
+	EASE_OUT_QUART,
+	ROUTE_SETTLED_EVENT,
+} from '@/utils/motion'
 
 const subscribeToHydration = () => () => {}
 const getClientSnapshot = () => true
 const getServerSnapshot = () => false
+const announceSettled = () =>
+	window.dispatchEvent(new Event(ROUTE_SETTLED_EVENT))
 
 /**
  * Entrance-only route transition. Re-keying on pathname remounts the incoming
@@ -36,6 +42,7 @@ function PageTransition() {
 				duration: animateIn ? DURATION_BASE : 0,
 				ease: EASE_OUT_QUART,
 			}}
+			onAnimationComplete={animateIn ? announceSettled : undefined}
 		>
 			<Outlet />
 		</motion.div>

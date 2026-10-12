@@ -2,6 +2,7 @@ import { motion } from 'motion/react'
 import { useRef } from 'react'
 
 import { useCatPeekReveal } from '@/hooks/useCatPeekReveal'
+import { useMediaQuery } from '@/hooks/useMediaQuery'
 
 /**
  * The cat that peeks around the bottom-right corner of its bento card.
@@ -26,27 +27,49 @@ import { useCatPeekReveal } from '@/hooks/useCatPeekReveal'
 /** Shared placement of the 139×139 cat box, hanging off the card's corner. */
 const BOX = 'absolute -right-26 bottom-2 h-34.75 w-34.75'
 
-export function CatPeekBody() {
+// Where the peek animates. Anywhere else the body sits at rest and nothing
+// measures or listens to scroll.
+const PEEK_QUERY =
+	'(min-width: 1024px) and (prefers-reduced-motion: no-preference)'
+
+const BODY_IMG = {
+	src: '/images/cat-peek.png',
+	width: 139,
+	height: 139,
+	loading: 'lazy',
+	decoding: 'async',
+	className: 'absolute inset-0 h-full w-full',
+} as const
+
+/** The body driven by scroll. Mounted only while the peek can run. */
+function ScrubbedBody() {
 	// The scroll scene is measured against this box, not the tile — see the
 	// hook's brief for why.
 	const boxRef = useRef<HTMLDivElement>(null)
-	const { active, bodyX } = useCatPeekReveal(boxRef)
+	const bodyX = useCatPeekReveal(boxRef)
+
+	return (
+		<div ref={boxRef} className={BOX}>
+			<motion.img {...BODY_IMG} alt="" style={{ x: bodyX }} />
+		</div>
+	)
+}
+
+export function CatPeekBody() {
+	const canPeek = useMediaQuery(PEEK_QUERY)
 
 	return (
 		<div
 			aria-hidden
 			className="pointer-events-none relative hidden [grid-area:cat] lg:block"
 		>
-			<div ref={boxRef} className={BOX}>
-				<motion.img
-					src="/images/cat-peek.png"
-					alt=""
-					width={139}
-					height={139}
-					style={active ? { x: bodyX } : undefined}
-					className="absolute inset-0 h-full w-full"
-				/>
-			</div>
+			{canPeek ? (
+				<ScrubbedBody />
+			) : (
+				<div className={BOX}>
+					<img {...BODY_IMG} alt="" />
+				</div>
+			)}
 		</div>
 	)
 }
@@ -63,6 +86,8 @@ export function CatPeekPaws() {
 					alt=""
 					width={21}
 					height={80}
+					loading="lazy"
+					decoding="async"
 					className="absolute top-[42.302%] left-[18.417%] h-[57.554%] w-[15.108%]"
 				/>
 			</div>

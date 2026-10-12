@@ -4,7 +4,7 @@ import { TRACE_SEGMENTS } from '@/components/about/skate-trace-paths'
 import { useSkateTrace } from '@/hooks/useSkateTrace'
 
 /**
- * The skate photo plus its traced swoosh. `hani-drop-clean.png` is a *clean*
+ * The skate photo plus its traced swoosh. `hani-drop-clean.webp` is a *clean*
  * cutout with no swoosh baked in — see skate-trace-paths.ts for provenance —
  * so the drawn overlay doesn't double up against one already in the raster.
  *
@@ -25,10 +25,12 @@ export function SkateTrace() {
 			className="relative -mb-14 w-full max-w-61.25 translate-x-[8%] self-end md:-mb-10 md:max-w-75 md:translate-x-[7%]"
 		>
 			<img
-				src="/images/hani-drop-clean.png"
+				src="/images/hani-drop-clean.webp"
 				alt="Han skateboarding"
 				width={600}
 				height={766}
+				loading="lazy"
+				decoding="async"
 				className="w-full"
 			/>
 
