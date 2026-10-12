@@ -45,12 +45,12 @@ export function AboutHero() {
 				</motion.div>
 
 				<div className="relative z-1 mt-82 flex flex-col gap-6 md:gap-12">
-					<motion.div {...fadeUp(0.1)}>
+					<motion.div {...fadeUp(0)}>
 						<Display>Hi there! I&apos;m Han.</Display>
 					</motion.div>
 
 					<motion.div
-						{...fadeUp(0.18)}
+						{...fadeUp(1)}
 						className="flex flex-col gap-4 md:max-w-[60%]"
 					>
 						<Text variant="lead" as="p">

@@ -9,8 +9,9 @@ reasoned, and documented.
 
 Durations and easing come from CSS custom properties in `app/styles/theme.css`.
 `app/utils/motion.ts` mirrors them for JS. Don't add new easing arrays,
-cubic-beziers, or UI durations as literals. The ones that already exist are
-listed under [Known gaps](#known-gaps).
+cubic-beziers, or UI durations as literals. The few that remain are listed under
+the exemptions below, and Vaul's drawer timing is an open taste call under
+[Known gaps](#known-gaps).
 
 | CSS token             | JS constant         | Use                                               |
 | --------------------- | ------------------- | ------------------------------------------------- |
@@ -29,13 +30,38 @@ branch on its own (see below).
 
 In Tailwind, the `--ease-*` tokens are real utilities (`ease-out-quart`).
 `--duration-*` is not a Tailwind namespace, so write
-`duration-(--duration-base)`.
+`duration-(--duration-base)`. A bare `transition*` class with neither falls back
+to `--duration-fast` and `--ease-hover`: `theme.css` points Tailwind's
+`--default-transition-*` at them, so even those transitions are zeroed under
+reduce. `--ease-hover` is an ease-out quart, so the default also suits state and
+load fades; name a curve only when you want a different one.
+
+Under reduce, every token-timed transition is instant, colour and opacity fades
+included. That's house policy, and stricter than courses that keep short fades.
+
+Tailwind v4's `scale-*`, `translate-*` and `rotate-*` set their own CSS
+properties, not `transform`. So a press like `active:scale-[0.97]` needs `scale`
+in its `transition-[…]` list (or `transition-transform`, which covers all four).
+To drop a press under reduce, gate the press itself
+(`motion-safe:active:scale-[0.97]`). A `motion-reduce:` override loses to
+`active:` in Tailwind's variant order, and `transform-none` doesn't touch
+`scale` at all.
+
+JS also has three timing constants in `motion.ts`:
+
+- `ENTRANCE_DELAY` (0.1s), the first beat after mount.
+- `STAGGER_STEP` (0.08s), the gap between staggered siblings (`fadeUp(step)`,
+  `Reveal`'s `stagger` variant, the works grid).
+- `GSAP_EASE_OUT_QUART` (`power3.out`), the house curve for GSAP tweens.
 
 Exempt from the token rule:
 
 - **Springs** (`{ type: 'spring', duration, bounce }`), which settle on their
   own parameters.
 - **Scrubbed scroll scenes**, where scroll position is the clock.
+- **Pointer smoothing**: `POINTER_SMOOTHING` (0.35s) on the hero dot field
+  (`hero-dot-field.tsx`). It's lag on a live input, like a spring, not a UI
+  duration.
 - **Two literals**, neither of which matches a token:
   - `0.6` on the about hero avatar.
   - `1.3s` per letter, with its `0.25s` lead-in and `0.03s` stagger, on the home
@@ -82,8 +108,10 @@ exception, not a pattern. Ask before adding a third scroll observer.
 2. **Reduced motion is a render path, not a disabled animation.** Render the
    finished, visible state:
    - **CSS:** tokens or a `prefers-reduced-motion: reduce` block. Watch for
-     delays: `.toc-enter` drops its animation outright because a delay alone
-     would hold the element at opacity 0.
+     delays: a literal delay on a `backwards` animation holds the element at its
+     first keyframe even when the duration is zeroed. `.toc-enter` still drops
+     its animation outright under reduce, as a guard, though its delay is now
+     the zeroed `--duration-base`.
    - **Motion:** branch on `useReducedMotion()`, with two traps:
      - It returns `null` on the server and is read once on the client, so it
        doesn't update if the preference changes mid-visit.
@@ -239,40 +267,22 @@ Every candidate for motion should first be checked against this list:
 Found on 2026-10-10; a full timing sweep on 2026-10-11 added the rest. Fix these
 before building on top of them, and remove each entry once it's fixed.
 
-- **Tailwind's default transition timing isn't overridden.** A bare
-  `transition`, `transition-colors` or `transition-opacity` with no `ease-*` or
-  `duration-(--…)` class falls back to Tailwind's `150ms`
-  `cubic-bezier(.4, 0, .2, 1)`, which reduced motion doesn't zero. That covers
-  about ten colour hovers and the image fades in `blurrable-image.tsx`. Point
-  `--default-transition-duration` and `--default-transition-timing-function` in
-  `@theme` at the tokens.
-- **Off-token curves.** These durations are tokens; the curves aren't:
-  - `ease` on the underline wipes (`.underlined` in `app.css`, headings in
-    `prose.css`)
-  - Tailwind's `ease-in-out` on the Substack image hover
-    (`writing/article-card.tsx`)
-  - a bare `ease` class, which generates nothing in Tailwind v4:
-    `projects/project-card.tsx` (both banners), `ui/theme-switcher.tsx` (hover
-    fill)
-  - no ease class: `top-blur-overlay.tsx`, `ui/filter-tag.tsx`
-  - Vaul's own `0.5s` `cubic-bezier(.32, .72, 0, 1)` on the works TOC drawer's
-    slide and overlay fade. Reduced motion is handled; retiming the normal slide
-    is a taste call.
-  - the legacy `button.tsx` (`/links` only): no `transition-*` class, so it gets
-    `transition: all` on the browser's `ease`
-  - `duration: 0.35, ease: 'power3'` on the dot-field pointer follow
-    (`hero-dot-field.tsx`). `power3` is GSAP's ease-out quart, so give it a name
-    in `motion.ts`.
-- **Literal delays.** All are reduce-safe; none are tokens:
-  - `fadeUp(0.1)` / `fadeUp(0.18)` in all three heroes
-  - `STAGGER_STEP = 0.08` (`reveal.tsx`), copied as `idx * 0.08` in
-    `works._index.tsx`. Both stagger stacked full-width cards that each reveal
-    on their own, so lower cards wait after scrolling in.
-  - `.toc-enter`'s `200ms` (`app.css`), which is `--duration-base`
-- **Two keyframes named `fadeOut`.** Vaul injects an unlayered
-  `@keyframes fadeOut`, which beats the tooltip's layered one in `tailwind.css`.
-  After a works page loads, the tooltip exit loses its 2px drift. Rename the
-  tooltip's keyframe.
+- **Three taste calls are open.**
+  - **The works TOC drawer** slides, and its overlay fades, on Vaul's own `0.5s`
+    `cubic-bezier(.32, .72, 0, 1)`. Reduced motion is handled. Keeping Vaul's
+    sheet timing is reasonable; moving it onto the tokens would change how the
+    drawer feels.
+  - **Stacked full-width cards stagger by index.** Each card on the home
+    projects section and the works grid reveals on its own as it scrolls in, so
+    the `STAGGER_STEP` delay only makes lower cards wait (about 0.3s for the
+    fifth).
+  - **Card image zooms use two durations.** Project-card banners run on
+    `--duration-base` (200ms) and Substack images on `--duration-slow` (300ms).
+    The theme assigns image zoom to the slow token.
+- **The project-card image load fade never runs with motion allowed.**
+  `blurrable-image.tsx` adds `transition-opacity`, but the caller's
+  `motion-safe:transition-transform` comes later and replaces the property list.
+  Give the image one list that covers both (`opacity` and `scale`).
 - **About bento.** The verified review, the skate rework, and the fix batches
   are in [plan 002](../plans/002-about-bento-motion.md).
 

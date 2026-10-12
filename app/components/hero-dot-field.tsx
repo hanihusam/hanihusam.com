@@ -10,11 +10,17 @@ import {
 	readCssVar,
 	setupCanvas,
 } from '@/components/ui/dot-field'
+import { GSAP_EASE_OUT_QUART } from '@/utils/motion'
 import { useGSAP } from '@gsap/react'
 import { gsap } from 'gsap'
 import { useRef } from 'react'
 
 gsap.registerPlugin(useGSAP)
+
+// Seconds the dots take to catch up with the pointer. Exempt from the UI
+// duration scale: it's smoothing on a live input, like a spring.
+// KEEP_ALIVE_MS (ui/dot-field.ts) must stay well above it.
+const POINTER_SMOOTHING = 0.35
 
 type Anchor = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
 type Dot = { bx: number; by: number }
@@ -169,8 +175,14 @@ export function HeroDotField({ className }: Readonly<{ className?: string }>) {
 
 			const loop = createRenderLoop(render)
 
-			const xTo = gsap.quickTo(pointer, 'x', { duration: 0.35, ease: 'power3' })
-			const yTo = gsap.quickTo(pointer, 'y', { duration: 0.35, ease: 'power3' })
+			const xTo = gsap.quickTo(pointer, 'x', {
+				duration: POINTER_SMOOTHING,
+				ease: GSAP_EASE_OUT_QUART,
+			})
+			const yTo = gsap.quickTo(pointer, 'y', {
+				duration: POINTER_SMOOTHING,
+				ease: GSAP_EASE_OUT_QUART,
+			})
 
 			const handlePointerMove = contextSafe((event: Event) => {
 				const rect = container.getBoundingClientRect()

@@ -1,6 +1,11 @@
 import { useReducedMotion, type Transition } from 'motion/react'
 
-import { DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
+import {
+	DURATION_SLOWER,
+	EASE_OUT_QUART,
+	ENTRANCE_DELAY,
+	STAGGER_STEP,
+} from '@/utils/motion'
 
 type EntranceFrom = { opacity: number; x?: number; y?: number }
 
@@ -32,10 +37,15 @@ function useEntrance() {
 	})
 
 	// The staggered fade+rise shared by the home, about and works heroes.
-	const fadeUp = (delay: number) =>
+	// `step` is the element's place in the stagger: 0, 1, …
+	const fadeUp = (step: number) =>
 		enter(
 			{ opacity: 0, y: 12 },
-			{ duration: DURATION_SLOWER, ease: EASE_OUT_QUART, delay },
+			{
+				duration: DURATION_SLOWER,
+				ease: EASE_OUT_QUART,
+				delay: ENTRANCE_DELAY + step * STAGGER_STEP,
+			},
 		)
 
 	return { enter, fadeUp }

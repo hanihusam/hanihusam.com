@@ -17,7 +17,7 @@ interface ButtonProps {
 function getBaseClassName({ className }: { className?: string }) {
 	return clsxm(
 		'group relative inline-flex w-fit shrink-0 items-center justify-center overflow-hidden',
-		'font-medium transition-[background-color] duration-(--duration-base) ease-hover',
+		'font-medium transition-[background-color,scale] duration-(--duration-base) ease-hover',
 		'active:scale-[0.97]',
 		'focus:outline-none',
 		'disabled:pointer-events-none',

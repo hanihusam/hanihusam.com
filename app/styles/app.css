@@ -29,7 +29,7 @@ light-mode {
 	background-repeat: no-repeat;
 	background-position: 0 100%;
 	background-size: 0% 2px;
-	transition: background-size var(--duration-base) ease;
+	transition: background-size var(--duration-base) var(--ease-hover);
 }
 
 .underlined:hover,
@@ -141,12 +141,13 @@ light-mode {
 .toc-enter {
 	animation: revealFromRight var(--duration-slower) var(--ease-out-quart)
 		backwards;
-	animation-delay: 200ms;
+	animation-delay: var(--duration-base);
 }
 
 @media (prefers-reduced-motion: reduce) {
-	/* Render the visible state outright — the delay would otherwise hold the
-	   TOC at opacity 0 even with the duration tokens zeroed. */
+	/* Render the visible state outright. The delay is a zeroed token now, but
+	   this guards against it ever becoming a literal that would hold the TOC
+	   at opacity 0. */
 	.toc-enter {
 		animation: none;
 	}

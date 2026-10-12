@@ -40,10 +40,10 @@ function ExternalNavigationItem({
 						<span
 							className={clsxm(
 								'relative text-(--nav-item-icon-default)',
-								'transition-[color,transform] duration-(--duration-fast) ease-hover',
+								'transition-[color,scale] duration-(--duration-fast) ease-hover',
 								'group-hover:text-(--nav-item-icon-hover)',
 								'group-focus-visible:text-(--nav-item-icon-active)',
-								'group-active:scale-[0.97] motion-reduce:transform-none',
+								'motion-safe:group-active:scale-[0.97]',
 							)}
 						>
 							{children}

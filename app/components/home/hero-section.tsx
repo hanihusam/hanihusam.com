@@ -48,7 +48,7 @@ export function HeroSection() {
 
 				<div className="z-10 col-span-full flex flex-col items-start gap-y-8 self-stretch md:h-[50vh] lg:flex-row lg:items-center">
 					<motion.div
-						{...fadeUp(0.1)}
+						{...fadeUp(0)}
 						className="flex flex-col justify-end gap-y-8 lg:h-77.5"
 					>
 						<div className="flex w-fit items-center gap-4 rounded-full bg-(--surface-secondary) px-4 py-2">
@@ -83,7 +83,7 @@ export function HeroSection() {
 						</ButtonLink>
 					</motion.div>
 					<motion.div
-						{...fadeUp(0.18)}
+						{...fadeUp(1)}
 						className="flex w-full flex-col gap-y-4 md:ml-auto md:w-90 lg:w-100"
 					>
 						<H3 className="text-(--text-paragraph)">
