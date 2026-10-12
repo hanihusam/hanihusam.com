@@ -38,7 +38,7 @@
 
 	/* Exit — reuses the fast token so it's re-zeroed under reduced motion. */
 	.TooltipContent[data-state='closed'] {
-		animation-name: fadeOut;
+		animation-name: tooltipFadeOut;
 	}
 
 	@keyframes slideDownAndFade {
@@ -52,7 +52,7 @@
 		}
 	}
 
-	@keyframes fadeOut {
+	@keyframes tooltipFadeOut {
 		from {
 			opacity: 1;
 			transform: translateY(0);

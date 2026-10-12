@@ -28,9 +28,9 @@ export default function ThemeSwitcher() {
 						<button
 							type="submit"
 							aria-live="polite"
-							className="toggle-theme-switcher group ease-hover relative grid size-10 cursor-pointer place-items-center overflow-hidden rounded-md p-2 text-(--icon-primary) transition-transform duration-(--duration-fast) focus:outline-none active:scale-[0.97] motion-reduce:transform-none"
+							className="toggle-theme-switcher group ease-hover relative grid size-10 cursor-pointer place-items-center overflow-hidden rounded-md p-2 text-(--icon-primary) transition-transform duration-(--duration-fast) focus:outline-none motion-safe:active:scale-[0.97]"
 						>
-							<span className="ease absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-(--duration-fast) group-hover:opacity-100 group-focus-visible:opacity-100" />
+							<span className="ease-hover absolute inset-0 rounded-md bg-(--nav-item-surface-active) opacity-0 transition-opacity duration-(--duration-fast) group-hover:opacity-100 group-focus-visible:opacity-100" />
 							{/* Moon icon */}
 							<svg
 								id="moon-icon"

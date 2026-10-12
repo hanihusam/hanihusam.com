@@ -1,9 +1,11 @@
 import { motion, useReducedMotion, type HTMLMotionProps } from 'motion/react'
 
-import { DURATION_BASE, DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
-
-// Seconds between siblings in the `stagger` variant.
-const STAGGER_STEP = 0.08
+import {
+	DURATION_BASE,
+	DURATION_SLOWER,
+	EASE_OUT_QUART,
+	STAGGER_STEP,
+} from '@/utils/motion'
 
 type RevealVariant = 'rise' | 'stagger' | 'settle'
 

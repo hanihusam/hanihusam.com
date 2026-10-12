@@ -13,6 +13,15 @@ export const DURATION_BASE = 0.2
 export const DURATION_SLOW = 0.3
 export const DURATION_SLOWER = 0.5
 
+// GSAP can't take a bezier array without CustomEase. `power3.out` is its
+// ease-out quart, the same family as EASE_OUT_QUART.
+export const GSAP_EASE_OUT_QUART = 'power3.out'
+
+// Entrance choreography, in seconds: the first beat after mount, and the gap
+// between staggered siblings.
+export const ENTRANCE_DELAY = 0.1
+export const STAGGER_STEP = 0.08
+
 // Scroll scenes keep their visible motion inside a "stage": the viewport
 // inset this many px from both edges. Below lg the floating nav
 // (navigation.tsx, `fixed bottom-8`, ~50px tall) covers the bottom ~82px, and

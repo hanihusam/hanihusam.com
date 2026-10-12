@@ -719,7 +719,7 @@ pre {
 	background-repeat: no-repeat;
 	background-position: 0 100%;
 	background-size: 0% 2px;
-	transition: background-size var(--duration-base) ease;
+	transition: background-size var(--duration-base) var(--ease-hover);
 }
 
 .prose :where(h1, h2, h3, h4):hover {

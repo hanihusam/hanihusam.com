@@ -15,6 +15,7 @@ import { getUrl } from '@/utils/helpers'
 import { getContentMdxListItems } from '@/utils/mdx.server'
 import { useUpdateQueryStringValueWithoutNavigation } from '@/utils/misc'
 import { getRootRequestInfo, getSocialMetas } from '@/utils/seo'
+import { STAGGER_STEP } from '@/utils/motion'
 import { getServerTimeHeader } from '@/utils/timing.server'
 
 import { getPageSocialImage } from '@/og/social-images.server'
@@ -181,7 +182,7 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 									key={project.slug}
 									layout
 									transition={{
-										default: { ...CARD_SPRING, delay: idx * 0.08 },
+										default: { ...CARD_SPRING, delay: idx * STAGGER_STEP },
 										layout: CARD_SPRING,
 									}}
 									// Reveal is pinned visible under reduced motion, so an exit

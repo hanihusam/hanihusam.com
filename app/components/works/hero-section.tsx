@@ -32,12 +32,12 @@ export function WorksHero() {
 
 			<Grid className="relative">
 				<div className="col-span-full flex flex-col items-center justify-center gap-2 text-center">
-					<motion.div {...fadeUp(0.1)}>
+					<motion.div {...fadeUp(0)}>
 						<H1>
 							Curated <span className="text-sunset-400">Projects</span>
 						</H1>
 					</motion.div>
-					<motion.div {...fadeUp(0.18)}>
+					<motion.div {...fadeUp(1)}>
 						<Text variant="lead">Work that speaks for itself</Text>
 					</motion.div>
 				</div>

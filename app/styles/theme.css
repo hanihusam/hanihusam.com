@@ -134,6 +134,11 @@
 	/* ease-in-out for on-screen movement / morphing */
 	--ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
 	--ease-hover: cubic-bezier(0.25, 1, 0.5, 1);
+
+	/* Tailwind's own defaults for bare `transition*` classes, pointed at the
+	   tokens so those transitions are zeroed under reduced motion too. */
+	--default-transition-duration: var(--duration-fast);
+	--default-transition-timing-function: var(--ease-hover);
 }
 
 @keyframes revealText {
