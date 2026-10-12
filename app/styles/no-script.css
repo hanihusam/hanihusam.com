@@ -9,3 +9,10 @@
 	opacity: 1 !important;
 	transform: none !important;
 }
+
+/* BlurrableImage: the real image renders visible and covers its placeholder
+   once loaded. Without JS the placeholder is never removed, so drop it rather
+   than leave a blur behind images with transparency. */
+[data-blur-placeholder] {
+	display: none;
+}
