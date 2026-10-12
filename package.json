@@ -118,6 +118,9 @@
     "vite-tsconfig-paths": "^6.1.1"
   },
   "overrides": {
+    "@tailwindcss/typography": {
+      "postcss-selector-parser": "^7.1.6"
+    },
     "deepmerge-ts": "8.0.0",
     "fflate": "0.7.5",
     "mysql2": "3.24.4",
