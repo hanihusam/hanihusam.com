@@ -110,12 +110,18 @@
 	--breakpoint-md: 640px; /* Tailwind default: 48rem (768px) */
 	--breakpoint-lg: 1024px; /* Tailwind default: 64rem (1024px) — same px, kept explicit */
 	--breakpoint-xl: 1440px; /* Tailwind default: 80rem (1280px) */
+}
 
+@theme static {
 	/* ─── Motion — single source of truth for durations + easing.
-	   Generates ease-out-quart, ease-in-out-quart and ease-hover utilities.
+	   Generates ease-out-quart, ease-out-expo, ease-in-out-quart and ease-hover
+	   utilities.
 	   --duration-* is not a Tailwind namespace, so reference it as
 	   duration-(--duration-base). These variables are re-zeroed under
-	   prefers-reduced-motion below; the JS mirrors in app/utils/motion.ts are not. */
+	   prefers-reduced-motion below; the JS mirrors in app/utils/motion.ts are not.
+	   `static` because app.css and prose.css read these with var() but aren't
+	   compiled by Tailwind, which otherwise drops theme variables it sees no use
+	   for, and an undefined var() voids the whole `animation` shorthand. */
 	--duration-fast: 150ms; /* micro-interactions, hover, color */
 	--duration-base: 200ms; /* standard UI: buttons, dropdowns, tooltips */
 	--duration-slow: 300ms; /* larger elements: modals, drawers, image zoom */
@@ -123,6 +129,8 @@
 
 	/* ease-out for enter/exit (the house curve, already used by the theme toggle) */
 	--ease-out-quart: cubic-bezier(0.165, 0.84, 0.44, 1);
+	/* sharper ease-out with a long settle: the hero headline reveal, tooltips */
+	--ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 	/* ease-in-out for on-screen movement / morphing */
 	--ease-in-out-quart: cubic-bezier(0.77, 0, 0.175, 1);
 	--ease-hover: cubic-bezier(0.25, 1, 0.5, 1);

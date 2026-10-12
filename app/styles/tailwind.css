@@ -15,7 +15,7 @@
 		/* Token → 0ms under prefers-reduced-motion, so the slide keyframe below
 		   completes instantly (no perceptible motion). */
 		animation-duration: var(--duration-fast);
-		animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+		animation-timing-function: var(--ease-out-expo);
 		will-change: transform, opacity;
 	}
 	.dark .TooltipContent {

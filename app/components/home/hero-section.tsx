@@ -74,8 +74,8 @@ export function HeroSection() {
 							className="hidden self-start md:inline-flex"
 							iconRight={
 								<>
-									<ArrowDownIcon className="col-start-1 row-start-1 translate-y-[-200%] transition-transform duration-(--duration-base) ease-[cubic-bezier(0.785,0.135,0.15,0.86)] group-hover:translate-y-0" />
-									<ArrowDownIcon className="col-start-1 row-start-1 transition-transform duration-(--duration-fast) ease-[cubic-bezier(0.785,0.135,0.15,0.86)] group-hover:translate-y-[200%]" />
+									<ArrowDownIcon className="ease-in-out-quart col-start-1 row-start-1 translate-y-[-200%] transition-transform duration-(--duration-base) group-hover:translate-y-0" />
+									<ArrowDownIcon className="ease-in-out-quart col-start-1 row-start-1 transition-transform duration-(--duration-fast) group-hover:translate-y-[200%]" />
 								</>
 							}
 						>

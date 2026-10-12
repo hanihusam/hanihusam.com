@@ -12,15 +12,16 @@ Durations and easing come from CSS custom properties in `app/styles/theme.css`.
 cubic-beziers, or UI durations as literals. The ones that already exist are
 listed under [Known gaps](#known-gaps).
 
-| CSS token             | JS constant         | Use                                   |
-| --------------------- | ------------------- | ------------------------------------- |
-| `--duration-fast`     | `DURATION_FAST`     | 150ms — hover, color, press           |
-| `--duration-base`     | `DURATION_BASE`     | 200ms — buttons, tooltips, routes     |
-| `--duration-slow`     | `DURATION_SLOW`     | 300ms — drawers, larger elements      |
-| `--duration-slower`   | `DURATION_SLOWER`   | 500ms — rare, large travel, entrances |
-| `--ease-out-quart`    | `EASE_OUT_QUART`    | enter/exit (the house curve)          |
-| `--ease-in-out-quart` | `EASE_IN_OUT_QUART` | movement while on screen              |
-| `--ease-hover`        | `EASE_HOVER`        | hover                                 |
+| CSS token             | JS constant         | Use                                               |
+| --------------------- | ------------------- | ------------------------------------------------- |
+| `--duration-fast`     | `DURATION_FAST`     | 150ms — hover, color, press                       |
+| `--duration-base`     | `DURATION_BASE`     | 200ms — buttons, tooltips, routes                 |
+| `--duration-slow`     | `DURATION_SLOW`     | 300ms — drawers, larger elements                  |
+| `--duration-slower`   | `DURATION_SLOWER`   | 500ms — rare, large travel, entrances             |
+| `--ease-out-quart`    | `EASE_OUT_QUART`    | enter/exit (the house curve)                      |
+| `--ease-out-expo`     | —                   | sharp enter, long settle: hero headline, tooltips |
+| `--ease-in-out-quart` | `EASE_IN_OUT_QUART` | movement while on screen                          |
+| `--ease-hover`        | `EASE_HOVER`        | hover                                             |
 
 The duration tokens drop to `0ms` under `prefers-reduced-motion: reduce`, so CSS
 built on them is reduced-motion-safe for free. JS durations are not. JS has to
@@ -35,7 +36,11 @@ Exempt from the token rule:
 - **Springs** (`{ type: 'spring', duration, bounce }`), which settle on their
   own parameters.
 - **Scrubbed scroll scenes**, where scroll position is the clock.
-- **One literal**: `0.6` on the about hero avatar, which has no matching token.
+- **Two literals**, neither of which matches a token:
+  - `0.6` on the about hero avatar.
+  - `1.3s` per letter, with its `0.25s` lead-in and `0.03s` stagger, on the home
+    headline reveal (`#heroDisplay span`), the one signature entrance allowed
+    past the UI duration scale.
 
 ## Who owns what
 
@@ -185,16 +190,53 @@ Every candidate for motion should first be checked against this list:
 
 ## Known gaps
 
-Found on 2026-10-10. Fix these before building on top of them, and remove each
-entry once it's fixed.
+Found on 2026-10-10; a full timing sweep on 2026-10-11 added the rest. Fix these
+before building on top of them, and remove each entry once it's fixed.
 
-- **The home hero headline ignores reduced motion.** `#heroDisplay span`
-  (`app.css`) runs `revealText` for a literal `1.3s` and has no reduced-motion
-  rule.
-- **Literal easing curves.** These are not tokens yet:
-  - `.TooltipContent` in `tailwind.css`
-  - the hero arrow icon (`home/hero-section.tsx`)
-  - `#heroDisplay`
+- **Three places ignore reduced motion.**
+  - **Works TOC drawer.** Vaul (`works/toc-drawer.tsx`) injects its own CSS. The
+    sheet slides its full height, and the overlay fades, on a literal `0.5s`
+    `cubic-bezier(.32, .72, 0, 1)`. Vaul 1.1.2 has no reduced-motion handling.
+    Override both with the tokens. Vaul's rules are unlayered and load last, so
+    the override needs higher specificity than `[data-vaul-drawer]` /
+    `[data-vaul-overlay]`.
+  - **Hard-load view transitions.** `@view-transition` (`theme.css`) runs the
+    browser's default `0.25s` crossfade, and browsers don't skip it under
+    reduce. Gate it on `no-preference`.
+  - **Case-study videos.** `blog/cloudinary-video.tsx` sets `autoPlay loop`
+    unconditionally. The controls satisfy WCAG 2.2.2, but rule 2 wants
+    decorative motion off, so drop autoplay under reduce.
+- **Tailwind's default transition timing isn't overridden.** A bare
+  `transition`, `transition-colors` or `transition-opacity` with no `ease-*` or
+  `duration-(--…)` class falls back to Tailwind's `150ms`
+  `cubic-bezier(.4, 0, .2, 1)`, which reduced motion doesn't zero. That covers
+  about ten colour hovers and the image fades in `blurrable-image.tsx`. Point
+  `--default-transition-duration` and `--default-transition-timing-function` in
+  `@theme` at the tokens.
+- **Off-token curves.** These durations are tokens; the curves aren't:
+  - `ease` on the underline wipes (`.underlined` in `app.css`, headings in
+    `prose.css`)
+  - Tailwind's `ease-in-out` on the Substack image hover
+    (`writing/article-card.tsx`)
+  - a bare `ease` class, which generates nothing in Tailwind v4:
+    `projects/project-card.tsx` (both banners), `ui/theme-switcher.tsx` (hover
+    fill)
+  - no ease class: `top-blur-overlay.tsx`, `ui/filter-tag.tsx`
+  - the legacy `button.tsx` (`/links` only): no `transition-*` class, so it gets
+    `transition: all` on the browser's `ease`
+  - `duration: 0.35, ease: 'power3'` on the dot-field pointer follow
+    (`hero-dot-field.tsx`). `power3` is GSAP's ease-out quart, so give it a name
+    in `motion.ts`.
+- **Literal delays.** All are reduce-safe; none are tokens:
+  - `fadeUp(0.1)` / `fadeUp(0.18)` in all three heroes
+  - `STAGGER_STEP = 0.08` (`reveal.tsx`), copied as `idx * 0.08` in
+    `works._index.tsx`. Both stagger stacked full-width cards that each reveal
+    on their own, so lower cards wait after scrolling in.
+  - `.toc-enter`'s `200ms` (`app.css`), which is `--duration-base`
+- **Two keyframes named `fadeOut`.** Vaul injects an unlayered
+  `@keyframes fadeOut`, which beats the tooltip's layered one in `tailwind.css`.
+  After a works page loads, the tooltip exit loses its 2px drift. Rename the
+  tooltip's keyframe.
 - **Reloads replay the scroll restore as a smooth scroll.** `html` has
   `scroll-behavior: smooth`, which also animates React Router's
   `<ScrollRestoration>`. On short viewports a mid-page reload visibly scrolls
