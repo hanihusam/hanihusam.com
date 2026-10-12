@@ -62,8 +62,13 @@ exception, not a pattern. Ask before adding a third scroll observer.
    drawn and the cat fully out, and JS adds the hidden starting state only after
    mount, below the fold at common sizes. On viewports taller than ~1230px, or
    on a mount with restored scroll, the trace can visibly change on mount (see
-   the skate brief). `Reveal` and the hero entrances currently break this rule
-   (see [Known gaps](#known-gaps)). Don't copy them.
+   the skate brief).
+   - **Exception: mount entrances that must play on a hard load** (the heroes,
+     `Reveal`). These ship Motion's hidden `initial` and carry `data-entrance`.
+     CSS forces `[data-entrance]` visible with JS disabled (`no-script.css`) and
+     under reduced motion (`app.css`), so neither case waits on JS.
+   - Build new mount entrances with `useEntrance` (`enter()` / `fadeUp()`).
+     Don't hand-roll the `initial`/`animate` pair.
 2. **Reduced motion is a render path, not a disabled animation.** Render the
    finished, visible state:
    - **CSS:** tokens or a `prefers-reduced-motion: reduce` block. Watch for
@@ -77,7 +82,10 @@ exception, not a pattern. Ask before adding a third scroll observer.
        React 19 does not patch the mismatch.
 
      Keep `initial` unconditional. Under reduce, set `animate` to the final
-     state with `duration: 0`.
+     state with `duration: 0`. `useEntrance` and `Reveal` already do this. Under
+     reduce, `[data-entrance]` is pinned visible with `!important`, which
+     freezes any opacity/transform `exit` on it. Drop the exit under reduce, as
+     the works grid does.
 
    - **GSAP:** build the scene inside
      `gsap.matchMedia('(prefers-reduced-motion: no-preference)')` so it never
@@ -166,6 +174,7 @@ Every candidate for motion should first be checked against this list:
 | Scene                     | Files                                                                              |
 | ------------------------- | ---------------------------------------------------------------------------------- |
 | Route transition          | `components/page-transition.tsx`                                                   |
+| Hero entrances            | `hooks/useEntrance.ts`, `{home,about,works}/hero-section.tsx`                      |
 | Scroll reveals            | `components/reveal.tsx`                                                            |
 | Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`               |
 | Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)               |
@@ -179,18 +188,6 @@ Every candidate for motion should first be checked against this list:
 Found on 2026-10-10. Fix these before building on top of them, and remove each
 entry once it's fixed.
 
-- **Server HTML hides `Reveal` and the hero entrances.**
-  - The home, about and works hero `fadeUp` entrances render Motion's `initial`
-    into the server HTML as `style="opacity:0;…"`, and so does `Reveal`. There
-    is no `<noscript>` override, so with JS disabled that content never appears.
-  - **Reduced-motion users with JS lose the hero too.** Under reduce the hero
-    passes `{}`, so nothing ever clears the server's `opacity:0`. A hard load
-    leaves the about hero invisible.
-  - `Reveal` recovers because it sets an explicit `animate`, but it still logs a
-    hydration mismatch.
-- **The stick figure's reduced-motion pose.** The height tile branches `initial`
-  on `useReducedMotion()`. A reduced-motion hard load therefore keeps the
-  crouched server pose and logs a hydration mismatch.
 - **The home hero headline ignores reduced motion.** `#heroDisplay span`
   (`app.css`) runs `revealText` for a literal `1.3s` and has no reduced-motion
   rule.

@@ -2,3 +2,10 @@
 .noscript-hidden {
 	display: none !important;
 }
+
+/* Motion entrances (useEntrance, Reveal) ship their hidden `initial` in the
+   server HTML; without JS nothing would ever reveal them. */
+[data-entrance] {
+	opacity: 1 !important;
+	transform: none !important;
+}

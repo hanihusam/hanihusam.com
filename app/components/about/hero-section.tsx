@@ -1,40 +1,23 @@
 import { Grid } from '@/components/grid'
 import { Display, Text } from '@/components/typography'
 import { DotGrid } from '@/components/ui/dot-grid'
-import { DURATION_SLOWER, EASE_OUT_QUART } from '@/utils/motion'
+import { useEntrance } from '@/hooks/useEntrance'
+import { EASE_OUT_QUART } from '@/utils/motion'
 
-import { motion, useReducedMotion } from 'motion/react'
+import { motion } from 'motion/react'
 
 export function AboutHero() {
-	const shouldReduceMotion = useReducedMotion()
-
-	// Staggered entrance on first mount. Skipping `initial` under reduced motion
-	// was meant to keep SSR content visible, but useReducedMotion() is null on
-	// the server, so SSR always ships opacity:0 — see Known gaps in
-	// docs/agents/motion.md.
-	const fadeUp = (delay: number) =>
-		shouldReduceMotion
-			? {}
-			: {
-					initial: { opacity: 0, y: 12 },
-					animate: { opacity: 1, y: 0 },
-					transition: {
-						duration: DURATION_SLOWER,
-						ease: EASE_OUT_QUART,
-						delay,
-					},
-				}
+	// Staggered entrance on first mount; SSR, no-JS and reduced-motion handling
+	// live in useEntrance.
+	const { enter, fadeUp } = useEntrance()
 
 	// Avatar slides in from the right. The transform lives on this wrapper, not on
 	// the box below — that box uses responsive Tailwind `translate-x-*` utilities
 	// which Motion's inline transform would otherwise clobber.
-	const slideInFromRight = shouldReduceMotion
-		? {}
-		: {
-				initial: { opacity: 0, x: 48 },
-				animate: { opacity: 1, x: 0 },
-				transition: { duration: 0.6, ease: EASE_OUT_QUART },
-			}
+	const slideInFromRight = enter(
+		{ opacity: 0, x: 48 },
+		{ duration: 0.6, ease: EASE_OUT_QUART },
+	)
 
 	return (
 		<Grid as="section" className="relative pt-40 md:pb-16 lg:pb-40">

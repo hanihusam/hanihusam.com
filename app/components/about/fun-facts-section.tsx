@@ -179,14 +179,11 @@ export function FunFactsSection() {
 				<Tile
 					ref={heightTileRef}
 					area="[grid-area:height]"
-					initial={shouldReduceMotion ? undefined : 'rest'}
-					animate={
-						shouldReduceMotion
-							? undefined
-							: heightHover.active
-								? 'grown'
-								: 'rest'
-					}
+					// Always start at `rest`, the pose the server ships. Hover is the only
+					// way to `grown`, and it's off under reduced motion, so reduce keeps
+					// the server pose instead of mismatching it.
+					initial="rest"
+					animate={heightHover.active ? 'grown' : 'rest'}
 					onHoverStart={
 						shouldReduceMotion ? undefined : heightHover.onHoverStart
 					}

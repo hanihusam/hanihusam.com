@@ -21,7 +21,7 @@ import { getPageSocialImage } from '@/og/social-images.server'
 import { type Route } from './+types/works._index'
 
 import { PlusIcon } from '@phosphor-icons/react'
-import { AnimatePresence, MotionConfig } from 'motion/react'
+import { AnimatePresence, MotionConfig, useReducedMotion } from 'motion/react'
 import { data, type HeadersArgs, useSearchParams } from 'react-router'
 
 // One spring family for the whole filtered grid, so entrance, exit, and the
@@ -93,6 +93,7 @@ const PAGE_SIZE = 5
 
 export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 	const { projects, tags } = loaderData
+	const shouldReduceMotion = useReducedMotion()
 
 	const [searchParams] = useSearchParams()
 	const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
@@ -182,11 +183,17 @@ export default function WorksIndex({ loaderData }: Route.ComponentProps) {
 										default: { ...CARD_SPRING, delay: idx * 0.08 },
 										layout: CARD_SPRING,
 									}}
-									exit={{
-										opacity: 0,
-										scale: 0.96,
-										transition: CARD_EXIT_SPRING,
-									}}
+									// Reveal is pinned visible under reduced motion, so an exit
+									// would just hold the card in place; remove it outright.
+									exit={
+										shouldReduceMotion
+											? undefined
+											: {
+													opacity: 0,
+													scale: 0.96,
+													transition: CARD_EXIT_SPRING,
+												}
+									}
 									className="col-span-full"
 								>
 									<ProjectCard

@@ -137,4 +137,13 @@ light-mode {
 	.toc-enter {
 		animation: none;
 	}
+
+	/* Motion entrances (useEntrance, Reveal) ship their hidden `initial` in the
+	   server HTML. Show them before hydration instead of waiting for Motion to
+	   snap them visible. This also pins exits on these elements, so drop any
+	   opacity/transform `exit` under reduced motion. */
+	[data-entrance] {
+		opacity: 1 !important;
+		transform: none !important;
+	}
 }

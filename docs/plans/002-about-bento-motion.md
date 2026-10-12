@@ -7,8 +7,8 @@
 - Status: review complete, docs corrected. Batch A (skate rework) implemented on
   2026-10-11 with Hani's go-ahead and the neutral-400 light stroke. It is
   waiting on Hani's visual sign-off. The cat window from batch C was retimed the
-  same day to finish with the skate (see below). Batch B runs as a separate
-  task. The rest of C and D are not started.
+  same day to finish with the skate (see below). Batch B done on 2026-10-11 (see
+  below). The rest of C and D are not started.
 - Risk: low. Every change is scoped to the About page bento, except batch B,
   which touches the shared hero pattern.
 
@@ -215,9 +215,34 @@ Two follow-ups landed after this run, from the verifier:
 - Real devices: a wheel mouse at 1024×768, a trackpad, and iPhone momentum
   scrolling.
 
-## Batch B — reduced-motion and SSR correctness
+## Batch B — reduced-motion and SSR correctness (done)
 
-Runs as a separate task.
+**Done 2026-10-11.** Findings 6 and 7 are fixed, and the no-JS gap is closed.
+
+- **Shared hook.** `hooks/useEntrance.ts` now builds the hero entrances (home,
+  about, works). `initial` is unconditional. Under reduce, `animate` lands the
+  final state with `duration: 0`. `Reveal` follows the same contract.
+- **`data-entrance`.** Both mark their elements with it.
+  - `no-script.css` forces it visible with JS disabled.
+  - `app.css` does the same under `prefers-reduced-motion: reduce`, so reduce
+    doesn't wait for the deferred (`requestIdleCallback`) hydration.
+  - Normal motion still plays the hard-load entrance.
+- **Height tile.** `initial` is always `rest`. Hover is the only way to `grown`,
+  and it's off under reduce, so reduce holds the server pose.
+- **Works grid.** Under reduce the cards drop their `exit`. The `!important` pin
+  would otherwise freeze an exiting card in place for the 0.35s exit spring.
+- **Rejected: a hydration-gated marker** (dropping `data-entrance` on
+  hydration).
+  - It showed a frame where the hero sat at opacity 0, after the marker went and
+    before Motion wrote its final style.
+  - It let the works cards' own spring fade them in under reduce.
+- **Verified** in Playwright at 1440×900:
+  - Normal motion: hard-load and client-nav entrances animate.
+  - Reduced motion: zero sub-1 opacity frames, no hydration warning, and a
+    static stick figure.
+  - JS disabled: every `[data-entrance]` is at opacity 1 with no transform.
+
+Original scope:
 
 1. Hero `fadeUp` (home, about, works) and the height tile:
    - keep `initial` unconditional;

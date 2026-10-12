@@ -84,11 +84,9 @@ function useWave(active: boolean) {
  * the `grown` pose. Touch pointers never fire Motion's hover gesture, so on
  * phones the figure stays crouched and only the idle wave plays.
  *
- * The base pose is meant to be the reduced-motion render, but today it isn't:
- * the tile picks `initial` from `useReducedMotion()`, which is null on the
- * server, so SSR ships the crouched `rest` pose and a reduced-motion hard
- * load keeps it (React 19 does not patch the attribute mismatch). See
- * docs/plans/002.
+ * The server always ships the crouched `rest` pose (the tile's `initial`), and
+ * reduced motion keeps it: hover, the only way to `grown`, is off there, so a
+ * reduced-motion load holds that one pose with no hydration mismatch.
  *
  * `idle` drives a periodic wave on BOTH arms — and only the arms. The head,
  * torso and legs never move outside of the hover-triggered grow, so the
