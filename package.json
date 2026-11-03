@@ -87,7 +87,7 @@
     "tailwind-merge": "^3.0.1",
     "unist-util-visit": "^5.0.0",
     "vaul": "^1.1.2",
-    "zod": "^4.4.3"
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.0",
