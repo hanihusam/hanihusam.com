@@ -39,6 +39,11 @@ const SAMPLES: Array<{
 		params: { title: `${'Wordy '.repeat(33)}en`, url: 'hanihusam.com' },
 	},
 	{
+		name: 'resume — paper',
+		template: 'resume',
+		params: { title: 'Frontend & UI Engineer', url: 'hanihusam.com/resume' },
+	},
+	{
 		name: 'project — real banner',
 		template: 'project',
 		params: {

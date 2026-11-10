@@ -76,11 +76,27 @@
 	--color-warning-400: #fbbf24;
 	--color-warning-500: #f59e0b;
 
+	/* Paper — off-white and ink, the /resume page's own palette (Style Guide v1.2).
+	   Figma has no 500 step. */
+	--color-paper-50: #f2f0ea;
+	--color-paper-100: #e8e5dc;
+	--color-paper-200: #d7d5d0;
+	--color-paper-300: #cac8c3;
+	--color-paper-400: #aba59a;
+	--color-paper-600: #6e695f;
+	--color-paper-700: #3a3a39;
+	--color-paper-800: #2a2925;
+	--color-paper-900: #1c1c1b;
+	--color-paper-950: #121212;
+
 	/* ─── Typography ──────────────────────────────────────────────────────── */
 
-	/* Font families — override Tailwind defaults with project fonts */
+	/* Font families — override Tailwind defaults with project fonts.
+	   JetBrains Mono and the handwriting face are only loaded on /resume
+	   (resume-fonts.css); everywhere else `font-mono` falls back. */
 	--font-sans: 'Satoshi', ui-sans-serif, system-ui, sans-serif;
 	--font-mono: 'JetBrains Mono', ui-monospace, 'Fira Code', monospace;
+	--font-hand: 'Nothing You Could Do', cursive;
 
 	/* Font weights — medium/bold/black identical to Tailwind, omitted.
 	   Only `regular` is kept: Tailwind uses `normal` for 400, not `regular`. */
@@ -147,6 +163,27 @@
 	}
 	to {
 		transform: translateY(0);
+	}
+}
+
+/* /resume's pen strokes (HandMark, on a pathLength="1" path with a 1 2 dash)
+   and handwriting appearing left to right (the header notes, Signature). The insets
+   leave room for the script's swashes, so nothing is cut once it's written. */
+@keyframes markDraw {
+	from {
+		stroke-dashoffset: 1.05;
+	}
+	to {
+		stroke-dashoffset: 0;
+	}
+}
+
+@keyframes handWrite {
+	from {
+		clip-path: inset(-40% 100% -40% -10%);
+	}
+	to {
+		clip-path: inset(-40% -10% -40% -10%);
 	}
 }
 
@@ -366,6 +403,95 @@
 		0 10px 15px -3px rgb(0 0 0 / 0.4), 0 4px 6px -4px rgb(0 0 0 / 0.4);
 	--shadow-xl:
 		0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   SEMANTIC TOKENS — PAPER (the /resume routes)
+   Figma collection: Tokens → Paper Light (3277:0) / Paper Dark (3277:1)
+   root.tsx puts `.paper` on <html> for routes whose handle sets `paper`.
+   Dark needs `.dark.paper *` because `.dark *` re-declares every token on
+   each element, so inheriting from <html> isn't enough.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.paper {
+	--surface-primary: var(--color-paper-50);
+	--surface-secondary: var(--color-paper-100);
+
+	--text-title-primary: var(--color-paper-950);
+	--text-title-secondary: var(--color-sunset-400);
+	--text-paragraph: var(--color-paper-800);
+	--text-lead: var(--color-paper-800);
+	--text-caption: var(--color-paper-600);
+	--text-overline: var(--color-paper-600);
+	--text-label: var(--color-paper-600);
+	--text-code: var(--color-paper-800);
+	--text-link: var(--color-paper-950);
+	--text-inverse: var(--color-paper-50);
+
+	--border-primary: var(--color-paper-200);
+	--border-default: var(--color-paper-300);
+	--border-focus: var(--color-sunset-500);
+
+	--icon-primary: var(--color-paper-950);
+	--icon-secondary: var(--color-paper-600);
+
+	--tag-surface-default: var(--color-paper-100);
+	--tag-border-default: var(--color-paper-200);
+	--tag-text-default: var(--color-paper-800);
+
+	--btn-secondary-bg: var(--color-paper-950);
+	--btn-secondary-bg-hover: var(--color-paper-800);
+	--btn-secondary-bg-disabled: var(--color-paper-400);
+	--btn-secondary-text: var(--color-paper-50);
+
+	--btn-ghost-bg-hover: var(--color-paper-100);
+	--btn-ghost-text: var(--color-paper-950);
+	--btn-ghost-text-hover: var(--color-paper-950);
+
+	--nav-item-icon-active: var(--color-paper-950);
+	--nav-item-icon-hover: var(--color-paper-950);
+	--nav-item-icon-default: var(--color-paper-600);
+}
+
+.dark.paper,
+.dark.paper * {
+	--surface-primary: var(--color-paper-950);
+	--surface-secondary: var(--color-paper-900);
+
+	--text-title-primary: var(--color-paper-50);
+	--text-title-secondary: var(--color-sunset-400);
+	--text-paragraph: var(--color-paper-100);
+	--text-lead: var(--color-paper-100);
+	--text-caption: var(--color-paper-400);
+	--text-overline: var(--color-paper-400);
+	--text-label: var(--color-paper-400);
+	--text-code: var(--color-paper-100);
+	--text-link: var(--color-paper-50);
+	--text-inverse: var(--color-paper-950);
+
+	--border-primary: var(--color-paper-800);
+	--border-default: var(--color-paper-700);
+	--border-focus: var(--color-sunset-400);
+
+	--icon-primary: var(--color-paper-50);
+	--icon-secondary: var(--color-paper-400);
+
+	--tag-surface-default: var(--color-paper-900);
+	--tag-border-default: var(--color-paper-800);
+	--tag-text-default: var(--color-paper-100);
+
+	--btn-secondary-bg: var(--color-paper-50);
+	--btn-secondary-bg-hover: var(--color-paper-100);
+	--btn-secondary-bg-disabled: var(--color-paper-600);
+	--btn-secondary-text: var(--color-paper-950);
+
+	--btn-ghost-bg-hover: var(--color-paper-800);
+	--btn-ghost-text: var(--color-paper-50);
+	--btn-ghost-text-hover: var(--color-paper-50);
+
+	--nav-item-icon-active: var(--color-paper-50);
+	--nav-item-icon-hover: var(--color-paper-50);
+	--nav-item-icon-default: var(--color-paper-400);
 }
 
 /* ─────────────────────────────────────────────────────────────────────────

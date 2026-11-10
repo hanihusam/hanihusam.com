@@ -11,6 +11,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 		{ route: '/', priority: '1.0' },
 		{ route: '/about', priority: '0.8' },
 		{ route: '/works', priority: '0.8' },
+		{ route: '/resume', priority: '0.8' },
 	]
 
 	const projectEntries = projects.map((project) => ({

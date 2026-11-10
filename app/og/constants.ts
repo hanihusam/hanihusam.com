@@ -17,6 +17,17 @@ export const OG_COLORS = {
 	muted: '#9ca3af',
 } as const
 
+// The /resume card (templates/resume.tsx): Paper Light from theme.css's
+// `.paper` tokens. Satori can't read CSS variables, so the values are copied.
+export const OG_PAPER = {
+	paper: '#f2f0ea', // --color-paper-50, surface/primary
+	ink: '#121212', // --color-paper-950, text/title/primary
+	text: '#2a2925', // --color-paper-800, text/paragraph
+	caption: '#6e695f', // --color-paper-600, text/caption
+	rule: '#cac8c3', // --color-paper-300, border/default
+	accent: '#e6813e', // --color-sunset-400, text/title/secondary
+} as const
+
 export const OG_CLOUDINARY_CLOUD_NAME = 'hanihusam'
 export const OG_CLOUDINARY_HOST = 'res.cloudinary.com'
 

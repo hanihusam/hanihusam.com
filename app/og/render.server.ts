@@ -15,6 +15,10 @@ async function resolveTemplateAssets(
 	template: OgTemplateName,
 	params: OgTemplateParams,
 ) {
+	// The resume card is type and strokes only: nothing to fetch, so it never
+	// degrades.
+	if (template === 'resume') return { assets: {}, degraded: false }
+
 	const featuredImage =
 		template === 'project' ? (params as ProjectParams).featuredImage : undefined
 

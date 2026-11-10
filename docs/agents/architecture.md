@@ -57,8 +57,16 @@ session management.
 switches dark↔light directly.
 
 **Routes.** File-based in `app/routes/`. Live pages: `/`, `/about`, `/links`,
-`/works`, `/works/:slug`. `work.*` routes `301`-redirect legacy `/work` URLs to
-`/works`. Loaders return `data(payload, { headers })`.
+`/works`, `/works/:slug`, `/resume`, `/resume/upwork`. `work.*` routes
+`301`-redirect legacy `/work` URLs to `/works`. Loaders return
+`data(payload, { headers })`.
+
+**Route handles.** `root.tsx` reads three keys from a route's `handle`:
+`surface: 'secondary'` paints the page gray; `paper: true` puts `.paper` on
+`<html>` (the resume palette in `theme.css`); `chrome: false` drops the global
+footer and navigation. `/resume/upwork` uses the last one because both show Mail
+and LinkedIn, which Upwork proposals can't link to. It is also `noindex` and
+left out of the sitemap.
 
 ## Social cards (`app/og/`)
 
