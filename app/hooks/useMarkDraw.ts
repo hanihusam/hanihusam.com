@@ -8,8 +8,11 @@
  *              to Download PDF): page load, as an entrance. Pure CSS
  *              keyframes, so they play on first paint without waiting for JS.
  *            - Everything below (the underline, the circle, the signature):
- *              the element itself fully on stage (viewport inset by
- *              SCROLL_STAGE_INSET), once. A triggered reveal, not scrubbed.
+ *              the element itself fully inside the reading area, once: below
+ *              the top SCROLL_STAGE_INSET and above READING_LINE (55% down the
+ *              viewport). A triggered reveal, not scrubbed. Firing as soon as
+ *              it cleared the bottom inset drew it at 76–88% down the screen,
+ *              before the reader looked there (Han, 2026-11-10).
  * Frequency: once per element per visit; never replays.
  * Purpose:   a pen annotating the page as the reader arrives at it.
  * Enter:     marks: stroke-dashoffset 1.05 → 0 on a pathLength="1" path, the
@@ -38,8 +41,8 @@
  * Stack:     CSS keyframes and transitions; this hook only decides the state
  *            (IntersectionObserver, like Reveal's whileInView).
  * Open risk: an element scrolled past faster than the observer fires is drawn
- *            when it next enters the stage, or stays hidden above it until the
- *            reader scrolls back up.
+ *            when it next enters the reading area, or stays hidden above it
+ *            until the reader scrolls back up.
  */
 import { useEffect, useRef, useState, type RefObject } from 'react'
 
@@ -47,6 +50,10 @@ import { useMediaQuery } from '@/hooks/useMediaQuery'
 import { SCROLL_STAGE_INSET } from '@/utils/motion'
 
 type MarkState = 'drawn' | 'hidden'
+
+// Where the reader is looking: a mark draws once it's fully above this line,
+// as a fraction of the viewport height from the top.
+const READING_LINE = 0.55
 
 /** `enabled: false` keeps the element drawn (for marks animated another way). */
 function useMarkDraw(
@@ -70,14 +77,19 @@ function useMarkDraw(
 			return
 		}
 
-		// Near the end of a page with no footer (/resume/upwork) the element
-		// can't scroll above the stage's bottom edge, so that edge comes down
-		// to what's left below it.
+		// The area's bottom edge is the reading line (never closer to the
+		// bottom than the stage inset). Near the end of a page that can't scroll
+		// that far (/resume/upwork has no footer) it comes down to what's left
+		// below the element.
+		const readingInset = Math.max(
+			SCROLL_STAGE_INSET,
+			Math.round(window.innerHeight * (1 - READING_LINE)),
+		)
 		const belowElement =
 			document.documentElement.scrollHeight - (bottom + window.scrollY)
 		const bottomInset = Math.max(
 			0,
-			Math.min(SCROLL_STAGE_INSET, Math.floor(belowElement) - 1),
+			Math.min(readingInset, Math.floor(belowElement) - 1),
 		)
 
 		setState('hidden')
