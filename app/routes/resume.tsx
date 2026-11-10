@@ -27,8 +27,10 @@ export const meta: Route.MetaFunction = ({ loaderData, matches }) => {
 	})
 }
 
-export function headers({ actionHeaders, loaderHeaders }: HeadersArgs) {
-	return actionHeaders ? actionHeaders : loaderHeaders
+// Only a loader here. (`actionHeaders ? … : loaderHeaders` would always pick
+// actionHeaders: an empty Headers object counts as true.)
+export function headers({ loaderHeaders }: HeadersArgs) {
+	return loaderHeaders
 }
 
 export const loader = async ({ request }: Route.LoaderArgs) => {

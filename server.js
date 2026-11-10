@@ -20,6 +20,20 @@ app.set('trust proxy', 1)
 app.use(compression())
 app.disable('x-powered-by')
 
+// cv.hanihusam.com used to be Han's resume as a Figma Site. Old links land on
+// /resume, query string kept (e.g. ?ref= tags); the old site had no sub-pages.
+app.use((req, res, next) => {
+	const host = (req.get('X-Forwarded-Host') ?? req.get('host') ?? '')
+		.split(':')[0]
+		.toLowerCase()
+	if (host === 'cv.hanihusam.com') {
+		const query = req.url.slice(req.path.length)
+		res.redirect(301, `https://${primaryHost}/resume${query}`)
+		return
+	}
+	next()
+})
+
 // Helper middleware
 app.use((req, res, next) => {
 	res.set('x-fly-region', process.env.FLY_REGION ?? 'unknown')
