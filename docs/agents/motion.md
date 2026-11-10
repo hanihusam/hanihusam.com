@@ -70,12 +70,12 @@ Exempt from the token rule:
 
 ## Who owns what
 
-| Layer                   | Owns                                                                                          |
-| ----------------------- | --------------------------------------------------------------------------------------------- |
-| CSS                     | Hover/focus (`.underlined` wipe), theme toggle, tooltip, `.toc-enter`, hero text `revealText` |
-| Motion (`motion/react`) | DOM state, `PageTransition`, `Reveal`, hero entrances, floating nav, TOC, stick figure        |
-| GSAP                    | Canvas pointer work (`hero-dot-field.tsx`) and the skate tile's ScrollTrigger scene           |
-| Motion, as an exception | The cat tile's scroll peek (`useScroll`); see below                                           |
+| Layer                   | Owns                                                                                                                                         |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| CSS                     | Hover/focus (`.underlined` wipe), theme toggle, tooltip, `.toc-enter`, hero text `revealText`, /resume handwriting (`markDraw`, `handWrite`) |
+| Motion (`motion/react`) | DOM state, `PageTransition`, `Reveal`, hero entrances, floating nav, TOC, stick figure                                                       |
+| GSAP                    | Canvas pointer work (`hero-dot-field.tsx`) and the skate tile's ScrollTrigger scene                                                          |
+| Motion, as an exception | The cat tile's scroll peek (`useScroll`); see below                                                                                          |
 
 Use CSS when the motion is predetermined: entrance, hover, keyframes. Use Motion
 when it reacts to state or gestures. Never drive one element from two libraries.
@@ -143,10 +143,13 @@ exception, not a pattern. Ask before adding a third scroll observer.
      and motion is allowed, as `blog/cloudinary-video.tsx` does. Gating on the
      viewport replaces what the attribute did for free on mobile.
    - **Decorative motion:** turn it off entirely, not "gentler".
-3. **Animate `transform` and `opacity`.** The exceptions are both small SVG art:
-   - `stroke-dashoffset`, for line drawing (the skate trace);
+3. **Animate `transform` and `opacity`.** The exceptions are all small and
+   paint-only:
+   - `stroke-dashoffset`, for line drawing (the skate trace, the /resume marks);
    - the stick figure's geometry attributes (`cy`, `y1`, `x2`, `y2`), six
-     primitives. Paint-only and tiny.
+     primitives;
+   - `clip-path: inset()`, for /resume's handwriting appearing left to right
+     (three short notes and the signature, each played once).
 4. **No new animation dependencies.** Plugins that ship inside the installed
    `gsap` package are allowed.
 5. **No exit animations on route change.** The reason is in
@@ -249,19 +252,20 @@ Every candidate for motion should first be checked against this list:
 
 ## Where motion lives
 
-| Scene                     | Files                                                                             |
-| ------------------------- | --------------------------------------------------------------------------------- |
-| Route transition          | `components/page-transition.tsx`                                                  |
-| Hero entrances            | `hooks/useEntrance.ts`, `{home,about,works}/hero-section.tsx`                     |
-| Scroll reveals            | `components/reveal.tsx`                                                           |
-| Image load fade           | `components/blurrable-image.tsx` (card and article thumbnails)                    |
-| Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`              |
-| Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)              |
-| Bento: skate line draw    | `about/skate-trace.tsx`, `about/skate-trace-paths.ts`, `hooks/useSkateTrace.ts`   |
-| Bento: cat peek (lg+)     | `about/cat-peek.tsx`, `hooks/useCatPeekReveal.ts`                                 |
-| Bento: height grow + wave | `about/height-tile.tsx`, `hooks/useHeightTileMotion.ts`, `about/stick-figure.tsx` |
-| Works TOC                 | `works/toc-list.tsx`, `works/toc-drawer.tsx`, `.toc-enter` in `app.css`           |
-| Shared hooks              | `hooks/useMediaQuery.ts`, `hooks/useHoverIntent.ts`                               |
+| Scene                     | Files                                                                                                              |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Route transition          | `components/page-transition.tsx`                                                                                   |
+| Hero entrances            | `hooks/useEntrance.ts`, `{home,about,works}/hero-section.tsx`                                                      |
+| Scroll reveals            | `components/reveal.tsx`                                                                                            |
+| Image load fade           | `components/blurrable-image.tsx` (card and article thumbnails)                                                     |
+| Floating nav              | `components/navigation.tsx`, `hooks/useFloatingNavigationMotion.tsx`                                               |
+| Home hero dot field       | `components/hero-dot-field.tsx`, `components/ui/dot-field.ts` (GSAP)                                               |
+| Bento: skate line draw    | `about/skate-trace.tsx`, `about/skate-trace-paths.ts`, `hooks/useSkateTrace.ts`                                    |
+| Bento: cat peek (lg+)     | `about/cat-peek.tsx`, `hooks/useCatPeekReveal.ts`                                                                  |
+| Bento: height grow + wave | `about/height-tile.tsx`, `hooks/useHeightTileMotion.ts`, `about/stick-figure.tsx`                                  |
+| Works TOC                 | `works/toc-list.tsx`, `works/toc-drawer.tsx`, `.toc-enter` in `app.css`                                            |
+| Resume handwriting        | `resume/hand-mark.tsx`, `resume/signature.tsx`, header notes in `resume/resume-header.tsx`, `hooks/useMarkDraw.ts` |
+| Shared hooks              | `hooks/useMediaQuery.ts`, `hooks/useHoverIntent.ts`                                                                |
 
 ## Known gaps
 

@@ -1,0 +1,68 @@
+/* Loaded by the /resume routes only. Latin subsets from Google Fonts, self-hosted.
+   Both are SIL Open Font License 1.1: public/fonts/OFL-*.txt */
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'Nothing You Could Do';
+	src: url('/fonts/NothingYouCouldDo-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+	font-style: normal;
+}
+
+/* Satoshi draws its en dash almost as wide as an em dash (0.93em against
+   1.14em), so ranges like "8 – 11 AM" and "30–40%" read as "—". On the resume
+   only, the en dash comes from JetBrains Mono, already loaded above. Browsers
+   combine faces only when their descriptors match exactly, so there's one per
+   Satoshi weight in fonts.css; declared later, they're checked first for this
+   one character. */
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+	font-weight: 300;
+	font-display: swap;
+	font-style: normal;
+	unicode-range: U+2013;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+	font-weight: 400;
+	font-display: swap;
+	font-style: normal;
+	unicode-range: U+2013;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+	font-weight: 500;
+	font-display: swap;
+	font-style: normal;
+	unicode-range: U+2013;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+	font-weight: 700;
+	font-display: swap;
+	font-style: normal;
+	unicode-range: U+2013;
+}
+
+@font-face {
+	font-family: 'Satoshi';
+	src: url('/fonts/JetBrainsMono-Regular.woff2') format('woff2');
+	font-weight: 900;
+	font-display: swap;
+	font-style: normal;
+	unicode-range: U+2013;
+}

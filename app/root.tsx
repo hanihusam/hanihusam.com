@@ -8,6 +8,7 @@ import noScriptStyles from '@/styles/no-script.css?url'
 import proseStyles from '@/styles/prose.css?url'
 import tailwindStyles from '@/styles/tailwind.css?url'
 import { ClientHintCheck, getHints } from '@/utils/client-hints'
+import { clsxm } from '@/utils/clsxm'
 import { getEnv } from '@/utils/env.server'
 import {
 	getUrl,
@@ -176,15 +177,32 @@ function Canonical() {
 	)
 }
 
+// What a route's `handle` can ask of the global layout.
+type RouteHandle = {
+	surface?: 'primary' | 'secondary'
+	/** Wear the paper palette (the /resume routes). */
+	paper?: boolean
+	/** `false` drops the global footer and navigation (/resume/upwork). */
+	chrome?: boolean
+}
+
+const THEME_COLORS = {
+	default: { light: '#FFFFFF', dark: '#0B0B0F' },
+	paper: { light: '#F2F0EA', dark: '#121212' },
+}
+
 function Document({
 	children,
 	nonce,
 	theme = 'light',
+	paper = false,
 	env,
 }: {
 	children: React.ReactNode
 	nonce: string
 	theme?: string
+	/** The /resume routes' paper palette (theme.css `.paper`). */
+	paper?: boolean
 	env?: Record<string, unknown>
 }) {
 	// Gates smooth scrolling (theme.css) so the pre-hydration scroll restore
@@ -193,8 +211,10 @@ function Document({
 		document.documentElement.dataset.hydrated = ''
 	}, [])
 
+	const themeColors = THEME_COLORS[paper ? 'paper' : 'default']
+
 	return (
-		<html className={theme} lang="en">
+		<html className={clsxm(theme, paper && 'paper')} lang="en">
 			<head>
 				<ClientHintCheck nonce={nonce} />
 				<meta
@@ -203,7 +223,7 @@ function Document({
 				/>
 				<meta
 					name="theme-color"
-					content={theme === 'dark' ? '#0B0B0F' : '#FFFFFF'}
+					content={theme === 'dark' ? themeColors.dark : themeColors.light}
 				/>
 				<Meta />
 				<Canonical />
@@ -248,23 +268,23 @@ function App({
 }) {
 	const nonce = useNonce()
 	const theme = useTheme()
-	const matches = useMatches()
-	const surface = matches.some(
-		(match) =>
-			(match.handle as { surface?: 'primary' | 'secondary' } | undefined)
-				?.surface === 'secondary',
+	const handles = useMatches().map(
+		(match) => match.handle as RouteHandle | undefined,
 	)
+	const surface = handles.some((handle) => handle?.surface === 'secondary')
 		? 'secondary'
 		: 'primary'
+	const paper = handles.some((handle) => handle?.paper)
+	const chrome = !handles.some((handle) => handle?.chrome === false)
 
 	return (
-		<Document nonce={nonce} theme={theme} env={data.ENV}>
+		<Document nonce={nonce} theme={theme} paper={paper} env={data.ENV}>
 			<LayoutRoot surface={surface}>
 				<FloatingNavigationMotionProvider>
 					<TopBlurOverlay />
 					<PageTransition />
-					<Footer />
-					<Navigation />
+					{chrome ? <Footer /> : null}
+					{chrome ? <Navigation /> : null}
 				</FloatingNavigationMotionProvider>
 			</LayoutRoot>
 		</Document>

@@ -5,8 +5,9 @@ import { OG_CANVAS } from '@/og/constants'
 import { pageParamsSchema, projectParamsSchema } from '@/og/schemas'
 import { PageCard } from '@/og/templates/page'
 import { ProjectCard } from '@/og/templates/project'
+import { ResumeCard } from '@/og/templates/resume'
 
-export type OgTemplateName = 'page' | 'project'
+export type OgTemplateName = 'page' | 'project' | 'resume'
 
 // Assets are resolved to data URIs by the renderer and merged into the params
 // before the component is called, so components see both.
@@ -39,6 +40,15 @@ export const ogTemplateRegistry = {
 		size: OG_CANVAS,
 		component: (params) => (
 			<ProjectCard {...(params as Parameters<typeof ProjectCard>[0])} />
+		),
+	},
+	// The paper-style card for /resume and /resume/upwork.
+	resume: {
+		schema: pageParamsSchema,
+		version: 2,
+		size: OG_CANVAS,
+		component: (params) => (
+			<ResumeCard {...(params as Parameters<typeof ResumeCard>[0])} />
 		),
 	},
 } satisfies Record<OgTemplateName, OgTemplateDefinition>

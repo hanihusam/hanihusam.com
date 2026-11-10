@@ -27,6 +27,23 @@ export function getPageSocialImage({
 	)
 }
 
+/** The paper-style card for /resume and its Upwork copy. */
+export function getResumeSocialImage({
+	request,
+	title,
+}: {
+	request: Request
+	title: string
+}) {
+	const origin = new URL(request.url).origin
+	return buildOgImageUrl(
+		origin,
+		'resume',
+		{ title, url: displayUrlFromRequest(request) },
+		getOgImageSecret(),
+	)
+}
+
 export function getProjectSocialImage({
 	request,
 	title,

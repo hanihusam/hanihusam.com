@@ -1,5 +1,5 @@
 const externalLinks = {
-	cv: 'https://drive.google.com/file/d/1pauUzeImQPPpzS9D8HI-CcySZO_MjWgk/view?usp=sharing',
+	cv: '/resume',
 	github: 'https://github.com/hanihusam',
 	upwork: 'https://www.upwork.com/freelancers/~013306ab317c6ea0da',
 	dribbble: 'https://dribbble.com/hanihusam',
